@@ -77,6 +77,10 @@ panda_makedate (int year, int month, int day, int hour, int minutes,
 	    year, month, day, hour, minutes, seconds,
 	    zulu, gmthours, gmtminutes);
 
+#if defined DEBUG
+  printf("Returned a date string as requested\n");
+#endif
+
   // And finish
   return dateString;
 }
@@ -114,6 +118,10 @@ panda_nowdate ()
   struct tm *timenow;
   time_t curtime;
 
+#if defined DEBUG
+  printf("Requested the date string for now\n");
+#endif
+
   // Get the current time...
   curtime = time (NULL);
   timenow = (struct tm *) localtime(&curtime);
@@ -124,4 +132,8 @@ panda_nowdate ()
 			 timenow->tm_hour, 
 			 timenow->tm_min, 
 			 timenow->tm_sec);
+
+#if defined DEBUG
+  printf("Returned a date string representing now, as requested\n");
+#endif
 }

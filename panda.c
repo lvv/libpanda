@@ -153,7 +153,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 {
   panda_pdf *openedpdf;
   char *tempPtr;
-  char newmode[2];
+  char newmode[3];
 
   // We are going to open a PDF for file I/O. Currently, the only supported
   // mode is 'w'. There are some more obscure modes not included in the error
@@ -187,7 +187,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  }
 
       // Opening the file with the binary option makes Windows work
-      sprintf(newmode, "%cb", mode[0]);
+      snprintf(newmode, 3, "%cb", mode[0]);
 
       // We _are_ going to create the file
       if(strcmp(filename, "-") == 0) openedpdf->file = stdout;
@@ -260,7 +260,12 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  panda_adddictitem (openedpdf->info->dict, "CreationDate",
 			     panda_brackettedtextvalue, tempPtr =
 			     panda_nowdate ());
-	  free (tempPtr);
+
+#if defined DEBUG
+	  printf("Inserted the creation date\n");
+#endif
+
+	  if(tempPtr != NULL) free (tempPtr);
 	}
       else
 	{
@@ -272,8 +277,9 @@ panda_open_actual (char *filename, char *mode, int suppress)
       // And this stuff is always done
 
       // Create a dummy object for when we print the pdf to a file
-      openedpdf->dummyObj = (panda_object *) panda_newobject (openedpdf, 
-							      panda_placeholder);
+      openedpdf->dummyObj = 
+	(panda_object *) panda_newobject (openedpdf, 
+					  panda_placeholder);
 
       // Remember the mode and create the linear object if needed
       if ((mode[1] == 'l') || (mode[1] == 'L'))
@@ -289,6 +295,10 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  openedpdf->mode = panda_write;
 	  openedpdf->linear = NULL;
 	}
+
+#if defined DEBUG
+      printf("PDF file opened ok\n");
+#endif
 
       // We did open the PDF file ok
       return openedpdf;

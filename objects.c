@@ -93,6 +93,9 @@ panda_newobject (panda_pdf * doc, int type)
   // We are not in text mode within the layout stream at the start
   created->textmode = panda_false;
 
+  // We are by default not a contents object
+  created->isContents = panda_false;
+
   // New objects have a generation number of 0 by definition
   created->generation = 0;
 
@@ -622,6 +625,20 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 	{
 	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
 			     dumpTarget->binarystreamLength);
+	}
+     
+      // Make sure we deal with empty content streams probably
+      else if (dumpTarget->isContents == panda_true)
+	{
+#if defined DEBUG
+	  printf("Forcing output of content stream\n");
+#endif
+
+	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
+			     0);
+	  dumpTarget->layoutstream = (char *) panda_xmalloc(sizeof(char) * 2);
+	  sprintf(dumpTarget->layoutstream, " ");
+	  dumpTarget->layoutstreamLength = 1;
 	}
 
       // We are going to dump the named object (and only the named object) to 

@@ -337,3 +337,57 @@ panda_print (panda_pdf * output, char *format)
 
   // With windows we might also need to update the newline count here
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_xsnprintf
+PURPOSE a safe version of vnsprintf
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+char panda_xsnprintf(const char* format, va_list ap);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This command behaves like a slightly modified version of <command>vsnprintf</command>. The main difference is that if catches the various different ways that errors can be returned, and turns these into a single NULL is a string big enough to hold the formatted string could not be allocated. 
+
+RETURNS A string
+
+EXAMPLE START
+This is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+char *panda_xsnprint(char *format, ...)
+{
+  char *output = NULL;
+  int  size, result;
+  va_list ap;
+
+  /* We start with the size of the format string as a guess */
+  size = strlen(format);
+  
+  va_start(ap, format);
+
+  while(result != 0){
+    output = panda_xrealloc(output, size);
+
+    /* Now do the vsnprint (the results can be different, based on the c
+       library in use */
+    result = vsnprintf(output, size, format, ap);
+
+    if(result == -1){
+      /* Up to glibc 2.0.6 */
+      size += 100;
+    }
+    else if(result > size){
+      /* Glibc from now on */
+      size = result;
+    }
+  }
+
+  va_end(ap);
+  return output;
+}

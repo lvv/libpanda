@@ -59,6 +59,7 @@ extern "C"
     void *cachedLastChild;
 
     int isPages;
+    int isContents;
 
     char cascadeproperties[panda_object_property_max];
     char localproperties[panda_object_property_max];

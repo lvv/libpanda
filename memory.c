@@ -52,3 +52,43 @@ panda_xmalloc (size_t size)
 
   return buffer;
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_xrealloc
+PURPOSE allocate some memory, resizing it if already exists
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void *panda_xmalloc (void *now, size_t size);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Allocate some memory, performing all of the error checking so we don't have to elsewhere. Resize the memory if it already exists.
+
+RETURNS A void * to the memory allocated.
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+char *memory;
+
+memory = (char *) panda_xrealloc(memory, 42);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void *
+panda_xrealloc (void *memory, size_t size)
+{
+  void *buffer;
+
+  if ((buffer = realloc (memory, size)) == NULL)
+    {
+      panda_error ("panda_xrealloc failed to allocate memory");
+    }
+
+  return buffer;
+}

@@ -471,7 +471,7 @@ panda_fillline (panda_page * target)
   // implementing it...
   target->contents->layoutstream = 
     panda_streamprintf (target->contents->layoutstream,
-			"f\n");
+			"B\n");
 }
 
 /******************************************************************************
@@ -704,7 +704,7 @@ SYNOPSIS START
 void panda_setfillcolor (panda_page *target, int red, int green, int blue);
 SYNOPSIS END
 
-DESCRIPTION This function sets the color to fill a close shape with when the shape is closed. Ti is expressed as a combinartion of red, green, and blue.
+DESCRIPTION This function sets the color to fill a close shape with when the shape is closed. It is expressed as a combinartion of red, green, and blue. The maximum number for each value is 255 (a number greater than 255 is reduced to 255).
 
 RETURNS Nothing
 
@@ -735,10 +735,16 @@ DOCBOOK END
 void
 panda_setfillcolor(panda_page *target, int red, int green, int blue)
 {
+  if(red > 255) red = 255;
+  if(green > 255) green = 255;
+  if(blue > 255) blue = 255;
+
   panda_entergraphicsmode(target);
   target->contents->layoutstream = 
     panda_streamprintf (target->contents->layoutstream,
-  			"%d %d %d rg\n", red, green, blue);
+  			"%f %f %f rg\n", (((double) red) / 255), 
+			(((double) green) / 255), 
+			(((double) blue) / 255));
 }
 
 /******************************************************************************
@@ -781,8 +787,14 @@ DOCBOOK END
 void
 panda_setlinecolor(panda_page *target, int red, int green, int blue)
 {
+  if(red > 255) red = 255;
+  if(green > 255) green = 255;
+  if(blue > 255) blue = 255;
+  
   panda_entergraphicsmode(target);
   target->contents->layoutstream = 
     panda_streamprintf (target->contents->layoutstream,
-    			"%d %d %d RG\n", red, green, blue);
+    			"%f %f %f RG\n", (((double) red) / 255), 
+			(((double) green) / 255), 
+			(((double) blue) / 255));
 }

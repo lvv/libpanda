@@ -167,6 +167,7 @@ panda_createandinsertpage (panda_pdf * output){
   panda_addchild (newPage->obj, newPage->contents);
   panda_adddictitem (newPage->obj->dict, "Contents", panda_objectvalue,
 		     newPage->contents);
+  newPage->contents->isContents = panda_true;
 
   // Setup some stuff in the contents object that we need later
   newPage->contents->textmode = panda_false;

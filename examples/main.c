@@ -31,8 +31,23 @@ main (int argc, char *argv[])
   // Open our demo PDF
   if ((demo = panda_open ("output.pdf", "w")) == NULL)
     panda_error ("demo: could not open output.pdf to write to.");
-  panda_setproperty(demo->pages, panda_scope_cascade,
-		    panda_object_property_compress, panda_true);
+
+  printf("Opened the document ok\n");
+
+  if((argc > 1) && (strcmp(argv[1], "compressed") == 0)){
+    printf("Turn on compression\n");
+    
+    panda_setproperty(demo->pages, panda_scope_cascade,
+		      panda_object_property_compress, panda_true);
+    
+    printf("Just before compression level set\n");
+    
+    panda_setproperty(demo->pages, panda_scope_cascade,
+		      panda_object_property_compress_level, 9);
+  }
+  else printf("For compressed sample, use %s compressed\n", argv[0]);
+
+  printf("Set some basic properties\n");
 
   ///////////////////////////////////////////////////////////////////////////
   // Image functionality
@@ -239,31 +254,33 @@ main (int argc, char *argv[])
 
   // Straight lines of all types -- stroked and filled
   panda_setlinecolor(currPage, 99, 33, 255);
+  panda_setfillcolor(currPage, 112, 38, 300);
   panda_setlinestart (currPage, 110, 310);
   panda_setlinewidth (currPage, 5);
   panda_addlinesegment (currPage, 160, 330);
   panda_addlinesegment (currPage, 210, 386);
   panda_addlinesegment (currPage, 96, 222);
   panda_closeline (currPage);
-  panda_strokeline (currPage);
   panda_fillline (currPage);
   panda_endline (currPage);
 
   // Now some curves -- stroked and filled
+  panda_setfillcolor(currPage, 112, 138, 37);
   panda_setlinestart (currPage, 210, 410);
   panda_setlinewidth (currPage, 5);
   panda_addcubiccurvesegment (currPage, 310, 410, 225, 500, 275, 600);
   panda_addquadraticcurvesegmentone (currPage, 160, 360, 200, 425);
   panda_addquadraticcurvesegmenttwo (currPage, 210, 410, 250, 575);
   panda_closeline (currPage);
-  panda_strokeline (currPage);
+  //panda_strokeline (currPage);
   panda_fillline (currPage);
   panda_endline (currPage);
 
   // Rectangles -- stroked filled
+  panda_setfillcolor(currPage, 38, 38, 38);
   panda_setlinewidth (currPage, 5);
   panda_rectangle (currPage, 410, 210, 510, 310);
-  panda_strokeline (currPage);
+  //panda_strokeline (currPage);
   panda_fillline (currPage);
   panda_endline (currPage);
 

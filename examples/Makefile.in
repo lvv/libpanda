@@ -75,7 +75,7 @@ PLATFORM = @PLATFORM@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
 
-noinst_PROGRAMS = pandademo pandademolegacy circles morecircles
+noinst_PROGRAMS = pandademo pandademolegacy circles morecircles empty
 
 LDADD = -lpanda -ldmalloc -L..
 
@@ -83,6 +83,7 @@ pandademo_SOURCES = main.c
 pandademolegacy_SOURCES = legacymain.c
 circles_SOURCES = circles.c
 morecircles_SOURCES = morecircles.c
+empty_SOURCES = empty.c
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_CLEAN_FILES = 
 PROGRAMS =  $(noinst_PROGRAMS)
@@ -108,6 +109,10 @@ morecircles_OBJECTS =  morecircles.o
 morecircles_LDADD = $(LDADD)
 morecircles_DEPENDENCIES = 
 morecircles_LDFLAGS = 
+empty_OBJECTS =  empty.o
+empty_LDADD = $(LDADD)
+empty_DEPENDENCIES = 
+empty_LDFLAGS = 
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -120,10 +125,10 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = gtar
 GZIP_ENV = --best
-DEP_FILES =  .deps/circles.P .deps/legacymain.P .deps/main.P \
-.deps/morecircles.P
-SOURCES = $(pandademo_SOURCES) $(pandademolegacy_SOURCES) $(circles_SOURCES) $(morecircles_SOURCES)
-OBJECTS = $(pandademo_OBJECTS) $(pandademolegacy_OBJECTS) $(circles_OBJECTS) $(morecircles_OBJECTS)
+DEP_FILES =  .deps/circles.P .deps/empty.P .deps/legacymain.P \
+.deps/main.P .deps/morecircles.P
+SOURCES = $(pandademo_SOURCES) $(pandademolegacy_SOURCES) $(circles_SOURCES) $(morecircles_SOURCES) $(empty_SOURCES)
+OBJECTS = $(pandademo_OBJECTS) $(pandademolegacy_OBJECTS) $(circles_OBJECTS) $(morecircles_OBJECTS) $(empty_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -193,6 +198,10 @@ morecircles: $(morecircles_OBJECTS) $(morecircles_DEPENDENCIES)
 	@rm -f morecircles
 	$(LINK) $(morecircles_LDFLAGS) $(morecircles_OBJECTS) $(morecircles_LDADD) $(LIBS)
 
+empty: $(empty_OBJECTS) $(empty_DEPENDENCIES)
+	@rm -f empty
+	$(LINK) $(empty_LDFLAGS) $(empty_OBJECTS) $(empty_LDADD) $(LIBS)
+
 tags: TAGS
 
 ID: $(HEADERS) $(SOURCES) $(LISP)
@@ -235,7 +244,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \

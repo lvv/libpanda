@@ -119,6 +119,7 @@ extern "C"
 ******************************************************************************/
 
   void *panda_xmalloc (size_t);
+  void *panda_xrealloc (void *, size_t);
 
 /******************************************************************************
   Panda.c
@@ -176,6 +177,7 @@ extern "C"
   char *panda_streamprintf (char *, char *, ...);
   void panda_putc (panda_pdf *, int c);
   void panda_print (panda_pdf *, char *);
+  char *panda_xsnprintf (char *, ...);
 
 /******************************************************************************
   XREF.c
