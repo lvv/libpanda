@@ -12,14 +12,14 @@ AC_LIBTOOL_DLOPEN
 
 dnl Checks for programs.
 AC_PROG_CC
+AC_PROG_CXX
 AC_PROG_INSTALL
-AM_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 
 dnl Checks for libraries.
 dnl The syntax is library name, function, action if found, action if not found
 dnl We just use the default if found action which adds -l<lib> to the LIBS var
 dnl and #defined HAVE_LIB<lib>
-
 
 dnl -lm:
 AC_CHECK_LIB(m, atan)
@@ -36,20 +36,40 @@ AC_CHECK_LIB(tiff, TIFFOpen, CFLAGS="$CFLAGS -DHAVE_LIBTIFF"  LDFLAGS="$LDFLAGS 
 dnl -ljpeg:
 AC_CHECK_LIB(jpeg, jpeg_std_error, CFLAGS="$CFLAGS -DHAVE_LIBJPEG"  LDFLAGS="$LDFLAGS -ljpeg")
 
-dnl -ledb
-AC_CHECK_LIB(edb, e_db_open, CFLAGS="$CFLAGS -DHAVE_LIBEDB"  LDFLAGS="$LDFLAGS -ledb")
+AC_ARG_ENABLE(edb, AC_HELP_STRING([--enable-edb], [Use Enlightenment Database]), [DATABASE="edb"])
+AC_ARG_ENABLE(berkeley-db, AC_HELP_STRING([--enable-berkeley-db], [Use Berkeley DB]), [DATABASE="db"])
+
+if test "z" = "z$DATABASE"; then
+   AC_CHECK_LIB(edb, e_db_open,
+	[LDFLAGS="$LDFLAGS -ledb" DATABASE="edb" AC_DEFINE([USE_EDB], [], [Use Edb])],
+	[AC_CHECK_LIB(db, db_create,
+		[LDFLAGS="$LDFLAGS -ldb" DATABASE="db"],
+		[AC_MSG_RESULT([not found])
+		 AC_MSG_ERROR([please install either Edb or Berkeley DB])]
+	)]
+   )
+else
+   if test "z$DATABASE" = "zedb"; then
+     AC_CHECK_LIB(edb, e_db_open,
+	[LDFLAGS="$LDFLAGS -ledb" DATABASE="edb" AC_DEFINE([USE_EDB], [], [Use Edb])],
+	[AC_MSG_RESULT([not found]),
+	 AC_MSG_ERROR([please reinstall the Edb distribution])])
+   elif test "z$DATABASE" = "zdb"; then
+     AC_CHECK_LIB(db, db_create,
+	[LDFLAGS="$LDFLAGS -ldb" DATABASE="db" AC_DEFINE([USE_DB], [], [Use Berkeley DB])],
+	[AC_MSG_RESULT([not found]),
+	 AC_MSG_ERROR([please reinstall the Berkeley DB distribution])])
+   fi
+fi
 
 dnl Checks for header files.
 dnl STDC checks for stdlib.h stdarg.h string.h and float.h
-AC_HEADER_STDC
-AC_CHECK_HEADERS(stdio.h)
-AC_CHECK_HEADERS(unistd.h)
-AC_CHECK_HEADERS(sys/stat.h)
-AC_CHECK_HEADERS(pthread.h)
+AC_CHECK_HEADERS([stdio.h unistd.h sys/stat.h pthread.h fcntl.h malloc.h stddef.h sys/timeb.h])
 
 dnl Headers for libraries
 AC_CHECK_HEADERS(jpeglib.h)
 AC_CHECK_HEADERS(tiffio.h)
+AC_HEADER_STDBOOL
 
 dnl Windows specific headers
 AC_MSG_CHECKING(if this is a windows box)
@@ -57,7 +77,16 @@ AC_MSG_RESULT()
 AC_CHECK_HEADERS(windows.h, PLATFORM=WINDOWS, PLATFORM=UNIX)
 AC_SUBST(PLATFORM)
 
+dnl Checks for functions
+AC_CHECK_FUNCS([memset strcasecmp])
+AC_FUNC_MALLOC
+AC_FUNC_REALLOC
+
 dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_TYPE_OFF_T
+AC_TYPE_SIZE_T
+AC_STRUCT_TM
 
 dnl Checks for library functions.
 AC_FUNC_VPRINTF
