@@ -63,7 +63,7 @@ object  *newobject(pdf *, int);
 void    adddictitem(object *, char *, int, ...);
 void    *getdictvalue(dictionary *);
 void    writeObject(pdf *, object *);
-void    writeDictionary(pdf *, dictionary *);
+void    writeDictionary(pdf *, object *, dictionary *);
 void    addchild(object *, object *);
 void    traverseObjects(pdf *, object *, traverseFunct);
 void    appendtextstream(object *, char *, unsigned long);
@@ -93,10 +93,10 @@ void  writeTrailer(pdf *);
 void  pdfprintf(pdf *, char *, ...);
 void  textstreamprintf(object *, char *, ...);
 void  pdfputc(pdf *, int c);
+void  pdfprint(pdf *, char *);
 
 /******************************************************************************
   XREF.c
 ******************************************************************************/
 
 void  writeXref(pdf *);
-void  writeXrefEntry(pdf *, object *);

@@ -11,11 +11,15 @@ DODEBUG = NO
 #DODEBUG = DEBUG
 
 # The first one of these will make a profiling library
-#PROFILING = -pg
-PROFILING = 
+PROFILING = -pg
+#PROFILING = 
+
+# Do we optomise?
+OPTO = 
+#OPTO = -O3
 
 COMPILER = gcc
-COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG) -Wall $(PROFILING)
+COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG) -Wall $(PROFILING) $(OPTO)
 
 # Main is excluded from here for the benefit of the tests and the library
 OBJFILES = error.o  font.o  objects.o  panda.o  text.o  trailer.o  utility.o  xref.o
@@ -53,31 +57,32 @@ clean:
 		rm -i *core*
 		rm -i *~
 
-################################################################################
-error.o:	error.c constants.h functions.h objects.h
+###############################################################################
+
+error.o:	error.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) error.c -o error.o
 
-font.o:		font.c constants.h functions.h objects.h
+font.o:		font.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) font.c -o font.o
 
-main.o:		main.c constants.h functions.h objects.h
+main.o:		main.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) main.c -o main.o
 
-objects.o:	objects.c constants.h functions.h objects.h
+objects.o:	objects.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) objects.c -o objects.o
 
-panda.o:	panda.c constants.h functions.h objects.h
+panda.o:	panda.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) panda.c -o panda.o
 
-text.o:		text.c constants.h functions.h objects.h
+text.o:		text.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) text.c -o text.o
 
-trailer.o:	trailer.c constants.h functions.h objects.h
+trailer.o:	trailer.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) trailer.c -o trailer.o
 
-utility.o:	utility.c constants.h functions.h objects.h
+utility.o:	utility.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) utility.c -o utility.o
 
-xref.o:		xref.c constants.h functions.h objects.h
+xref.o:		xref.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) xref.c -o xref.o
 

@@ -44,6 +44,8 @@ typedef struct __object{
 
   void           *children;
   void           *cachedLastChild;
+
+  int            isPages;
 } object;
 
 typedef struct __page{
@@ -59,8 +61,7 @@ typedef struct __child{
 } child;
 
 typedef struct __xref{
-  int            number;
-  char           *string;
+  object         *this;
   struct __xref  *next;
 } xref;
 
@@ -69,7 +70,7 @@ typedef struct __pdf{
   object           *catalog, *pages, *fonts;
   unsigned long    byteOffset, xrefOffset;
   int              nextObjectNumber, xrefCount, pageCount;
-  xref             *xrefTable;
+  xref             *xrefList, *xrefTail;
 
   // These store the state of the drawing environment
   char             *currentFont;
@@ -80,4 +81,8 @@ typedef struct __pdf{
   double           currentHorizontalScaling;
   double           currentLeading;
   int              nextFontNumber;
+
+  // This is a dummy object for dumping objects
+  object           *dummyObj;
 } pdf;
+

@@ -21,12 +21,9 @@
 // Print a possibly complex string into the PDF file and make sure the offset
 // into the PDF file is stored correctly (dispite Windows)
 void pdfprintf(pdf *file, char *format, ...){
-  // Print some information into the pdf file, but also record how many
-  // bytes we have gone into the file. POSSIBLE BUG: Cannot print more than
-  // 1024 bytes at a time. I am not sure how to decide how much memory to
-  // allocate...
-  char     *buffer, *formatString;
-  int      newlineCount = 0, counter = 0, indent = 0, actualLen;
+  char     *buffer, *formatString, *token, *strtokVictim;
+  int      newlineCount = 0, counter = 0, indent = 0, actualLen, value,
+           targetNo, digits;
   va_list  argPtr;
 
   // This is a little strange... On a windows machine, printf inserts \r's 
@@ -49,18 +46,40 @@ void pdfprintf(pdf *file, char *format, ...){
   if((formatString = 
     malloc((strlen(format) + newlineCount + 1) * sizeof(char))) == NULL)
     error("Could not make temporary printing space.");
+  formatString[0] = 0;
 
-  for(counter = indent = 0; counter < strlen(format); counter++){
-    if(format[counter] == '\n'){
-      formatString[indent++] = '\r';
-      formatString[indent++] = format[counter];
-      }
-     else
+  // Make every \n a \r\n in the format string
+  //  for(counter = indent = 0; counter < strlen(format); counter++){
+  //    if(format[counter] == '\n'){
+  //      formatString[indent++] = '\r';
+  //      formatString[indent++] = format[counter];
+  //      }
+  //     else formatString[indent++] = format[counter];
+  //    }
+  //
+  //  formatString[indent] = 0;
 
-    formatString[indent++] = format[counter];
-    }
+  if((strtokVictim = (char *) malloc(sizeof(char) * (strlen(format) + 1)))
+    == NULL)
+    error("Could not make a strtok victim.");
+  strcpy(strtokVictim, format);
+  token = strtok(strtokVictim, "\n");
 
-  formatString[indent] = 0;
+  // There is a special case when we are at the end of the format string and
+  // have a left over token when we don't want to append the newline info...
+  while(token != NULL){
+    strcat(formatString, token);
+    token = strtok(NULL, "\n");
+
+    if(token != NULL) strcat(formatString, "\r\n");
+  }
+
+  // We don't need strtokVictim any more
+  free(strtokVictim);
+
+  // We might have missed at \n the end
+  if(format[strlen(format) - 1] == '\n') strcat(formatString, "\r\n");
+  
 #endif
 
   // Now we need to make a best guess at how long buffer needs to be -- it is 
@@ -74,6 +93,10 @@ void pdfprintf(pdf *file, char *format, ...){
     // We did not fit! Try again...
     free(buffer);
 
+#if defined DEBUG
+    printf("Needed to make a bigger space for the buffer in pdfprintf\n");
+#endif
+
     if((buffer = malloc(actualLen * sizeof(char))) == NULL)
       error("Could not grab space for a pdfprintf call (actual).");
 
@@ -81,7 +104,7 @@ void pdfprintf(pdf *file, char *format, ...){
       error("Really bad file i/o error.");
     }
   }
-  
+
   // Record how long it was
   file->byteOffset += strlen(buffer);
 
@@ -90,9 +113,9 @@ void pdfprintf(pdf *file, char *format, ...){
   // add (change for unix)
 
   // POSSIBLE BUG: Binary textstreams may be corrupted by Windows here
-  for(counter = 0; counter < strlen(buffer); counter++){
+  for(icounter = 0; counter < strlen(buffer); counter++){
     if(buffer[counter] == '\n') newlineCount++;
-    }
+  }
 
   // Add this number to the byteOffset
   file->byteOffset += newlineCount;
@@ -101,8 +124,9 @@ void pdfprintf(pdf *file, char *format, ...){
   // Store it
   fprintf(file->file, "%s", buffer);
 
-  // Free the temp string
-  //  free(formatString);
+  // Free the temp data structures
+  free(formatString);
+  free(buffer);
   va_end(argPtr);
 }
 
@@ -120,9 +144,65 @@ void textstreamprintf(object *textobj, char *format, ...){
   va_end(argPtr);
 }
 
-// Put just one character into the PDf file, while updating the offset so that
+// Put just one character into the PDF file, while updating the offset so that
 // the xref table works later on
 void pdfputc(pdf *output, int c){
   fputc(c, output->file);
   output->byteOffset++;
 }
+
+// Put some known text into the PDF file, also update the offset
+// Don't forget to do the \n to \r\n conversion as well
+void pdfprint(pdf *output, char *format){
+  char   *strtokVictim, *formatString, *token;
+  int    counter, newlineCount;
+
+#if defined WINDOWS
+  if((formatString = malloc((strlen(format) + 1) * sizeof(char))) == NULL)
+    error("Could not make temporary printing space.");
+
+  strcpy(formatString, format);
+#else
+  // We need to go through the format string and replace \n with \r\n
+  // because lines in a PDF end with \r\n (one of the options)
+
+  // Count the number of \n's.
+  newlineCount = 0;
+  for(counter = 0; counter < strlen(format); counter++)
+    if(format[counter] == '\n') newlineCount++;
+
+  if((formatString = 
+    malloc((strlen(format) + newlineCount + 1) * sizeof(char))) == NULL)
+    error("Could not make temporary printing space.");
+  formatString[0] = 0;
+
+  if((strtokVictim = (char *) malloc(sizeof(char) * (strlen(format) + 1)))
+    == NULL)
+    error("Could not make a strtok victim.");
+  strcpy(strtokVictim, format);
+  token = strtok(strtokVictim, "\n");
+
+  // There is a special case when we are at the end of the format string and
+  // have a left over token when we don't want to append the newline info...
+  while(token != NULL){
+    strcat(formatString, token);
+    token = strtok(NULL, "\n");
+
+    if(token != NULL) strcat(formatString, "\r\n");
+  }
+
+  // We might have missed at \n the end
+  if(format[strlen(format) - 1] == '\n') strcat(formatString, "\r\n");
+
+  // We don't need strtokVictim any more
+  free(strtokVictim);
+#endif
+
+  fprintf(output->file, "%s", formatString);
+  output->byteOffset += strlen(formatString);
+
+  // With windows we might also need to update the newline count here
+}
+
+
+

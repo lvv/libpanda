@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Check we are not running already
-data=`ps -aux | grep wrapper | wc -l | tr -d " "`
-if [ $data -gt 3 ]
+data=`ps -aux | grep wrapper | grep -v emacs | grep -v grep | wc -l | tr -d " "`
+if [ $data -gt 2 ]
 then
   echo "Already running ($data)"
   exit 42
@@ -20,13 +20,30 @@ starttime=`date`
 # performance has improved or degraded.
 
 # This variable is a list of libaries to test
-libs="clibpdf-202r1 pdflib-30 panda-02"
+if [ `echo $3 | wc -c | tr -d " "` -gt 0 ]
+then
+  libs=$3
+else
+  libs="clibpdf-202r1 pdflib-30 panda-02"
+fi
 
-# This variable is a list of tests
-tests="hello manytextboxes manypages"
+# This variable is a list of tests -- this can also be overwridden on the
+# command line if we only want to run one test
+if [ `echo $2 | wc -c | tr -d " "` -gt 0 ]
+then
+  tests=$2
+else
+  tests="hello manytextboxes manypages"
+fi
 
 # How many times per test
-number=100
+if [ `echo $4 | wc -c | tr -d " "` -gt 0 ]
+then
+  number=$4
+else
+  number=100
+fi
+
 delay=1
 
 for test in $tests

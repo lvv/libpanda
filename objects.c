@@ -64,6 +64,20 @@ object *newobject(pdf *doc, int type){
   // New objects have a generation number of 0 by definition
   created->generation = 0;
 
+  // Add this new object to the end of the linked list that we use to append
+  // the xref table onto the end of the PDF
+  doc->xrefTail->this = created;  
+
+  // Make space for the next one
+  if((doc->xrefTail->next = malloc(sizeof(xref))) == NULL)
+    error("Could not add xref to the list for new object.");
+  doc->xrefTail->next->next = NULL;
+  doc->xrefTail = doc->xrefTail->next;
+
+  // By default this object is not a pages object
+  created->isPages = gFalse;
+
+  // Return
   return created;
 }
 
@@ -97,6 +111,12 @@ void adddictitem(object *input, char *name, int valueType, ...){
     dictNow->objectArrayValue = NULL;
     dictNow->dictValue = NULL;
     }
+  else{
+#if defined DEBUG
+    printf(" (Overwriting a dictionary element) ");
+    fflush(stdout);
+#endif
+  }
 
   // Work with the last argument
   va_start(argPtr, valueType);
@@ -235,32 +255,61 @@ void writeObject(pdf *output, object *dumpTarget){
     
     // We are going to dump the named object (and only the named object) to 
     // disk
-    pdfprintf(output, "%d %d obj\n", dumpTarget->number, 
+    pdfprintf(output, "%d %d obj\n", 
+      dumpTarget->number,
       dumpTarget->generation);
 
-    writeDictionary(output, dumpTarget->dict);
+    writeDictionary(output, dumpTarget, dumpTarget->dict);
 
     // Do we have a textstream?
     if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
-      pdfprintf(output, "stream\nBT\n");
+      pdfprint(output, "stream\nBT\n");
+      
+      for(count = 0; count < dumpTarget->textstreamLength; count ++)
+	pdfputc(output, dumpTarget->textstream[count]);
 
-      // We know that textstreams never contain a \0, so we can use pdfprintf
-      pdfprintf(output, "%s\n", dumpTarget->textstream);
-      pdfprintf(output, "ET\nendstream\n");
+      pdfprint(output, "ET\nendstream\n");
     }
     
-    pdfprintf(output, "endobj\n");
+    pdfprint(output, "endobj\n");
   }
 }
 
-void writeDictionary(pdf *output, dictionary  *incoming){
+void writeDictionary(pdf *output, object *obj, dictionary *incoming){
   // Recursively write the dictionary out (including sub-dictionaries)
   objectArray  *currentObjectArray;
   dictionary   *dictNow;
   int          atBegining = gTrue;
+  child        *currentKid;
 
   // The start of the dictionary
-  pdfprintf(output, "<<\n");
+  pdfprint(output, "<<\n");
+
+  // If this is a pages object then we need to have a kids object created now
+  if(obj->isPages == gTrue){
+    pdfprint(output, "\t/Kids [");
+
+    // Do the dumping
+    currentKid = obj->children;
+
+    while(currentKid->next != NULL){
+      if(atBegining == gFalse) pdfprint(output, " ");
+      else atBegining = gFalse;
+
+      pdfprintf(output, "%d %d R", 
+	currentKid->me->number,
+	currentKid->me->generation);
+
+      // Next
+      currentKid = currentKid->next;
+    }
+
+    // End it all
+    pdfprint(output, "]\n");
+  }
+
+  // Restore atBegining
+  atBegining = gTrue;
 
   // Enumerate the dictionary elements
   dictNow = incoming;
@@ -285,7 +334,7 @@ void writeDictionary(pdf *output, dictionary  *incoming){
       currentObjectArray = dictNow->objectArrayValue;
       while(currentObjectArray->next != NULL){
         if(atBegining == gTrue) atBegining = gFalse;
-        else pdfprintf(output, " ");
+        else pdfprint(output, " ");
 
         pdfprintf(output, "%d %d R",
           currentObjectArray->number,
@@ -295,21 +344,21 @@ void writeDictionary(pdf *output, dictionary  *incoming){
       }
 
       // Finish the array
-      pdfprintf(output, "]\n");
+      pdfprint(output, "]\n");
       break;
 
     case gDictionaryValue:
       // These are handled recursively
       pdfprintf(output, "\t/%s ", dictNow->name);
 
-      writeDictionary(output, dictNow->dictValue);
+      writeDictionary(output, output->dummyObj, dictNow->dictValue);
       break;
     }
 
     dictNow = dictNow->next;
   }
 
-  pdfprintf(output, ">>\n");
+  pdfprint(output, ">>\n");
 }
 
 void addchild(object *parentObj, object *childObj){

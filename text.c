@@ -133,7 +133,7 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
 
     // Make space for the new name
     if((textobj->currentSetFont = malloc(
-      sizeof(char) * strlen(output->currentFont))) == NULL)
+      sizeof(char) * strlen(output->currentFont + 1))) == NULL)
         error("Could not copy the font to the new page.");
 
     // Store the name so we know what is happening
@@ -167,7 +167,7 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   ***************************************************************************/
 
   // Get the first token
-  if((strtokVictim = (char *) malloc(sizeof(char) * strlen(text))) == NULL)
+  if((strtokVictim = (char *) malloc(sizeof(char) * strlen(text) + 1)) == NULL)
     error("Could not make space for temporary copy of textbox text.");
   strcpy(strtokVictim, text);
 
@@ -180,34 +180,33 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     // If we haven't displayed that first part that would otherwise be missed
     // do so now
     if(displayedFirstPart == gFalse){
-      //textstreamprintf(textobj, "(%s) '\n", strtokVictim);
+      textstreamprintf(textobj, "(%s) '\n", strtokVictim);
       displayedFirstPart = gTrue;
     }
 
     switch(text[currentToken - strtokVictim - 1]){
     case '\n':
-      //textstreamprintf(textobj, "(%s) '\n", currentToken);
+      textstreamprintf(textobj, "(%s) '\n", currentToken);
       break;
 
     case 4:
-      //textstreamprintf(textobj, "%c Ts (%s) Tj\n",
-      //currentToken[0], currentToken + 1);
+      textstreamprintf(textobj, "%c Ts (%s) Tj\n",
+	currentToken[0], currentToken + 1);
       break;
 
     case 5:
-      //textstreamprintf(textobj, "-%c Ts (%s) Tj\n",
-      //currentToken[0], currentToken + 1);
+      textstreamprintf(textobj, "-%c Ts (%s) Tj\n",
+	currentToken[0], currentToken + 1);
       break;
 
     case 6:
-      //textstreamprintf(textobj, "0 Ts (%s) Tj\n", currentToken);
+      textstreamprintf(textobj, "0 Ts (%s) Tj\n", currentToken);
       break;
     }
 
     currentToken = strtok(NULL, delim);
   }
+
+  // Free temp data
+  free(strtokVictim);
 }
-
-
-
-

@@ -42,6 +42,14 @@ pdf *pdfopen(char *filename, char *mode){
     error("Could not create a pdf structure (out of memory?)");
   }
 
+  // Every PDF is going to have to have some xref information associated with
+  // it at some stage.
+  if((openedpdf->xrefList = (xref *) malloc(sizeof(xref))) == NULL)
+    error("Could not make a new xref list for this pdf document.");
+  openedpdf->xrefList->next = NULL;
+  openedpdf->xrefTail = openedpdf->xrefList;
+
+  // Do stuff based on the mode of the opening
   switch(mode[0]){
   case 'r':
   case 'a':
@@ -83,9 +91,10 @@ pdf *pdfopen(char *filename, char *mode){
 
     // We now need to setup some information in the pages object
     adddictitem(openedpdf->pages, "Type", gTextValue, "Pages");
+    openedpdf->pages->isPages = gTrue;
 
     // Make sure we have not started an XREF table
-    openedpdf->xrefTable = NULL;
+    //    openedpdf->xrefTable = NULL;
 
     // There is no font currently selected
     openedpdf->currentFont = NULL;
@@ -102,6 +111,9 @@ pdf *pdfopen(char *filename, char *mode){
     setwordspacing(openedpdf, 0.0);
     sethorizontalscaling(openedpdf, 1.0);
     setleading(openedpdf, 0.0);
+
+    // Create a dummy object for when we print the pdf to a file
+    openedpdf->dummyObj = newobject(openedpdf, gPlaceholder);
 
     // We did open the PDF file ok
     return openedpdf;
@@ -155,7 +167,8 @@ page *pdfpage(pdf *output, char *pageSize){
   addchild(output->pages, newPage->obj);
 
   // List it in the Kids field of the pages object
-  adddictitem(output->pages, "Kids", gObjArrayValue, newPage->obj);
+  // This is now done when the object is written out into the PDF at the end
+  // adddictitem(output->pages, "Kids", gObjArrayValue, newPage->obj);
 
   // Setup some basic things within the page object's dictionary
   adddictitem(newPage->obj, "Type", gTextValue, "Page");

@@ -20,3 +20,19 @@ Release 0.1 -> Release 0.2
 	and therefore improved the textstream writing code.
 
   * Improved the speed of the library with the manytextboxes time trial.
+
+  * Fixed the blank line before the ET at the end of text streams. This was a
+	bug introduced by development of 0.2 and should not have affected
+	any users.
+
+  * Fixed the segmentation faults that were occuring. These were because of a
+	malloc off by one bug, but my use of MALLOC_CHECK_ had obscured them
+	during testing...
+
+  * Improved the speed of the xref table creation, which should help the
+	manypages timetrial.
+
+  * Kids dictionary element of the Pages object is now handled as a special
+	case because appending to this array was too slow. This shaved 13
+	seconds off the manypages test run on my P II 300 laptop...
+

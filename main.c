@@ -19,6 +19,8 @@ int main(int argc, char *argv[]){
   int    lineDepth;
   char   tempString[1024];
 
+  printf("Welcome to the Panda 0.2 sample application...\n");
+
   // Initialise the library
   initpanda();
 
@@ -36,11 +38,11 @@ int main(int argc, char *argv[]){
     currPage = pdfpage(demo, gPageSizeA4);
 
     // Put some text onto it
-    //    setfontmode(demo, lineDepth);
-    //    setcharacterspacing(demo, (double) lineDepth);
-    //    setwordspacing(demo, (double) lineDepth * 10);
-    //    sethorizontalscaling(demo, (double) 1 - (lineDepth * 0.1));
-    //    setleading(demo, 16.0);
+    setfontmode(demo, lineDepth);
+    setcharacterspacing(demo, (double) lineDepth);
+    setwordspacing(demo, (double) lineDepth * 10);
+    sethorizontalscaling(demo, (double) 1 - (lineDepth * 0.1));
+    setleading(demo, 16.0);
 
     // I am not drawing a multiline string here because I am not sure how to 
     // represent this in the PDF at the moment
@@ -52,7 +54,7 @@ int main(int argc, char *argv[]){
     printf("Created textbox\n");
 #endif
 
-    //    textbox(demo, currPage, 300, 10, 400, 50, "A second textbox on the page");
+    textbox(demo, currPage, 300, 10, 400, 50, "A second textbox on the page");
 
 #if defined DEBUG
     printf("Created second textbox\n");
