@@ -28,7 +28,7 @@ COMPILER = gcc
 COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG) -Wall $(PROFILING) $(OPTO)
 
 # Main is excluded from here for the benefit of the tests and the library
-OBJFILES = error.o  font.o  images.o objects.o  panda.o  text.o  trailer.o  utility.o  xref.o
+OBJFILES = date.o error.o font.o images.o objects.o panda.o text.o trailer.o utility.o xref.o
 
 # Build panda (including the sample application)
 all:		$(OBJFILES) main.o
@@ -64,6 +64,9 @@ clean:
 		rm -i *~
 
 ###############################################################################
+
+date.o		date.c constants.h functions.h objects.h Makefile
+		$(COMPILER) $(COMPILER_FLAGS) date.c -o date.o
 
 error.o:	error.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) error.c -o error.o
