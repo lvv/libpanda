@@ -48,7 +48,7 @@ panda_createfont (panda_pdf * output, char *fontname, int type,
 {
   // Create a font object in the PDF
   panda_object *font;
-  char tempBuffer[10], *fontident;
+  char *tempBuffer, *fontident;
 
   // Make the new object
   font = (panda_object *) panda_newobject (output, panda_normal);
@@ -59,12 +59,11 @@ panda_createfont (panda_pdf * output, char *fontname, int type,
   // Setup some values within the font object
   panda_adddictitem (font->dict, "Type", panda_textvalue, "Font");
 
-  sprintf (tempBuffer, "Type%d", type);
+  tempBuffer = panda_xsnprintf("Type%d", type);
   panda_adddictitem (font->dict, "Subtype", panda_textvalue, tempBuffer);
 
   // Make a font identifier string for this font
-  fontident = panda_xmalloc (10 * sizeof (char));
-  sprintf (fontident, "F%08d", output->nextFontNumber);
+  fontident = panda_xsnprintf("F%08d", output->nextFontNumber);
   output->nextFontNumber++;
 
   panda_adddictitem (font->dict, "Name", panda_textvalue, fontident);
@@ -200,14 +199,14 @@ panda_getfontobj (panda_pdf * output, char *fontident)
   // sub-dictionaries here at the moment...
   panda_child *thisChild;
   panda_dictionary *thisDict;
-  char valueString[20];
+  char *valueString;
 
 #if defined DEBUG
   printf ("Looking in pdf for font object \"%s\"\n", fontident);
 #endif
 
   // The value string needs to have a / out the front
-  sprintf (valueString, "/%s", fontident);
+  valueString = panda_xsnprintf("/%s", fontident);
 
   // Start
   thisChild = output->fonts->children;

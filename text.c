@@ -50,7 +50,7 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left,
 {
   // Add a box with some text in it into the PDF page
   panda_object *textobj;
-  char *currentToken, *strtokVictim = NULL, delim[10];
+  char *currentToken, *strtokVictim = NULL, *delim;
   int internalTop, internalLeft, displayedFirstPart = panda_false;
   panda_object *subdict, *subsubdict, *fontObj;
 
@@ -238,7 +238,7 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left,
   strcpy (strtokVictim, text);
 
   // Build the delimiter string
-  sprintf (delim, "\n%c%c%c", 4, 5, 6);
+  delim = panda_xsnprintf("\n%c%c%c", 4, 5, 6);
 
   currentToken = strtok (strtokVictim, delim);
 

@@ -305,14 +305,14 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
   int stripCount, stripMax;
   tsize_t stripSize;
   unsigned long imageOffset;
-  char *tempstream, *stripBuffer, errMessage[1024];
+  char *tempstream, *stripBuffer, *errMessage;
   uint16 tiffResponse16, compression, fillorder;
   uint32 height, width;
 
   // Open the file and make sure that it exists and is a TIFF file
   if ((image = TIFFOpen (filename, "r")) == NULL)
     {
-      snprintf (errMessage, 1024,
+      errMessage = panda_xsnprintf(
 		"Could not open the specified TIFF image \"%s\".", filename);
       panda_error (errMessage);
     }

@@ -20,11 +20,6 @@ N * Further improve font handling so that font changes are minimised (change
 
   * Callback for error handling implementation.
 
-  * Make the \n -> \r\n conversion into a function call and make it faster...
-
-K * Handling of vsnprintf return number based on the different ways that
-	glibc behaves...
-
   * Be a bit more sensible in some of our error handling, for instance, if we
   	can't find a file to include in the PDF we shouldn't exit -- we should
 	report it to the calling function and let them deal with it...
@@ -109,3 +104,5 @@ L * New font ids are handed out too often -- what about font reuse?
   * If defined WINDOWS is not needed if the PDF is opened in binary mode - 
 	Juan Herrero <juan_herrero@yahoo.com> [binary mode now used, remove
 	unneeded #if defined WINDOWS's]
+
+  * snprintf() usage in printing functions in utility.c

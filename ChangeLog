@@ -162,3 +162,7 @@ Release 0.3 -> Release 0.4
   * Different compression levels for various objects can now be set by the
 	user. Note that the higher the level (the number) the more CPU used,
 	but hopefully the smaller the file...
+
+  * Colours and fills now work
+
+  * Safer handling of vsnprintf() et al

@@ -152,8 +152,7 @@ panda_pdf *
 panda_open_actual (char *filename, char *mode, int suppress)
 {
   panda_pdf *openedpdf;
-  char *tempPtr;
-  char newmode[3];
+  char *tempPtr, *newmode;
 
   // We are going to open a PDF for file I/O. Currently, the only supported
   // mode is 'w'. There are some more obscure modes not included in the error
@@ -187,7 +186,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  }
 
       // Opening the file with the binary option makes Windows work
-      snprintf(newmode, 3, "%cb", mode[0]);
+      newmode = panda_xsnprintf("%cb", mode[0]);
 
       // We _are_ going to create the file
       if(strcmp(filename, "-") == 0) openedpdf->file = stdout;

@@ -244,7 +244,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       // should be fine
       dictNow->textValue = (char *) panda_xmalloc (sizeof (char) * 20);
 
-      sprintf (dictNow->textValue, "%d %d R", objValue->number,
+      dictNow->textValue = panda_xsnprintf("%d %d R", objValue->number,
 	       objValue->generation);
       break;
 
@@ -637,7 +637,7 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
 			     0);
 	  dumpTarget->layoutstream = (char *) panda_xmalloc(sizeof(char) * 2);
-	  sprintf(dumpTarget->layoutstream, " ");
+	  dumpTarget->layoutstream = panda_xsnprintf(" ");
 	  dumpTarget->layoutstreamLength = 1;
 	}
 

@@ -360,34 +360,49 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-char *panda_xsnprint(char *format, ...)
+char *panda_xsnprintf(char *format, ...)
 {
   char *output = NULL;
   int  size, result;
   va_list ap;
+
+  printf("Started allocating a string\n");
 
   /* We start with the size of the format string as a guess */
   size = strlen(format);
   
   va_start(ap, format);
 
-  while(result != 0){
+  while(1){
+    printf("Inside while (result = %d, size = %d)\n", result, size);
     output = panda_xrealloc(output, size);
 
     /* Now do the vsnprint (the results can be different, based on the c
        library in use */
+    printf("Call vsnprintf\n");
     result = vsnprintf(output, size, format, ap);
+    printf("vsnprintf returns %s [%s] %d\n", format, output, result);
 
+    /* Check if we are done */
+    if(result < size) break;
+
+    printf("Start of if block\n");
     if(result == -1){
       /* Up to glibc 2.0.6 */
+      printf("Grow by 100\n");
       size += 100;
     }
-    else if(result > size){
+    else{
       /* Glibc from now on */
-      size = result;
+      printf("Grow to %d\n", result);
+      size = result + 1;
     }
+
+    printf("End of while loop\n");
   }
 
   va_end(ap);
+  printf("Created a string, eventual size is %d\n", size);
+  printf("Value was %s\n", output);
   return output;
 }

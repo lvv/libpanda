@@ -58,11 +58,6 @@ panda_makedate (int year, int month, int day, int hour, int minutes,
   gmtminutes = (gmtoffset->tm_gmtoff - gmthours * 60 * 60) / 60;
   if(gmthours < 0) zulu = '-';
 
-  // Make some space for the string we are going to return. We know this is
-  // always going to be 21 characters long (so we say 30 characters to be
-  // safe)
-  dateString = panda_xmalloc (sizeof (char) * 30);
-
   // Do some insurance things to make sure we do y2k dates ok
   if (year < 100)
     {
@@ -73,7 +68,7 @@ panda_makedate (int year, int month, int day, int hour, int minutes,
     }
 
   // Make the string
-  snprintf (dateString, 29, "D:%4d%02d%02d%02d%02d%02d%c%02d'%02d'",
+  dateString = panda_xsnprintf("D:%4d%02d%02d%02d%02d%02d%c%02d'%02d'",
 	    year, month, day, hour, minutes, seconds,
 	    zulu, gmthours, gmtminutes);
 
