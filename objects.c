@@ -517,7 +517,9 @@ panda_freedictionary (panda_dictionary * freeDict)
             panda_freedictionary (now->dictValue);
         }
       else{
+#ifdef DEBUG
 	printf("Found end of dictionary list\n");
+#endif
         endoftheline = panda_false;
       }
 
