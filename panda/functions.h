@@ -10,9 +10,24 @@
 ******************************************************************************/
 
 #define SUPPRESS(x)
+#define SUPPRESSEX(x, y)
 #define INTERNAL
 
 SUPPRESS (panda_object)
+SUPPRESS (double)
+SUPPRESS (panda_fontmetric)
+
+SUPPRESSEX (panda_init, cmd)
+SUPPRESSEX (panda_open_suppress, cmd)
+SUPPRESSEX (panda_imagesize, cmd)
+SUPPRESSEX (panda_imagesizePNG, cmd)
+SUPPRESSEX (panda_imagesizeJPEG, cmd)
+SUPPRESSEX (panda_imagesizeTIFF, cmd)
+
+// TODO mikal: These ones should be fixed...
+SUPPRESSEX (panda_createfont, cmd)
+SUPPRESSEX (panda_setfont, cmd)
+
 #if defined _WINDOWS
 #if defined _DEMO
 #include "../panda/objects.h"
@@ -165,11 +180,11 @@ SUPPRESS (panda_object)
 /******************************************************************************
   FontMetrics.c
 ******************************************************************************/
-       panda_fontmetric *panda_getfontmetric (panda_pdf *);
-       double panda_charwidth (panda_pdf *, char, panda_fontmetric *, int);
-       double panda_stringwidth (panda_pdf *, char *, panda_fontmetric *);
-       int panda_findlinebreak (panda_pdf *, char *, panda_fontmetric *, int,
-				double *);
+       INTERNAL panda_fontmetric *panda_getfontmetric (panda_pdf *);
+       INTERNAL double panda_charwidth (panda_pdf *, char, panda_fontmetric *, int);
+       INTERNAL double panda_stringwidth (panda_pdf *, char *, panda_fontmetric *);
+       INTERNAL int panda_findlinebreak (panda_pdf *, char *, panda_fontmetric *, int,
+					 double *);
 
 /******************************************************************************
   Memory.c

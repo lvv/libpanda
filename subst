@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+
+# $1 is the filename header to use if not using env variables
+
+use strict;
+my($temp);
+
+while(<STDIN>){
+  while(/(.*)%(.+)%(.*)/){
+#    print STDERR "Found: $2, replacing with $ENV{$2}\n";
+    if($ARGV[0] eq ""){
+      $_ = "$1" . $ENV{$2} . "$3\n";
+    }
+    else{
+      $temp=`cat $ARGV[0]-$2`;
+      chomp $temp;
+      chomp $temp;
+
+      $_ = "$1$temp$3\n";
+      }
+    }
+
+  print "$_";
+  }

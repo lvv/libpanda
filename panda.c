@@ -506,7 +506,9 @@ panda_close (panda_pdf * openedpdf)
 #endif
     }
 
-  panda_xfree (pagevictim);
+  // TODO mikal: this caused a segmentation fault with documents with no
+  // pages -- investigate...
+  // panda_xfree (pagevictim);
 
   // Clean up the last one
   panda_xfree (pagelist);

@@ -2,266 +2,399 @@
 // available from http://www.stillhq.com -- edit this file at your
 // own risk
 
+// panda_object suppressed
+// double suppressed
+// panda_fontmetric suppressed
+class Cpanda;
 class Cpanda_page;
 class Cpanda_pdf;
-class Cpanda;
+
+class Cpanda
+{
+public:
+
+  void imagesize (int * a0, int * a1, char * a2, int a3) { panda_imagesize( a0, a1, a2, a3); }
+};
+
+  void imagesizeTIFF (int * a0, int * a1, char * a2) { panda_imagesizeTIFF( a0, a1, a2); }
+};
+
+  void imagesizeJPEG (int * a0, int * a1, char * a2) { panda_imagesizeJPEG( a0, a1, a2); }
+};
+
+  void imagesizePNG (int * a0, int * a1, char * a2) { panda_imagesizePNG( a0, a1, a2); }
+};
+
+  void init () { panda_init(); }
+};
+
+  Cpanda_pdf open (char * a0, char * a1) { return Cpanda_pdf(panda_open( a0, a1)); }
+};
+
+  Cpanda_pdf open_suppress (char * a0, char * a1) { return Cpanda_pdf(panda_open_suppress( a0, a1)); }
+};
 
 class Cpanda_page
 {
 public:
-  Cpanda_page (panda_page * passed_ptr,
-	       panda_pdf * passed_panda_pdf):m_panda_pdf (passed_panda_pdf)
-  {
-    m_ptr = passed_ptr;
-  }
-   ~Cpanda_page ()
-  {
-    panda_xfree (m_ptr);
-  }
+  Cpanda_page(panda_page *passed_ptr, panda_pdf* passed_panda_pdf) :
+    m_panda_pdf(passed_panda_pdf)
+    { m_ptr = passed_ptr; }
+  ~Cpanda_page() { panda_xfree(m_ptr); }
 
-  void setlinestart (int a0, int a1)
-  {
-    panda_setlinestart (m_ptr, a0, a1);
-  }
-  void addlinesegment (int a0, int a1)
-  {
-    panda_addlinesegment (m_ptr, a0, a1);
-  }
-  void addcubiccurvesegment (int a0, int a1, int a2, int a3, int a4, int a5)
-  {
-    panda_addcubiccurvesegment (m_ptr, a0, a1, a2, a3, a4, a5);
-  }
-  void addquadraticcurvesegmentone (int a0, int a1, int a2, int a3)
-  {
-    panda_addquadraticcurvesegmentone (m_ptr, a0, a1, a2, a3);
-  }
-  void addquadraticcurvesegmenttwo (int a0, int a1, int a2, int a3)
-  {
-    panda_addquadraticcurvesegmenttwo (m_ptr, a0, a1, a2, a3);
-  }
-  void closeline ()
-  {
-    panda_closeline (m_ptr);
-  }
-  void rectangle (int a0, int a1, int a2, int a3)
-  {
-    panda_rectangle (m_ptr, a0, a1, a2, a3);
-  }
-  void endline ()
-  {
-    panda_endline (m_ptr);
-  }
-  void strokeline ()
-  {
-    panda_strokeline (m_ptr);
-  }
-  void fillline ()
-  {
-    panda_fillline (m_ptr);
-  }
-  void setlinewidth (int a0)
-  {
-    panda_setlinewidth (m_ptr, a0);
-  }
-  void setlinecap (int a0)
-  {
-    panda_setlinecap (m_ptr, a0);
-  }
-  void setlinejoin (int a0)
-  {
-    panda_setlinejoin (m_ptr, a0);
-  }
-  void setlinedash (int a0, int a1, int a2)
-  {
-    panda_setlinedash (m_ptr, a0, a1, a2);
-  }
-  void setfillcolor (int a0, int a1, int a2)
-  {
-    panda_setfillcolor (m_ptr, a0, a1, a2);
-  }
-  void setlinecolor (int a0, int a1, int a2)
-  {
-    panda_setlinecolor (m_ptr, a0, a1, a2);
-  }
-  void imagebox (int a0, int a1, int a2, int a3, char *a4, int a5)
-  {
-    panda_imagebox (m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5);
-  }
-  void imageboxrot (int a0, int a1, int a2, int a3, double a4, char *a5,
-		    int a6)
-  {
-    panda_imageboxrot (m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5, a6);
-  }
-  void textbox (int a0, int a1, int a2, int a3, char *a4)
-  {
-    panda_textbox (m_panda_pdf, m_ptr, a0, a1, a2, a3, a4);
-  }
-  void textboxrot (int a0, int a1, int a2, int a3, double a4, char *a5)
-  {
-    panda_textboxrot (m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5);
-  }
-  void pageduration (int a0)
-  {
-    panda_pageduration (m_panda_pdf, m_ptr, a0);
-  }
-  void transduration (double a0)
-  {
-    panda_transduration (m_panda_pdf, m_ptr, a0);
-  }
-  void transstyle (int a0)
-  {
-    panda_transstyle (m_panda_pdf, m_ptr, a0);
-  }
+
+  void textannotation (int a0, char * a1, char * a2, int a3, int a4, int a5, int a6, double a7, double a8, double a9, int a10, int a11) { panda_textannotation(m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11); }
 
 private:
-  panda_page * m_ptr;
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void freetextannotation (char * a0, char * a1, int a2, int a3, int a4, int a5, double a6, double a7, double a8, int a9) { panda_freetextannotation(m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void lineannotation (char * a0, char * a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9, double a10, double a11, double a12, int a13) { panda_lineannotation(m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11, a12, a13); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  panda_object *insertannotation (char * a0, int a1, int a2, int a3, int a4, double a5, double a6, double a7, int a8) { return panda_insertannotation(m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5, a6, a7, a8); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void setlinestart (int a0, int a1) { panda_setlinestart(m_ptr, a0, a1); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void addlinesegment (int a0, int a1) { panda_addlinesegment(m_ptr, a0, a1); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void addcubiccurvesegment (int a0, int a1, int a2, int a3, int a4, int a5) { panda_addcubiccurvesegment(m_ptr, a0, a1, a2, a3, a4, a5); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void addquadraticcurvesegmentone (int a0, int a1, int a2, int a3) { panda_addquadraticcurvesegmentone(m_ptr, a0, a1, a2, a3); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void addquadraticcurvesegmenttwo (int a0, int a1, int a2, int a3) { panda_addquadraticcurvesegmenttwo(m_ptr, a0, a1, a2, a3); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void closeline () { panda_closeline(m_ptr); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void rectangle (int a0, int a1, int a2, int a3) { panda_rectangle(m_ptr, a0, a1, a2, a3); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void endline () { panda_endline(m_ptr); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void strokeline () { panda_strokeline(m_ptr); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void fillline () { panda_fillline(m_ptr); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void setlinewidth (int a0) { panda_setlinewidth(m_ptr, a0); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void setlinecap (int a0) { panda_setlinecap(m_ptr, a0); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void setlinejoin (int a0) { panda_setlinejoin(m_ptr, a0); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void setlinedash (int a0, int a1, int a2) { panda_setlinedash(m_ptr, a0, a1, a2); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void setfillcolor (int a0, int a1, int a2) { panda_setfillcolor(m_ptr, a0, a1, a2); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void setlinecolor (int a0, int a1, int a2) { panda_setlinecolor(m_ptr, a0, a1, a2); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void imagebox (int a0, int a1, int a2, int a3, char * a4, int a5) { panda_imagebox(m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void imageboxrot (int a0, int a1, int a2, int a3, double a4, char * a5, int a6) { panda_imageboxrot(m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5, a6); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void textbox (int a0, int a1, int a2, int a3, char * a4) { panda_textbox(m_panda_pdf, m_ptr, a0, a1, a2, a3, a4); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void textboxrot (int a0, int a1, int a2, int a3, double a4, char * a5) { panda_textboxrot(m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void textboxrotalign (int a0, int a1, int a2, int a3, double a4, int a5, int a6, char * a7) { panda_textboxrotalign(m_panda_pdf, m_ptr, a0, a1, a2, a3, a4, a5, a6, a7); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void pageduration (int a0) { panda_pageduration(m_panda_pdf, m_ptr, a0); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void transduration (double a0) { panda_transduration(m_panda_pdf, m_ptr, a0); }
+
+private:
+  panda_page *m_ptr;
+  panda_pdf *m_panda_pdf;
+};
+
+  void transstyle (int a0) { panda_transstyle(m_panda_pdf, m_ptr, a0); }
+
+private:
+  panda_page *m_ptr;
   panda_pdf *m_panda_pdf;
 };
 
 class Cpanda_pdf
 {
 public:
-  Cpanda_pdf (panda_pdf * passed_ptr)
-  {
-    m_ptr = passed_ptr;
-  }
-   ~Cpanda_pdf ()
-  {
-    panda_xfree (m_ptr);
-  }
+  Cpanda_pdf(panda_pdf *passed_ptr)
+    { m_ptr = passed_ptr; }
+  ~Cpanda_pdf() { panda_xfree(m_ptr); }
 
-  void setauthor (char *a0)
-  {
-    panda_setauthor (m_ptr, a0);
-  }
-  void setcreator (char *a0)
-  {
-    panda_setcreator (m_ptr, a0);
-  }
-  void settitle (char *a0)
-  {
-    panda_settitle (m_ptr, a0);
-  }
-  void setsubject (char *a0)
-  {
-    panda_setsubject (m_ptr, a0);
-  }
-  void setkeywords (char *a0)
-  {
-    panda_setkeywords (m_ptr, a0);
-  }
-  char *createfont (char *a0, int a1, char *a2)
-  {
-    return panda_createfont (m_ptr, a0, a1, a2);
-  }
-  void setfont (char *a0)
-  {
-    panda_setfont (m_ptr, a0);
-  }
-  void setfontsize (int a0)
-  {
-    panda_setfontsize (m_ptr, a0);
-  }
-  void setfontmode (int a0)
-  {
-    panda_setfontmode (m_ptr, a0);
-  }
-  void setcharacterspacing (double a0)
-  {
-    panda_setcharacterspacing (m_ptr, a0);
-  }
-  void setwordspacing (double a0)
-  {
-    panda_setwordspacing (m_ptr, a0);
-  }
-  void sethorizontalscaling (double a0)
-  {
-    panda_sethorizontalscaling (m_ptr, a0);
-  }
-  void setleading (double a0)
-  {
-    panda_setleading (m_ptr, a0);
-  }
-  void close ()
-  {
-    panda_close (m_ptr);
-  }
-  Cpanda_page newpage (char *a0)
-  {
-    return Cpanda_page (panda_newpage (m_ptr, a0), m_ptr);
-  }
-  Cpanda_page newtemplate (char *a0)
-  {
-    return Cpanda_page (panda_newtemplate (m_ptr, a0), m_ptr);
-  }
-  void hidetoolbar (int a0)
-  {
-    panda_hidetoolbar (m_ptr, a0);
-  }
-  void hidemenubar (int a0)
-  {
-    panda_hidemenubar (m_ptr, a0);
-  }
-  void hidewindowui (int a0)
-  {
-    panda_hidewindowui (m_ptr, a0);
-  }
-  void fitwindow (int a0)
-  {
-    panda_fitwindow (m_ptr, a0);
-  }
-  void centerwindow (int a0)
-  {
-    panda_centerwindow (m_ptr, a0);
-  }
-  void nfspagemode (int a0)
-  {
-    panda_nfspagemode (m_ptr, a0);
-  }
-  void fullscreen (int a0)
-  {
-    panda_fullscreen (m_ptr, a0);
-  }
-  void textdirection (int a0)
-  {
-    panda_textdirection (m_ptr, a0);
-  }
+
+  void setauthor (char * a0) { panda_setauthor(m_ptr, a0); }
 
 private:
-  panda_pdf * m_ptr;
+  panda_pdf *m_ptr;
 };
 
-class Cpanda
-{
-public:
-  void imagesize (int *a0, int *a1, char *a2, int a3)
-  {
-    panda_imagesize (a0, a1, a2, a3);
-  }
-  void imagesizeTIFF (int *a0, int *a1, char *a2)
-  {
-    panda_imagesizeTIFF (a0, a1, a2);
-  }
-  void imagesizeJPEG (int *a0, int *a1, char *a2)
-  {
-    panda_imagesizeJPEG (a0, a1, a2);
-  }
-  void imagesizePNG (int *a0, int *a1, char *a2)
-  {
-    panda_imagesizePNG (a0, a1, a2);
-  }
-  void init ()
-  {
-    panda_init ();
-  }
-  Cpanda_pdf open (char *a0, char *a1)
-  {
-    return Cpanda_pdf (panda_open (a0, a1));
-  }
-  Cpanda_pdf open_suppress (char *a0, char *a1)
-  {
-    return Cpanda_pdf (panda_open_suppress (a0, a1));
-  }
+  void setcreator (char * a0) { panda_setcreator(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void settitle (char * a0) { panda_settitle(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void setsubject (char * a0) { panda_setsubject(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void setkeywords (char * a0) { panda_setkeywords(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  char *createfont (char * a0, int a1, char * a2) { return panda_createfont(m_ptr, a0, a1, a2); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void setfont (char * a0) { panda_setfont(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void setfontsize (int a0) { panda_setfontsize(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void setfontmode (int a0) { panda_setfontmode(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void setcharacterspacing (double a0) { panda_setcharacterspacing(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void setwordspacing (double a0) { panda_setwordspacing(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void sethorizontalscaling (double a0) { panda_sethorizontalscaling(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void setleading (double a0) { panda_setleading(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  Cpanda_fontmetric getfontmetric () { return Cpanda_fontmetric(panda_getfontmetric(m_ptr), m_ptr); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void close () { panda_close(m_ptr); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  Cpanda_page newpage (char * a0) { return Cpanda_page(panda_newpage(m_ptr, a0), m_ptr); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  Cpanda_page newtemplate (char * a0) { return Cpanda_page(panda_newtemplate(m_ptr, a0), m_ptr); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void hidetoolbar (int a0) { panda_hidetoolbar(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void hidemenubar (int a0) { panda_hidemenubar(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void hidewindowui (int a0) { panda_hidewindowui(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void fitwindow (int a0) { panda_fitwindow(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void centerwindow (int a0) { panda_centerwindow(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void nfspagemode (int a0) { panda_nfspagemode(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void fullscreen (int a0) { panda_fullscreen(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
+};
+
+  void textdirection (int a0) { panda_textdirection(m_ptr, a0); }
+
+private:
+  panda_pdf *m_ptr;
 };
 
 
