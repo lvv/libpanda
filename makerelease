@@ -1,148 +1,93 @@
 #!/bin/bash
 
-set -x
+read -p "Release version (e.g. 0.5.4)? " relver
+read -p "Put packages in? " reldir
 
-# This script makes the world nice-looking for the world.
-cvs up
-cvs commit
+cd ..
+rm -rf panda-$relver && cp -R panda panda-$relver
+cd panda-$relver
 
-# Name of the release?
-echo -n "Release name (e.g) panda-0.4.1: "
-read relname
-
-echo -n "Tag this release (y/n)? "
-read tag
-
-if [ $tag = "y" ]
+if [ "$reldir" == "" ]
 then
-  echo -n "CVS tag name (e.g) panda-release-041: "
-  read tagname
-  cvs tag -b $tagname
+  reldir=~/PKGS/panda
 fi
 
-# Get a clean copy of the source
-rm -rf temp
-mkdir temp
-cd temp
-export CVSROOT="/home/httpd/html/cvs"
-cvs co panda
-cd panda
-
-# Clean out the old documentation
-echo "------------------------------------------------------------------------"
-echo "Updating documentation"
-rm man/*sgml man/*man
-
-# Generate the new documentation
-for item in `ls *.c`
+# Clean everything up. This should be a fresh checkout.
+make clean
+(cd examples && make clean)
+rmlist="*core* *~ #*# Makefile Makefile.in *.o *.lo *.obj config.cache config.log config.status logfile math config.h *.pdf .deps panda.ncb panda.opt autom4te.cache CVS panda.db"
+for i in $rmlist
 do
-  ~mikal/opensource/autodocbook/autodocbook $item man
+  find -name $i | xargs rm -rf
 done
+rm -rf timetrials testdata
 
-mv *.3 man/
-cvs up
-cvs commit
+mkdir -p $reldir
 
-# Autotools
-echo "------------------------------------------------------------------------"
-echo "Running the autotools"
-libtoolize --force
+# Windows
+echo "Creating Win32 package."
+(cd .. && zip -r -9 $reldir/panda-windows-$relver.zip panda-$relver)
+
+# Everyone else
+echo "Creating standard release."
 aclocal
-automake --add-missing
+libtoolize --force
+autoheader
 autoconf
-./configure
-make clean
-make
+automake --add-missing --copy
+rm -rf activex Debug examples/Visual*
+(cd .. && tar cvjf $reldir/panda-$relver.tar.bz2 panda-$relver)
 
-# Make sure that the release passes some simple dmalloc tests
-echo "------------------------------------------------------------------------"
-echo "Checking for memory leaks"
-
-#dmalloc -b -l log -i 100 low
-#cd examples
-#./pandademo > /dev/null
-#
-#if [ `grep "not freed" log | wc -l | tr -d " "` -gt 0 ]
-#then
-#  echo ""
-#  echo ""
-#  echo "Prospective release failed the memory leak test"
-#  exit 42
-#fi
-#cd ..
-
-# Get rid of core files
-echo "------------------------------------------------------------------------"
-echo "Clean up"
-
-make clean
-
-for item in `find . | grep core`
-do
-  rm -i $item
-done
-
-# Get rid of compiled files that make clean wont remove
-find . -name "*obj" -type f -exec rm -i {} \; -print
-
-# Get rid of the timetrials -- they are too big
-rm -rf timetrials
-rm -rf testdata
-
-delname="Makefile config.cache config.log config.status logfile math config.h output.pdf .deps panda.ncb panda.opt autom4te.cache"
-
-# Get rid of makefiles
-for filename in $delname
-do
-  for item in `find . -name $filename -print`
-  do
-    rm -rf $item
-  done
-done
-
-# How much space do we use?
-echo "------------------------------------------------------------------------"
-echo "Release takes" `du -sk` "kbytes"
-
-# Now we can start packaging the various versions
-cd ..
-
-relnamenoexamples=`echo $relname | sed 's/-/-noexamples-/'`
-relnamewindows=`echo $relname | sed 's/-/-windows-/'`
-
-mkdir $relname
-mkdir $relnamenoexamples
-mkdir $relnamewindows
-
-# Windows is simply everything
-cp -R panda/* $relnamewindows/
-
-# Now we do the full unix release
-cp -R panda/* $relname
-cd $relname
-rm -rf activex
-rm -rf Debug
-cd examples
-rm -rf Visual*
-cd ../..
-
-# Now the no examples
-cp -R $relname/* $relnamenoexamples/
-cd $relnamenoexamples
+# No examples
+echo "Creating no example release."
 rm -rf examples
+mv Makefile.am Makefile.am.ex && sed "s/SUBDIRS = . panda examples/SUBDIRS = . panda/" Makefile.am.ex > Makefile.am
+mv configure.in configure.in.ex && sed "s/AC_OUTPUT(examples\/Makefile /AC_OUTPUT(/" configure.in.ex > configure.in
+autoconf
+automake --add-missing --copy
+(cd .. && tar cvjf $reldir/panda-noexamples-$relver.tar.bz2 panda-$relver)
+
+# RPM
+./configure --prefix=/usr
+sudo cp $reldir/panda-$relver.tar.bz2 /usr/src/RPM/SOURCES/panda-$relver.tar.bz2
+sudo rpmbuild -ba panda.spec
+cp /usr/src/RPM/RPMS/i586/panda-$relver-1.i586.rpm /usr/src/RPM/RPMS/i586/panda-devel-$relver-1.i586.rpm $reldir
+cp /usr/src/RPM/SRPMS/panda-$relver-1.src.rpm $reldir/panda-$relver-1.src.rpm
+
+# Documentation
+for i in *.c
+do
+  autodocbook $i
+done
+cd man
+cat docbook/manual-start.sgml > manual.sgml
+for item in *.sgml
+do
+  if [ "$item" != "manual.sgml" ]
+  then
+    echo "<chapter><title>$item</title>" >> manual.sgml
+    grep -v DOCTYPE $item >> manual.sgml
+    echo "</chapter>" >> manual.sgml
+  fi
+done
+cat docbook/manual-end.sgml >> manual.sgml
+jw -o panda-docs-$relver -b html manual.sgml
+cd panda-docs-$relver
+for i in *.html
+do
+  tidy -m -c -i -asxhtml -q $i
+done
+cd ..
+tar -cvjf $reldir/panda-docs-$relver.tar.bz2 panda-docs-$relver
 cd ..
 
-# Compress them all
-tar czf `echo $relname | sed 's/-/_/g' | sed 's/\./_/g'`.tgz $relname
-tar czf `echo $relnamenoexamples | sed 's/-/_/g' | sed 's/\./_/g'`.tgz $relnamenoexamples
-tar czf `echo $relnamewindows | sed 's/-/_/g' | sed 's/\./_/g'`.tgz $relnamewindows
-
-# Sign them all
-gpg --detach-sign --armour --output `echo $relname | sed 's/-/_/g' | sed 's/\./_/g'`.sig `echo $relname | sed 's/-/_/g' | sed 's/\./_/g'`.tgz
-gpg --detach-sign --armour --output `echo $relnamenoexamples | sed 's/-/_/g' | sed 's/\./_/g'`.sig `echo $relnamenoexamples | sed 's/-/_/g' | sed 's/\./_/g'`.tgz
-gpg --detach-sign --armour --output `echo $relnamewindows | sed 's/-/_/g' | sed 's/\./_/g'`.sig `echo $relnamewindows | sed 's/-/_/g' | sed 's/\./_/g'`.tgz
-
-# Now deal with the RPMS
-
+# Signatures
+gpg -a --detach-sign $reldir/panda-windows-$relver.zip
+gpg -a --detach-sign $reldir/panda-$relver.tar.bz2
+gpg -a --detach-sign $reldir/panda-noexamples-$relver.tar.bz2
+gpg -a --detach-sign $reldir/panda-docs-$relver.tar.bz2
+gpg -a --detach-sign $reldir/panda-$relver-1.src.rpm
+gpg -a --detach-sign $reldir/panda-$relver-1.i586.rpm
+gpg -a --detach-sign $reldir/panda-devel-$relver-1.i586.rpm
 
 echo "Remember to email editor@planetpdf.com"
