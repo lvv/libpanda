@@ -50,3 +50,6 @@ Release 0.4 -> Release 0.5
 
 2003-04-25 Michael Still mikal@stillhq.com
 	Fixed a bug in panda_streamprintf which meant that complex graphical streams caused a segmentation fault.
+
+2003-05-28 Evan Nemerson evan@coeus-group.com
+	Fix a bug causing an endless loop in textboxes.
