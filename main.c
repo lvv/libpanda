@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
     imagebox(demo, currPage, 10, 10, 20, 20, "input.tif", gImageTiff);
 
 #if defined DEBUG
-    printf("Created textbox\n");
+    printf("Created textbox and inserted first image\n");
 #endif
 
     textbox(demo, currPage, 300, 10, 400, 50, "A second textbox on the page");

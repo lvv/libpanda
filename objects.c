@@ -89,7 +89,7 @@ object *newobject(pdf *doc, int type){
   return created;
 }
 
-void adddictitem(object *input, char *name, int valueType, ...){
+void adddictitem(dictionary *input, char *name, int valueType, ...){
   // Add an item to the dictionary in the object
   dictionary  *dictNow;
   va_list     argPtr;
@@ -99,12 +99,12 @@ void adddictitem(object *input, char *name, int valueType, ...){
   dictionary  *dictValue;
 
 #if defined DEBUG
-  printf("Added dictionary item %s to object %d", name, input->number);
+  printf("Added dictionary item %s to object\n", name);
   fflush(stdout);
 #endif
 
   // Find the end of the dictionary or something with this name already
-  dictNow = input->dict;
+  dictNow = input;
   while((dictNow->next != NULL) && (strcmp(dictNow->name, name) != 0)){
     dictNow = dictNow->next;
     }
@@ -139,8 +139,14 @@ void adddictitem(object *input, char *name, int valueType, ...){
     // Record the type
     dictNow->valueType = valueType;
   }
-  else if(valueType != gObjArrayValue)
+  else switch(valueType){
+  case gObjArrayValue:
+  case gDictionaryValue:
+    break;
+
+  default:
     error("Overwriting non array objects not yet supported.");
+  }
 
   switch(valueType){
   case gTextValue:
@@ -187,7 +193,8 @@ void adddictitem(object *input, char *name, int valueType, ...){
     if(dictNow->objectArrayValue == NULL){
       if((dictNow->objectArrayValue =
         (objectArray *) malloc(sizeof(objectArray))) == NULL)
-        error("Could not create the object array root for the new dictionary.");
+        error(
+          "Could not create the object array root for the new dictionary.");
       dictNow->objectArrayValue->next = NULL;
       }
 
@@ -211,17 +218,56 @@ void adddictitem(object *input, char *name, int valueType, ...){
     // This is a sub-dictionary
     dictValue = va_arg(argPtr, dictionary *);
 
-    // And now do the adding
-    dictNow->dictValue = dictValue;
+    if(dictNow->next->next == NULL){
+      // This is a new dictionary item, just copy the info across
+      dictNow->dictValue = dictValue;
+    }
+    else{
+      // We are appending to a subdictionary item -- we need to go through all
+      // of the subdictionary items we just got handed and add them to the
+      // subdictionary that is already here
+      while(dictValue->next != NULL){
+#if defined DEBUG
+	printf("Adding a subdictionary element named %s\n", dictNow->name);
+#endif
+
+	switch(dictNow->valueType){
+	case gTextValue:
+	case gBracketedTextValue:
+	case gLiteralTextValue:
+	case gObjValue:
+	  adddictitem(dictNow->dictValue, dictValue->name,
+	    dictValue->valueType, dictValue->textValue);
+	  break;
+
+	case gDictionaryValue:
+	  adddictitem(dictNow->dictValue, dictValue->name,
+	    dictValue->valueType, dictValue->dictValue);
+	  break;
+
+	case gIntValue:
+	  adddictitem(dictNow->dictValue, dictValue->name,
+	    dictValue->valueType, dictValue->intValue);
+	  break;
+
+	case gObjArrayValue:
+	  adddictitem(dictNow->dictValue, dictValue->name,
+	    dictValue->valueType, dictValue->objectArrayValue);
+	  break;
+	}
+
+	dictValue = dictValue->next;
+      }
+
+      // Clean up the duplicated memory
+      
+
+    }
     break;
   }
 
   // Stop dealing with arguments
   va_end(argPtr);
-
-#if defined DEBUG
-  printf(" -> %d\n", input->number);
-#endif
 }
 
 void *getdictvalue(dictionary *dictValue){
@@ -270,19 +316,19 @@ void writeObject(pdf *output, object *dumpTarget){
 
     if(dumpTarget->textstreamLength > 0){
       // Do we also have an xobjectstream?
-      adddictitem(dumpTarget, "Length", gIntValue, 
+      adddictitem(dumpTarget->dict, "Length", gIntValue, 
         dumpTarget->textstreamLength + 6 + dumpTarget->xobjectstream);
     }
 
     // We cannot have a textstream and a binary stream in the same object
     else if(dumpTarget->binarystreamLength > 0){
-      adddictitem(dumpTarget, "Length", gIntValue,
+      adddictitem(dumpTarget->dict, "Length", gIntValue,
 	dumpTarget->binarystreamLength);
     }
 
     // We might also only have an xobjectstream here
     if(dumpTarget->xobjectstreamLength > 0){
-      adddictitem(dumpTarget, "Length", gIntValue, 
+      adddictitem(dumpTarget->dict, "Length", gIntValue, 
 	dumpTarget->xobjectstreamLength);
     }
     
@@ -338,6 +384,10 @@ void writeDictionary(pdf *output, object *obj, dictionary *incoming){
   int          atBegining = gTrue;
   child        *currentKid;
 
+#if defined DEBUG
+  printf("Starting to write a dictionary\n");
+#endif
+
   // The start of the dictionary
   pdfprint(output, "<<\n");
 
@@ -350,6 +400,11 @@ void writeDictionary(pdf *output, object *obj, dictionary *incoming){
     case gObjValue:
     case gLiteralTextValue:
     case gBracketedTextValue:
+#if defined DEBUG
+      printf("Writing a text value named %s into the dictionary\n",
+	dictNow->name);
+#endif
+
       pdfprintf(output, "\t/%s %s\n", dictNow->name, dictNow->textValue);
 
       // If the type is type, then possibly output the Kids line for the pages
@@ -378,10 +433,20 @@ void writeDictionary(pdf *output, object *obj, dictionary *incoming){
       break;
 
     case gIntValue:
+#if defined DEBUG
+      printf("Writing a int value with name %s into the dictionary\n",
+	dictNow->name);
+#endif
+
       pdfprintf(output, "\t/%s %d\n", dictNow->name, dictNow->intValue);
       break;
 
     case gObjArrayValue:
+#if defined DEBUG
+      printf("Writing an object array value with name %s into dictionary\n",
+	dictNow->name);
+#endif
+
       // Start the array in the file
       atBegining = gTrue;
 
@@ -406,10 +471,21 @@ void writeDictionary(pdf *output, object *obj, dictionary *incoming){
 
     case gDictionaryValue:
       // These are handled recursively
+      if(dictNow->dictValue == NULL)
+	error("Subdictionary value erroneously NULL.");
+
+#if defined DEBUG
+      printf("Output the subdictionary starting with the name %s\n",
+	dictNow->dictValue->name);
+#endif
+
       pdfprintf(output, "\t/%s ", dictNow->name);
 
       writeDictionary(output, output->dummyObj, dictNow->dictValue);
       break;
+
+    default:
+      error("Unknown dictionary type");
     }
 
     dictNow = dictNow->next;

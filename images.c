@@ -16,12 +16,21 @@
 // A redistribution point for image insertions based on type of image
 void imagebox(pdf *output, page *target, int top, int left, int bottom, 
   int right, char *filename, int type){
+
+#if defined DEBUG
+  printf("Started inserting an image.\n");
+#endif
+
   // We simply call the right function for that image type
   switch(type){
   case gImageTiff:
     insertTiff(output, target, top, left, bottom, right, filename);
     break;
   }
+
+#if defined DEBUG
+  printf("Finished inserting an image.\n");
+#endif
 }
 
 // This function will insert a TIFF image into a PDF
@@ -40,6 +49,11 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   if((image = TIFFOpen(filename, "r")) == NULL)
     error("Could not open the specified TIFF image.");
 
+#if defined DEBUG
+  printf("Inserting a TIFF image on page with object number %d.\n",
+    target->obj->number);
+#endif
+
   // Now we need an object to contain the tiff
   imageObj = newobject(output, gNormal);
   addchild(target->obj, imageObj);
@@ -50,8 +64,8 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   // We make an object not just a dictionary because this is what
   // adddictitem needs
   xobjrefsubdict = newobject(output, gPlaceholder);
-  adddictitem(xobjrefsubdict, filename, gObjValue, imageObj);
-  adddictitem(target->obj, "XObject", gDictionaryValue, xobjrefsubdict->dict);
+  adddictitem(xobjrefsubdict->dict, filename, gObjValue, imageObj);
+  adddictitem(target->obj->dict, "XObject", gDictionaryValue, xobjrefsubdict->dict);
 
   // We put some information based on a stat of the image file into the object
   // This will allow us to determine if this file's image is included in the
@@ -63,29 +77,29 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
 
   // We now add some dictionary elements to the image object to say that it is
   // a TIFF image
-  adddictitem(imageObj, "Type", gTextValue, "XObject");
-  adddictitem(imageObj, "Subtype", gTextValue, "Image");
+  adddictitem(imageObj->dict, "Type", gTextValue, "XObject");
+  adddictitem(imageObj->dict, "Subtype", gTextValue, "Image");
   
   // This line will need to be changed to gaurantee that the internal name is
   // unique unless the actual image is the same
-  adddictitem(imageObj, "Name", gTextValue, filename);
+  adddictitem(imageObj->dict, "Name", gTextValue, filename);
 
-  adddictitem(imageObj, "Filter", gTextValue, "CCITTFaxDecode");
+  adddictitem(imageObj->dict, "Filter", gTextValue, "CCITTFaxDecode");
   
   // Bits per component is per colour component, not per sample. Does this
   // matter?
   if(TIFFGetField(image, TIFFTAG_BITSPERSAMPLE, &tiffResponse16) != 0)
-    adddictitem(imageObj, "BitsPerComponent", gIntValue, tiffResponse16);
+    adddictitem(imageObj->dict, "BitsPerComponent", gIntValue, tiffResponse16);
   else error("Could not get the colour depth for the tiff image.");
 
   // The colour device will change based on this number as well
   switch(tiffResponse16){
   case 1:
-    adddictitem(imageObj, "ColorSpace", gTextValue, "DeviceGray");
+    adddictitem(imageObj->dict, "ColorSpace", gTextValue, "DeviceGray");
     break;
 
   default:
-    adddictitem(imageObj, "ColorSpace", gTextValue, "DeviceRGB");
+    adddictitem(imageObj->dict, "ColorSpace", gTextValue, "DeviceRGB");
     break;
   }
 
@@ -100,24 +114,24 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
 
   // There are several parameters that we need to set for the compression to be
   // able to do its thing
-  adddictitem(subdict, "K", gIntValue, -1);
+  adddictitem(subdict->dict, "K", gIntValue, -1);
 
   // Width of the image
   if(TIFFGetField(image, TIFFTAG_IMAGEWIDTH, &tiffResponse32) != 0){
-    adddictitem(subdict, "Columns", gIntValue, tiffResponse32);
-    adddictitem(imageObj, "Width", gIntValue, tiffResponse32);
+    adddictitem(subdict->dict, "Columns", gIntValue, tiffResponse32);
+    adddictitem(imageObj->dict, "Width", gIntValue, tiffResponse32);
   }
   else error("Could not get the width of the TIFF image.");
 
   // Height of the image
   if(TIFFGetField(image, TIFFTAG_IMAGELENGTH, &tiffResponse32) != 0){
-    adddictitem(subdict, "Rows", gIntValue, tiffResponse32);
-    adddictitem(imageObj, "Height", gIntValue, tiffResponse32);
+    adddictitem(subdict->dict, "Rows", gIntValue, tiffResponse32);
+    adddictitem(imageObj->dict, "Height", gIntValue, tiffResponse32);
   }
   else error("Could not get the height of the TIFF image.");
 
   // And put this into the PDF
-  adddictitem(imageObj, "Resources", gDictionaryValue, subdict->dict);
+  adddictitem(imageObj->dict, "Resources", gDictionaryValue, subdict->dict);
 
   /****************************************************************************
      Insert the image

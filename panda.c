@@ -80,18 +80,19 @@ pdf *pdfopen(char *filename, char *mode){
 
     // We need a catalog object with some elements within it's dictionary
     openedpdf->catalog = newobject(openedpdf, gNormal);
-    adddictitem(openedpdf->catalog, "Type", gTextValue, "Catalog");
+    adddictitem(openedpdf->catalog->dict, "Type", gTextValue, "Catalog");
 
     // We need a reference to our pages object
     addchild(openedpdf->catalog, 
       openedpdf->pages = newobject(openedpdf, gNormal));
-    adddictitem(openedpdf->catalog, "Pages", gObjValue, openedpdf->pages);
+    adddictitem(openedpdf->catalog->dict, "Pages", gObjValue,
+      openedpdf->pages);
 
     // We need to remember how many pages there are for later
     openedpdf->pageCount = 0;
 
     // We now need to setup some information in the pages object
-    adddictitem(openedpdf->pages, "Type", gTextValue, "Pages");
+    adddictitem(openedpdf->pages->dict, "Type", gTextValue, "Pages");
     openedpdf->pages->isPages = gTrue;
 
     // Make sure we have not started an XREF table
@@ -123,8 +124,9 @@ pdf *pdfopen(char *filename, char *mode){
       error("Failed to make an info object for the PDF. Not sure why...");
 
     // Add some stuff
-    adddictitem(openedpdf->info, "Producer", gBracketedTextValue, "Panda 0.2");
-    adddictitem(openedpdf->info, "CreationDate", gBracketedTextValue,
+    adddictitem(openedpdf->info->dict, "Producer", gBracketedTextValue, 
+      "Panda 0.2");
+    adddictitem(openedpdf->info->dict, "CreationDate", gBracketedTextValue,
       tempPtr = nowdate());
     free(tempPtr);
  
@@ -145,7 +147,8 @@ pdf *pdfopen(char *filename, char *mode){
 void pdfclose(pdf *openedpdf){
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
-  adddictitem(openedpdf->pages, "Count", gIntValue, openedpdf->pageCount);
+  adddictitem(openedpdf->pages->dict, "Count", gIntValue, 
+    openedpdf->pageCount);
   
   // We need to write out the objects into the PDF file and then close the
   // file -- any object which heads an object tree, or lives outside the tree
@@ -181,18 +184,18 @@ page *pdfpage(pdf *output, char *pageSize){
 
   // List it in the Kids field of the pages object
   // This is now done when the object is written out into the PDF at the end
-  // adddictitem(output->pages, "Kids", gObjArrayValue, newPage->obj);
+  // adddictitem(output->pages->dict, "Kids", gObjArrayValue, newPage->obj);
 
   // Setup some basic things within the page object's dictionary
-  adddictitem(newPage->obj, "Type", gTextValue, "Page");
-  adddictitem(newPage->obj, "MediaBox", gLiteralTextValue, pageSize);
-  adddictitem(newPage->obj, "Parent", gObjValue, output->pages);
+  adddictitem(newPage->obj->dict, "Type", gTextValue, "Page");
+  adddictitem(newPage->obj->dict, "MediaBox", gLiteralTextValue, pageSize);
+  adddictitem(newPage->obj->dict, "Parent", gObjValue, output->pages);
 
   // We also need to do the same sort of thing for the contents object
   // that each page owns
   newPage->contents = newobject(output, gNormal);
   addchild(newPage->obj, newPage->contents);
-  adddictitem(newPage->obj, "Contents", gObjValue, newPage->contents);
+  adddictitem(newPage->obj->dict, "Contents", gObjValue, newPage->contents);
 
   // Copy the pageSize string somewhere safe, and then clobber the copy.
   // We can't clober the original because it is a constant anyway and it would

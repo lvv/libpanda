@@ -78,7 +78,7 @@ page  *pdfpage(pdf *, char *);
 ******************************************************************************/
 
 object  *newobject(pdf *, int);
-void    adddictitem(object *, char *, int, ...);
+void    adddictitem(dictionary *, char *, int, ...);
 void    *getdictvalue(dictionary *);
 void    writeObject(pdf *, object *);
 void    writeDictionary(pdf *, object *, dictionary *);

@@ -27,7 +27,7 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   // Make an object to store the text
   //  textobj = newobject(output, gNormal);
   //  addchild(thisPage->obj, textobj);
-  //  adddictitem(thisPage->obj, "Contents", gObjValue, textobj);
+  //  adddictitem(thisPage->obj->dict, "Contents", gObjValue, textobj);
   textobj = thisPage->contents;
 
   // Is there a font setup? Does this work with changing the font?
@@ -59,13 +59,14 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     // We make an object not just a dictionary because this is what
     // adddictitem needs
     subsubdict = newobject(output, gPlaceholder);
-    adddictitem(subsubdict, output->currentFont, gObjValue, fontObj);
+    adddictitem(subsubdict->dict, output->currentFont, gObjValue, fontObj);
   
     subdict = newobject(output, gPlaceholder);
-    adddictitem(subdict, "Font", gDictionaryValue, subsubdict->dict);
+    adddictitem(subdict->dict, "Font", gDictionaryValue, subsubdict->dict);
 
     // And put this into the PDF
-    adddictitem(thisPage->obj, "Resources", gDictionaryValue, subdict->dict);
+    adddictitem(thisPage->obj->dict, "Resources", gDictionaryValue, 
+      subdict->dict);
   }
 
   // Is there a text size setup?

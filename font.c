@@ -23,19 +23,19 @@ char *createfont(pdf *output, char *fontname, int type, char *encoding){
   addchild(output->fonts, font);
 
   // Setup some values within the font object
-  adddictitem(font, "Type", gTextValue, "Font");
+  adddictitem(font->dict, "Type", gTextValue, "Font");
 
   sprintf(tempBuffer, "Type%d", type);
-  adddictitem(font, "Subtype", gTextValue, tempBuffer);
+  adddictitem(font->dict, "Subtype", gTextValue, tempBuffer);
 
   // Make a font identifier string for this font
   if((fontident = (char *) malloc(10 * sizeof(char))) == NULL)
     error("Could not make space for a new font identifier.");
   sprintf(fontident, "F%08d", output->nextFontNumber);
-  adddictitem(font, "Name", gTextValue, fontident);
+  adddictitem(font->dict, "Name", gTextValue, fontident);
 
-  adddictitem(font, "BaseFont", gTextValue, fontname);
-  adddictitem(font, "Encoding", gTextValue, encoding);
+  adddictitem(font->dict, "BaseFont", gTextValue, fontname);
+  adddictitem(font->dict, "Encoding", gTextValue, encoding);
 
   return fontident;
 }
