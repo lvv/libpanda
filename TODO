@@ -59,3 +59,6 @@
 	wrong in a fit of confusion.
 
   * Memory leaks caused by createfont in main()
+
+  * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
+	so that the compilation works properly.
