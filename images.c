@@ -100,6 +100,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
       fprintf(stderr, "%s %s\n",
 	      "TIFF support not compiled into Panda because libtiff was not",
 	      "found at compile time.");
+      adddictitem(imageObj->dict, "TIFF_Support_Missing", gIntValue, 1);
 #endif
       break;
 
@@ -111,6 +112,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
       fprintf(stderr, "%s %s\n",
 	      "JPEG support not compiled into Panda because libjpeg was not",
 	      "found at compile time.");
+      adddictitem(imageObj->dict, "JPEG_Support_Missing", gIntValue, 1);
 #endif
       break;
 
@@ -122,6 +124,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
       fprintf(stderr, "%s %s\n",
 	      "PNG support not compiled into Panda because libpng was not",
 	      "found at compile time.");
+      adddictitem(imageObj->dict, "PNG_Support_Missing", gIntValue, 1);
 #endif
       break;
     }
