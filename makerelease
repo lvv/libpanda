@@ -22,7 +22,7 @@ cd temp
 export CVSROOT="/home/cvs"
 cvs co panda
 cd panda
-exit
+
 # Clean out the old documentation
 echo "------------------------------------------------------------------------"
 echo "Updating documentation"
