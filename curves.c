@@ -14,18 +14,39 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
- /*****************************************************************************
- ** DOCBOOK COMMON: #include <panda/functions.h>
- ** DOCBOOK COMMON: #include <panda/constants.h>
- *****************************************************************************/
+/******************************************************************************
+DOCBOOK START
 
- /*****************************************************************************
- ** DOCBOOK setlinestart: The function setlinestart set the starting position
- ** DOCBOOK setlinestart: of the line that is about to be drawn. It is required
- ** DOCBOOK setlinestart: in order for a line to be drawn. This, however, does
- ** DOCBOOK setlinestart: not mean this call is required for the drawing of
- ** DOCBOOK setlinestart: shapes such as rectangles.
- *****************************************************************************/
+FUNCTION panda_setlinestart
+PURPOSE sets the starting point of a curve
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_setlinestart (panda_page * target, int x, int y);
+SYNOPSIS END
+
+DESCRIPTION Set the starting point for the sequence of curves and lines that it to be drawn on the current page. This call is compulsory for almost all of the line drawing functions. It is not required for the xxx call.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+...
+panda_pdf *document;
+panda_page *page;
+...
+panda_init();
+...
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+...
+void panda_setlinestart (page, 100, 200);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
 // Set the start point of a line on the page
 void
 panda_setlinestart (panda_page * target, int x, int y)

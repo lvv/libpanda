@@ -19,7 +19,7 @@ int
 main (int argc, char *argv[])
 {
   panda_pdf *demo;
-  panda_page *currPage;
+  panda_page *currPage, *templatePage;
   int lineDepth;
   char tempString[1024], *tempPtr;
 
@@ -341,6 +341,15 @@ main (int argc, char *argv[])
   panda_strokeline (currPage);
   panda_endline (currPage);
 
+  ///////////////////////////////////////////////////////////////////////////
+  // We can also setup template pages to make life a little easier (and the
+  // document a little smaller)
+  ///////////////////////////////////////////////////////////////////////////
+
+  //templatePage = panda_newpage(demo, panda_pagesize_template_a4);
+  currPage = panda_newpage(demo, panda_pagesize_a4);
+  panda_setlinestart (currPage, 100, 800);
+  
 
   panda_close (demo);
 

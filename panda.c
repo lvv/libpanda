@@ -344,9 +344,6 @@ panda_newpage (panda_pdf * output, char *pageSize)
 
   free (pageSizeCopy);
 
-  // Increment the page count for the PDF
-  output->pageCount++;
-
   return newPage;
 }
 

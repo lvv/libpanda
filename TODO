@@ -95,3 +95,7 @@ K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
 	it work!
 
   * Memory leaks
+
+  * Empty pages (including template pages) cayses the demo application to
+	crash with a Seg Fault. What is different between a newly initialised
+	page and one later on?

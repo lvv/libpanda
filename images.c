@@ -221,10 +221,6 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
 	  target->obj->number);
 #endif
 
-  // This dictionary item is TIFF specific
-  panda_adddictitem (imageObj->dict, "Filter", panda_textvalue,
-		     "CCITTFaxDecode");
-
   // Bits per component is per colour component, not per sample. Does this
   // matter?
   if (TIFFGetField (image, TIFFTAG_BITSPERSAMPLE, &tiffResponse16) != 0)
@@ -233,7 +229,10 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
   else
     panda_error ("Could not get the colour depth for the tiff image.");
 
-  // The colour device will change based on this number as well
+  // The colour device will change based on the number of samples per pixel
+  if(TIFFGetField (image, TIFFTAG_SAMPLESPERPIXEL, &tiffResponse16) == 0)
+    panda_error("Could not get number of samples per pixel for a tiff image.");
+
   switch (tiffResponse16)
     {
     case 1:
@@ -261,11 +260,19 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
   switch (compression)
     {
     case COMPRESSION_CCITTFAX3:
+      panda_adddictitem (imageObj->dict, "Filter", panda_textvalue,
+			 "CCITTFaxDecode");
       panda_adddictitem (subdict->dict, "K", panda_integervalue, 0);
       break;
 
     case COMPRESSION_CCITTFAX4:
+      panda_adddictitem (imageObj->dict, "Filter", panda_textvalue,
+			 "CCITTFaxDecode");
       panda_adddictitem (subdict->dict, "K", panda_integervalue, -1);
+      break;
+
+    case COMPRESSION_NONE:
+      // We put nothing here because it is not compressed
       break;
 
     case COMPRESSION_LZW:
@@ -354,7 +361,6 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       // We also need to copy some of the attributes of the tiff image
       // Bits per sample has to be 1 because this is going to be a G4/G3 image
       // (and all other image formats were stripped out above).
-      // I need to check all of these sometime with many images...
       TIFFSetField (conv, TIFFTAG_IMAGEWIDTH, width);
       TIFFSetField (conv, TIFFTAG_IMAGELENGTH, height);
       TIFFSetField (conv, TIFFTAG_BITSPERSAMPLE, 1);

@@ -73,5 +73,8 @@ panda_createandinsertpage (panda_pdf * output){
   newPage->contents->textmode = panda_false;
   newPage->contents->insidegraphicsblock = panda_false;
 
+  // Increment the page count for the PDF
+  output->pageCount++;
+
   return newPage;
 }

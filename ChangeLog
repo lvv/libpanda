@@ -82,4 +82,7 @@ Release 0.3 -> Release 0.4
 	definitely different, but it would appear that acrobat is converting
 	the image into a TIFF stream before insertion, possibly because of this
 	sort of problem.
-	
+
+  * Uncompressed TIFF images may now be inserted into PDF documents.
+
+  * Grayscale TIFF images now can be embedded as well...
