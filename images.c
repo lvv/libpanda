@@ -662,7 +662,7 @@ SYNOPSIS START
 void panda_insertPNG (panda_pdf * output, panda_page * target, panda_object * imageObj, char *filename);
 SYNOPSIS END
 
-DESCRIPTION <command>PANDA INTERNAL</command>. Do the actual insertion of the PNG image into the PDF document. This routine handles the conversion of the PNG image into the form supported by the PDF specification, and similar operations. It is an internal <command>Panda</command> call and should not be needed by users of the API. NOT YET IMPLEMENTED.
+DESCRIPTION <command>PANDA INTERNAL</command>. Do the actual insertion of the PNG image into the PDF document. This routine handles the conversion of the PNG image into the form supported by the PDF specification, and similar operations. It is an internal <command>Panda</command> call and should not be needed by users of the API.
 
 RETURNS Nothing
 
@@ -761,8 +761,8 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 
   if(colourtype == PNG_COLOR_TYPE_PALETTE)
     png_set_expand(png);
-  if(colourtype & PNG_COLOR_MASK_ALPHA)
-    png_set_strip_alpha(png);
+  //  if(colourtype & PNG_COLOR_MASK_ALPHA)
+  png_set_strip_alpha(png);
   png_read_update_info(png, info);
 
   rowbytes = png_get_rowbytes(png, info);

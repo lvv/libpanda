@@ -100,3 +100,6 @@ K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
   * Make sure the date code is portable...
 
   * Need to handle the absense of headers when libraries are not installed.
+
+  * PNG images have their alpha channel ignored, with the background colour not
+	being used.
