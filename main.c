@@ -49,7 +49,10 @@ int main(int argc, char *argv[]){
     sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.", 4, 6, 5);
     textbox(demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30, 
       tempString);
+
+    // Insert some images
     imagebox(demo, currPage, 10, 10, 20, 20, "input.tif", gImageTiff);
+    imagebox(demo, currPage, 200, 200, 250, 250, "doll.jpg", gImageJpeg);
 
 #if defined DEBUG
     printf("Created textbox and inserted first image\n");
@@ -61,6 +64,8 @@ int main(int argc, char *argv[]){
     printf("Created second textbox\n");
 #endif
 
+    setfont(demo,
+      createfont(demo, "Times-Roman", 1, "MacRomanEncoding"));
     textbox(demo, currPage, 600, 10, 700, 300, 
       "The background image on this page is Copyright 2000 Andrew Cagney");
     textbox(demo, currPage, 620, 10, 720, 300,

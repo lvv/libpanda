@@ -24,13 +24,14 @@ OPTO =
 #OPTO = -O3
 
 # The libraries that are required
-LIBS = -lm -ltiff
-
-# The locations of libraries
+LIBS = -lm -ltiff -lgd
 LIBLOCS = -L/usr/lib -L/usr/local/lib
 
+# The includes can be found in a few places
+INCLOCS = -I/usr/include -I/usr/local/include
+
 COMPILER = gcc
-COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG) -D$(DMALLOC) -Wall $(PROFILING) $(OPTO)
+COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG) -D$(DMALLOC) -Wall $(PROFILING) $(OPTO) $(INCLOCS)
 
 # Main is excluded from here for the benefit of the tests and the library
 OBJFILES = date.o error.o font.o images.o info.o objects.o panda.o text.o trailer.o utility.o xref.o
@@ -67,6 +68,13 @@ clean:
 		rm -i libpanda.a
 		rm -i configure
 		rm -rf mctemp
+
+# Remove all the caching stuff from the configure script so we can run it again
+distclean:
+		rm -i config.cache
+		rm -i config.status
+		rm -i config.log
+		rm -i Makefile
 
 ###############################################################################
 

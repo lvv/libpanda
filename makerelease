@@ -11,6 +11,9 @@ do
   rm -i $item
 done
 
+# Get rid of the timetrials -- they are too big
+rm -rf timetrials
+
 delname="Makefile config.cache config.log config.status logfile math"
 
 # Get rid of makefiles
@@ -24,6 +27,10 @@ done
 
 # Generate the configure script
 autoconf
+
+# How much space do we use?
+du -sk
+
 
 
 

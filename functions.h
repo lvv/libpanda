@@ -42,7 +42,8 @@ void  error(char *);
 ******************************************************************************/
 
 void  imagebox(pdf *, page *, int, int, int, int, char *, int);
-void  insertTiff(pdf *, page *, int, int, int, int, char *);
+void  inserttiff(pdf *, page *, object *, char *);
+void  insertjpeg(pdf *, page *, object *, char *);
 
 /******************************************************************************
   Info.c
@@ -97,12 +98,6 @@ void       traverseObjects(pdf *, object *, int, traverseFunct);
 ******************************************************************************/
 
 void  textbox(pdf *, page *, int, int, int, int, char *);
-
-/******************************************************************************
-  Tiff.c
-******************************************************************************/
-
-void  insertTiff(pdf *, page *, int, int, int, int, char *);
 
 /******************************************************************************
   Trailer.c

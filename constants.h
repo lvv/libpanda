@@ -67,5 +67,6 @@ enum{
 
 // The image types supported
 enum{
-  gImageTiff = 0
+  gImageTiff = 0,
+  gImageJpeg
   };

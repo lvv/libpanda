@@ -12,55 +12,23 @@
 #include "constants.h"
 #include "functions.h"
 #include <tiffio.h>
+#include <jpeglib.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
 // A redistribution point for image insertions based on type of image
 void imagebox(pdf *output, page *target, int top, int left,
   int bottom, int right, char *filename, int type){
+  object        *imageObj, *xobjrefsubdict, *xobjrefsubsubdict;
 
 #if defined DEBUG
   printf("Started inserting an image.\n");
 #endif
 
-  // We simply call the right function for that image type
-  switch(type){
-  case gImageTiff:
-    insertTiff(output, target, top, left, bottom, right, filename);
-    break;
-  }
-
-#if defined DEBUG
-  printf("Finished inserting an image.\n");
-#endif
-}
-
-// This function will insert a TIFF image into a PDF
-void insertTiff(pdf *output, page *target, int top, int left, 
-  int bottom, int right, char *filename){
-  TIFF          *image;
-  object        *imageObj, *subdict, *xobjrefsubdict, *xobjrefsubsubdict;
-  int           stripCount;
-  tsize_t       stripSize;
-  unsigned long imageOffset;
-  char          *tempstream;
-  uint16        tiffResponse16;
-  uint32        tiffResponse32;
-
-  // Open the file and make sure that it exists and is a TIFF file
-  if((image = TIFFOpen(filename, "r")) == NULL)
-    error("Could not open the specified TIFF image.");
-
-#if defined DEBUG
-  printf("Inserting a TIFF image on page with object number %d.\n",
-    target->obj->number);
-#endif
-
   // Now we need an object to contain the tiff
   imageObj = newobject(output, gNormal);
   addchild(target->obj, imageObj);
-
-  // We do not use the xobject stream here because the image is not inline (it
-  // is external to the stream that the page is described in)
-
+  
   // We make an object not just a dictionary because this is what
   // adddictitem needs
   xobjrefsubsubdict = newobject(output, gPlaceholder);
@@ -90,6 +58,85 @@ void insertTiff(pdf *output, page *target, int top, int left,
   // This line will need to be changed to gaurantee that the internal name is
   // unique unless the actual image is the same
   adddictitem(imageObj->dict, "Name", gTextValue, filename);
+
+  // --------------------------------------------------------------------------
+  // Now we do the things that are image format specific...
+  switch(type){
+  case gImageTiff:
+    inserttiff(output, target, imageObj, filename);
+    break;
+
+  case gImageJpeg:
+    insertjpeg(output, target, imageObj, filename);
+    break;
+  }
+  // --------------------------------------------------------------------------
+  
+  // We also need to add some information to the text stream for the contents
+  // object for the page that the image is being displayed on. This information
+  // consists of the following:
+  //  - save the current graphics state (q operator, p 386 of spec)
+  //  - setup the current transformation matrix (ctm, s 3.2 and p 323 of spec)
+  //    such that the image is scaled correctly (cm operator)
+  //  - modify the ctm to shift the image to where it is meant to be on the
+  //    the page
+  //  - use the image xobject we have created (Do operator, p 348 of spec)
+  //  - restore the graphics state to the way it was previously (Q operator,
+  //    p 386 of spec)
+  target->contents->xobjectstream = 
+    streamprintf(target->contents->xobjectstream, 
+    "\nq\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
+    
+    // The first matrix
+    1.0, // xscale
+    0.0, // rot and scale?
+    0.0, // ???
+    1.0, // yscale
+    right - left, // x size
+    bottom - top); // y size
+
+  target->contents->xobjectstream =
+    streamprintf(target->contents->xobjectstream,
+    "%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
+
+    // The second matrix
+    (double) target->width - left, // x left offset
+    0.0, // ???
+    0.0, // ???
+    (double) target->height - top, // y bottom offset
+    0.0, // ???
+    0.0); // ???
+
+  target->contents->xobjectstream = 
+    streamprintf(target->contents->xobjectstream,
+    "/%s Do\nQ\n\n", filename);
+  
+#if defined DEBUG
+  printf("Finished inserting an image.\n");
+#endif
+}
+
+// This function will insert a TIFF image into a PDF
+void inserttiff(pdf *output, page *target, object *imageObj, char *filename){
+  TIFF          *image;
+  object        *subdict;
+  int           stripCount;
+  tsize_t       stripSize;
+  unsigned long imageOffset;
+  char          *tempstream;
+  uint16        tiffResponse16;
+  uint32        tiffResponse32;
+
+  // Open the file and make sure that it exists and is a TIFF file
+  if((image = TIFFOpen(filename, "r")) == NULL)
+    error("Could not open the specified TIFF image.");
+
+#if defined DEBUG
+  printf("Inserting a TIFF image on page with object number %d.\n",
+    target->obj->number);
+#endif
+
+  // This dictionary item is TIFF specific
   adddictitem(imageObj->dict, "Filter", gTextValue, "CCITTFaxDecode");
   
   // Bits per component is per colour component, not per sample. Does this
@@ -163,45 +210,79 @@ void insertTiff(pdf *output, page *target, int top, int left,
 
   // The image offset is the total size of the binary stream as well
   imageObj->binarystreamLength = imageOffset;
-
-  // We also need to add some information to the text stream for the contents
-  // object for the page that the image is being displayed on. This information
-  // consists of the following:
-  //  - save the current graphics state (q operator, p 386 of spec)
-  //  - setup the current transformation matrix (ctm, s 3.2 and p 323 of spec)
-  //    such that the image is scaled correctly (cm operator)
-  //  - modify the ctm to shift the image to where it is meant to be on the
-  //    the page
-  //  - use the image xobject we have created (Do operator, p 348 of spec)
-  //  - restore the graphics state to the way it was previously (Q operator,
-  //    p 386 of spec)
-  target->contents->xobjectstream = 
-    streamprintf(target->contents->xobjectstream, 
-    "\nq\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
-    
-    // The first matrix
-    1.0, // xscale
-    0.0, // rot and scale?
-    0.0, // ???
-    1.0, // yscale
-    right - left, // x size
-    bottom - top); // y size
-
-  target->contents->xobjectstream =
-    streamprintf(target->contents->xobjectstream,
-    "%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
-
-    // The second matrix
-    (double) target->width - left, // x left offset
-    0.0, // ???
-    0.0, // ???
-    (double) target->height - top, // y bottom offset
-    0.0, // ???
-    0.0); // ???
-
-  target->contents->xobjectstream = 
-    streamprintf(target->contents->xobjectstream,
-    "/%s Do\nQ\n\n", filename);
 }
+
+// This function will insert a JPEG image into a PDF
+void insertjpeg(pdf *output, page *target, object *imageObj, char *filename){
+  struct jpeg_decompress_struct   cinfo;
+  struct jpeg_error_mgr           jerr;
+  struct stat                     buf;
+  FILE                            *image;
+
+#if defined DEBUG
+  printf("Inserting a JPEG image on page with object number %d.\n",
+    target->obj->number);
+#endif
+
+  // Open the file
+  if((image = fopen(filename, "rb")) == NULL)
+    error("Could not open the specified JPEG file.");
+    
+  // Setup the decompression options
+  cinfo.err = jpeg_std_error(&jerr);
+  jpeg_stdio_src(&cinfo, image);
+
+  // Start decompressing
+  jpeg_create_decompress(&cinfo);
+  jpeg_stdio_src(&cinfo, image);
+  jpeg_read_header(&cinfo, TRUE);
+
+  // This dictionary item is JPEG specific
+  adddictitem(imageObj->dict, "Filter", gTextValue, "DCTDecode");
+  
+  // Bits per component is per colour component, not per sample. Does this
+  // matter?
+  adddictitem(imageObj->dict, "BitsPerComponent", gIntValue, tiffResponse16);
+
+  // The colour device will change based on this number as well
+  switch(tiffResponse16){
+  case 1:
+    adddictitem(imageObj->dict, "ColorSpace", gTextValue, "DeviceGray");
+    break;
+
+  default:
+    adddictitem(imageObj->dict, "ColorSpace", gTextValue, "DeviceRGB");
+    break;
+  }
+
+  /****************************************************************************
+     Some details of the image
+  ****************************************************************************/
+
+  adddictitem(imageObj->dict, "Width", gIntValue, tiffResponse32);
+  adddictitem(imageObj->dict, "Height", gIntValue, tiffResponse32);
+
+  /****************************************************************************
+     Determine the filesize
+  ****************************************************************************/
+
+  if(stat(filename, &buf) != 0)
+    error("Could not stat the JPEG file.");
+  
+  /****************************************************************************
+     Insert the image
+  ****************************************************************************/
+
+  if((imageObj->binarystream = (char *)
+      malloc(buf.st_blocks * buf.st_blksize)) == NULL)
+    error("Insufficient memory for JPEG image insertion.");
+
+  imageObj->binarystreamLength = imageOffset;
+
+  // This cleans things up for us in the JPEG library
+  jpeg_destroy_decompress(&cinfo);
+}
+
+
 
 
