@@ -166,3 +166,9 @@ Release 0.3 -> Release 0.4
   * Colours and fills now work
 
   * Safer handling of vsnprintf() et al
+
+  * Started the Windows port. This has included:
+    - Fixing some function definitions
+	- Wrappering the #includes for Panda headers
+	- Adding Windows GMT handling code
+	- Changing the Creator string to identify this version
