@@ -51,7 +51,12 @@ createfont (pdf * output, char *fontname, int type, char *encoding)
 void
 setfont (pdf * output, char *fontident)
 {
-  output->currentFont = fontident;
+  // Free on a NULL should do nothing (check for other platforms)
+  free(output->currentFont);
+
+  if((output->currentFont = malloc(strlen(fontident) + 1)) == NULL)
+    error("Could not allocate enough memory to change font, and old font clobbered");
+  strcpy(output->currentFont, fontident);
 }
 
 // Set the current font size

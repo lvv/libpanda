@@ -62,3 +62,6 @@
 
   * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
 	so that the compilation works properly.
+
+  * At the moment if we can't change font we stop the whole schmozzle - should
+	we just report an error and keep going in the old font?
