@@ -34,7 +34,7 @@ void pdfprintf(pdf *file, char *format, ...){
   // the format string, and then add them here if we were not compiled on 
   // windows
 #if defined WINDOWS
-  if((formatString = malloc(strlen(format) * sizeof(char))) == NULL)
+  if((formatString = malloc((strlen(format) + 1) * sizeof(char))) == NULL)
     error("Could not make temporary printing space.");
 
   strcpy(formatString, format);
@@ -47,7 +47,7 @@ void pdfprintf(pdf *file, char *format, ...){
     if(format[counter] == '\n') newlineCount++;
 
   if((formatString = 
-    malloc((strlen(format) + newlineCount) * sizeof(char))) == NULL)
+    malloc((strlen(format) + newlineCount + 1) * sizeof(char))) == NULL)
     error("Could not make temporary printing space.");
 
   for(counter = indent = 0; counter < strlen(format); counter++){
@@ -81,7 +81,7 @@ void pdfprintf(pdf *file, char *format, ...){
       error("Really bad file i/o error.");
     }
   }
-
+  
   // Record how long it was
   file->byteOffset += strlen(buffer);
 
