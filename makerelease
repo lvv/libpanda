@@ -89,7 +89,7 @@ find . -name "*obj" -type f -exec rm -i {} \; -print
 rm -rf timetrials
 rm -rf testdata
 
-delname="Makefile config.cache config.log config.status logfile math config.h output.pdf .deps panda.ncb panda.opt"
+delname="Makefile config.cache config.log config.status logfile math config.h output.pdf .deps panda.ncb panda.opt autom4te.cache"
 
 # Get rid of makefiles
 for filename in $delname
