@@ -1,0 +1,4578 @@
+<!-- $Id: panda.xml,v 1.1 2004/04/24 08:26:15 tadpole Exp $ -->
+<?xml version='1.0' encoding='iso-8859-1'?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "docbook/xml-dtd-4.1.2/docbookx.dtd">
+<book><!-- Parts of this are from the FANN documentation. -->
+  <bookinfo id="bookinfo">
+    <title>Panda</title>
+    <authorgroup id="authors">
+      <author>
+        <firstname>Michael</firstname>
+        <surname>Still</surname>
+      </author>
+      <author>
+        <firstname>Evan</firstname>
+        <surname>Nemerson</surname>
+      </author>
+    </authorgroup>
+    <copyright>
+      <year>2004</year>
+    </copyright>
+  </bookinfo>
+  <chapter id="intro">
+    <title id="intro.title">Introduction</title>
+    <para>
+      Panda is a PDF creation API written in C. It is dual licensed under the GNU GPL or LGPL. Panda
+      is written almost entirely by Michael Still, but is now maintained by Evan Nemerson.
+    </para>
+    <section id="intro.getting">
+      <title id="intro.getting.title">Getting Panda</title>
+      <para>
+        Panda can be downloaded from several locations. The preferred location is from
+	<ulink url="http://savannah.nongnu.org/projects/panda">Savannah</ulink>, but it is also
+	available from <ulink url="http://www.sourceforge.net/projects/panda">SourceForge</ulink> and
+	<ulink url="http://www.stillhq.com/cgi-bin/getpage?area=panda&amp;page=index.htm">stillhq.com</ulink>.
+      </para>
+    </section>
+    <section id="intro.install">
+      <title>Installation</title>
+      <section id="intro.install.rpm">
+        <title>RPMs</title>
+        <para>
+	  RPMs are a simple way to manage packages, and is used on many common Linux distributions such as 
+          <ulink url="http://www.redhat.com">Red Hat</ulink>, <ulink url="http://www.mandrake.com/">Mandrake</ulink>,
+	  and <ulink url="http://www.suse.com/">SuSE</ulink>.
+	</para>
+	<para>
+	  Two seperate packages exist; fann, the runtime library, and fann-devel, the development library and
+	  header files.
+	</para>
+        <para>
+	  After downloading Panda, simply run (as root) the following command: <command>rpm -ivh $PATH_TO_RPM</command>
+	</para>
+      </section>
+      <section id="intro.install.win32">
+        <title>Windows</title>
+	<para>
+	  Panda includes a Microsoft Visual C++ 6.0 project file, which can be used to compile Panda for Windows.
+	  To build the library and examples with MSVC++ 6.0:
+	</para>
+      </section>
+      <section id="intro.install.src">
+        <title id="intro.install.src.title">Compiling from source</title>
+        <para>
+	  Compiling Panda from source code entails the standard GNU autotools technique. First, configure the package as
+	  you want it by typing (in the Panda directory), <command>./configure</command> If you need help choosing the
+	  options you would like to use, try <command>./configure --help</command>
+	</para>
+        <para>
+	  Next, you have to actually compile the library. To do this, simply type <command>make</command>
+	</para>
+	<para>
+	  Finally, to install the library, type <command>make install</command>. Odds are you will have to
+	  be root to install, so you may need to <command>su</command> to root before installing. Please
+	  remember to log out of the root account immediately after <command>make install</command> finishes.
+	</para>
+      </section>
+    </section>
+    <section id="intro.start">
+      <title id="intro.start.title">Getting Started</title>
+      <para>
+        TODO: Short tutorial.
+      </para>
+    </section>
+    <section id="intro.help">
+      <title id="intro.help.title">Getting Help</title>
+
+      <para>
+        If after reading the documentation you are still having problems, or have a question that is not covered in the documentation,
+	please consult the panda-users mailing list. Archives and subscription information are available
+	<ulink url="https://lists.sourceforge.net/lists/listinfo/panda-users">here</ulink>. 
+      </para>
+    </section>
+    <section id="intro.advanced">
+      <title id="intro.advanced.title">Advanced Usage</title>
+
+      <para>
+        TODO: Advanced stuff not covered elsewhere, like writing low-level functions to create dictionaries, etc.
+      </para>
+    </section>
+  </chapter>
+  <chapter id="api">
+    <title id="api.title">API Reference</title>
+
+    <para>
+      This chapter will provide an in-depth look at each function in the Panda library.
+    </para>
+
+    <section id="api.basic">
+      <title id="api.basic.title">Basic Functions</title>
+
+      <para>
+        This section contains functions for basic operations, such as PDF creation,
+	destruction, and writing files to the disk.
+      </para>
+
+      <refentry id="api.panda_init">
+        <refnamediv>
+          <refname>panda_init</refname>
+          <refpurpose>Initialize the library.</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_init</methodname>
+            <methodparam>
+              <type>void</type>
+	      <parameter></parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Performs some simple setup of Panda before it is used for the first time in your application.
+	  </para>
+	  <example id="api.panda_init.example">
+	    <title id="api.panda_init.title"><function>panda_init</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_init();
+]]>
+	    </programlisting>
+	  </example>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_open">
+        <refnamediv>
+          <refname>panda_open</refname>
+          <refpurpose>open a PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>panda_pdf *</type>
+            <methodname>panda_open</methodname>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>mode</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Open the named PDF document with the mode specified. The only mode currently
+	    supported is "w", but others will be integrated later. The interface to this
+	    function is identical in it's behaviour to the <function>fopen</function>
+	    function call offered by the ANSI C standard IO library.
+	  </para>
+	  <para>
+	    <emphasis>Returns:</emphasis> A pointer to a panda_pdf structure on success,
+	    NULL on failure.
+	  </para>
+	  <example id="api.panda_open.example">
+	    <title id="api.panda_open.title"><function>panda_open</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_init"><function>panda_init</function></link>,
+	    <link linkend="api.panda_open_actual"><function>panda_open_actual</function></link>,
+	    <link linkend="api.panda_open_suppress"><function>panda_open_suppress</function></link>,
+	    <link linkend="api.panda_close"><function>panda_close</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_close">
+        <refnamediv>
+          <refname>panda_close</refname>
+          <refpurpose>write a PDF document out to disk</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_close</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Write out the PDF document we have created to disk, clean up and free memory.
+	  </para>
+	  <example id="api.panda_close.example">
+	    <title id="api.panda_close.title"><function>panda_close</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+panda_close(document);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_open"><function>panda_open</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_newpage">
+        <refnamediv>
+          <refname>panda_newpage</refname>
+          <refpurpose>create a new page in the PDF</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>panda_page *</type>
+            <methodname>panda_newpage</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter></parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>page_size</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Create a new blank page at the end of the PDF with the
+	    specified size. Use the standard pagesize strings that are
+	    defined by Panda for most things.  These are
+	    panda_pagesize_a4, and panda_pagesize_usletter. If you
+	    need to create your own page sizes, then have a look at
+	    these for hints.
+	  </para>
+	  <example id="api.panda_newpage.example">
+	    <title id="api.panda_newpage.title"><function>panda_newpage</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_open"><function>panda_open</function></link>,
+	    <link linkend="api.panda_close"><function>panda_close</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+    </section>
+
+    <section id="api.text">
+      <title id="api.text.title">Text Functions</title>
+
+      <para>
+        These functions control the text of a PDF.
+      </para>
+
+      <refentry id="api.panda_setfont">
+        <refnamediv>
+          <refname>panda_setfont</refname>
+          <refpurpose>set the current font</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setfont</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>font</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Once you have generated a font identifier for a given
+	    font, you can then set that current font to that font
+	    using this call. Create a font identifier with the
+	    <command>panda_createfont</command> call.
+	  </para>
+	  <example id="api.panda_setfont.example">
+	    <title id="api.panda_setfont.title"><function>panda_setfont</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *output;
+char *fonthandle;
+
+panda_init();
+output = panda_open ("output.pdf", "w");
+fonthandle = panda_createfont (output, "Helventica", 3, "MacRomanEncoding");
+panda_setfont (fonthandle);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_createfont"><function>panda_createfont</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setfontsize">
+        <refnamediv>
+          <refname>panda_setfontsize</refname>
+          <refpurpose>set the current font size</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setfontsize</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>size</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Set the size of the font to be used next (in points).
+	  </para>
+	  <example id="api.panda_setfontsize.example">
+	    <title id="api.panda_setfontsize.title"><function>panda_setfontsize</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *output;
+
+panda_init();
+output = panda_open("output.pdf", "w");
+setfontsize(output, 42);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setfont"><function>panda_setfont</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setfontmode">
+        <refnamediv>
+          <refname>panda_setfontmode</refname>
+          <refpurpose>set the current font mode</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setfontmode</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>mode</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Set the drawing mode for the current font. Valid modes
+	    are: panda_textmode_normal, panda_textmode_outline,
+	    panda_textmode_filledoutline, panda_textmode_invisible,
+	    panda_textmode_filledclipped,
+	    panda_textmode_strokedclipped,
+	    panda_textmode_filledstrokedclipped and
+	    panda_textmode_clipped.
+	  </para>
+	  <example id="api.panda_setfontmode.example">
+	    <title id="api.panda_setfontmode.title"><function>panda_setfontmode</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *output;
+
+panda_init();
+output = panda_open("output.pdf", "w");
+panda_setfontmode(output, panda_textmode_outline);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setfont"><function>panda_setfont</function></link>,
+	    <link linkend="api.panda_setfontsize"><function>panda_setfontsize</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setcharacterspacing">
+        <refnamediv>
+          <refname>panda_setcharacterspacing</refname>
+          <refpurpose>set the space between characters</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setcharacterspacing</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>amount</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Set the amount of additional space between characters in points.
+	  </para>
+	  <example id="api.panda_setcharacterspacing.example">
+	    <title id="api.panda_setcharacterspacing.title"><function>panda_setcharacterspacing</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *output;
+
+panda_init();
+output = panda_open("output.pdf", "w");
+panda_setcharacterspacing(output, 42.3);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setwordspacing"><function>panda_setwordspacing</function></link>,
+	    <link linkend="api.panda_sethorizontalscaling"><function>panda_sethorizontalscaling</function></link>,
+	    <link linkend="api.panda_setleading"><function>panda_setleading</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setwordspacing">
+        <refnamediv>
+          <refname>panda_setwordspacing</refname>
+          <refpurpose>set the space between words</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setwordspacing</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>amount</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Set the amount of additional space between words in points.
+	  </para>
+	  <example id="api.panda_setwordspacing.example">
+	    <title id="api.panda_setwordspacing.title"><function>panda_setwordspacing</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *output;
+
+panda_init();
+output = panda_open("output.pdf", "w");
+panda_setwordspacing(output, 42.3);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setcharacterspacing"><function>panda_setwordspacing</function></link>,
+	    <link linkend="api.panda_sethorizontalscaling"><function>panda_sethorizontalscaling</function></link>,
+	    <link linkend="api.panda_setleading"><function>panda_setleading</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_sethorizontalscaling">
+        <refnamediv>
+          <refname>panda_sethorizontalscaling</refname>
+          <refpurpose>set the horizontal scaling of text</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_sethorizontalscaling</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>amount</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Set the horizontal scaling factor of the text in percent.
+	  </para>
+	  <example id="api.panda_sethorizontalscaling.example">
+	    <title id="api.panda_sethorizontalscaling.title"><function>panda_sethorizontalscaling</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *output;
+
+panda_init();
+output = panda_open("output.pdf", "w");
+panda_sethorizontalscaling(output, 42.3);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setwordspacing"><function>panda_setwordspacing</function></link>,
+	    <link linkend="api.panda_setcharacterspacing"><function>panda_setwordspacing</function></link>,
+	    <link linkend="api.panda_setleading"><function>panda_setleading</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setleading">
+        <refnamediv>
+          <refname>panda_setleading</refname>
+          <refpurpose>set the amount of space between lines of text</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setleading</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>leading</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Set the amount of space between lines of text in points.
+	  </para>
+	  <example id="api.panda_setleading.example">
+	    <title id="api.panda_setleading.title"><function>panda_setleading</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *output;
+
+panda_init();
+output = panda_open("output.pdf", "w");
+panda_setleading(output, 42.3);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setwordspacing"><function>panda_setwordspacing</function></link>,
+	    <link linkend="api.panda_setcharacterspacing"><function>panda_setwordspacing</function></link>,
+	    <link linkend="api.panda_sethorizontalscaling"><function>panda_sethorizontalscaling</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+    </section>
+
+    <section id="api.image">
+      <title id="api.image.title">Image Functions</title>
+
+      <para>
+        These function deal with images.
+      </para>
+
+      <refentry id="api.panda_imagebox">
+        <refnamediv>
+          <refname>panda_imagebox</refname>
+          <refpurpose>insert an image into the PDF document at the specified location</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_imagebox</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>type</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function call inserts an image into the PDF document
+	    at the specified location using a reasonable default for
+	    rotation (none). This call is included for backward
+	    compatability with previous releases of the API and it is
+	    recommened that new code call
+	    <command>panda_imageboxrot</command>. It is unlikely
+	    that this call will be retired however. The image types
+	    accepted by this call are: panda_image_tiff,
+	    panda_image_jpeg and panda_image_png.
+	  </para>
+	  <example id="api.panda_imagebox.example">
+	    <title id="api.panda_imagebox.title"><function>panda_imagebox</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *demo;
+panda_page *currPage;
+
+panda_init ();
+
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+  panda_error (panda_true, "demo: could not open output.pdf to write to.");
+
+currPage = panda_newpage (demo, panda_pagesize_a4);
+  
+panda_imagebox (demo, currPage, 0, 0, currPage->height / 2,
+  currPage->width, "input.tif", panda_image_tiff);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_imageboxrot">
+        <refnamediv>
+          <refname>panda_imageboxrot</refname>
+          <refpurpose>insert an image into the PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_imageboxrot</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>angle</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>type</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function call inserts an image into the PDF document
+	    at the specified location, including the ability to rotate
+	    the image on the page. It should be noted that xpdf will
+	    sometimes make the rotated image look quite sickly. This
+	    is in fact a bug in xpdf (which has been reported), and
+	    not a bug in Panda. The image types accepted by this call
+	    are: panda_image_tiff, panda_image_jpeg and
+	    panda_image_png.
+	  </para>
+	  <para>
+	    This function will check to see if an image has already
+	    been inserted elsewhere. If the image is already present,
+	    Panda will simple insert a pointer to that image instead
+	    of inserting another copy of the image. If you really want
+	    to insert multiple copies of the same image, use <link
+	    linkend="api.panda_imageboxactual"><function>panda_imageboxactual</function></link>
+	  </para>
+	  <example id="api.panda_imageboxrot.example">
+	    <title id="api.panda_imageboxrot.title"><function>panda_imageboxrot</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *demo;
+panda_page *currPage;
+
+panda_init ();
+
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+  panda_error (panda_true, "demo: could not open output.pdf to write to.");
+
+currPage = panda_newpage (demo, panda_pagesize_a4);
+  
+panda_imagebox (demo, currPage, 0, 0, currPage->height / 2,
+  currPage->width, 45.0, "input.tif", panda_image_tiff);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imageboxactual"><function>panda_imageboxactual</function></link>,
+	    <link linkend="api.panda_imagebox"><function>panda_imagebox</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_insertTIFF">
+        <refnamediv>
+          <refname>panda_insertTIFF</refname>
+          <refpurpose>insert a TIFF image into the PDF</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_insertTIFF</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_object *</type>
+              <parameter>imageObj</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Do the actual insertion of the TIFF image into the PDF
+	    document. This routine handles the conversion of the TIFF
+	    image into the form supported by the PDF specification,
+	    and similar operations. It is an internal Panda call and
+	    should not be needed by users of the API.
+	  </para>
+	  <para>
+	    See <link
+	    linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>
+	    for an example.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imagebox"><function>panda_imagebox</function></link>,
+	    <link linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>,
+	    <link linkend="api.panda_insertJPEG"><function>panda_insertJPEG</function></link>,
+	    <link linkend="api.panda_insertPNG"><function>panda_insertPNG</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_insertJPEG">
+        <refnamediv>
+          <refname>panda_insertJPEG</refname>
+          <refpurpose>insert a JPEG image into the PDF</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_insertJPEG</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_object *</type>
+              <parameter>imageObj</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Do the actual insertion of the JPEG image into the PDF
+	    document. This routine handles the conversion of the JPEG
+	    image into the form supported by the PDF specification,
+	    and similar operations. It is an internal
+	    <command>Panda</command> call and should not be needed by
+	    users of the API.
+	  </para>
+	  <para>
+	    See <link
+	    linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>
+	    for an example.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imagebox"><function>panda_imagebox</function></link>,
+	    <link linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>,
+	    <link linkend="api.panda_insertJPEG"><function>panda_insertTIFF</function></link>,
+	    <link linkend="api.panda_insertPNG"><function>panda_insertPNG</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_insertPNG">
+        <refnamediv>
+          <refname>panda_insertPNG</refname>
+          <refpurpose>insert a PNG image into the PDF</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_insertPNG</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_object *</type>
+              <parameter>imageObj</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Do the actual insertion of the PNG image into the PDF
+	    document. This routine handles the conversion of the PNG
+	    image into the form supported by the PDF specification,
+	    and similar operations. It is an internal Panda call and
+	    should not be needed by users of the API.
+	  </para>
+	  <para>
+	    While developing this function call, some reference was
+	    made to the source code for <ulink
+	    url="http://www.lowagie.com/iText">iText</ulink>, which is
+	    a GPL'ed PDF generator written in Java. The code in Panda
+	    is original though...
+	  </para>
+	  <para>
+	    See <link
+	    linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>
+	    for an example.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imagebox"><function>panda_imagebox</function></link>,
+	    <link linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>,
+	    <link linkend="api.panda_insertJPEG"><function>panda_insertTIFF</function></link>,
+	    <link linkend="api.panda_insertPNG"><function>panda_insertPNG</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_imagesize">
+        <refnamediv>
+          <refname>panda_imagesize</refname>
+          <refpurpose>determine the size of an image</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_imagesize</methodname>
+            <methodparam>
+              <type>int *</type>
+              <parameter>width</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int *</type>
+              <parameter>height</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>type</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function can be used to determine the size of an
+	    image before a <command>panda_imagebox</command>
+	    function call.
+	  </para>
+	  <example id="api.panda_imagesize.example">
+	    <title id="api.panda_imagesize.title"><function>panda_imagesize</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+int height, width;
+
+panda_init ();
+  
+panda_imagesize (&width, &height, "input.tif", panda_image_tiff);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imagebox"><function>panda_imagebox</function></link>,
+	    <link linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>,
+	    <link linkend="api.panda_imagesizeTIFF"><function>panda_imagesizeTIFF</function></link>,
+	    <link linkend="api.panda_imagesizeJPEG"><function>panda_imagesizeJPEG</function></link>,
+	    <link linkend="api.panda_imagesizePNG"><function>panda_imagesizePNG</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+    </section>
+
+    <section id="api.date">
+      <title id="api.date.title">Date Functions</title>
+
+      <refentry id="api.panda_makedate">
+        <refnamediv>
+          <refname>panda_makedate</refname>
+          <refpurpose>format a date into the internal PDF representation</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>char *</type>
+            <methodname>panda_makedate</methodname>
+            <methodparam>
+              <type>int</type>
+              <parameter>year</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>month</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>day</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>hour</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>minute</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>second</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    The function makedate generates a date that is suitable to
+	    be embedded into a PDF. This date will include information
+	    about the timezone in which the PDF was created and the
+	    relationship that this timezone has with GMT (Zulu)
+	    time. Mostly this function is used internally within
+	    Panda, and should not concern the average programmer too
+	    much.
+	  </para>
+	  <example id="api.panda_makedate.example">
+	    <title id="api.panda_makedate.title"><function>panda_makedate</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+printf("Panda would encode 19 July 1977 3:14:23 AM as: %s\n",
+  panda_makedate(1977, 7, 19, 3, 14, 23));
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_nowdate"><function>panda_nowdate</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_nowdate">
+        <refnamediv>
+          <refname>panda_nowdate</refname>
+          <refpurpose>return the string for now</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>char *</type>
+            <methodname>panda_nowdate</methodname>
+            <methodparam>
+              <type>void</type>
+              <parameter></parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    The function nowdate generates a date that is suitable to
+	    be embedded into a PDF. This date will include information
+	    about the timezone in which the PDF was created and the
+	    relationship that this timezone has with GMT (Zulu)
+	    time. Mostly this function is used internally within
+	    Panda, and should not concern the avaerage programmer too
+	    much. This version takes no input, and makes a date for
+	    the current time.
+	  </para>
+	  <example id="api.panda_nowdate.example">
+	    <title id="api.panda_nowdate.title"><function>panda_nowdate</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+printf("The time now is %s\n", panda_nowdate());
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_makedate"><function>panda_makedate</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+    </section>
+
+    <section id="api.error">
+      <title id="api.error.title">Error Handling</title>
+
+      <refentry id="api.panda_error">
+        <refnamediv>
+          <refname>panda_error</refname>
+          <refpurpose>handle an error</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type></type>
+            <methodname>panda_error</methodname>
+            <methodparam>
+              <type>int</type>
+              <parameter>fatal</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>message</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	     Print out the error message to stderr and then exit (if fatal is panda_true).
+	  </para>
+	  <example id="api.panda_error.example">
+	    <title id="api.panda_error.title"><function>panda_error</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_error (panda_true, "All is rotten in the state of Denmark");
+]]>
+	    </programlisting>
+	  </example>
+        </refsect1>
+      </refentry>
+    </section>
+
+    <section id="api.annotate">
+      <title id="api.annotate.title">Annotations</title>
+
+      <refentry id="api.panda_textannotation">
+        <refnamediv>
+          <refname>panda_textannotation</refname>
+          <refpurpose>draw a text annotation which looks like a sticky note onto a page</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_textannotation</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>open</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>text</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>icon</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>flags</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function inserts a text annotation onto one of the pages in your PDF document.
+	    The open arguement defines whether the text annotation initially appears with the
+	    text visible (the open state) or not. The possible values for the icon arguement
+	    are: panda_icon_comment; panda_icon_help; panda_icon_insert; panda_icon_key;
+	    panda_icon_newparagraph; panda_icon_note; panda_icon_paragraph. The possible values
+	    for the flags arguement are: panda_annotationflag_invisible; panda_annotationflag_hidden;
+	    panda_annotationflag_print; panda_annotationflag_nozoom; panda_annotationflag_norotate;
+	    panda_annotationflag_noview; panda_annotationflag_readonly -- the values for this
+	    arguement may by OR'ed together if needed.
+	  </para>
+	  <para>
+	    Please note that not all PDF viewers support annotations, so you cannot gaurantee that
+	    the user will see this annotation...
+	  </para>
+	  <example id="api.panda_textannotation.example">
+	    <title id="api.panda_textannotation.title"><function>panda_textannotation</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *demo;
+panda_page *currPage;
+
+panda_init();
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+    panda_error (panda_true, "demo: could not open output.pdf to write to.");
+currPage = panda_newpage (demo, panda_pagesize_a4);
+
+panda_textannotation(demo, currPage, panda_true, "Hello", 10, 10, 50, 50,
+                       panda_icon_comment, 0);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_freetextannotation"><function>panda_freetextannotation</function></link>
+	    <link linkend="api.panda_insertannotation"><function>panda_insertannotation</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_freetextannotation">
+        <refnamediv>
+          <refname>panda_freetextannotation</refname>
+          <refpurpose>draw a text annotation which doesn't look like a sticky note onto a page</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_freetextannotation</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>open</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>text</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>icon</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>flags</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function inserts a text annotation onto one of the pages in your PDF document.
+	    The possible values for the flags arguement are: panda_annotationflag_invisible;
+	    panda_annotationflag_hidden; panda_annotationflag_print; panda_annotationflag_nozoom;
+	    panda_annotationflag_norotate; panda_annotationflag_noview;
+	    panda_annotationflag_readonly -- the values for this arguement may by OR'ed together
+	    if needed.
+	  </para>
+	  <para>
+	    Please note that not all PDF viewers support annotations, so you cannot gaurantee that
+	    the user will see this annotation...
+	  </para>
+	  <example id="api.panda_freetextannotation.example">
+	    <title id="api.panda_freetextannotation.title"><function>panda_freetextannotation</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *demo;
+panda_page *currPage;
+
+panda_init();
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+    panda_error (panda_true, "demo: could not open output.pdf to write to.");
+currPage = panda_newpage (demo, panda_pagesize_a4);
+
+panda_freetextannotation(demo, currPage, "Hello", 10, 10, 50, 50, 0);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_textannotation"><function>panda_textannotation</function></link>,
+	    <link linkend="api.panda_insertannotation"><function>panda_insertannotation</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_lineannotation">
+        <refnamediv>
+          <refname>panda_lineannotation</refname>
+          <refpurpose>insert a line annotation</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_lineannotation</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>text</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>title</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>x1</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>y1</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>x2</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>y2</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>red</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>green</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>blue</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>flags</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function will insert a line annotation int <parameter>page</parameter> in
+	    <parameter>document</parameter>. 
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_urilink">
+        <refnamediv>
+          <refname>panda_urilink</refname>
+          <refpurpose>insert link to a URI</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_urilink</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>uri</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>border</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function will create a link to a URI based on the supplied arguments.
+	  </para>
+	  <example id="api.panda_urilink.example">
+	    <title id="api.panda_urilink.title"><function>panda_urilink</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *demo;
+panda_page *currPage;
+
+panda_init();
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+    panda_error (panda_true, "demo: could not open output.pdf to write to.");
+currPage = panda_newpage (demo, panda_pagesize_a4);
+
+panda_urilink (demo, currPage, "http://www.google.com/", 5, 5, 100, 100, 1);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_link"><function>panda_link</function></link>,
+	    <link linkend="api.panda_internallink"><function>panda_internallink</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_link">
+        <refnamediv>
+          <refname>panda_link</refname>
+          <refpurpose>create a link to an internal location in a PDF.</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_link</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>dest</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>dest_top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>dest_left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>zoom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>source</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>border</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function will create a link to (<parameter>dest_top</parameter>, <parameter>dest_left</parameter>)
+	    on <parameter>dest</parameter> from <parameter>source</parameter>.
+	  </para>
+	  <example id="api.panda_link.example">
+	    <title id="api.panda_link.title"><function>panda_link</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *demo;
+panda_page *Page1, *Page2;
+
+panda_init();
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+    panda_error (panda_true, "demo: could not open output.pdf to write to.");
+Page1 = panda_newpage (demo, panda_pagesize_a4);
+Page2 = panda_newpage (demo, panda_pagesize_a4);
+
+panda_link (demo, Page1, 0, 0, 0, Page2, 5, 5, 100, 100, 1);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_urilink"><function>panda_urilink</function></link>,
+	    <link linkend="api.panda_internallink"><function>panda_internallink</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_outlineitem">
+        <refnamediv>
+          <refname>panda_outlineitem</refname>
+          <refpurpose>create an outline item (commonly referred to as a bookmark).</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>panda_outline *</type>
+            <methodname>panda_outlineitem</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_outline *</type>
+              <parameter>parent</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>title</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>destination</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>dest_top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>dest_left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>zoom</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Create an outline item with the specified proerties. If the second argument is NULL, it will be assumed
+	    that this is a top level outline. Otherwise, it must be a pointer an address of a previously created
+	    outline, and the new outline will be created as sub-outline of that outline.
+	  </para>
+	  <example id="api.panda_outlineitem.example">
+	    <title id="api.panda_outlineitem.title"><function>panda_outlineitem</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *pdf;
+panda_page *page;
+panda_outline *main_document;
+char *tmpPtr;
+int x;
+
+pdf = panda_open("outlines.pdf", "w");
+for ( x=0 ; x<10 ; x++ ) {
+  page = panda_newpage(pdf, panda_pagesize_a4);
+  main_document = panda_outlineitem(pdf, NULL, tmpPtr = panda_xsnprintf("Section %d", x+1), page, 0, 0, 0);
+  panda_xfree(tmpPtr);
+  panda_outlineitem(pdf, main_document, "Sub 1", page, 100, 0, 0);
+  panda_outlineitem(pdf, main_document, "Sub 2", page, 200, 0, 0);
+}
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_writeoutline"><function>panda_writeoutline</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+    </section>
+
+    <section id="api.drawing">
+      <title id="api.drawing.title">Drawing Functions</title>
+
+      <para>
+        These functions are used to draw lines, curves, boxes, etc.
+      </para>
+
+      <refentry id="api.panda_setlinestart">
+        <refnamediv>
+          <refname>panda_setlinestart</refname>
+          <refpurpose>sets the starting point of a line or curve</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setlinestart</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>x</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>y</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Set the starting point for the sequence of curves and lines that it to be drawn on the current page.
+	    This call is compulsory for almost all of the line drawing functions. It is not required for the
+	    <command>panda_rectangle</command> call.
+	  </para>
+	  <example id="api.panda_setlinestart.example">
+	    <title id="api.panda_setlinestart.title"><function>panda_setlinestart</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addcubiccurvesegment"><function>panda_addcubiccurvesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_addlinesegment">
+        <refnamediv>
+          <refname>panda_addlinesegment</refname>
+          <refpurpose>add a straight segment to the line shape we are drawing</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_addlinesegment</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>x</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>y</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Add a point to the shape we are currently drawing with a straight line between the current cursor location and (x,y).
+	  </para>
+	  <example id="api.panda_addlinesegment.example">
+	    <title id="api.panda_addlinesegment.title"><function>panda_addlinesegment</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_addlinesegment (page, 200, 200);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addcubiccurvesegment"><function>panda_addcubiccurvesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_addcubiccurvesegment">
+        <refnamediv>
+          <refname>panda_addcubiccurvesegment</refname>
+          <refpurpose>add a curved segment to the line shape we are drawing</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_addcubiccurvesegment</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>x</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>y</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>cx1</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>cy1</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>cx2</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>cy2</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Add a point to the shape we are currently drawing with a cubic curve between the current
+	    cursor location and (x,y). There are two control points used to generate the cubic curve.
+	    They are (<parameter>cx1</parameter>, <parameter>cy1</parameter>) and
+	    (<parameter>cx2</parameter>, <parameter>cy2</parameter>).
+	  </para>
+	  <example id="api.panda_addcubiccurvesegment.example">
+	    <title id="api.panda_addcubiccurvesegment.title"><function>panda_addcubiccurvesegment</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (currPage, 210, 210);
+panda_addcubiccurvesegment (currPage, 310, 210, 225, 300, 275, 400);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_addquadraticcurvesegmentone">
+        <refnamediv>
+          <refname>panda_addquadraticcurvesegmentone</refname>
+          <refpurpose>add a curved segment to the line shape that we are drawing</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_addquadraticcurvesegmentone</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>x</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>y</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>cx</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>cy</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function adds a curved segment to the line shape that we are drawing. The curved
+	    segment has a control point, namely (cx1, cy1). This call creates slightly different
+	    curves from <command>panda_addquadraticcurvesegmenttwo</command>
+	  </para>
+	  <example id="api.panda_addquadraticcurvesegmentone.example">
+	    <title id="api.panda_addquadraticcurvesegmentone.title"><function>panda_addquadraticcurvesegmentone</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_addquadraticcurvesegmentone (page, 200, 200, 12, 32);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_addquadraticcurvesegmenttwo">
+        <refnamediv>
+          <refname>panda_addquadraticcurvesegmenttwo</refname>
+          <refpurpose>add a curved segment to the line shape that we are drawing</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_addquadraticcurvesegmenttwo</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>x</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>y</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>cx</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>cy</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function adds a curved segment to the line shape that we are drawing. The curved
+	    segment has a control point, namely (cx1, cy1). This call creates slightly different
+	    curves from <command>panda_addquadraticcurvesegmentone</command>
+	  </para>
+	  <example id="api.panda_addquadraticcurvesegmenttwo.example">
+	    <title id="api.panda_addquadraticcurvesegmenttwo.title"><function>panda_addquadraticcurvesegmenttwo</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_addquadraticcurvesegmenttwo (page, 200, 200, 12, 32);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_closeline">
+        <refnamediv>
+          <refname>panda_closeline</refname>
+          <refpurpose>close off the line shape we are drawing</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_closeline</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Close the line shape we are drawing by returning to the starting point as set by
+	    <command>panda_setlinestart</command>
+	  </para>
+	  <example id="api.panda_closeline.example">
+	    <title id="api.panda_closeline.title"><function>panda_closeline</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_addlinesegment (page, 200, 200);
+panda_addlinesegment (page, 400, 300);
+panda_closeline (page);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_rectangle">
+        <refnamediv>
+          <refname>panda_rectangle</refname>
+          <refpurpose>draw a rectangle</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_rectangle</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Draw a rectangle on the PDF page. There is no need for the <command>panda_setlinestart</command>
+	    or <command>panda_closeline</command> calls.
+	  </para>
+	  <example id="api.panda_rectangle.example">
+	    <title id="api.panda_rectangle.title"><function>panda_rectangle</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_rectangle( page, 10, 10, 150, 200);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_endline">
+        <refnamediv>
+          <refname>panda_endline</refname>
+          <refpurpose>finalise the current line shape</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_endline</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	     Finalise the line shape we are drawing. Only one line shape may be drawn at any one time.
+	     There is no need for this call with the <command>panda_rectangle</command>() call.
+	  </para>
+	  <example id="api.panda_endline.example">
+	    <title id="api.panda_endline.title"><function>panda_endline</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_addlinesegment (page, 200, 200);
+panda_endline (page);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_strokeline">
+        <refnamediv>
+          <refname>panda_strokeline</refname>
+          <refpurpose>stroke the line shape we have just drawn</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_strokeline</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function must be called for the line shape that we have drawn to actually display on the
+	    PDF page. This process is known as 'stroking', and hence the name of this function call.
+	  </para>
+	  <example id="api.panda_strokeline.example">
+	    <title id="api.panda_strokeline.title"><function>panda_strokeline</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_addlinesegment (page, 200, 200);
+panda_strokeline (page);
+panda_endline (page);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_fillline">
+        <refnamediv>
+          <refname>panda_fillline</refname>
+          <refpurpose>fill the closed shape we just drew</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_fillline</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Fill the shape we have just drawn with the previously defined fill.
+	  </para>
+	  <example id="api.panda_fillline.example">
+	    <title id="api.panda_fillline.title"><function>panda_fillline</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_addlinesegment (page, 200, 200);
+panda_addlinesegment (page, 250, 250);
+panda_endline (page);
+panda_fillline (page);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setlinewidth">
+        <refnamediv>
+          <refname>panda_setlinewidth</refname>
+          <refpurpose>sets the width of the line that we are drawing</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setlinewidth</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>width</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Set the width of the line that is being drawn. You can use <command>panda_setlinecap</command>,
+	    <command>panda_setlinejoin</command> and <command>panda_setlinedash</command> to change other
+	    characteristics of the line.
+	  </para>
+	  <example id="api.panda_setlinewidth.example">
+	    <title id="api.panda_setlinewidth.title"><function>panda_setlinewidth</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_setlinewidth (page, 42);
+panda_addlinesegment (page, 200, 200);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setlinecap">
+        <refnamediv>
+          <refname>panda_setlinecap</refname>
+          <refpurpose>sets the line cap for the lines we are drawing now</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setlinecap</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>cap</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    A line cap is used at the ends of lines that do not meet other lines. The different cap
+	    styles are defined in panda/constants.h and are: panda_linecap_butt, panda_linecap_round
+	    and panda_linecap_projectedsquare.
+	  </para>
+	  <example id="api.panda_setlinecap.example">
+	    <title id="api.panda_setlinecap.title"><function>panda_setlinecap</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_setlinecap (page, panda_linecap_round);
+panda_addlinesegment (page, 200, 200);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setlinejoin">
+        <refnamediv>
+          <refname>panda_setlinejoin</refname>
+          <refpurpose>is used to set the line join style</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setlinejoin</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>join</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    A line join is used where the ends of two lines meet. The valid line joins are defined in
+	    <filename>panda/constants.h</filename> and are: panda_linejoin_miter, panda_linejoin_round
+	    and panda_linejoin_bevel.
+	  </para>
+	  <example id="api.panda_setlinejoin.example">
+	    <title id="api.panda_setlinejoin.title"><function>panda_setlinejoin</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_setlinejoin (page, panda_linejoin_bevel);
+panda_addlinesegment (page, 200, 200);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setlinedash">
+        <refnamediv>
+          <refname>panda_setlinedash</refname>
+          <refpurpose>draw the subsequent lines with the defined dashing pattern</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setlinedash</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>on</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>off</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>phase</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function allows the user to define a line dashing style, which is
+	    then applied to subsequent lines drawn on that page. The dashing style
+	    is defined as a on and off number, as well as a phase. For example,
+	    on = 2, off = 4, phase = 0 should result in a line like:
+	    <programlisting>--    --    --    --    --    --    --</programlisting>
+	    Whilst values of on = 2, off = 4, phase = 1 would give:
+	    <programlisting>
+	        --    --    --    --    --    --    --
+	    </programlisting>
+	  </para>
+	  <example id="api.panda_setlinedash.example">
+	    <title id="api.panda_setlinedash.title"><function>panda_setlinedash</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_setlinedash (page, 2, 4, 0);
+panda_addlinesegment (page, 200, 200);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setfillcolor">
+        <refnamediv>
+          <refname>panda_setfillcolor</refname>
+          <refpurpose>set the color to fill a close shape with</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setfillcolor</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>red</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>green</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>blue</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function sets the color to fill a close shape with when the shape is closed. It
+	    is expressed as a combinartion of red, green, and blue. The maximum number for each
+	    value is 255 (a number greater than 255 is reduced to 255).
+	  </para>
+	  <example id="api.panda_setfillcolor.example">
+	    <title id="api.panda_setfillcolor.title"><function>panda_setfillcolor</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_setfillcolor (page, 100, 200, 300);
+panda_addlinesegment (page, 200, 200);
+panda_addlinesegment (page, 250, 300);
+panda_closeline (page);
+panda_endline (page);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setlinecolor"><function>panda_setlinecolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setlinecolor">
+        <refnamediv>
+          <refname>panda_setlinecolor</refname>
+          <refpurpose>change the color of the line drawn</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setlinecolor</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>red</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>green</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>blue</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Set the color of lines being drawn using a combination of red, green and blue.
+	  </para>
+	  <example id="api.panda_setlinecolor.example">
+	    <title id="api.panda_setlinecolor.title"><function>panda_setlinecolor</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+panda_setlinecolor (page, 100, 200, 450);
+panda_addlinesegment (page, 200, 200);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setlinestart"><function>panda_setlinestart</function></link>,
+	    <link linkend="api.panda_addlinesegment"><function>panda_addlinesegment</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmentone"><function>panda_addquadraticcurvesegmentone</function></link>,
+	    <link linkend="api.panda_addquadraticcurvesegmenttwo"><function>panda_addquadraticcurvesegmenttwo</function></link>,
+	    <link linkend="api.panda_closeline"><function>panda_closeline</function></link>,
+	    <link linkend="api.panda_rectangle"><function>panda_rectangle</function></link>,
+	    <link linkend="api.panda_endline"><function>panda_endline</function></link>,
+	    <link linkend="api.panda_strokeline"><function>panda_strokeline</function></link>,
+	    <link linkend="api.panda_fillline"><function>panda_fillline</function></link>,
+	    <link linkend="api.panda_setlinewidth"><function>panda_setlinewidth</function></link>,
+	    <link linkend="api.panda_setlinecap"><function>panda_setlinecap</function></link>,
+	    <link linkend="api.panda_setlinejoin"><function>panda_setlinejoin</function></link>,
+	    <link linkend="api.panda_setlinedash"><function>panda_setlinedash</function></link>,
+	    <link linkend="api.panda_setfillcolor"><function>panda_setfillcolor</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+    </section>
+
+    <section id="api.properties">
+      <title id="api.properties.title">Document Properties</title>
+
+      <para>
+        These functions deal with the document properties.
+      </para>
+
+      <refentry id="api.panda_setauthor">
+        <refnamediv>
+          <refname>panda_setauthor</refname>
+          <refpurpose>set the author string for the PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setauthor</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>author</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function sets the value of the author within the PDF document.
+	  </para>
+	  <example id="api.panda_setauthor.example">
+	    <title id="api.panda_setauthor.title"><function>panda_setauthor</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_setauthor(document, "Mikal");
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setcreator"><function>panda_setcreator</function></link>,
+	    <link linkend="api.panda_settitle"><function>panda_settitle</function></link>,
+	    <link linkend="api.panda_setsubject"><function>panda_setsubject</function></link>,
+	    <link linkend="api.panda_setkeywords"><function>panda_setkeywords</function></link>,
+	    <link linkend="api.panda_setid"><function>panda_setid</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setcreator">
+        <refnamediv>
+          <refname>panda_setcreator</refname>
+          <refpurpose>set the creator string for the PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setcreator</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>creator</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function sets the value of the creator within the PDF
+	    document. This is normally the string "Panda", but may be
+	    overridden by another call to the function by a user of
+	    the API. I'm not sure why you would want to do that
+	    though...
+	  </para>
+	  <example id="api.panda_setcreator.example">
+	    <title id="api.panda_setcreator.title"><function>panda_setcreator</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_setcreator(document, "Panda PDF Generator");
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setauthor"><function>panda_setauthor</function></link>,
+	    <link linkend="api.panda_settitle"><function>panda_settitle</function></link>,
+	    <link linkend="api.panda_setsubject"><function>panda_setsubject</function></link>,
+	    <link linkend="api.panda_setkeywords"><function>panda_setkeywords</function></link>,
+	    <link linkend="api.panda_setid"><function>panda_setid</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_settitle">
+        <refnamediv>
+          <refname>panda_settitle</refname>
+          <refpurpose>set the title string for the PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_settitle</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>title</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function sets the value of the title within the PDF document.
+	  </para>
+	  <example id="api.panda_settitle.example">
+	    <title id="api.panda_settitle.title"><function>panda_settitle</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_settitle(document, "Mikal's excellent PDF document");
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setcreator"><function>panda_setcreator</function></link>,
+	    <link linkend="api.panda_setauthor"><function>panda_setauthor</function></link>,
+	    <link linkend="api.panda_setsubject"><function>panda_setsubject</function></link>,
+	    <link linkend="api.panda_setkeywords"><function>panda_setkeywords</function></link>,
+	    <link linkend="api.panda_setid"><function>panda_setid</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setsubject">
+        <refnamediv>
+          <refname>panda_setsubject</refname>
+          <refpurpose>set the subject string for the PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_setsubject</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>subject</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function sets the value of the subject within the PDF document.
+	  </para>
+	  <example id="api.panda_setsubject.example">
+	    <title id="api.panda_setsubject.title"><function>panda_setsubject</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_setsubject(document, "Mikal's homework");
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setcreator"><function>panda_setcreator</function></link>,
+	    <link linkend="api.panda_setauthor"><function>panda_setauthor</function></link>,
+	    <link linkend="api.panda_settitle"><function>panda_settitle</function></link>,
+	    <link linkend="api.panda_setkeywords"><function>panda_setkeywords</function></link>,
+	    <link linkend="api.panda_setid"><function>panda_setid</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setkeywords">
+        <refnamediv>
+          <refname>panda_setkeywords</refname>
+          <refpurpose>set the keywords string for the PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type></type>
+            <methodname>panda_setkeywords</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>keywords</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function sets the value of the keywords string within
+	    the PDF document. The string is merely a list of keywords
+	    in the form "cats dogs hamsters chickens"
+	  </para>
+	  <example id="api.panda_setkeywords.example">
+	    <title id="api.panda_setkeywords.title"><function>panda_setkeywords</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_setkeywords(document, "panda documentation pdf api generate");
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setcreator"><function>panda_setcreator</function></link>,
+	    <link linkend="api.panda_setauthor"><function>panda_setauthor</function></link>,
+	    <link linkend="api.panda_settitle"><function>panda_settitle</function></link>,
+	    <link linkend="api.panda_setsubject"><function>panda_setsubject</function></link>,
+	    <link linkend="api.panda_setid"><function>panda_setid</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_">
+        <refnamediv>
+          <refname>panda_</refname>
+          <refpurpose></refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type></type>
+            <methodname>panda_</methodname>
+            <methodparam>
+              <type></type>
+              <parameter></parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    
+	  </para>
+	  <example id="api.panda_.example">
+	    <title id="api.panda_.title"><function>panda_</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_"><function>panda_</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+    </section>
+
+    <section id="api.internal">
+      <title id="api.internal.title">Internal Functions</title>
+
+      <para>
+        These functions are internal to the Panda PDF library, and should not
+	be used by outside applications.
+      </para>
+
+      <refentry id="api.panda_open_suppress">
+        <refnamediv>
+          <refname>panda_open_suppress</refname>
+          <refpurpose>open a PDF document with some special options</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>panda_pdf *</type>
+            <methodname>panda_open_suppress</methodname>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>mode</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Open the named PDF document with the mode specified. The only mode currently
+	    supported is "w", but others will be integrated later. The interface to this
+	    function is identical in it's behaviour to the <function>fopen</function>()
+	    function call offered by the ANSI C standard IO library. This function call
+	    additionally doesn't create any of the default objects that a panda_open
+	    would create, which is useful when you want to parse an existing PDF into a
+	    new document.
+	  </para>
+	  <example id="api.panda_open_suppress.example">
+	    <title id="api.panda_open_suppress.title"><function>panda_open_suppress</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open_suppress("filename.pdf", "w");
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_init"><function>panda_init</function></link>,
+	    <link linkend="api.panda_open_actual"><function>panda_open_actual</function></link>,
+	    <link linkend="api.panda_open"><function>panda_open</function></link>,
+	    <link linkend="api.panda_close"><function>panda_close</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_open_actual">
+        <refnamediv>
+          <refname>panda_open_actual</refname>
+          <refpurpose>actually open a PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>panda_pdf *</type>
+            <methodname>panda_open_actual</methodname>
+            <methodparam>
+              <type>void</type>
+	      <parameter></parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Open the named PDF document with the mode specified. The only mode currently
+	    supported is "w", but others will be integrated later. The interface to this
+	    function is identical in it's behaviour to the <function>fopen</function>()
+	    function call offered by the ANSI C standard IO library. This call actually
+	    does the opening for <function>panda_open</function>() and
+	    <function>panda_open_suppress</function>().
+	  </para>
+	  <para>
+	    You should not use this function- use
+	    <link linkend="api.panda_open" endterm="api.panda_open.title"><function>panda_open</function></link>
+	    instead.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_init"><function>panda_init</function></link>,
+	    <link linkend="api.panda_open_suppress"><function>panda_open_suppress</function></link>,
+	    <link linkend="api.panda_open"><function>panda_open</function></link>,
+	    <link linkend="api.panda_close"><function>panda_close</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_closetext">
+        <refnamediv>
+          <refname>panda_closetext</refname>
+          <refpurpose>a traversal callback used for closing text streams within the PDF</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_closetext</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_object *</type>
+              <parameter>subject</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function is called by the <command>panda_traverseobjects</command> function
+	    to write out streams attached to objects when <command>panda_close</command> call.
+	    You shouldn't need to ever call this function.
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_processtrans">
+        <refnamediv>
+          <refname>panda_processtrans</refname>
+          <refpurpose>a traversal callback used for processing transition objects within the PDF</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_processtrans</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_object *</type>
+              <parameter>subject</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function is called by the <command>panda_traverseobjects</command>()
+	    function to deal with transition effects attached to objects when
+	    <command>panda_close</command>() call. You shouldn't need to ever call this
+	    function.
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_insertannotation">
+        <refnamediv>
+          <refname>panda_insertannotation</refname>
+          <refpurpose>actually insert an annotation</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>panda_object *</type>
+            <methodname>panda_insertannotation</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>flags</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function call creates the object to store the annotation and the common elements which are required.
+	  </para>
+	  <para>
+	    <function>panda_insertannotation</function> returns a pointer to the annotation object which was created.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_textannotation"><function>panda_textannotation</function></link>,
+	    <link linkend="api.panda_freetextannotation"><function>panda_freetextannotation</function></link>,
+	    <link linkend="api.panda_lineannotation"><function>panda_lineannotation</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_internallink">
+        <refnamediv>
+          <refname>panda_internallink</refname>
+          <refpurpose>do work common to <function>panda_urilink</function> and <function>panda_link</function></refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_internallink</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_object *</type>
+              <parameter>link</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>border</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function will create set up common properties of a link annotation.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_urilink"><function>panda_urilink</function></link>,
+	    <link linkend="api.panda_link"><function>panda_link</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_writeoutline">
+        <refnamediv>
+          <refname>panda_writeoutline</refname>
+          <refpurpose>write an outline to a document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_writeoutline</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_outline *</type>
+              <parameter>outline</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This recursive function is called to write an outline to a PDF. It is called automatically
+	    by <link linkend="api.panda_close">panda_close</link> and should <emphasis>not</emphasis>
+	    be called anywhere else.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_outlineitem"><function>panda_outlineitem</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_dbopen">
+        <refnamediv>
+          <refname>panda_dbopen</refname>
+          <refpurpose>prepare the Panda internal database for use</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_dbopen</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This command opens the database which is used to store
+	    information about things like dictionary items which have
+	    been created in the document. The use of this database
+	    makes Panda much more reliable than it has previously
+	    been.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_dbclose"><function>panda_dbclose</function></link>,
+	    <link linkend="api.panda_dbwrite"><function>panda_dbwrite</function></link>,
+	    <link linkend="api.panda_dbread"><function>panda_dbread</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_dbclose">
+        <refnamediv>
+          <refname>panda_dbclose</refname>
+          <refpurpose>finalize the use of the Panda internal database</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_dbclose</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This command closes the database which is used to store
+	    information about things like dictionary items which have
+	    been created in the document. The use of this database
+	    makes Panda much more reliable than it has previously
+	    been.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_dbopen"><function>panda_dbopen</function></link>,
+	    <link linkend="api.panda_dbwrite"><function>panda_dbwrite</function></link>,
+	    <link linkend="api.panda_dbread"><function>panda_dbread</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_dbwrite">
+        <refnamediv>
+          <refname>panda_dbwrite</refname>
+          <refpurpose>write a value into the Panda internal database</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_dbwrite</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>key</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>value</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function write a value into the Panda internal database.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_dbopen"><function>panda_dbopen</function></link>,
+	    <link linkend="api.panda_dbwrite"><function>panda_dbwrite</function></link>,
+	    <link linkend="api.panda_dbread"><function>panda_dbread</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_dbread">
+        <refnamediv>
+          <refname>panda_dbread</refname>
+          <refpurpose>read a value from the Panda internal database</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>char *</type>
+            <methodname>panda_dbread</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>key</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function reads a value from the Panda internal database.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_dbopen"><function>panda_dbopen</function></link>,
+	    <link linkend="api.panda_dbclose"><function>panda_dbclose</function></link>,
+	    <link linkend="api.panda_dbwrite"><function>panda_dbwrite</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_createfont">
+        <refnamediv>
+          <refname>panda_createfont</refname>
+          <refpurpose>return a handle to the requested font</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>char *</type>
+            <methodname>panda_createfont</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>fontname</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>type</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>encoding</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This funtion call creates a font object for the requested
+	    font and returns the identifier that should be used when
+	    the font is set within the PDF document.
+	  </para>
+	  <para>
+	    This function will return a font identifier (handle) as a
+	    null terminated string on success, or NULL on failure.
+	  </para>
+	  <example id="api.panda_createfont.example">
+	    <title id="api.panda_createfont.title"><function>panda_createfont</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *output;
+char *fonthandle;
+
+panda_init();
+output = panda_open("output.pdf", "w");
+fonthandle = (output, "Helventica", 3, "MacRomanEncoding");
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_"><function>panda_</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_getfontobj">
+        <refnamediv>
+          <refname>panda_getfontobj</refname>
+          <refpurpose>get the object that the named font is stored in</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type></type>
+            <methodname>panda_getfontobj</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>font</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function is used to map a font identifier handed to
+	    Panda by a user to the object that actually stores the
+	    font requested. This is because the PDF specification
+	    actually wants a reference to this object, instead of
+	    merely the name of the font.
+	  </para>
+	  <example id="api.panda_getfontobj.example">
+	    <title id="api.panda_getfontobj.title"><function>panda_getfontobj</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *output;
+
+panda_init();
+output = panda_open("output.pdf", "w");
+
+fonthandle = panda_createfont (output, "Helventica", 3, "MacRomanEncoding");
+printf("The font was stored in object number %d\n",
+  (panda_getfont (output, fonthandle))->number);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_createfont"><function>panda_createfont</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_getfontmetric">
+        <refnamediv>
+          <refname>panda_getfontmetric</refname>
+          <refpurpose>retrieve a fontmetric</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>panda_fontmetric *</type>
+            <methodname>panda_getfontmetric</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Locate the metric for the currently selected font, if not
+	    available fall back on the empty font metric (all zero
+	    widths, so no wrapping.
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_charwidth">
+        <refnamediv>
+          <refname>panda_charwidth</refname>
+          <refpurpose>calculate the width of a character</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>double</type>
+            <methodname>panda_charwidth</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char</type>
+              <parameter>c</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_fontmetric *</type>
+              <parameter>fontmetric</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>addCharSpacing</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Calculate the width of <parameter>c</parameter> using the
+	    specified <parameter>fontmetric</parameter> and the text
+	    settings
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_stringwidth">
+        <refnamediv>
+          <refname>panda_stringwidth</refname>
+          <refpurpose>calculate the width of a string</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>double</type>
+            <methodname>panda_stringwidth</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>text</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_fontmetric *</type>
+              <parameter>fontmetric</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Calculate the width of <parameter>text</parameter> using
+	    the specified <parameter>fontmetric</parameter> and the
+	    text settings if the fontmetric is specified as NULL then
+	    look them up for the current font as specified in output.
+	  </para>
+	  <example id="api.panda_stringwidth.example">
+	    <title id="api.panda_stringwidth.title"><function>panda_stringwidth</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+
+]]>
+	    </programlisting>
+	  </example>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_findlinebreak">
+        <refnamediv>
+          <refname>panda_findlinebreak</refname>
+          <refpurpose>find the next line break</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>int</type>
+            <methodname>panda_findlinebreak</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>text</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_fontmetric *</type>
+              <parameter>fontmetric</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>wrapwidth</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double *</type>
+              <parameter>linewidth</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Find the next logical line break in text for the current
+	    font settings, assuming a maximum width of wrapWidth, if
+	    lineWidth is non NULL store the actual line width (in
+	    points) into it, return the number of character to the
+	    next line break.
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_imageboxactual">
+        <refnamediv>
+          <refname>panda_imageboxactual</refname>
+          <refpurpose>add an image</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type></type>
+            <methodname>panda_imageboxactual</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>angle</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>type</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function will add an image to
+	    <parameter>document</parameter>, regardless of whether or
+	    not there is an existing copy.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>,
+	    <link linkend="api.panda_imageboxinternal"><function>panda_imageboxinternal</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_imageboxinternal">
+        <refnamediv>
+          <refname>panda_imageboxinternal</refname>
+          <refpurpose>redistribute the image types</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type></type>
+            <methodname>panda_imageboxinternal</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>top</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>left</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>bottom</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>right</parameter>
+            </methodparam>
+            <methodparam>
+              <type>double</type>
+              <parameter>angle</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>type</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>addImage</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char</type>
+              <parameter>objref</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>databasecount</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Redistribute the image types
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imageboxrot"><function>panda_imageboxrot</function></link>,
+	    <link linkend="api.panda_imageboxactual"><function>panda_imageboxactual</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.libtiffDummyReadProc">
+        <refnamediv>
+          <refname>libtiffDummyReadProc</refname>
+          <refpurpose>mangle libtiff to do image conversion in memory without temporary files</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>static tsize_t</type>
+            <methodname>libtiffDummyReadProc</methodname>
+            <methodparam>
+              <type>thandle_t</type>
+              <parameter>fd</parameter>
+            </methodparam>
+            <methodparam>
+              <type>tdata_t</type>
+              <parameter>buff</parameter>
+            </methodparam>
+            <methodparam>
+              <type>tsize_t</type>
+              <parameter>size</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This call implements a dummy read procedure for libtiff to
+	    allow for the conversion of TIFF images on the fly in
+	    memory without the use of temporary files. It is an
+	    internal call and should NEVER be called by users of the
+	    API.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.libtiffDummyWriteProc"><function>panda_libtiffDummyWriteProc</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.libtiffDummyWriteProc">
+        <refnamediv>
+          <refname>libtiffDummyWriteProc</refname>
+          <refpurpose>mangle libtiff to do image conversion in memory without temporary files</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>static tsize_t</type>
+            <methodname>libtiffDummyWriteProc</methodname>
+            <methodparam>
+              <type>thandle_t</type>
+              <parameter>fd</parameter>
+            </methodparam>
+            <methodparam>
+              <type>tdata_t</type>
+              <parameter>buff</parameter>
+            </methodparam>
+            <methodparam>
+              <type>tsize_t</type>
+              <parameter>size</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This call implements a dummy write procedure for libtiff
+	    to allow for the conversion of TIFF images on the fly in
+	    memory without the use of temporary files. It is an
+	    internal call and should NEVER be called by users of the
+	    API.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.libtiffDummyReadProc"><function>libtiffDummyReadProc</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.libtiffDummySeekProc">
+        <refnamediv>
+          <refname>libtiffDummySeekProc</refname>
+          <refpurpose></refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>static toff_t</type>
+            <methodname>libtiffDummySeekProc</methodname>
+            <methodparam>
+              <type>thandle_t</type>
+              <parameter>fd</parameter>
+            </methodparam>
+            <methodparam>
+              <type>toff_t</type>
+              <parameter>off</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int</type>
+              <parameter>i</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This call implements a dummy seek procedure for libtiff to
+	    allow for the conversion of TIFF images on the fly in
+	    memory without the use of temporary files. It is an
+	    internal call and should NEVER be called by users of the
+	    API.
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.libtiffDummyCloseProc">
+        <refnamediv>
+          <refname>libtiffDummyCloseProc</refname>
+          <refpurpose>mangle libtiff to do image conversion in memory without temportary files</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>static int</type>
+            <methodname>libtiffDummyCloseProc</methodname>
+            <methodparam>
+              <type>thandle_t</type>
+              <parameter>fd</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This call implements a dummy close procedure for libtiff
+	    to allow for the conversion of TIFF images on the fly in
+	    memory without the use of temporary files. It is an
+	    internal call and should NEVER be called by users of the
+	    API.
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.libpngDummyWriteProc">
+        <refnamediv>
+          <refname>libpngDummyWriteProc</refname>
+          <refpurpose>mangle libpng to do image conversion in memory without temporary files</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>libpngDummyWriteProc</methodname>
+            <methodparam>
+              <type>structp</type>
+              <parameter>png</parameter>
+            </methodparam>
+            <methodparam>
+              <type>bytep</type>
+              <parameter>data</parameter>
+            </methodparam>
+            <methodparam>
+              <type>uint</type>
+              <parameter>len</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This call implements a dummy write proceedure for
+	    libpng. This is needed so that Panda can get at the
+	    compressed PNG data, whilst converting it on the fly from
+	    unsupported PNG variants, and while not having to deal
+	    with temporary files. PDF documents only need the content
+	    of the IDAT chunks within the PNG file, and this method
+	    eases gaining access to those chunks.
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.libpngDummyFlushProc">
+        <refnamediv>
+          <refname>libpngDummyFlushProc</refname>
+          <refpurpose>mangle libpng to do image conversion in memory without temportary files</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>libpngDummyFlushProc</methodname>
+            <methodparam>
+              <type>structp</type>
+              <parameter>png</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This call implements a dummy flush proceedure for
+	    libpng. This is needed so that Panda can get at the
+	    compressed PNG data, whilst converting it on the fly from
+	    unsupported PNG variants, and while not having to deal
+	    with temporary files. PDF documents only need the content
+	    of the IDAT chunks within the PNG file, and this method
+	    eases gaining access to those chunks.
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_imagesizeTIFF">
+        <refnamediv>
+          <refname>panda_imagesizeTIFF</refname>
+          <refpurpose>determine the size of a TIFF image</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_imagesizeTIFF</methodname>
+            <methodparam>
+              <type>int *</type>
+              <parameter>width</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int *</type>
+              <parameter>height</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function will determine the size of
+	    <parameter>filename</parameter>, and place the dimensions
+	    in <parameter>width</parameter> and
+	    <parameter>height</parameter>.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imagesize"><function>panda_imagesize</function></link>
+	    <link linkend="api.panda_imagesizeJPEG"><function>panda_imagesizeJPEG</function></link>
+	    <link linkend="api.panda_imagesizePNG"><function>panda_imagesizePNG</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_imagesizeJPEG">
+        <refnamediv>
+          <refname>panda_imagesizeJPEG</refname>
+          <refpurpose>determine the size of a JPEG image</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_imagesizeJPEG</methodname>
+            <methodparam>
+              <type>int *</type>
+              <parameter>width</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int *</type>
+              <parameter>height</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function will determine the size of
+	    <parameter>filename</parameter>, and place the dimensions
+	    in <parameter>width</parameter> and
+	    <parameter>height</parameter>.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imagesize"><function>panda_imagesize</function></link>
+	    <link linkend="api.panda_imagesizeTIFF"><function>panda_imagesizeTIFF</function></link>
+	    <link linkend="api.panda_imagesizePNG"><function>panda_imagesizePNG</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_imagesizePNG">
+        <refnamediv>
+          <refname>panda_imagesizePNG</refname>
+          <refpurpose>determine the size of a PNG image</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_imagesizePNG</methodname>
+            <methodparam>
+              <type>int *</type>
+              <parameter>width</parameter>
+            </methodparam>
+            <methodparam>
+              <type>int *</type>
+              <parameter>height</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function will determine the size of
+	    <parameter>filename</parameter>, and place the dimensions
+	    in <parameter>width</parameter> and
+	    <parameter>height</parameter>.
+	  </para>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_imagesize"><function>panda_imagesize</function></link>
+	    <link linkend="api.panda_imagesizeJPEG"><function>panda_imagesizeJPEG</function></link>
+	    <link linkend="api.panda_imagesizeTIFF"><function>panda_imagesizeTIFF</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_checkinfo">
+        <refnamediv>
+          <refname>panda_checkinfo</refname>
+          <refpurpose>ensure an info object exists</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_checkinfo</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function call ensures that the info object exists
+	    inside the PDF document so that information may be safely
+	    added. This function call is unlikely to be needed by
+	    users of the API because it is used whenever one of the
+	    info object functions is called by the Panda code itself.
+	  </para>
+	  <example id="api.panda_checkinfo.example">
+	    <title id="api.panda_checkinfo.title"><function>panda_checkinfo</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_checkinfo(document);
+]]>
+	    </programlisting>
+	  </example>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_setid">
+        <refnamediv>
+          <refname>panda_setid</refname>
+          <refpurpose>set the id string for the PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type></type>
+            <methodname>panda_setid</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>pdf</parameter>
+            </methodparam>
+            <methodparam>
+              <type>char *</type>
+              <parameter>filename</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function sets the value of the document id within the
+	    PDF document. This is based on an MD5 hash of the file
+	    creation time, and the file path. Adobe products use some
+	    other stuff, but this should be sufficient to have a
+	    unique hash generated.
+	  </para>
+	  <example id="api.panda_setid.example">
+	    <title id="api.panda_setid.title"><function>panda_setid</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_setid(document, "filename.pdf");
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_setcreator"><function>panda_setcreator</function></link>,
+	    <link linkend="api.panda_setauthor"><function>panda_setauthor</function></link>,
+	    <link linkend="api.panda_settitle"><function>panda_settitle</function></link>,
+	    <link linkend="api.panda_setsubject"><function>panda_setsubject</function></link>,
+	    <link linkend="api.panda_setkeywords"><function>panda_setkeywords</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_entergraphicsmode">
+        <refnamediv>
+          <refname>panda_entergraphicsmode</refname>
+          <refpurpose>make sure the page description stream is in graphics mode</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_entergraphicsmode</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    PDF pages are described with a text stream full of
+	    commands. Many of these commands are similar to those used
+	    within Postscript. This function call ensures that the
+	    text stream is in a graphics state.
+	  </para>
+	  <example id="api.panda_entergraphicsmode.example">
+	    <title id="api.panda_entergraphicsmode.title"><function>panda_entergraphicsmode</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+panda_entergraphicsmode (page);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_exitgraphicsmode"><function>panda_exitgraphicsmode</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_exitgraphicsmode">
+        <refnamediv>
+          <refname>panda_exitgraphicsmode</refname>
+          <refpurpose></refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void</type>
+            <methodname>panda_exitgraphicsmode</methodname>
+            <methodparam>
+              <type>panda_page *</type>
+              <parameter>page</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    PDF pages are described with a text stream full of
+	    commands. Many of these commands are similar to those used
+	    within Postscript. This function call ensures that the
+	    text stream is not in a graphics state.
+	  </para>
+	  <example id="api.panda_exitgraphicsmode.example">
+	    <title id="api.panda_exitgraphicsmode.title"><function>panda_exitgraphicsmode</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+panda_entergraphicsmode (page);
+/* ... */
+panda_exitgraphicsmode (page);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_entergraphicsmode"><function>panda_entergraphicsmode</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_createandinsertpage">
+        <refnamediv>
+          <refname>panda_createandinsertpage</refname>
+          <refpurpose>create a page within the PDF document</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>panda_page *</type>
+            <methodname>panda_createandinsertpage</methodname>
+            <methodparam>
+              <type>panda_pdf *</type>
+              <parameter>document</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    This function creates the objects required for a page to
+	    exist within Panda. This function is wrappered by other
+	    Panda function calls.
+	  </para>
+	  <example id="api.panda_.example">
+	    <title id="api.panda_.title"><function>panda_</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_createandinsertpage(document);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_newpage"><function>panda_newpage</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_xmalloc">
+        <refnamediv>
+          <refname>panda_xmalloc</refname>
+          <refpurpose>allocate some memory</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type>void *</type>
+            <methodname>panda_xmalloc</methodname>
+            <methodparam>
+              <type>size_t</type>
+              <parameter>size</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Allocate some memory, performing all of the error checking so we don't have to elsewhere.
+	  </para>
+	  <example id="api.panda_xmalloc.example">
+	    <title id="api.panda_xmalloc.title"><function>panda_xmalloc</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+char *memory;
+
+memory = (char *) panda_xmalloc(42);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_xrealloc"><function>panda_xrealloc</function></link>,
+	    <link linkend="api.panda_xfree"><function>panda_xfree</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_xrealloc">
+        <refnamediv>
+          <refname>panda_xrealloc</refname>
+          <refpurpose>allocate some memory, resizing it if already exists</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type></type>
+            <methodname>panda_xrealloc</methodname>
+            <methodparam>
+              <type>void *</type>
+              <parameter>memory</parameter>
+            </methodparam>
+            <methodparam>
+              <type>size_t</type>
+              <parameter>size</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Allocate some memory, performing all of the error checking
+	    so we don't have to elsewhere. Resize the memory if it
+	    already exists.
+	  </para>
+	  <example id="api.panda_xrealloc.example">
+	    <title id="api.panda_xrealloc.title"><function>panda_xrealloc</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+char *memory;
+
+memory = (char *) panda_xrealloc(memory, 42);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_xmalloc"><function>panda_xmalloc</function></link>,
+	    <link linkend="api.panda_xfree"><function>panda_xfree</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+
+      <refentry id="api.panda_xfree">
+        <refnamediv>
+          <refname>panda_xfree</refname>
+          <refpurpose>deallocate memory in a safe manner</refpurpose>
+        </refnamediv>
+        <refsect1>
+          <title>Description</title>
+          <methodsynopsis>
+            <type></type>
+            <methodname>panda_xfree</methodname>
+            <methodparam>
+              <type>void *</type>
+              <parameter>memory</parameter>
+            </methodparam>
+          </methodsynopsis>
+          <para>
+	    Deallocate a block of memory in a safe manner. For
+	    instance, some systems will not allow you to free a NULL
+	    pointer...
+	  </para>
+	  <example id="api.panda_xfree.example">
+	    <title id="api.panda_xfree.title"><function>panda_xfree</function> example</title>
+	    <programlisting>
+<![CDATA[
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+char *p;
+p = panda_xmalloc(42);
+panda_xrealloc(p);
+]]>
+	    </programlisting>
+	  </example>
+	  <para>
+	    See also:
+	    <link linkend="api.panda_xmalloc"><function>panda_xmalloc</function></link>
+	    <link linkend="api.panda_xrealloc"><function>panda_xrealloc</function></link>
+	  </para>
+        </refsect1>
+      </refentry>
+    </section>
+  </chapter>
+</book>
+<!--
+TODO:
+
+o Sort internal functions into subcategories
+o Better documentation of panda_lineannotation
+o Advanced usage section
+o Introductory tutorial
+-->
