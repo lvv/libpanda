@@ -1,10 +1,10 @@
 %{
-  //  #include "constants.h"
-  //  #include "functions.h"
+  #include "constants.h"
+  #include "functions.h"
 
   int    binaryMode;
-  //  pdf    *yypdf;
-  //  object *yycurobj = NULL;
+  pdf    *yypdf;
+  object *yycurobj = NULL;
 %}
 
           /* Define the possible yylval values */
@@ -39,16 +39,21 @@ objects   : object objects
           ;
 
 object    : INT INT OBJ {
-                      printf("Found an object\n");
-
 		      // Create the object in the new PDF we are building
-		      //     yycurobj = newobject(yypdf, gNormal);
+		      yycurobj = newobject(yypdf, gNormal);
+
+		      // Make the object actually look like the one we read
+		      yycurobj->number = $1;
+		      yycurobj->generation = $2;
+
+		      // Make the object a child of the pages object
+		      addchild(yypdf->dummyObj, yycurobj);
                                                                              }
                         DBLLT dict DBLGT stream ENDOBJ
           ;
 
 dict      : NAME STRING dict {}
-          | NAME NAME dict {}                /* e.g. /Type /Page */
+          | NAME NAME dict {}
           | NAME ARRAY arrayvals ENDARRAY dict {}
           | NAME OBJREF dict {}
           | NAME DBLLT dict DBLGT dict {}
@@ -86,11 +91,14 @@ main(){
   binaryMode = 0;
 
   // Startup the pdf library and stuff
-  //  initpanda();
-  //  if((yypdf = pdfopen("lexical.pdf", "r")) == NULL)
-  //    error("lexer: could not open lexical.pdf");
+  initpanda();
+  if((yypdf = pdfopen_suppress("lexical.pdf", "w")) == NULL)
+    error("lexer: could not open lexical.pdf");
 
   yyparse();
+
+  // Write the new pdf out
+  pdfclose(yypdf);
 }
 
 yyerror(char *s){

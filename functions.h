@@ -77,6 +77,8 @@ void	setleading(pdf *, double);
 
 void  initpanda();
 pdf   *pdfopen(char *, char *);
+pdf   *pdfopen_suppress(char *, char *);
+pdf   *pdfopen_actual(char *, char *, int);
 void  pdfclose(pdf *);
 page  *pdfpage(pdf *, char *);
 
