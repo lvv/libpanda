@@ -1,0 +1,6 @@
+Time trials for the panda PDF generator.
+
+The code in this folder is used to determine if the panda library is a similar speed to it's compeditors... The code assumes that you have already successfully installed clibpdf (http://www.fastio.com), pdflib (http://www.pdflib.com) and panda.
+
+Michael Still
+22 July 2000

@@ -27,8 +27,9 @@ lib:		$(OBJFILES)
 		ar rs libpanda.a $(OBJFILES)
 
 # This installs the library and header files in the right places
+# I would have used -b here as well, but it is not supported on FreeBSD...
 install:	lib
-		install -m 664 -b libpanda.a /usr/local/lib/libpanda.a
+		install -m 664 libpanda.a /usr/local/lib/libpanda.a
 		install -m 664 -d /usr/local/include/panda
 		install -m 664 -D *.h /usr/local/include/panda/
 
