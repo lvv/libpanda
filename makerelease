@@ -13,6 +13,7 @@ then
 fi
 
 # Clean everything up. This should be a fresh checkout.
+./autogen.sh --prefix=/usr
 make clean
 (cd examples && make clean)
 rmlist="*core* *~ #*# Makefile Makefile.in *.o *.lo *.obj config.cache config.log config.status logfile math config.h *.pdf .deps panda.ncb panda.opt autom4te.cache CVS panda.db"
