@@ -913,6 +913,99 @@ There  are no known bugs in <command>Panda</command>. If you find one, please co
 </refsect1>
 </refentry>
 </chapter>
+<chapter><title>panda_applytemplate.sgml</title>
+<!-- 
+
+     This document is part of the panda distribution, and is covered
+     by the GNU GPL, a copy of which is in the file named COPYING inside the
+     distribution.
+
+     This program and it's documentation are distributed in the hope that 
+     they will be useful,but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+-->
+
+
+<refentry id="panda_applytemplate">
+<refmeta>
+<refentrytitle>panda_applytemplate</refentrytitle>
+<manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>panda_applytemplate</refname>
+<refpurpose>use a template page previously created</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<synopsis>
+ #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ void panda_applytemplate (panda_pdf * output, panda_page * target,
+ panda_page * template)
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>DESCRIPTION</title>
+<para>This function is used to use a template created with the <command>panda_newtemplate</command> function call.</para>
+</refsect1>
+
+<refsect1>
+<title>RETURNS</title>
+<para>Nothing</para>
+</refsect1>
+
+<refsect1>
+<title>EXAMPLE</title>
+<para> #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ 
+ panda_pdf *document;
+ panda_page *templatepage, *realpage;
+ 
+ panda_init();
+ 
+ document = panda_open("filename.pdf", "w");
+ templatepage = panda_newtemplate (document, panda_pagesize_a4);
+ realpage = panda_newpage (document, panda_pagesize_a4);
+ 
+ ... the order of the drawing commands to the two pages doesn't matter ...
+ 
+ panda_applytemplate(document, realpage, templatepage);
+</para>
+</refsect1>
+
+<refsect1>
+<title>SEE ALSO</title>
+<para>panda_newpage, panda_newtemplate</para>
+</refsect1>
+
+
+<refsect1>
+    <title>VERSION</title>
+    <para>
+This documentation was generated for <command>Panda</command> 0.4.2 by <command>autodocbook</command> (http://www.stillhq.com).
+    </para>
+</refsect1>
+
+<refsect1>
+    <title>AUTHOR</title>
+    <para>
+<command>Panda</command> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+</para>
+</refsect1>
+
+<refsect1>
+    <title>BUGS</title>
+    <para>
+There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
+</para>
+</refsect1>
+</refentry>
+</chapter>
 <chapter><title>panda_centerwindow.sgml</title>
 <!-- 
 
@@ -3107,6 +3200,80 @@ There  are no known bugs in <command>Panda</command>. If you find one, please co
 </refsect1>
 </refentry>
 </chapter>
+<chapter><title>panda_imagesize.sgml</title>
+<!-- 
+
+     This document is part of the panda distribution, and is covered
+     by the GNU GPL, a copy of which is in the file named COPYING inside the
+     distribution.
+
+     This program and it's documentation are distributed in the hope that 
+     they will be useful,but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+-->
+
+
+<refentry id="panda_imagesize">
+<refmeta>
+<refentrytitle>panda_imagesize</refentrytitle>
+<manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>panda_imagesize</refname>
+<refpurpose>determine the size of an image</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<synopsis>
+END
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>DESCRIPTION</title>
+<para>This function can be used to determine the size of an image before a <command>panda_imagebox</command>() function call.</para>
+</refsect1>
+
+<refsect1>
+<title>RETURNS</title>
+<para>Nothing</para>
+</refsect1>
+
+<refsect1>
+<title>EXAMPLE</title>
+<para>END</para>
+</refsect1>
+
+<refsect1>
+<title>SEE ALSO</title>
+<para>panda_imagebox, panda_imageboxrot</para>
+</refsect1>
+
+
+<refsect1>
+    <title>VERSION</title>
+    <para>
+This documentation was generated for <command>Panda</command> 0.4.2 by <command>autodocbook</command> (http://www.stillhq.com).
+    </para>
+</refsect1>
+
+<refsect1>
+    <title>AUTHOR</title>
+    <para>
+<command>Panda</command> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+</para>
+</refsect1>
+
+<refsect1>
+    <title>BUGS</title>
+    <para>
+There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
+</para>
+</refsect1>
+</refentry>
+</chapter>
 <chapter><title>panda_init.sgml</title>
 <!-- 
 
@@ -3733,6 +3900,93 @@ There  are no known bugs in <command>Panda</command>. If you find one, please co
 <refsect1>
 <title>SEE ALSO</title>
 <para>panda_open, panda_close</para>
+</refsect1>
+
+
+<refsect1>
+    <title>VERSION</title>
+    <para>
+This documentation was generated for <command>Panda</command> 0.4.2 by <command>autodocbook</command> (http://www.stillhq.com).
+    </para>
+</refsect1>
+
+<refsect1>
+    <title>AUTHOR</title>
+    <para>
+<command>Panda</command> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+</para>
+</refsect1>
+
+<refsect1>
+    <title>BUGS</title>
+    <para>
+There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
+</para>
+</refsect1>
+</refentry>
+</chapter>
+<chapter><title>panda_newtemplate.sgml</title>
+<!-- 
+
+     This document is part of the panda distribution, and is covered
+     by the GNU GPL, a copy of which is in the file named COPYING inside the
+     distribution.
+
+     This program and it's documentation are distributed in the hope that 
+     they will be useful,but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+-->
+
+
+<refentry id="panda_newtemplate">
+<refmeta>
+<refentrytitle>panda_newtemplate</refentrytitle>
+<manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>panda_newtemplate</refname>
+<refpurpose>create a template page in the PDF</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<synopsis>
+ #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ void panda_newtemplate(panda_pdf *document, char *pageSize);
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>DESCRIPTION</title>
+<para>This function is used to create 'template' pages which can then be refered to on other pages. For instance, if you were creating a document that used a standard letter head, then it would make sense to construct the letterhead as a template, and then use this on all the pages. The created template looks and feels just like any other page in the document for the purposes of creating content. Refer to the <command>panda_newpage</command> man page for details on how to use pages.</para>
+</refsect1>
+
+<refsect1>
+<title>RETURNS</title>
+<para>A pointer to the template page</para>
+</refsect1>
+
+<refsect1>
+<title>EXAMPLE</title>
+<para> #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ 
+ panda_pdf *document;
+ panda_page *templatepage;
+ 
+ panda_init();
+ 
+ document = panda_open("filename.pdf", "w");
+ templatepage = panda_newtemplate (document, panda_pagesize_a4);
+</para>
+</refsect1>
+
+<refsect1>
+<title>SEE ALSO</title>
+<para>panda_newpage, panda_applytemplate</para>
 </refsect1>
 
 

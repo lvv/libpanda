@@ -58,7 +58,7 @@ panda_init();
 document = panda_open("filename.pdf", "w");
 panda_checkinfo(document);
 EXAMPLE END
-SEEALSO panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setkeywords
+SEEALSO panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setkeywords, panda_setid
 DOCBOOK END
 ******************************************************************************/
 
@@ -101,7 +101,7 @@ panda_init();
 document = panda_open("filename.pdf", "w");
 panda_setauthor(document, "Mikal");
 EXAMPLE END
-SEEALSO panda_checkinfo, panda_setcreator, panda_settitle, panda_setsubject, panda_setkeywords
+SEEALSO panda_checkinfo, panda_setcreator, panda_settitle, panda_setsubject, panda_setkeywords, panda_setid
 DOCBOOK END
 ******************************************************************************/
 
@@ -144,7 +144,7 @@ panda_init();
 document = panda_open("filename.pdf", "w");
 panda_setcreator(document, "Panda PDF Generator");
 EXAMPLE END
-SEEALSO panda_checkinfo, panda_setauthor, panda_settitle, panda_setsubject, panda_setkeywords
+SEEALSO panda_checkinfo, panda_setauthor, panda_settitle, panda_setsubject, panda_setkeywords, panda_setid
 DOCBOOK END
 ******************************************************************************/
 
@@ -187,7 +187,7 @@ panda_init();
 document = panda_open("filename.pdf", "w");
 panda_settitle(document, "Mikal's excellent PDF document");
 EXAMPLE END
-SEEALSO panda_checkinfo, panda_setcreator, panda_setauthor, panda_setsubject, panda_setkeywords
+SEEALSO panda_checkinfo, panda_setcreator, panda_setauthor, panda_setsubject, panda_setkeywords, panda_setid
 DOCBOOK END
 ******************************************************************************/
 
@@ -230,7 +230,7 @@ panda_init();
 document = panda_open("filename.pdf", "w");
 panda_setsubject(document, "Mikal's homework");
 EXAMPLE END
-SEEALSO panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setkeywords
+SEEALSO panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setkeywords, panda_setid
 DOCBOOK END
 ******************************************************************************/
 
@@ -273,7 +273,7 @@ panda_init();
 document = panda_open("filename.pdf", "w");
 panda_setkeywords(document, "panda documentation pdf api generate");
 EXAMPLE END
-SEEALSO panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject
+SEEALSO panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setid
 DOCBOOK END
 ******************************************************************************/
 
@@ -288,3 +288,52 @@ panda_setkeywords (panda_pdf * document, char *keywords)
   panda_adddictitem (document, document->info, "Keywords",
 		     panda_brackettedtextvalue, keywords);
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_setid
+PURPOSE set the id string for the PDF document
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_setid (panda_pdf *output, char *filename);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function sets the value of the document id within the PDF document. This is based on an MD5 hash of the file creation time, and the file path. Adobe products use some other stuff, but this should be sufficient to have a unique hash generated.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_setid(document, "filename.pdf");
+EXAMPLE END
+SEEALSO panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setkeywords
+DOCBOOK END
+******************************************************************************/
+
+void
+panda_setid (panda_pdf * document, char *filename)
+{
+  char *now, *input, *hash;
+
+  // Check the info object already exists
+  panda_checkinfo (document);
+
+  now = panda_nowdate();
+  input = panda_xsprintf("%s-%s", now, filename);
+  hash = panda_md5hash(input);
+
+  // Add the creator bit to it
+  panda_adddictitem (document, document->info, "Creator",
+		     panda_brackettedtextvalue, creator);
+}
+

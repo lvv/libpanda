@@ -38,6 +38,9 @@
 #else
 #include <panda/constants.h>
 #include <panda/functions.h>
+
+#include "md5-global.h"
+#include "md5.h"
 #endif
 
 /******************************************************************************
@@ -373,7 +376,7 @@ PURPOSE a safe version of vnsprintf
 SYNOPSIS START
 #include&lt;panda/constants.h&gt;
 #include&lt;panda/functions.h&gt;
-char panda_xsnprintf(const char* format, va_list ap);
+char *panda_xsnprintf(const char* format, va_list ap);
 SYNOPSIS END
 
 DESCRIPTION <command>PANDA INTERNAL</command>. This command behaves like a slightly modified version of <command>vsnprintf</command>. The main difference is that if catches the various different ways that errors can be returned, and turns these into a single NULL is a string big enough to hold the formatted string could not be allocated. 
@@ -420,4 +423,40 @@ panda_xsnprintf (char *format, ...)
 
   va_end (ap);
   return output;
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_md5hash
+PURPOSE a wrapper to Rivest's MD5 code
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+char *panda_md5hash(char *input);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function generates a hash on the given string and then returns that hash.
+
+RETURNS A hash on the input string as a string
+
+EXAMPLE START
+This is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+char *
+panda_md5hash(char *input){
+  MD5_CTX context;
+  unsigned char *digest;
+
+  digest = panda_xmalloc(16);
+
+  MDInit (&context);
+  MDUpdate (&context, input, strlen(input));
+  MDFinal (digest, &context);
+
+  return digest;
 }
