@@ -1,4 +1,4 @@
-noinst_PROGRAMS = pandademo pandademolegacy circles morecircles empty template
+noinst_PROGRAMS = pandademo pandademolegacy circles morecircles empty template exercise
 
 LDADD = -lpanda -L../.libs
 INCLUDES = -I..
@@ -9,3 +9,4 @@ circles_SOURCES = circles.c
 morecircles_SOURCES = morecircles.c
 empty_SOURCES = empty.c
 template_SOURCES = template.c
+exercise_SOURCES = exercise.c
