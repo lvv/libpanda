@@ -168,8 +168,8 @@ panda_adddict(panda_pdf *document)
 // The value we return here is the database key that the dictionary value
 // was stored at, if this value is used as the name of a later key, then
 // this implies that we are adding a subdictionary. The valuetype for this
-// first key should have been panda_dictvalue
-char *
+// first key should have been panda_dictvalue. No longer return a value...
+void
 panda_adddictitem (panda_pdf *document, panda_object * input, char *name, 
 		   int valueType, ...)
 {
@@ -234,7 +234,7 @@ panda_adddictitem (panda_pdf *document, panda_object * input, char *name,
   retval = panda_adddictiteminternal(document, dictno, dictelem, 
 				     name, valueType, dictdata);
   free(dictdata);
-  return retval;
+  free(retval);
 }
 
 // Insert data into the dictionary at a given location
@@ -281,24 +281,30 @@ panda_adddictiteminternal(panda_pdf *document, int passeddictno, int dictelem,
       // We need to add the dictionary item here
       pdictno = panda_adddict(document);
       dbdata = panda_xsnprintf("%d", pdictno);
-      panda_adddictiteminternal(document, passeddictno,
+      retval = panda_adddictiteminternal(document, passeddictno,
       				panda_getdictelem(document, passeddictno, 
       						  namebit), namebit,
       				panda_dictionaryvalue, dbdata);
+
       free(dbdata);
+      free(retval);
       dictno = pdictno;
     }
 
 #if defined DEBUG
-    printf("Actually add the dictionary element\n");
+    printf("Create a subdictionary\n");
 #endif
 
     // We need the element number for the dictionary
     dictelem = panda_getdictelem(document, dictno, therest);
     retval = panda_adddictiteminternal(document, dictno, dictelem,
 				       therest, valueType, value);
-    free(dbname);
     free(tempname);
+
+#if defined DEBUG
+    printf("Rolling up sudictionary creation\n");
+#endif
+
     return retval;
   }
   else
@@ -334,10 +340,21 @@ panda_adddictiteminternal(panda_pdf *document, int passeddictno, int dictelem,
     dbdata2 = panda_xsnprintf("%s", value);
 
   panda_dbwrite(document, dbkey, dbdata2);
-  free(dbkey);
-  free(dbdata2);
-  if(dbdata != NULL)
-    free(dbdata);
+
+  if(tempname != NULL)
+    free(tempname);
+  if(dbkey != NULL)
+    free(dbkey);
+  if(dbdata2 != NULL)
+    free(dbdata2);
+
+  // todo_mikal: I think there should be a free here, dmalloc disagrees
+  //if(dbdata != NULL)
+  //  free(dbdata);
+
+#if defined DEBUG
+  printf("Finished inserting dictionary item\n");
+#endif
 
   return panda_xsnprintf("dict-%d-%d-", dictno, dictelem);
 }

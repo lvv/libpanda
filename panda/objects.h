@@ -39,8 +39,6 @@ extern "C"
     int textmode;
     int insidegraphicsblock;
     unsigned long byteOffset;
-    //    panda_dictionary *dict;
-    //    panda_dictionary *trans;
     char *currentSetFont;
 
     char *layoutstream, *binarystream;
@@ -64,7 +62,6 @@ extern "C"
   {
     panda_object *obj;
     panda_object *contents;
-    //    panda_dictionary *annotations;
 
     int height;
     int width;

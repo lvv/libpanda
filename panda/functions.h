@@ -163,7 +163,7 @@ extern "C"
   panda_object *panda_newobject (panda_pdf *, int);
   
   int panda_adddict(panda_pdf *);
-  char * panda_adddictitem (panda_pdf *, panda_object *, char *, int, ...);
+  void panda_adddictitem (panda_pdf *, panda_object *, char *, int, ...);
   char * panda_adddictiteminternal(panda_pdf *document, int dictno, 
 				   int dictelem, char *name, int valueType, 
 				   char *value);
