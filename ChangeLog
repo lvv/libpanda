@@ -21,3 +21,9 @@ Release 0.3 -> Release 0.4
 
   * Defined #defines so that headers are only included once at compilation
 	time
+
+  * Fixed the Makefile.am so that the man pages are installed as well...
+
+  * Discovered that the Makefile.am needs to be changed for that the headers
+	will install from their new location in panda/, so I had a look into
+	that as well...
