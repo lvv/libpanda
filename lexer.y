@@ -1,5 +1,10 @@
 %{
-  int binaryMode;
+  //  #include "constants.h"
+  //  #include "functions.h"
+
+  int    binaryMode;
+  //  pdf    *yypdf;
+  //  object *yycurobj = NULL;
 %}
 
           /* Define the possible yylval values */
@@ -33,11 +38,13 @@ objects   : object objects
           |
           ;
 
-object    : INT INT OBJ DBLLT dict DBLGT stream ENDOBJ { 
+object    : INT INT OBJ {
                       printf("Found an object\n");
 
 		      // Create the object in the new PDF we are building
-                           }
+		      //     yycurobj = newobject(yypdf, gNormal);
+                                                                             }
+                        DBLLT dict DBLGT stream ENDOBJ
           ;
 
 dict      : NAME STRING dict {}
@@ -77,6 +84,11 @@ trailer   : STRING DBLLT dict DBLGT STRING INT PDFEOF {}
 main(){
   // We are not looking into a stream at the moment
   binaryMode = 0;
+
+  // Startup the pdf library and stuff
+  //  initpanda();
+  //  if((yypdf = pdfopen("lexical.pdf", "r")) == NULL)
+  //    error("lexer: could not open lexical.pdf");
 
   yyparse();
 }

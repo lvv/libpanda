@@ -124,10 +124,10 @@ xref.o:		xref.c constants.h functions.h objects.h Makefile
 
 ###########################################################################
 
-lex:	panda.y panda.l
-	flex -opanda.lex.c panda.l
-	bison -d panda.y
-	$(COMPILER) -o lexical -D$(DODEBUGGING) panda.tab.c panda.lex.c -lfl -lpanda
+lexer:	lexer.y lexer.l
+	bison -d lexer.y
+	flex -olexer.c lexer.l
+	$(COMPILER) lexer.tab.c lexer.c @LIBS@ -D$(DMALLOC) -o lexical -lfl $(OBJFILES)
 
 fail:   lex
 	./lexical < tests/object_simple.txt
