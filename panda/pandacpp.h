@@ -50,8 +50,6 @@ public:
     { m_ptr = passed_ptr; }
   ~Cpanda_pdf() { panda_xfree(m_ptr); }
 
-  void imagebox (panda_page * a0, int a1, int a2, int a3, int a4, char * a5, int a6) { panda_imagebox(m_ptr, a0, a1, a2, a3, a4, a5, a6); }
-  void imageboxrot (panda_page * a0, int a1, int a2, int a3, int a4, double a5, char * a6, int a7) { panda_imageboxrot(m_ptr, a0, a1, a2, a3, a4, a5, a6, a7); }
   void setauthor (char * a0) { panda_setauthor(m_ptr, a0); }
   void setcreator (char * a0) { panda_setcreator(m_ptr, a0); }
   void settitle (char * a0) { panda_settitle(m_ptr, a0); }
@@ -68,8 +66,6 @@ public:
   void close () { panda_close(m_ptr); }
   Cpanda_page newpage (char * a0) { return Cpanda_page(panda_newpage(m_ptr, a0), m_ptr); }
   Cpanda_page newtemplate (char * a0) { return Cpanda_page(panda_newtemplate(m_ptr, a0), m_ptr); }
-  void textbox (panda_page * a0, int a1, int a2, int a3, int a4, char * a5) { panda_textbox(m_ptr, a0, a1, a2, a3, a4, a5); }
-  void textboxrot (panda_page * a0, int a1, int a2, int a3, int a4, double a5, char * a6) { panda_textboxrot(m_ptr, a0, a1, a2, a3, a4, a5, a6); }
   void hidetoolbar (int a0) { panda_hidetoolbar(m_ptr, a0); }
   void hidemenubar (int a0) { panda_hidemenubar(m_ptr, a0); }
   void hidewindowui (int a0) { panda_hidewindowui(m_ptr, a0); }
@@ -78,9 +74,6 @@ public:
   void nfspagemode (int a0) { panda_nfspagemode(m_ptr, a0); }
   void fullscreen (int a0) { panda_fullscreen(m_ptr, a0); }
   void textdirection (int a0) { panda_textdirection(m_ptr, a0); }
-  void pageduration (panda_page * a0, int a1) { panda_pageduration(m_ptr, a0, a1); }
-  void transduration (panda_page * a0, double a1) { panda_transduration(m_ptr, a0, a1); }
-  void transstyle (panda_page * a0, int a1) { panda_transstyle(m_ptr, a0, a1); }
 
 private:
   panda_pdf *m_ptr;
