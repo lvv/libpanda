@@ -13,3 +13,7 @@
   * Check that all of the malloc calls involving a strlen have 1 added to the
 	the result of the strlen in a manner that allows the size of char to
 	change.
+
+  * Make the use of autoconf a little more intelligent
+
+  * Start using automake

@@ -3,21 +3,20 @@ AC_INIT(constants.h)
 
 dnl Checks for programs.
 AC_PROG_CC
-dnl AC_PROG_INSTALL
 
 dnl Checks for libraries.
 dnl Replace `main' with a function in -lcpdf:
-AC_CHECK_LIB(cpdf, main)
+AC_CHECK_LIB(cpdf, cpdfInit)
 dnl Replace `main' with a function in -lm:
-AC_CHECK_LIB(m, main)
+AC_CHECK_LIB(m, sqrt)
 dnl Replace `main' with a function in -lpanda:
-AC_CHECK_LIB(panda, main)
+AC_CHECK_LIB(panda, initpanda)
 dnl Replace `main' with a function in -lpdf:
-AC_CHECK_LIB(pdf, main)
+AC_CHECK_LIB(pdf, )
 dnl Replace `main' with a function in -lpng:
-AC_CHECK_LIB(png, main)
+AC_CHECK_LIB(png, png_sig_cmp)
 dnl Replace `main' with a function in -ltiff:
-AC_CHECK_LIB(tiff, main)
+AC_CHECK_LIB(tiff, tiffopen)
 
 dnl Checks for header files.
 AC_HEADER_STDC

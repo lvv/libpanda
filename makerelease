@@ -11,8 +11,13 @@ do
   rm -i $item
 done
 
+delname="Makefile config.cache config.log config.status"
+
 # Get rid of makefiles
-for item in `find . -name Makefile -print`
+for filename in $delname
 do
-  rm -i $item
+  for item in `find . -name $filename -print`
+  do
+    rm -i $item
+  done
 done
