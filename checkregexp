@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Check that the temp space exists
+if [ -d mctemp ]
+then
+  echo "Warning: mctemp already existed"
+else
+  mkdir mctemp
+  echo "Made the mctemp directory, you might need to clean it up..."
+fi
+
+# Copy all the c files there
+cp *.c mctemp/
+
+# Now go through what we have there and add some space to the mallocs
+for item in `ls *.c`
+do
+  cat mctemp/$item | sed 's/malloc(/malloc(100 + /g' > $item
+done
+
+make
+./panda
+
+if [ `egrep "$1" output.pdf | wc -l | tr -d " "` -ne 0 ]
+then
+  echo "We could not remove $1 by manipulating mallocs"
+  exit
+fi
+
+# Find the file
+for item in `ls *.c`
+do
+  cp mctemp/$item $item
+  make
+  ./panda
+
+  if [ `egrep "$1" output.pdf | wc -l | tr -d " "` -ne 0 ]
+  then
+    echo "Changing $item made $1 appear in output.pdf"
+    exit
+  fi
+done
+
+echo "Didn't find anything of interest"
