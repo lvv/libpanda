@@ -17,7 +17,7 @@ done
 rm -rf timetrials
 rm -rf testdata
 
-delname="Makefile Makefile.am config.cache config.log config.status logfile math config.h output.pdf"
+delname="Makefile Makefile.am config.cache config.log config.status logfile math config.h output.pdf .deps"
 
 # Get rid of makefiles
 for filename in $delname

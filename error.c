@@ -14,7 +14,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "functions.h"
+#include <panda/functions.h>
 
 /******************************************************************************
 	Handle an error.

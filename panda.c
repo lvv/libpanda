@@ -14,8 +14,8 @@
 ******************************************************************************/
 
 #define  GLOBALS	here
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 
 // Initialise the PDF library ready for operations
 void

@@ -16,8 +16,8 @@
 ******************************************************************************/
 
 #include <windows.h>
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 
 // We should have a callback for errors setup -- this is not currently
 // implemented in the library, but we will put just enough here to make it

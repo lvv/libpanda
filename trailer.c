@@ -10,8 +10,8 @@
     Write out the trailer for the PDF.
 ******************************************************************************/
 
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 
 void
 writeTrailer (pdf * output)

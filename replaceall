@@ -1,9 +1,0 @@
-#!/bin/bash
-
-# Call me with: "*.[ch]" stream textstream
-
-for item in `ls $1`
-do
-  cat $item | sed "s/$2/$3/g" >> $item.new
-  mv $item.new $item
-done

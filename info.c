@@ -8,8 +8,8 @@
     Build the info object for the document.
 ******************************************************************************/
 
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 
 // Check if an info object exists in the PDF document already
 void

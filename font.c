@@ -8,8 +8,8 @@
     Routines related to fonts.
 ******************************************************************************/
 
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 
 char *
 createfont (pdf * output, char *fontname, int type, char *encoding)

@@ -15,8 +15,8 @@
     Utility functions for the panda library.
 ******************************************************************************/
 
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 
 // Print a possibly complex string into the PDF file and make sure the offset
 // into the PDF file is stored correctly (dispite Windows)

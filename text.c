@@ -9,8 +9,8 @@
     Functions related to displaying text on a PDF page.
 ******************************************************************************/
 
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 
 void
 textbox (pdf * output, page * thisPage, int top, int left, int bottom,

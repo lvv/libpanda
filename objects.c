@@ -12,8 +12,8 @@
     methods needed to maintain the objects that we have.
 ******************************************************************************/
 
-#include "functions.h"
-#include "constants.h"
+#include <panda/functions.h>
+#include <panda/constants.h>
 
 /******************************************************************************
   Create an object with error checking.

@@ -10,8 +10,8 @@
     as stand alone application. This file supports that methodology.
 ******************************************************************************/
 
-#include  "functions.h"
-#include  "constants.h"
+#include  <panda/functions.h>
+#include  <panda/constants.h>
 
 int
 main (int argc, char *argv[])
@@ -31,7 +31,7 @@ main (int argc, char *argv[])
     error ("demo: could not open output.pdf to write to.");
 
   // For every text mode in v 1.3
-  for (lineDepth = 0; lineDepth < 1; lineDepth++)
+  for (lineDepth = 0; lineDepth < 8; lineDepth++)
     {
 #if defined DEBUG
       printf ("Created page\n");

@@ -8,8 +8,8 @@
     Functions related to the internal representation of dates in PDF land.
 ******************************************************************************/
 
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 
 // Format a given date into the approved format
 char *

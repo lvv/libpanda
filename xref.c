@@ -9,8 +9,8 @@
     Handle all things related to the XREF table at the end of the PDF.
 ******************************************************************************/
 
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 
 void
 writeXref (pdf * output)

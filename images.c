@@ -9,8 +9,8 @@
     calls the functions that know about particular image types...
 ******************************************************************************/
 
-#include "constants.h"
-#include "functions.h"
+#include <panda/constants.h>
+#include <panda/functions.h>
 #include <tiffio.h>
 #include <math.h>
 #include <jpeglib.h>
@@ -44,6 +44,8 @@ imageboxrot (pdf * output, page * target, int top, int left,
 	  int bottom, int right, double angle, char *filename, int type)
 {
   object *imageObj, *xobjrefsubdict, *xobjrefsubsubdict;
+  char   *pdfFilename;
+  int    i;
 
 #if defined DEBUG
   printf ("Started inserting an image.\n");
@@ -53,10 +55,25 @@ imageboxrot (pdf * output, page * target, int top, int left,
   imageObj = newobject (output, gNormal);
   addchild (target->obj, imageObj);
 
+  // We cannot have some characters in the filename that we embed into the PDF,
+  // so we fix them here
+  if((pdfFilename = (char *) 
+      malloc((strlen(filename) + 1) * sizeof(char))) == NULL)
+    error("Could not make space for mangled filename");
+  strcpy(pdfFilename, filename);
+
+  for(i = 0; i < strlen(pdfFilename) + 1; i++)
+    if(pdfFilename[i] == '/') pdfFilename[i] = '-';
+
+#if defined DEBUG
+  printf("Filename for PDF was \"%s\" and is now \"%s\"\n",
+	 filename, pdfFilename);
+#endif
+
   // We make an object not just a dictionary because this is what
   // adddictitem needs
   xobjrefsubsubdict = newobject (output, gPlaceholder);
-  adddictitem (xobjrefsubsubdict->dict, filename, gObjValue, imageObj);
+  adddictitem (xobjrefsubsubdict->dict, pdfFilename, gObjValue, imageObj);
 
   xobjrefsubdict = newobject (output, gPlaceholder);
   adddictitem (xobjrefsubdict->dict, "XObject", gDictionaryValue,
@@ -81,7 +98,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
 
   // This line will need to be changed to gaurantee that the internal name is
   // unique unless the actual image is the same
-  adddictitem (imageObj->dict, "Name", gTextValue, filename);
+  adddictitem (imageObj->dict, "Name", gTextValue, pdfFilename);
 
   // Now we do the things that are image format specific... This is also
   // where we check if support has been compiled in for the libraries we need.
@@ -171,7 +188,8 @@ imageboxrot (pdf * output, page * target, int top, int left,
 		  0.0);		// ???
 
   target->contents->layoutstream =
-    streamprintf (target->contents->layoutstream, "/%s Do\nQ\n\n", filename);
+    streamprintf (target->contents->layoutstream, "/%s Do\nQ\n\n", 
+		  pdfFilename);
 
 #if defined DEBUG
   printf ("Finished inserting an image.\n");
@@ -195,13 +213,16 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
   int stripCount, stripMax;
   tsize_t stripSize;
   unsigned long imageOffset;
-  char *tempstream, *stripBuffer;
+  char *tempstream, *stripBuffer, errMessage[1024];
   uint16 tiffResponse16, compression, fillorder;
   uint32 height, width;
 
   // Open the file and make sure that it exists and is a TIFF file
-  if ((image = TIFFOpen (filename, "r")) == NULL)
-    error ("Could not open the specified TIFF image.");
+  if ((image = TIFFOpen (filename, "r")) == NULL){
+    snprintf(errMessage, 1024, 
+	     "Could not open the specified TIFF image \"%s\".", filename);
+    error(errMessage);
+  }
 
 #if defined DEBUG
   printf ("Inserting a TIFF image on page with object number %d.\n",

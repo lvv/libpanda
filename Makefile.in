@@ -69,12 +69,11 @@ YACC = @YACC@
 
 pandaincludedir = $(includedir)/panda
 
-noinst_PROGRAMS = panda
+noinst_PROGRAMS = pandademo
 lib_LIBRARIES = libpanda.a
-pandainclude_HEADERS = constants.h functions.h objects.h
+pandainclude_HEADERS = panda/constants.h panda/functions.h panda/objects.h
 
-panda_SOURCES = date.c font.c info.c main.c panda.c trailer.c error.c images.c objects.c text.c utility.c xref.c
-panda_LDADD = 
+pandademo_SOURCES = date.c font.c info.c main.c panda.c trailer.c error.c images.c objects.c text.c utility.c xref.c
 
 libpanda_a_SOURCES = date.c font.c info.c panda.c trailer.c error.c images.c objects.c text.c utility.c xref.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -93,10 +92,11 @@ images.o objects.o text.o utility.o xref.o
 AR = ar
 PROGRAMS =  $(noinst_PROGRAMS)
 
-panda_OBJECTS =  date.o font.o info.o main.o panda.o trailer.o error.o \
-images.o objects.o text.o utility.o xref.o
-panda_DEPENDENCIES = 
-panda_LDFLAGS = 
+pandademo_OBJECTS =  date.o font.o info.o main.o panda.o trailer.o \
+error.o images.o objects.o text.o utility.o xref.o
+pandademo_LDADD = $(LDADD)
+pandademo_DEPENDENCIES = 
+pandademo_LDFLAGS = 
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -114,8 +114,8 @@ GZIP_ENV = --best
 DEP_FILES =  .deps/date.P .deps/error.P .deps/font.P .deps/images.P \
 .deps/info.P .deps/main.P .deps/objects.P .deps/panda.P .deps/text.P \
 .deps/trailer.P .deps/utility.P .deps/xref.P
-SOURCES = $(libpanda_a_SOURCES) $(panda_SOURCES)
-OBJECTS = $(libpanda_a_OBJECTS) $(panda_OBJECTS)
+SOURCES = $(libpanda_a_SOURCES) $(pandademo_SOURCES)
+OBJECTS = $(libpanda_a_OBJECTS) $(pandademo_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -197,9 +197,9 @@ distclean-noinstPROGRAMS:
 
 maintainer-clean-noinstPROGRAMS:
 
-panda: $(panda_OBJECTS) $(panda_DEPENDENCIES)
-	@rm -f panda
-	$(LINK) $(panda_LDFLAGS) $(panda_OBJECTS) $(panda_LDADD) $(LIBS)
+pandademo: $(pandademo_OBJECTS) $(pandademo_DEPENDENCIES)
+	@rm -f pandademo
+	$(LINK) $(pandademo_LDFLAGS) $(pandademo_OBJECTS) $(pandademo_LDADD) $(LIBS)
 
 install-pandaincludeHEADERS: $(pandainclude_HEADERS)
 	@$(NORMAL_INSTALL)
@@ -291,7 +291,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$d/$$file $(distdir)/$$file; \
+	    cp -pr $$/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
