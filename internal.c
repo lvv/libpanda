@@ -48,3 +48,30 @@ panda_exitgraphicsmode (panda_page * target)
     panda_streamprintf (target->contents->layoutstream, "Q\n\n");
   target->contents->insidegraphicsblock = panda_false;
 }
+
+panda_page *
+panda_createandinsertpage (panda_pdf * output){
+  panda_page *newPage;
+
+  // Make some space for the object
+  newPage = (panda_page *) panda_xmalloc (sizeof (panda_page));
+
+  // Make the new page object
+  newPage->obj = panda_newobject (output, panda_normal);
+
+  // Add it to the object tree
+  panda_addchild (output->pages, newPage->obj);
+
+  // We also need to do the same sort of thing for the contents object
+  // that each page owns
+  newPage->contents = panda_newobject (output, panda_normal);
+  panda_addchild (newPage->obj, newPage->contents);
+  panda_adddictitem (newPage->obj->dict, "Contents", panda_objectvalue,
+		     newPage->contents);
+
+  // Setup some stuff in the contents object that we need later
+  newPage->contents->textmode = panda_false;
+  newPage->contents->insidegraphicsblock = panda_false;
+
+  return newPage;
+}

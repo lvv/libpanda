@@ -18,11 +18,9 @@
 panda_page *
 panda_newtemplate (panda_pdf * output, char *pageSize)
 {
-  panda_object *template;
+  panda_page *template;
 
-  // Make a new page and object
-  template = (page *) panda_xmalloc (sizeof (panda_page));
-  template->obj = (object *) panda_xmalloc (sizeof (panda_object));
+  template = panda_createandinsertpage(output);
 
   // Add the required dictionary elements for a template page
   panda_adddictitem (template->obj->dict, "Name", panda_textvalue, "XObject");
@@ -30,5 +28,6 @@ panda_newtemplate (panda_pdf * output, char *pageSize)
   panda_adddictitem (template->obj->dict, "FormType", panda_integervalue, 1);
   panda_adddictitem (template->obj->dict, "BBox", panda_textvalue, pageSize);
 
-  // Make sure it is written out at some point
-  panda_addchild (output->contents, template->obj);
+  return template;
+}
+

@@ -72,11 +72,11 @@ SUBDIRS = panda man
 noinst_PROGRAMS = pandademo pandademolegacy
 lib_LIBRARIES = libpanda.a
 
-pandademo_SOURCES = curves.c date.c font.c info.c main.c memory.c panda.c trailer.c error.c images.c internal.c objects.c text.c utility.c xref.c
+pandademo_SOURCES = curves.c date.c font.c info.c main.c memory.c panda.c trailer.c error.c images.c internal.c objects.c template.c text.c utility.c xref.c
 
-pandademolegacy_SOURCES = curves.c date.c font.c info.c legacymain.c memory.c panda.c trailer.c error.c images.c internal.c objects.c text.c utility.c xref.c
+pandademolegacy_SOURCES = curves.c date.c font.c info.c legacymain.c memory.c panda.c trailer.c error.c images.c internal.c objects.c template.c text.c utility.c xref.c
 
-libpanda_a_SOURCES = curves.c date.c font.c info.c memory.c panda.c trailer.c error.c images.c internal.c objects.c text.c utility.c xref.c
+libpanda_a_SOURCES = curves.c date.c font.c info.c memory.c panda.c trailer.c error.c images.c internal.c objects.c template.c text.c utility.c xref.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -89,19 +89,20 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libpanda_a_LIBADD = 
 libpanda_a_OBJECTS =  curves.o date.o font.o info.o memory.o panda.o \
-trailer.o error.o images.o internal.o objects.o text.o utility.o xref.o
+trailer.o error.o images.o internal.o objects.o template.o text.o \
+utility.o xref.o
 AR = ar
 PROGRAMS =  $(noinst_PROGRAMS)
 
 pandademo_OBJECTS =  curves.o date.o font.o info.o main.o memory.o \
-panda.o trailer.o error.o images.o internal.o objects.o text.o \
-utility.o xref.o
+panda.o trailer.o error.o images.o internal.o objects.o template.o \
+text.o utility.o xref.o
 pandademo_LDADD = $(LDADD)
 pandademo_DEPENDENCIES = 
 pandademo_LDFLAGS = 
 pandademolegacy_OBJECTS =  curves.o date.o font.o info.o legacymain.o \
-memory.o panda.o trailer.o error.o images.o internal.o objects.o text.o \
-utility.o xref.o
+memory.o panda.o trailer.o error.o images.o internal.o objects.o \
+template.o text.o utility.o xref.o
 pandademolegacy_LDADD = $(LDADD)
 pandademolegacy_DEPENDENCIES = 
 pandademolegacy_LDFLAGS = 
@@ -119,8 +120,9 @@ TAR = gtar
 GZIP_ENV = --best
 DEP_FILES =  .deps/curves.P .deps/date.P .deps/error.P .deps/font.P \
 .deps/images.P .deps/info.P .deps/internal.P .deps/legacymain.P \
-.deps/main.P .deps/memory.P .deps/objects.P .deps/panda.P .deps/text.P \
-.deps/trailer.P .deps/utility.P .deps/xref.P
+.deps/main.P .deps/memory.P .deps/objects.P .deps/panda.P \
+.deps/template.P .deps/text.P .deps/trailer.P .deps/utility.P \
+.deps/xref.P
 SOURCES = $(libpanda_a_SOURCES) $(pandademo_SOURCES) $(pandademolegacy_SOURCES)
 OBJECTS = $(libpanda_a_OBJECTS) $(pandademo_OBJECTS) $(pandademolegacy_OBJECTS)
 

@@ -98,6 +98,7 @@ extern "C"
 
   void panda_entergraphicsmode (panda_page *);
   void panda_exitgraphicsmode (panda_page *);
+  panda_page * panda_createandinsertpage (panda_pdf *);
 
 /******************************************************************************
   Font.c
@@ -147,6 +148,12 @@ extern "C"
   void panda_addchild (panda_object *, panda_object *);
   void panda_traverseobjects (panda_pdf *, panda_object *, int,
 			      traverseFunct);
+
+/******************************************************************************
+  Template.c
+******************************************************************************/
+
+  panda_page *panda_newtemplate (panda_pdf *, char *);
 
 /******************************************************************************
   Text.c

@@ -72,5 +72,14 @@ Release 0.3 -> Release 0.4
   * Made dmalloc stop complaining about freeing NULL pointers, I assume this 
 	makes the code more portable.
 
-  * Fixed a lot of memory leaks that were hiding in the code, dmalloc listed
-	them for me.
+  * The saga of the vertical line in JPEG images (reported by dave@valinux.com)
+	- a vertical line appears down the LHS of JPEG images embedded by Panda
+	- visible in: acroread (linux)
+	- not visible in: acroread (win32) gv (linux) xpdf (linux)
+
+	As a sanity check, I created a PDF using acrobat on a win32 box of just
+	the JPEG image in question... I then compared the streams. They are 
+	definitely different, but it would appear that acrobat is converting
+	the image into a TIFF stream before insertion, possibly because of this
+	sort of problem.
+	

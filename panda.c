@@ -305,28 +305,23 @@ panda_newpage (panda_pdf * output, char *pageSize)
   panda_page *newPage;
   char *pageSizeCopy;
 
-  ///////////////////////////////////////////////////////////////////////////
   // A template page is treated as a special case of a page, because they are
   // similar in many respects
-  ///////////////////////////////////////////////////////////////////////////
-  //  if(strcmp(pageSize, gPageSizeTemplate) == 0){ 
-  //    pageSizeCopy = (char *) panda_xmalloc(sizeof(char) * 
-  //                                      (strlen(pageSize) + 1));
-  //    strcpy(pageSizeCopy, pageSzie);
-  //    strtok(pageSizeCopy, " ");
-  //    newPage = panda_newtemplate(output, strtok(NULL, " "));
-  //    free(pageSizeCopy);
-  //   return newPage;
-  // }
-
-  // Make some space for the object
-  newPage = (panda_page *) panda_xmalloc (sizeof (panda_page));
-
-  // Make the new page object
-  newPage->obj = panda_newobject (output, panda_normal);
-
-  // Add it to the object tree
-  panda_addchild (output->pages, newPage->obj);
+  pageSizeCopy =
+    (char *) panda_xmalloc (sizeof (char) * (strlen (pageSize) + 1));
+  strcpy (pageSizeCopy, pageSize);
+  
+  if(strcmp(strtok(pageSizeCopy, " "), "TEMPLATE") == 0){
+    // Here we make the somewhat dangerous assumption that the only thing left
+    // in the pagesize string is numerical...
+    newPage = panda_newtemplate(output, strtok(NULL, "a"));
+    free(pageSizeCopy);
+    return newPage;
+  }
+  free(pageSizeCopy);
+  
+  // The code to setup the page has been moved to make things easier elsewhere
+  newPage = panda_createandinsertpage(output);
 
   // Setup some basic things within the page object's dictionary
   panda_adddictitem (newPage->obj->dict, "Type", panda_textvalue, "Page");
@@ -334,13 +329,6 @@ panda_newpage (panda_pdf * output, char *pageSize)
 		     pageSize);
   panda_adddictitem (newPage->obj->dict, "Parent", panda_objectvalue,
 		     output->pages);
-
-  // We also need to do the same sort of thing for the contents object
-  // that each page owns
-  newPage->contents = panda_newobject (output, panda_normal);
-  panda_addchild (newPage->obj, newPage->contents);
-  panda_adddictitem (newPage->obj->dict, "Contents", panda_objectvalue,
-		     newPage->contents);
 
   // Copy the pageSize string somewhere safe, and then clobber the copy.
   // We can't clober the original because it is a constant anyway and it would
