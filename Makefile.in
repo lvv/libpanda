@@ -122,3 +122,22 @@ utility.o:	utility.c constants.h functions.h objects.h Makefile
 xref.o:		xref.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) xref.c -o xref.o
 
+###########################################################################
+
+lex:	panda.y panda.l
+	flex -opanda.lex.c panda.l
+	bison -d panda.y
+	$(COMPILER) -o lexical -D$(DODEBUGGING) panda.tab.c panda.lex.c -lfl -lpanda
+
+fail:   lex
+	./lexical < tests/object_simple.txt
+	./lexical < tests/object_single_dict.txt
+	./lexical < tests/object_several_dict.txt
+	./lexical < tests/object_empty_stream.txt
+	./lexical < tests/object_ascii_stream.txt
+	./lexical < tests/object_binary_stream.txt
+	./lexical < tests/object_real_object.txt
+	./lexical < tests/pdf_no_xref.txt
+
+test:	lex
+	./lexical < tests/input_1.pdf
