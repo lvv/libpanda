@@ -152,3 +152,6 @@ Release 0.3 -> Release 0.4
 
   * Rectified a bug in the TIFF handling code, reported by 
 	Juan Herrero <juan_herrero@yahoo.com>
+
+  * michaelw on irc.freshmeat.net suggested a fix to the problem where the
+	examples were made before the library. This has now been applied...

@@ -119,6 +119,9 @@ extern "C"
     panda_scope_local
   };
 
+// Sometimes we need PI
+#define panda_pi 3.1415926535
+
 #ifdef __cplusplus
 }
 #endif

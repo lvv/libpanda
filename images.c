@@ -235,10 +235,10 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 			"\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
 			// The first matrix -- this has been modified because of
 			// patches submitted by Ceasar Miquel (miquel@df.uba.ar)
-			cos (angle * M_PI / 180.0),	// x scale
-			sin (angle * M_PI / 180.0),	// rotate and scale
-			-sin (angle * M_PI / 180.0),	// ???
-			cos (angle * M_PI / 180.0),	// y scale
+			cos (angle * panda_pi / 180.0),	// x scale
+			sin (angle * panda_pi / 180.0),	// rotate and scale
+			-sin (angle * panda_pi / 180.0),	// ???
+			cos (angle * panda_pi / 180.0),	// y scale
 			(double) left,	// x start
 			(double) target->height - bottom);	// y start
 

@@ -22,6 +22,9 @@ Juan Herrero    juan_herrero@yahoo.com    bug reports
                                           lots of work on the Windows 
                                           compilation issues in 0.4 RC3
 
+Michaelw        [irc.freshmeat.net]       suggested how to fix the examples
+                                          being made before the library
+
 Mirar		mirar@mirar.org	          was good enough to point out some
                                           usability issues with the 0.3.1
                                           release
