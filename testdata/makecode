@@ -1,14 +1,15 @@
 #!/bin/bash
 
+cfile=output.c               # `echo $item | sed 's/tif/c/'`
+rm -f $cfile
+
+cat header.c >> $cfile
+
 for item in `ls *tif | grep -v input.tif`
 do
-  cfile=`echo $item | sed 's/tif/c/'`
-
-  rm -f $cfile
-  cat header.c >> $cfile
   cat img-1.c >> $cfile
   echo \"$item\" >> $cfile
   cat img-2.c >> $cfile
-  cat footer.c >> $cfile
 done
 
+cat footer.c >> $cfile

@@ -4,6 +4,7 @@
 int main(int argc, char *argv[]){
   pdf    *demo;
   page   *currPage;
+  char   filename[1024];
 
   // Initialise the library
   initpanda();
