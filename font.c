@@ -85,4 +85,8 @@ object *getfontobj(pdf *output, char *fontident){
 
 void setfontmode(pdf *output, int mode){
   output->currentFontMode = mode;
-  }
+}
+
+void setcharacterspacing(pdf *output, double amount){
+  output->currentFontCharacterSpacing = amount;
+}

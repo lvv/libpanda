@@ -3,7 +3,7 @@
 
   Change Control:                                                      DDMMYYYY
     Michael Still    File created                                      03062000
-    ....................File definitions added as needed................
+    ....................Function definitions added as needed................
 
   Purpose:
     Prototypes for all internal function calls...
@@ -35,6 +35,7 @@ void    setfont(pdf *, char *);
 void    setfontsize(pdf *, int);
 object  *getfontobj(pdf *, char *);
 void    setfontmode(pdf *, int);
+void    setcharacterspacing(pdf *, double);
 
 /******************************************************************************
   Panda.c

@@ -85,8 +85,6 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
 
   /***************************************************************************
     Back to inserting the text
-
-    There is no need for the Tr command if the text mode is 0
   ***************************************************************************/
 
   // Build the command buffer
@@ -94,12 +92,26 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   // PS matrix environment well enough to be writing this sort of code. I am
   // going to have to have a look into this a little more...
   sprintf(commandBuffer,
-    "BT\n 1 0 0 1 %d %d Tm\n %d Tr\n/%s %d Tf\n (%s) '\nET",
-    internalLeft, internalTop,
-    output->currentFontMode,
-    output->currentFont, output->currentFontSize,
-    text);
+    "BT\n 1 0 0 1 %d %d Tm\n",
+    internalLeft, internalTop);
 
   // This new object has a stream with the text in it
+  appendstream(textobj, commandBuffer, strlen(commandBuffer));
+
+  // There are now a whole bunch of options that may or may not need to be set
+  if(output->currentFontMode != 0){
+    sprintf(commandBuffer, "%d Tr\n", output->currentFontMode);
+    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+  }
+
+  if(output->currentFontCharacterSpacing != 0){
+    sprintf(commandBuffer, "%d Tc\n", output->currentFontCharacterSpacing);
+    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+  }
+
+  // Finish off the text stream
+  sprintf(commandBuffer, "/%s %d Tf\n (%s) '\nET",
+    output->currentFont, output->currentFontSize,
+    text);
   appendstream(textobj, commandBuffer, strlen(commandBuffer));
 }
