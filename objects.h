@@ -32,7 +32,7 @@ typedef struct __dictionary{
   struct __dictionary  *next;
 } dictionary;
 
-typedef struct __object{    // BOOK: Chapter 1
+typedef struct __object{
   int            type;
   int            number;
   int            generation;
@@ -51,7 +51,7 @@ typedef struct __page{
   int         width;
 } page;
 
-typedef struct __child{      // BOOK: Chapter 1
+typedef struct __child{
   object          *me;
   struct __child  *next;
 } child;
@@ -62,8 +62,7 @@ typedef struct __xref{
   struct __xref  *next;
 } xref;
 
-typedef struct __pdf      // BOOK: Chapter 1
-{
+typedef struct __pdf{
   FILE             *file;  
   object           *catalog, *pages, *fonts;
   unsigned long    byteOffset, xrefOffset;
