@@ -31,12 +31,12 @@ txt: $(XML)
 clean:
 	rm -rf \
 		html html-single dvi pdf ps rtf tex txt \
-		fann.html \
-		fann.dvi \
-		fann.pdf \
-		fann.ps \
-		fann.rtf \
-		fann.tex \
-		fann.txt
+		panda.html \
+		panda.dvi \
+		panda.pdf \
+		panda.ps \
+		panda.rtf \
+		panda.tex \
+		panda.txt
 
 distclean: clean
