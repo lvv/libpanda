@@ -98,3 +98,7 @@ void setwordspacing(pdf *output, double amount){
 void sethorizontalscaling(pdf *output, double scaling){
   output->currentHorizontalScaling = scaling;
 }
+
+void setleading(pdf *output, double leading){
+  output->currentLeading = leading;
+}

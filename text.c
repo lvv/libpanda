@@ -16,7 +16,7 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
        int right, char *text){
   // Add a box with some text in it into the PDF page
   object      *textobj, *tempObj;
-  char        commandBuffer[1024];
+  char        commandBuffer[1024], *currentToken, *strtokVictim = NULL;
   int         internalTop, internalLeft;
   object      *subdict, *subsubdict, *fontObj;
 
@@ -120,9 +120,39 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     appendstream(textobj, commandBuffer, strlen(commandBuffer));
   }
 
-  // Finish off the text stream
-  sprintf(commandBuffer, "/%s %d Tf\n (%s) '\nET",
-    output->currentFont, output->currentFontSize,
-    text);
+  if(output->currentLeading != 0){
+    sprintf(commandBuffer, "%.2 TL\n", output->currentLeading);
+    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+  }
+
+  // Set the font that we want to use
+  sprintf(commandBuffer, "/%s %d Tf\n", 
+    output->currentFont, output->currentFontSize);
   appendstream(textobj, commandBuffer, strlen(commandBuffer));
+
+  /***************************************************************************
+    PDFs are funny in that we have to specify where line breaks are to occur.
+    We allow the programmer to specify line breaks by putting the characters
+    '\n' into the string that we is having us put into the PDF. We therefore
+    need to find this character sequence and handle it...
+  ***************************************************************************/
+
+  // Get the first token
+  if((strtokVictim = (char *) malloc(sizeof(char) * strlen(text))) == NULL)
+    error("Could not make space for temporary copy of textbox text.");
+  strcpy(strtokVictim, text);
+
+  currentToken = strtok(strtokVictim, "\n");
+
+  while(currentToken != NULL){
+    sprintf(commandBuffer, " (%s) '\n", currentToken);
+    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+  
+    currentToken = strtok(NULL, "\n");
+  }
+
+  /***************************************************************************
+    Now finish the text off
+  ***************************************************************************/
+  appendstream(textobj, "ET", 2);
 }

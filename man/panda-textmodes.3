@@ -70,14 +70,28 @@ function call in Panda. Note that this attribute is 'sticky' and therefore will 
 The default value is 0, meaning no extra space between lines of text.
 .RE
 
+Font and size (Tf operator)
+.RS
+The definition of this operator may be found on page 342 of the PDF specification.
 
+The mode is fully implemented in Panda, and is accessible through the
+.B setfont (3)
+and
+.B setfontsize (3)
+function calls in Panda. Note that these attributes are 'sticky' and therefore will not revert to the default if you perform other manipulations. You will need to explicitly change font and size if you wish to.
 
+The default font is Helvetica, with a size of 16 points.
+.RE
 
+Text matrix (Tm operator)
+.B PARTIALLY IMPLEMENTED
+.RS
+The definition of this operator may be found on page 342 of the PDF specification.
 
-
-
-
-
+The mode is partially implemented in Panda (due to my lack of understanding of the meaning of the values in the matrix), and is accessible indirectly through the
+.B textbox (3)
+function call in Panda. This is because this operator is used to place the textbox onto the page. The default Tm value, is we did not set one in the textbox code, is the bottom left hand corner of the page. The default implemented by the textbox code is the top left hand corner of the page, although the user must set a location on the page for the function call to be valid.
+.RE
 
 Text rendering (Tr operator)
 .RS
@@ -89,6 +103,43 @@ function call in Panda. Note that this attribute is 'sticky' and therefore will 
 
 The default mode is gTextModeNormal.
 .RE
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 .SH AUTHOR
 .br
 Panda is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000, and is released under the GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
