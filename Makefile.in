@@ -48,6 +48,9 @@ OBJFILES = date.o error.o font.o images.o info.o objects.o panda.o text.o traile
 all:		$(OBJFILES) main.o
 		gcc $(OBJFILES) @LIBS@ -D$(DMALLOC) main.o -o panda
 
+libcheck:	lib
+		gcc -D$(DMALLOC) main.c -o panda-lib -L. -lpanda -ltiff -ljpeg -lpng
+
 # This makes the archive that is the panda library. It is not installed by this
 # set of commands though, that needs a make install... The ar command is
 # quite interesting, read the man page for more information...
@@ -57,11 +60,11 @@ lib:		$(OBJFILES)
 # This installs the library and header files in the right places
 # I would have used -b here as well, but it is not supported on FreeBSD...
 install:	lib
-		@INSTALL@ -m 664 libpanda.a @libdir@/libpanda.a
-		@INSTALL@ -m 664 -d @includedir@/panda
-		@INSTALL@ -m 664 -D *.h @includedir@/panda/
-		@INSTALL@ -m 664 -d @mandir@/man3
-		@INSTALL@ -m 664 -D man/*.3 @mandir@/man3
+		@INSTALL@ -m 665 libpanda.a @libdir@/libpanda.a
+		@INSTALL@ -m 665 -d @includedir@/panda
+		@INSTALL@ -m 665 -D `ls *.h | grep -v lexer` @includedir@/panda/
+		@INSTALL@ -m 665 -d @mandir@/man3
+		@INSTALL@ -m 665 -D man/*.3 @mandir@/man3
 
 # This is used in my testing of make install. It does not uninstall the man
 # pages yet because I am not sure of the neatest way of doing this just yet...

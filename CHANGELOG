@@ -32,25 +32,37 @@ Release 0.2 -> Release 0.3
 	
 	* Fillorder (MSB2LSB vs LSB2MSB)
 	* Photometric interpretation (MINISWHITE vs MINISBLACK)
-	* Planar config (contiguous or separate)
 	* Number of strips (PDF only supports single strip tiffs)
 	* Endian-ness (big endian vs little endian)
+
+	The following are not currently tested because they cause strange
+	errors from tiffcp (files much too small to be real):
+	* Planar config (contiguous or separate)
 
 	The following compression schemes have been tested so far:
 	* CCITT Fax Group 3
 	* CCITT Fax Group 4
 	* Uncompressed
-
-	The following compression schemes should be tested and will be	
-	sometime in the near future:	
-	* Packbit
+	* Packbits
 	* JPEG
 	* zip (flate)
 	* LZW (unsupported and should exit with an error message)
-	* ...
 
 	If you find a tiff image that does not work, then please send me a copy
 	so that I can test it to see what happens. If that is not possible,
 	then please make sure you have libtiff installed and then run
 	tiffinfo and tiffdump against the image and send me the output of that.
 	I can be reached at mikal@stillhq.com...
+
+	The testimages I used may be found in the testdata directory, and are
+	generated using the makeimages script in that directory. To clean up,
+	use the removeimages script.
+
+
+
+
+
+
+
+
+
