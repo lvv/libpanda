@@ -44,9 +44,7 @@ Doug Jackson                              had ideas bounced off him a lot
                                           because he understands a lot about 
                                           black and white tiff imaging
 
-Evan Nemerson	evan@coeus-group.com	  fixed an error with the textbox
-					  implementation which caused it to
-					  sometimes lockup
+Evan Nemerson	evan@coeus-group.com	  a variety of minor bugfixes
 
 Juan Herrero    juan_herrero@yahoo.com    bug reports
                                           lots of work and suggestions for 
