@@ -16,3 +16,8 @@ Release 0.3 -> Release 0.4
 	the same path for the includes as the real applications that users
 	would be writing. This means that the demo application had to be
 	renamed to pandademo (from panda).
+
+  * extern "C"'ed all of the headers so that they are accessible from C++
+
+  * Defined #defines so that headers are only included once at compilation
+	time
