@@ -17,7 +17,28 @@
 #include <panda/functions.h>
 
 /******************************************************************************
-  Handle an error.
+DOCBOOK START
+
+FUNCTION panda_error
+PURPOSE handle a <command>Panda</command> error
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_error (char *msg);
+SYNOPSIS END
+
+DESCRIPTION Print out the error message to stderr and then exit.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_error ("All is wrotten in the state of Denmark");
+EXAMPLE END
+DOCBOOK END
 ******************************************************************************/
 
 // You can bang or head or you can drown in a hole

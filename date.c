@@ -36,7 +36,7 @@ printf("Panda would encode 19 July 1977 3:14:23 AM as: %s\n",
   panda_makedate(1977, 7, 19, 3, 14, 23));
 
 EXAMPLE END
-SEEALSO panda_addlinesegment, panda_addcubiccurvesegment, panda_addquadraticsegmentone, panda_addquadraticcurvesegmenttwo, panda_closeline, panda_rectangle, panda_endline, panda_strokeline, panda_fillline, panda_setlinewidth, panda_setlinecap, panda_setlinejoin, panda_setlinedash, panda_setfillcolor, panda_setlinecolor
+SEEALSO panda_nowdate
 DOCBOOK END
 ******************************************************************************/
 
@@ -103,7 +103,7 @@ EXAMPLE START
 
 printf("The time now is %s\n", panda_nowdate());
 EXAMPLE END
-SEEALSO panda_addlinesegment, panda_addcubiccurvesegment, panda_addquadraticsegmentone, panda_addquadraticcurvesegmenttwo, panda_closeline, panda_rectangle, panda_endline, panda_strokeline, panda_fillline, panda_setlinewidth, panda_setlinecap, panda_setlinejoin, panda_setlinedash, panda_setfillcolor, panda_setlinecolor
+SEEALSO panda_makedate
 DOCBOOK END
 ******************************************************************************/
 
