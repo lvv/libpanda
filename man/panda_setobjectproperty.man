@@ -1,4 +1,4 @@
-...\" $Header: /sources/panda/panda/man/Attic/panda_setobjectproperty.man,v 1.2 2001/07/20 05:08:47 mikal Exp $
+...\" $Header: /sources/panda/panda/man/Attic/panda_setobjectproperty.man,v 1.3 2002/01/06 08:53:55 mikal Exp $
 ...\"
 ...\"	transcript compatibility for postscript use.
 ...\"
@@ -50,48 +50,3 @@
 .ds f2\"
 .ds f3\"
 .ds f4\"
-.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 
-.TH "panda_setobjectproperty" "3"
-.SH "NAME"
-panda_setobjectproperty \(em set a property value for an object
-.SH "SYNOPSIS"
-.PP
-.nf
- #includepanda/constants\&.h
- #includepanda/functions\&.h
- void panda_setobjectproperty (panda_object *target, int scope, int propid, int propval);
-.fi
-.SH "DESCRIPTION"
-.PP
-Properties are a way of specifing things about objects\&. These properties can have either a cascade scope (they affect all subsequently created objects that are children of that object) -- \fBpanda_scope_cascade\fP, or local (they only occur for that object) -- \fBpanda_scope_local\fP\&. Possible properties are defined in the \fBpanda_const_properties\fP manual page\&.
-.SH "RETURNS"
-.PP
-None
-.SH "EXAMPLE"
-.PP
- #includepanda/constants\&.h
- #includepanda/functions\&.h
- 
- panda_pdf *document;
- panda_object *obj;
- 
- panda_init();
- 
- document = panda_open("filename\&.pdf", "w");
- obj = panda_newobject(document, panda_object_normal);
- panda_setproperty(obj, panda_scope_cascade, panda_object_property_compress, panda_true);
- 
-.SH "SEE ALSO"
-.PP
-panda_newobject, panda_const_properties
-.SH "VERSION"
-.PP
-This documentation was generated for \fBPanda\fP 0\&.4 by \fBautodocbook\fP (http://www\&.stillhq\&.com)\&.
-    
-.SH "AUTHOR"
-.PP
-\fBPanda\fP is under development by Michael Still (mikal@stillhq\&.com)\&. All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL\&. Code submissions are welcomed\&. Contact Michael at the address above if you have something you would like to contribute\&.
-.SH "BUGS"
-.PP
-There  are no known bugs in \fBPanda\fP\&. If you find one, please contact mikal@stillhq\&.com and let me know\&.
-...\" created by instant / docbook-to-man, Thu 19 Jul 2001, 14:08

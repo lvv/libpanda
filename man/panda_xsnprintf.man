@@ -1,4 +1,4 @@
-...\" $Header: /sources/panda/panda/man/Attic/panda_xsnprintf.man,v 1.2 2001/07/20 05:08:47 mikal Exp $
+...\" $Header: /sources/panda/panda/man/Attic/panda_xsnprintf.man,v 1.3 2002/01/06 08:53:55 mikal Exp $
 ...\"
 ...\"	transcript compatibility for postscript use.
 ...\"
@@ -50,34 +50,3 @@
 .ds f2\"
 .ds f3\"
 .ds f4\"
-.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 
-.TH "panda_xsnprintf" "3"
-.SH "NAME"
-panda_xsnprintf \(em a safe version of vnsprintf
-.SH "SYNOPSIS"
-.PP
-.nf
- #includepanda/constants\&.h
- #includepanda/functions\&.h
- char panda_xsnprintf(const char* format, va_list ap);
-.fi
-.SH "DESCRIPTION"
-.PP
-\fBPANDA INTERNAL\fP\&. This command behaves like a slightly modified version of \fBvsnprintf\fP\&. The main difference is that if catches the various different ways that errors can be returned, and turns these into a single NULL is a string big enough to hold the formatted string could not be allocated\&. 
-.SH "RETURNS"
-.PP
-A string
-.SH "EXAMPLE"
-.PP
- his is an internal function which will only be needed by those playing deeply with Panda itself, so I won\&'t provide an example\&.
-.SH "VERSION"
-.PP
-This documentation was generated for \fBPanda\fP 0\&.4 by \fBautodocbook\fP (http://www\&.stillhq\&.com)\&.
-    
-.SH "AUTHOR"
-.PP
-\fBPanda\fP is under development by Michael Still (mikal@stillhq\&.com)\&. All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL\&. Code submissions are welcomed\&. Contact Michael at the address above if you have something you would like to contribute\&.
-.SH "BUGS"
-.PP
-There  are no known bugs in \fBPanda\fP\&. If you find one, please contact mikal@stillhq\&.com and let me know\&.
-...\" created by instant / docbook-to-man, Thu 19 Jul 2001, 14:08

@@ -1,4 +1,4 @@
-...\" $Header: /sources/panda/panda/man/Attic/panda_newobject.man,v 1.2 2001/07/20 05:08:46 mikal Exp $
+...\" $Header: /sources/panda/panda/man/Attic/panda_newobject.man,v 1.3 2002/01/06 08:53:55 mikal Exp $
 ...\"
 ...\"	transcript compatibility for postscript use.
 ...\"
@@ -50,46 +50,3 @@
 .ds f2\"
 .ds f3\"
 .ds f4\"
-.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 
-.TH "panda_newobject" "3"
-.SH "NAME"
-panda_newobject \(em create a new object
-.SH "SYNOPSIS"
-.PP
-.nf
- #includepanda/constants\&.h
- #includepanda/functions\&.h
- panda_object *panda_newobject (panda_pdf *output, int type);
-.fi
-.SH "DESCRIPTION"
-.PP
-\fBPANDA INTERNAL\fP\&. Create a new object within the PDF document output\&. The types of object are panda_object_normal and panda_object_placeholder -- the difference is that a placeholder object wont be written out when the PDF is dumped to disc\&. This is an internal function call and would only be need by API users if they are creating support for object types not currently supported by \fBPanda\fP\&. If this is the case, then these users are encouraged to submit their code changes back to mikal@stillhq\&.com for inclusion with the next release of \fBPanda\fP, and are reminded of their obligations under the GNU GPL\&.
-.SH "RETURNS"
-.PP
-A pointer to the new object (a panda_object *)
-.SH "EXAMPLE"
-.PP
- #includepanda/constants\&.h
- #includepanda/functions\&.h
- 
- panda_pdf *document;
- panda_object *obj;
- 
- panda_init();
- 
- document = panda_open("filename\&.pdf", "w");
- obj = panda_newobject(document, panda_object_normal);
-.SH "SEE ALSO"
-.PP
-panda_freeobject, panda_writeobject, panda_traverseobjects, panda_addchild
-.SH "VERSION"
-.PP
-This documentation was generated for \fBPanda\fP 0\&.4 by \fBautodocbook\fP (http://www\&.stillhq\&.com)\&.
-    
-.SH "AUTHOR"
-.PP
-\fBPanda\fP is under development by Michael Still (mikal@stillhq\&.com)\&. All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL\&. Code submissions are welcomed\&. Contact Michael at the address above if you have something you would like to contribute\&.
-.SH "BUGS"
-.PP
-There  are no known bugs in \fBPanda\fP\&. If you find one, please contact mikal@stillhq\&.com and let me know\&.
-...\" created by instant / docbook-to-man, Thu 19 Jul 2001, 14:08

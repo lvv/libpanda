@@ -1,4 +1,4 @@
-...\" $Header: /sources/panda/panda/man/Attic/libpngDummyWriteProc.man,v 1.3 2001/07/26 09:50:14 mikal Exp $
+...\" $Header: /sources/panda/panda/man/Attic/libpngDummyWriteProc.man,v 1.4 2002/01/06 08:53:55 mikal Exp $
 ...\"
 ...\"	transcript compatibility for postscript use.
 ...\"
@@ -50,35 +50,3 @@
 .ds f2\"
 .ds f3\"
 .ds f4\"
-.ta 8n 16n 24n 32n 40n 48n 56n 64n 72n 
-.TH "libpngDummyWriteProc" "3"
-.SH "NAME"
-libpngDummyWriteProc \(em mangle libpng to do image conversion in memory without temportary files
-.SH "SYNOPSIS"
-.PP
-.nf
- void libpngDummyWriteProc(png_structp png, png_bytep data, png_uint_32 len);
-.fi
-.SH "DESCRIPTION"
-.PP
-\fBPANDA INTERNAL\fP\&. This call implements a dummy write proceedure for libpng\&. This is needed so that Panda can get at the compressed PNG data, whilst converting it on the fly from unsupported PNG variants, and while not having to deal with temporary files\&. PDF documents only need the content of the IDAT chunks within the PNG file, and this method eases gaining access to those chunks\&.
-.SH "RETURNS"
-.PP
-Zero
-.SH "EXAMPLE"
-.PP
- ee panda_insertPNG for an example usage
-.SH "SEE ALSO"
-.PP
-panda_insertPNG, libpngDummyReadProc, libpngDummyFlushProc
-.SH "VERSION"
-.PP
-This documentation was generated for \fBPanda\fP 0\&.4 by \fBautodocbook\fP (http://www\&.stillhq\&.com)\&.
-    
-.SH "AUTHOR"
-.PP
-\fBPanda\fP is under development by Michael Still (mikal@stillhq\&.com)\&. All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL\&. Code submissions are welcomed\&. Contact Michael at the address above if you have something you would like to contribute\&.
-.SH "BUGS"
-.PP
-There  are no known bugs in \fBPanda\fP\&. If you find one, please contact mikal@stillhq\&.com and let me know\&.
-...\" created by instant / docbook-to-man, Mon 23 Jul 2001, 13:37

@@ -29,10 +29,10 @@ echo "Updating documentation"
 rm man/*sgml man/*man
 
 # Generate the new documentation
-#for item in `ls *.c`
-#do
-#  ~mikal/opensource/autodocbook/0.3/autodocbook $item man
-#done
+for item in `ls *.c`
+do
+  ~mikal/opensource/autodocbook/working/autodocbook $item man
+done
 
 # Autotools
 echo "------------------------------------------------------------------------"
@@ -64,6 +64,8 @@ echo "Checking for memory leaks"
 echo "------------------------------------------------------------------------"
 echo "Clean up"
 
+make clean
+
 for item in `find . | grep core`
 do
   rm -i $item
@@ -76,7 +78,7 @@ find . -name "*obj" -type f -exec rm -i {} \; -print
 rm -rf timetrials
 rm -rf testdata
 
-delname="Makefile config.cache config.log config.status logfile math config.h output.pdf .deps"
+delname="Makefile config.cache config.log config.status logfile math config.h output.pdf .deps panda.ncb panda.opt"
 
 # Get rid of makefiles
 for filename in $delname
@@ -90,15 +92,19 @@ done
 # How much space do we use?
 echo "------------------------------------------------------------------------"
 echo "Release takes" `du -sk` "kbytes"
-exit
+
 # Now we can start packaging the various versions
 cd ..
+
+relnamenoexamples=`echo $relname | sed 's/-/-noexamples-/'`
+relnamewindows=`echo $relname | sed 's/-/-windows-/'`
+
 mkdir $relname
-mkdir `echo $relname | sed 's/-/-noexamples-//'`
-mkdir `echo $relname | sed 's/-/-windows-//'`
+mkdir $relnamenoexamples
+mkdir $relnamewindows
 
 # Windows is simply everything
-cp -R panda/* `echo $relname | sed 's/-/-windows-//'`/
+cp -R panda/* $relnamewindows/
 
 # Now we do the full unix release
 cp -R panda/* $relname
@@ -110,19 +116,19 @@ rm -rf Visual*
 cd ../..
 
 # Now the no examples
-cp -R $relname/* `echo $relname | sed 's/-/-noexamples-//'`/
-cd `echo $relname | sed 's/-/-noexamples-//'`/
+cp -R $relname/* $relnamenoexamples/
+cd $relnamenoexamples
 rm -rf examples
 cd ..
 
 # Compress them all
-tar czf `echo $relname | sed 's/-/_'`.tgz $relname
-tar czf `echo $relname | sed 's/-/-noexamples-//' | sed 's/-/_'`.tgz $relname
-tar czf `echo $relname | sed 's/-/-windows-//' | sed 's/-/_'`.tgz $relname
+tar czf `echo $relname | sed 's/-/_/'`.tgz $relname
+tar czf `echo $relnamenoexamples | sed 's/-/_/'`.tgz $relnamenoexamples
+tar czf `echo $relnamewindows | sed 's/-/_/'`.tgz $relnamewindows
 
 # Sign them all
-gpg --detach-sign --armour --output `echo $relname | sed 's/-/_'`.sig `echo $relname | sed 's/-/_'`.tgz
-gpg --detach-sign --armour --output `echo $relname | sed 's/-/-noexamples-//' | sed 's/-/_'`.sig `echo $relname | sed 's/-/-noexamples-//' | sed 's/-/_'`.tgz
-gpg --detach-sign --armour --output `echo $relname | sed 's/-/-windows-//' | sed 's/-/_'`.sig `echo $relname | sed 's/-/-windows-//' | sed 's/-/_'`.tgz
+gpg --detach-sign --armour --output `echo $relname | sed 's/-/_/'`.sig `echo $relname | sed 's/-/_/'`.tgz
+gpg --detach-sign --armour --output `echo $relnamenoexamples | sed 's/-/_/'`.sig `echo $relnamenoexamples | sed 's/-/_/'`.tgz
+gpg --detach-sign --armour --output `echo $relnamewindows | sed 's/-/_/'`.sig `echo $relnamewindows | sed 's/-/_/'`.tgz
 
 # Now deal with the RPMS

@@ -48,6 +48,11 @@
 </para>
 </refsect1>
 
+<refsect1>
+<title>SEE ALSO</title>
+<para>panda_putc, panda_printf, panda_streamprintf</para>
+</refsect1>
+
 
 <refsect1>
     <title>VERSION</title>
