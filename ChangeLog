@@ -115,3 +115,6 @@ Release 0.3 -> Release 0.4
 	PDF for now).
 
   * PNG now works for images with alpha channels (the alpha channel is ignored)
+
+  * PNG is now compressed inside the PDF document... I think this means PNG
+	is now fully implementented
