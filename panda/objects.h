@@ -21,7 +21,7 @@
   #endif
 #else
   #include <panda/constants.h>
-  #include <tdb.h>
+  #include <panda/panda_tdb.h>
 #endif
 
 #ifdef __cplusplus

@@ -30,8 +30,8 @@
 #include <errno.h>
 #include <sys/stat.h>
 #include <time.h>
-#include "tdb.h"
-#include "spinlock.h"
+#include <panda/panda_tdb.h>
+#include <panda/panda_spinlock.h>
 
 #define DEBUG
 

@@ -5,7 +5,7 @@
 #include <config.h>
 #endif
 
-#include "tdb.h"
+#include <panda/panda_tdb.h>
 
 #ifdef USE_SPINLOCKS
 

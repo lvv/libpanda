@@ -76,7 +76,7 @@ RANLIB = @RANLIB@
 VERSION = @VERSION@
 
 pandaincludedir = $(includedir)/panda
-pandainclude_HEADERS = constants.h functions.h objects.h legacy.h
+pandainclude_HEADERS = constants.h functions.h objects.h legacy.h panda_tdb.h panda_spinlock.h
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_CLEAN_FILES = 
 HEADERS =  $(pandainclude_HEADERS)

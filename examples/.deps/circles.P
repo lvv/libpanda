@@ -9,7 +9,7 @@ circles.o: circles.c /usr/include/stdio.h /usr/include/features.h \
   /usr/include/math.h /usr/include/bits/huge_val.h \
   /usr/include/bits/mathdef.h /usr/include/bits/mathcalls.h \
   /usr/include/bits/mathinline.h ../panda/functions.h ../panda/objects.h \
-  ../panda/constants.h ../tdb.h /usr/include/stdlib.h \
+  ../panda/constants.h ../panda/panda_tdb.h /usr/include/stdlib.h \
   /usr/include/sys/types.h /usr/include/time.h /usr/include/endian.h \
   /usr/include/bits/endian.h /usr/include/sys/select.h \
   /usr/include/bits/select.h /usr/include/bits/sigset.h \
@@ -46,7 +46,7 @@ circles.c :
 ../panda/functions.h :
 ../panda/objects.h :
 ../panda/constants.h :
-../tdb.h :
+../panda/panda_tdb.h :
 /usr/include/stdlib.h :
 /usr/include/sys/types.h :
 /usr/include/time.h :
