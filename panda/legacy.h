@@ -76,9 +76,41 @@ extern "C" {
 #define xref panda_xref
 #define pdf panda_pdf
 
+#define  panda_brackettedtextvalue
+#define  panda_dictionaryvalue
+#define  panda_integervalue
+#define  panda_textvalue
+#define  panda_literaltextvalue
+#define  panda_objectvalue
+#define  panda_objectarrayvalue
+#define  panda_true
+#define  panda_false
+#define  panda_up
+#define  panda_down
+#define  panda_write
+#define  panda_writelinear
+#define  panda_pagesize_a4
+#define  panda_pagesize_usletter
+#define  panda_pagesize_template_a4
+#define  panda_pagesize_template_usletter
+#define  panda_placeholder
+#define  panda_normal
+  panda_textmode_normal
+  panda_textmode_outline
+  panda_textmode_filledoutline
+  panda_textmode_invisible
+  panda_textmode_filledclipped
+  panda_textmode_strokedclipped
+  panda_textmode_filledstrokedclipped
+  panda_textmode_clipped
+  panda_image_tiff
+  panda_image_jpeg
+  panda_image_png
+
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* PANDA_LEGACY_H */
+
 

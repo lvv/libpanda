@@ -76,3 +76,5 @@ K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
 		- M (set the mitre limit)
 		- d (set the dash pattern)
 		- 
+
+  * AM_CONFIG_HEADER problems
