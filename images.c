@@ -23,6 +23,7 @@ static toff_t libtiffDummySeekProc(thandle_t fd, toff_t off, int i);
 static int libtiffDummyCloseProc(thandle_t fd);
 
 char                 *globalTiffBuffer;
+unsigned long        globalTiffBufferOffset;
 pthread_mutex_t      tiffConvMutex = PTHREAD_MUTEX_INITIALIZER;
 
 // A redistribution point for image insertions based on type of image
@@ -231,14 +232,21 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
       Convert the image
     *************************************************************************/
 
+#if defined DEBUG
+    printf("Conversion of the image in-memory will occur.\n");
+#endif
+
     // Because of the way this is implemented to integrate with the tiff lib
     // we need to ensure that we are the only thread that is performing this
     // operation at the moment. This is not a well coded piece of the library,
-    // but I am at a loss as to how to do it better...
+    // but I am at a loss as to how to do it better... We don't check if we
+    // have already used global tiff buffer, because we are still using it's
+    // old contents...
   
     pthread_mutex_lock(&tiffConvMutex);
     globalTiffBuffer = NULL;
-    
+    globalTiffBufferOffset = 0;
+
     // Open the dummy document (which actually only exists in memory)
     conv = TIFFClientOpen("dummy", "w", (thandle_t) -1, libtiffDummyReadProc,
       libtiffDummyWriteProc, libtiffDummySeekProc, libtiffDummyCloseProc, 
@@ -253,6 +261,10 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
       error("Insufficient memory for TIFF image insertion.");
 
     for(stripCount = 0; stripCount < TIFFNumberOfStrips(image); stripCount++){
+#if defined DEBUG
+      printf("Read a strip of the input image with offset %d\n", imageOffset);
+#endif
+
       imageOffset += TIFFReadRawStrip(image, stripCount, 
 	stripBuffer + imageOffset, stripSize);
     }
@@ -275,12 +287,23 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
     TIFFSetField(conv, TIFFTAG_XRESOLUTION, 300);
     TIFFSetField(conv, TIFFTAG_YRESOLUTION, 300);
     
+#if defined DEBUG
+    printf("The image buffer is %d bytes long\n", imageOffset);
+#endif
+
     // Actually do the conversion
     TIFFWriteEncodedStrip(conv, 0, stripBuffer, imageOffset);
 
     // Finish up
     free(stripBuffer);
-    imageObj->binarystreamLength = sizeof(globalTiffBuffer);
+
+#if defined DEBUG
+    printf("The global tiff buffer became %d bytes long\n", 
+      globalTiffBufferOffset);
+#endif
+
+    imageObj->binarystream = globalTiffBuffer;
+    imageObj->binarystreamLength = globalTiffBufferOffset;
     pthread_mutex_unlock(&tiffConvMutex);
   }
 
@@ -288,6 +311,10 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
     /**************************************************************************
        Insert the image
     **************************************************************************/
+
+#if defined DEBUG
+    printf("Image is not being converted internally.\n");
+#endif
 
     // We also need to add a binary stream to the object and put the image
     // data into this stream
@@ -421,7 +448,10 @@ static tsize_t libtiffDummyReadProc(thandle_t fd, tdata_t buf, tsize_t size){
    send me a patch at mikal@stillhq.com */
 
 static tsize_t libtiffDummyWriteProc(thandle_t fd, tdata_t buf, tsize_t size){
-  long        prevSize;
+
+#if defined DEBUG
+  printf("TIFF dummy write procedure called\n");
+#endif
   
   // libtiff will try to write an 8 byte header into the tiff file. We need
   // to ignore this because PDF does not use it...
@@ -434,21 +464,18 @@ static tsize_t libtiffDummyWriteProc(thandle_t fd, tdata_t buf, tsize_t size){
     if(globalTiffBuffer == NULL){
       if((globalTiffBuffer = (char *) malloc(size * sizeof(char))) == NULL)
 	error("Could not start tiff conversion memory buffer.");
-     
-      prevSize = 0;
     }
 
     // Otherwise, we need to grow the memory buffer
     else{
-      prevSize = sizeof(globalTiffBuffer);
-
       if((globalTiffBuffer = (char *) realloc(globalTiffBuffer,
-        (size * sizeof(char)) + sizeof(globalTiffBuffer))) == NULL)
+        (size * sizeof(char)) + globalTiffBufferOffset)) == NULL)
 	error("Could not grow the tiff conversion memory buffer.");
     }
 
     // Now move the image data into the buffer
-    memcpy(globalTiffBuffer + prevSize, buf, size);
+    memcpy(globalTiffBuffer + globalTiffBufferOffset, buf, size);
+    globalTiffBufferOffset += size;
   }
 
   return(size);

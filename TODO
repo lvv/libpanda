@@ -37,3 +37,5 @@
 	* Image placement on the page does not work correctly
 
   * Linearisation (also known as optimised PDF)
+
+  * Validity checks for things like names

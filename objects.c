@@ -381,6 +381,10 @@ void writeObject(pdf *output, object *dumpTarget){
   // Do all that is needed to dump a PDF object to disk
   unsigned long  count;
 
+#if defined DEBUG
+  printf("Writing object number %d\n", dumpTarget->number);
+#endif
+
   // We don't dump place holder objects (number = -1)
   if(dumpTarget->number != -1){
     // Remember the byte offset that was the start of this object -- this is
@@ -400,6 +404,15 @@ void writeObject(pdf *output, object *dumpTarget){
       We also handle binarystreams here.
 
     *************************************************************************/
+
+#if defined DEBUG
+    printf("Textstream is %s\n", 
+      (dumpTarget->textstream == NULL) ? "NULL" : "not NULL");
+    printf("Xobjectstream is %s\n", 
+      (dumpTarget->xobjectstream == NULL) ? "NULL" : "not NULL");
+    printf("Binarystream is %s\n", 
+      (dumpTarget->binarystream == NULL) ? "NULL" : "not NULL");
+#endif
 
     if(dumpTarget->textstream != NULL){
       // Do we also have an xobjectstream?
