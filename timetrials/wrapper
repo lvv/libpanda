@@ -69,7 +69,7 @@ do
       done
 
       # Output the results to the database
-      echo $starttime "-" `./math $runningtime / $number` "," `./math $runningmajorpf / $number` "," `./math $runningminorpf / $number` >> $test-$lib.db
+      echo $starttime "-" `./math $runningtime / $number` "," `./math $runningmajorpf / $number` "," `./math $runningminorpf / $number` "," `du -sk output.pdf` >> $test-$lib.db
     fi
   done
 done
