@@ -8,8 +8,8 @@
                        you don't ask it to, and even if you
                        have added your own. I need to take
                        this into account in the byte offsets.
-		     Added textpanda_streamprintf(...) call.                 17072000
-		     Added putc call                                22072000
+		     Added textpanda_streamprintf(...) call.           17072000
+		     Added putc call                                   22072000
 
   Purpose:
     Utility functions for the panda library.
@@ -343,6 +343,9 @@ panda_print (panda_pdf * output, char *format)
   output->byteOffset += strlen (formatString);
 
   // With windows we might also need to update the newline count here
+
+  // Clean up
+  free(formatString);
 }
 
 /******************************************************************************

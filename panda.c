@@ -202,6 +202,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
       // We have no objects yet
       openedpdf->nextObjectNumber = 1;
+      openedpdf->totalObjectNumber = 0;
 
       // We are at the begining of the file
       openedpdf->byteOffset = 0;
@@ -229,6 +230,10 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
 	  // We need to remember how many pages there are for later
 	  openedpdf->pageCount = 0;
+
+	  // And we store a list of the pages we have allocated so far
+	  openedpdf->pageholders = panda_xmalloc(sizeof(panda_pagelist));
+	  openedpdf->pageholders->next = NULL;
 
 	  // We now need to setup some information in the pages object
 	  panda_adddictitem (openedpdf->pages->dict, "Type", panda_textvalue,
@@ -363,6 +368,7 @@ void
 panda_close (panda_pdf * openedpdf)
 {
   panda_xref *xnow, *xprev;
+  panda_pagelist *pagelist, *pagevictim;
 
   // The header was written when we created the file on disk
 
@@ -436,12 +442,44 @@ panda_close (panda_pdf * openedpdf)
   // We also need to free all the memory that we no longer need. This is done
   // separately because sometimes we want to write out but not do this
   // in other words I a=inm leaving space for later movement...
+#if defined DEBUG
+  printf("Cleaning up catalog items\n");
+#endif
+
   if (openedpdf->catalog != NULL)
     panda_traverseobjects (openedpdf, openedpdf->catalog, panda_up,
 			   panda_freeobject);
+
+#if defined DEBUG
+  printf("Cleaning up font items\n");
+#endif
+
   if (openedpdf->fonts != NULL)
     panda_traverseobjects (openedpdf, openedpdf->fonts, panda_up,
 			   panda_freeobject);
+
+#if defined DEBUG
+  printf("Cleaning up page holder items\n");
+#endif
+
+  pagelist = openedpdf->pageholders;
+  while(pagelist->next != NULL){
+    pagevictim = pagelist;
+    pagelist = pagelist->next;
+
+    if(pagevictim->me != NULL){
+      free(pagevictim->me);
+
+#if defined DEBUG
+      printf("Cleaned up a page item\n");
+#endif
+    }
+
+    free(pagevictim);
+  }
+ 
+  // Clean up the last one
+  free(pagelist);
 
   // Clean up some document level things
   fclose (openedpdf->file);
@@ -462,8 +500,12 @@ panda_close (panda_pdf * openedpdf)
 	xprev->next = NULL;
     }
 
-  free (openedpdf->xrefList);
+#if defined DEBUG
+  printf("Total number of objects in document = %d\n", 
+	 openedpdf->totalObjectNumber);
+#endif
 
+  free (openedpdf->xrefList);
   free (openedpdf);
 }
 

@@ -67,6 +67,13 @@ panda_newtemplate (panda_pdf * output, char *pageSize)
   panda_adddictitem (template->obj->dict, "Resources", panda_dictionaryvalue,
                      xobjrefsubdict->dict);
 
+  // Now we need to clean up the temporary objects
+#if defined DEBUG
+  printf("Freeing a temporary object\n");
+#endif
+
+  panda_freetempobject(output, xobjrefsubdict, panda_false);
+
   // There is a pdf wide name that we use in resources sections to refer to
   // this template
   template->templatename = panda_xsnprintf("template%d%d", 
@@ -125,4 +132,12 @@ panda_applytemplate(panda_pdf *output, panda_page *target,
   // And put this into the PDF
   panda_adddictitem (target->obj->dict, "Resources", panda_dictionaryvalue,
                      xobjrefsubdict->dict);
+
+  // Now we need to clean up the temporary objects
+#if defined DEBUG
+  printf("Freeing two temporary objects\n");
+#endif
+
+  panda_freetempobject(output, xobjrefsubsubdict, panda_false);
+  panda_freetempobject(output, xobjrefsubdict, panda_false);
 }

@@ -182,6 +182,14 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   panda_adddictitem (target->obj->dict, "Resources", panda_dictionaryvalue,
 		     xobjrefsubdict->dict);
 
+  // Now we need to clean up these temporary objects that we just created
+#if defined DEBUG
+  printf("Freeing two temporary objects\n");
+#endif
+
+  panda_freetempobject(output, xobjrefsubsubdict, panda_false);
+  panda_freetempobject(output, xobjrefsubdict, panda_false);
+
   // We put some information based on a stat of the image file into the object
   // This will allow us to determine if this file's image is included in the
   // document again later, which will allow us avoid repetition of the same
@@ -273,6 +281,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
     panda_streamprintf (target->contents->layoutstream, "/%s Do\n",
 			pdfFilename);
 
+  free(pdfFilename);
   panda_exitgraphicsmode (target);
 
 #if defined DEBUG
@@ -426,6 +435,13 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
   // And put this into the PDF
   panda_adddictitem (imageObj->dict, "DecodeParms", panda_dictionaryvalue,
 		     subdict->dict);
+
+  // Now we need to clean up the temporary object
+#if defined DEBUG
+  printf("Freeing a temporary object\n");
+#endif
+
+  panda_freetempobject(output, subdict, panda_false);
 
   // Fillorder determines whether we convert on the fly or not, although
   // multistrip images also need to be converted
@@ -815,6 +831,13 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   panda_adddictitem (imageObj->dict, "DecodeParms", panda_dictionaryvalue,
 		     subdict->dict);
 
+  // Now we need to clean up the temporary object
+#if defined DEBUG
+  printf("Freeing a temporary object\n");
+#endif
+
+  panda_freetempobject(output, subdict, panda_false);
+
   /****************************************************************************
      Now actually insert the image. libpng lets us do some cool stuff with
      the data before it is handed to us like expanding it to our expectations.
@@ -896,6 +919,14 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   /****************************************************************************
      ... Finally, we have something that we can insert into the PDF stream
   ****************************************************************************/
+
+  // Sometimes this might clobber and existing binary stream
+  if(imageObj->binarystream != NULL)
+    free(imageObj->binarystream);
+
+  // We don't need row_pointers any more
+  if(row_pointers != NULL)
+    free(row_pointers);
 
   imageObj->binarystream = globalImageBuffer;
   imageObj->binarystreamLength = globalImageBufferOffset;

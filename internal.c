@@ -157,9 +157,21 @@ panda_page *
 panda_createandinsertpage (panda_pdf * output)
 {
   panda_page *newPage;
+  panda_pagelist *lastPage, *prevPage;
 
   // Make some space for the object
   newPage = (panda_page *) panda_xmalloc (sizeof (panda_page));
+  
+  // Store the page in the pagelist
+  lastPage = output->pageholders;
+  while(lastPage->next != NULL){
+    lastPage = lastPage->next;
+  }
+
+  // Add the page to the list
+  lastPage->me = newPage;
+  lastPage->next = panda_xmalloc(sizeof(panda_pagelist));
+  lastPage->next->next = NULL;
 
   // Make the new page object
   newPage->obj = (panda_object *) panda_newobject (output, panda_normal);

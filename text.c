@@ -154,6 +154,14 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
       // And put this into the PDF
       panda_adddictitem (thisPage->obj->dict, "Resources",
 			 panda_dictionaryvalue, subdict->dict);
+
+      // Now we need to clean up the temporary objects
+#if defined DEBUG
+      printf("Freeing two temporary objects\n");
+#endif
+
+      panda_freetempobject(output, subsubdict, panda_false);
+      panda_freetempobject(output, subdict, panda_false);
     }
 
   // Is there a text size setup?

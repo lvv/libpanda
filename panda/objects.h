@@ -59,9 +59,11 @@ extern "C"
     int insidegraphicsblock;
     unsigned long byteOffset;
     panda_dictionary *dict;
-    char *layoutstream, *binarystream;
-    unsigned long layoutstreamLength, binarystreamLength;
     char *currentSetFont;
+
+    char *layoutstream, *binarystream;
+    char *layoutstreamFilename, *binarystreamFilename;
+    unsigned long layoutstreamLength, binarystreamLength;
 
     void *children;
     void *cachedLastChild;
@@ -92,6 +94,13 @@ extern "C"
   }
   panda_child;
 
+  typedef struct panda_internal_pagelist
+  {
+    panda_object *me;
+    struct panda_internal_pagelist *next;
+  }
+  panda_pagelist;
+
   typedef struct panda_internal_xref
   {
     panda_object *this;
@@ -104,7 +113,7 @@ extern "C"
     FILE *file;
     panda_object *catalog, *pages, *fonts, *info, *linear;
     unsigned long byteOffset, xrefOffset;
-    int nextObjectNumber, pageCount;
+    int nextObjectNumber, pageCount, totalObjectNumber;
     panda_xref *xrefList, *xrefTail;
     int mode;
 
@@ -120,6 +129,9 @@ extern "C"
     double currentHorizontalScaling;
     double currentLeading;
     int nextFontNumber;
+
+    // This is a list of all of the pages allocated as pointers
+    panda_pagelist *pageholders;
 
     // This is a dummy object for dumping objects
     panda_object *dummyObj;

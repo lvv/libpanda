@@ -31,37 +31,39 @@ extern "C"
   extern char panda_binaryheaderstring[12];
 #endif
 
-// We sometimes need to specify what type of value we are passing to a 
-// function. These are the supported types.
-#define  panda_brackettedtextvalue 6
-#define  panda_dictionaryvalue     4
-#define  panda_integervalue        0
-#define  panda_textvalue           1
-#define  panda_literaltextvalue    5
-#define  panda_objectvalue         2
-#define  panda_objectarrayvalue    3
+  enum{
+    // True and false
+    panda_true = 0,
+    panda_false,
 
-// True and false
-#define  panda_true               0
-#define  panda_false              1
+    // We sometimes need to specify what type of value we are passing to a 
+    // function. These are the supported types.
+      panda_brackettedtextvalue,
+      panda_dictionaryvalue,
+      panda_integervalue,
+      panda_textvalue,
+      panda_literaltextvalue,
+      panda_objectvalue,
+      panda_objectarrayvalue,
 
-// Up and down movement for the traversal functions
-#define  panda_up                 7
-#define  panda_down               8
+    // Up and down movement for the traversal functions
+      panda_up,
+      panda_down,
 
-// File modes for the PDF object
-#define  panda_write              9
-#define  panda_writelinear        10
+      // File modes for the PDF object
+      panda_write,
+      panda_writelinear,
+
+      // We have the concept of placeholder objects, that do not get written out to
+      // the PDF
+      panda_placeholder,
+      panda_normal
+      };
 
 // Standard page sizes -- these are expressed in inches, with 72 dots per inch
 // with no fractional values shown. As many values as needed can be added here
 #define  panda_pagesize_a4                "[0 0 594 841]"
 #define  panda_pagesize_usletter          "[0 0 612 792]"
-
-// We have the concept of placeholder objects, that do not get written out to
-// the PDF
-#define  panda_placeholder        0
-#define  panda_normal             1
 
 // The text drawing modes (p 343 v 1.3)
   enum
@@ -108,6 +110,8 @@ extern "C"
     panda_object_property_compress = 0,
     panda_object_property_compress_level,
     panda_object_property_ignorepageerrors,
+    panda_object_property_binarystreamfile,
+    panda_object_property_layoutstreamfile,
     panda_object_property_max
   };
 

@@ -61,6 +61,7 @@ panda_newobject (panda_pdf * doc, int type)
 
   // Get some memory
   created = (panda_object *) panda_xmalloc (sizeof (panda_object));
+  doc->totalObjectNumber++;
 
   // We have no children at the moment
   created->children = (panda_child *) panda_xmalloc (sizeof (panda_child));
@@ -72,6 +73,11 @@ panda_newobject (panda_pdf * doc, int type)
   created->dict =
     (panda_dictionary *) panda_xmalloc (sizeof (panda_dictionary));
   created->dict->next = NULL;
+
+  created->dict->name = NULL;
+  created->dict->textValue = NULL;
+  created->dict->objectarrayValue = NULL;
+  created->dict->dictValue = NULL;
 
   // By default this object is not a pages object
   created->isPages = panda_false;
@@ -117,7 +123,7 @@ panda_newobject (panda_pdf * doc, int type)
   doc->xrefTail->next->next = NULL;
   doc->xrefTail = doc->xrefTail->next;
 
-  // Set the value of the local and cascaded proprties for this object to 
+  // Set the value of the local and cascaded properties for this object to 
   // defaults (all off)
   memset (created->localproperties, panda_false, panda_object_property_max);
   memset (created->cascadeproperties, panda_false, panda_object_property_max);
@@ -248,11 +254,6 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 	free (dictNow->textValue);
 
       objValue = va_arg (argPtr, panda_object *);
-
-      // We assume we need no more than 20 characters to store this. This
-      // should be fine
-      dictNow->textValue = (char *) panda_xmalloc (sizeof (char) * 20);
-
       dictNow->textValue = panda_xsnprintf ("%d %d R", objValue->number,
 					    objValue->generation);
       break;
@@ -431,28 +432,56 @@ DOCBOOK END
 ******************************************************************************/
 
 void
-panda_freeobject (panda_pdf * output, panda_object * freeVictim)
-{
+panda_freeobject(panda_pdf *output, panda_object *freeVictim){
+  panda_freeobjectactual(output, freeVictim, panda_true, panda_true);
+}
 
+void
+panda_freetempobject(panda_pdf *output, panda_object *freeVictim,
+		     int freedict){
+  panda_freeobjectactual(output, freeVictim, freedict, panda_false);
+}
+
+void
+panda_freeobjectactual (panda_pdf * output, panda_object * freeVictim,
+			int freedict, int freekids)
+{
 #if defined DEBUG
-  printf ("Cleaning up object number %d\n", freeVictim->number);
+  printf ("Freeing object number %d\n", freeVictim->number);
 #endif
 
   // We should skip placeholder objects (I think)
   if (freeVictim->number != -1)
     {
+#if defined DEBUG
+      printf("Actually freeing this object (not a placeholder)\n");
+#endif
+
       // Free the object and all it's bits -- free of a NULL does nothing! But
       // not in dmalloc!!!
       if (freeVictim->layoutstream != NULL)
 	free (freeVictim->layoutstream);
+#if defined DEBUG
+      else printf("No layout stream to free\n");
+#endif
+
       if (freeVictim->binarystream != NULL)
 	free (freeVictim->binarystream);
+#if defined DEBUG
+      else printf("No binary stream to free\n");
+#endif
+
       if (freeVictim->currentSetFont != NULL)
 	free (freeVictim->currentSetFont);
-
-      panda_freedictionary (freeVictim->dict);
+#if defined DEBUG
+      else printf("No currently set font to free\n");
+#endif
     }
 
+  if(freedict == panda_true)
+    panda_freedictionary (freeVictim->dict);
+
+  if(freekids == panda_true) free (freeVictim->children);
   free (freeVictim);
 }
 
@@ -469,40 +498,46 @@ panda_freedictionary (panda_dictionary * freeDict)
       prev = NULL;
 
       while (now->next != NULL)
-	{
-	  prev = now;
-	  now = now->next;
-	}
+        {
+          prev = now;
+          now = now->next;
+        }
 
       if (endoftheline == panda_false)
-	{
-#if defined DEBUG
-	  printf ("Free dictionary item named %s\n", now->name);
-#endif
+        {
+	  //#if defined DEBUG
+          printf ("Free dictionary item named %s\n", now->name);
+	  //#endif
 
-	  free (now->name);
-	  if (now->textValue != NULL)
-	    free (now->textValue);
-	  if (now->dictValue != NULL)
-	    panda_freedictionary (now->dictValue);
-	}
-      else
-	endoftheline = panda_false;
+	  if(freeDict->name != NULL)
+	    free (now->name);
+          if (now->textValue != NULL)
+            free (now->textValue);
+          if (now->dictValue != NULL)
+            panda_freedictionary (now->dictValue);
+        }
+      else{
+	printf("Found end of dictionary list\n");
+        endoftheline = panda_false;
+      }
 
       free (now);
 
       if (prev != NULL)
-	prev->next = NULL;
+        prev->next = NULL;
     }
 
   // And free that initial dictionary element
   if (freeDict != NULL)
     {
-      free (freeDict->name);
+      printf("Free the final dictionary item\n");
+
+      if(freeDict->name != NULL)
+	free (freeDict->name);
       if (freeDict->textValue != NULL)
-	free (freeDict->textValue);
+        free (freeDict->textValue);
       if (freeDict->dictValue != NULL)
-	panda_freedictionary (freeDict->dictValue);
+        panda_freedictionary (freeDict->dictValue);
 
       free (freeDict);
     }
@@ -926,6 +961,10 @@ panda_traverseobjects (panda_pdf * output, panda_object * dumpTarget,
   // Write out an object and all of it's children. This may be done with
   // recursive calls and writeobject()
   panda_child *currentChild;
+
+#if defined DEBUG
+  printf("Cleaning up object number %d\n", dumpTarget->number);
+#endif
 
   // No children
   if (((panda_child *) dumpTarget->children)->next == NULL)

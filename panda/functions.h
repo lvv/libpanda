@@ -32,10 +32,6 @@ extern "C"
 #include <string.h>
 #include <stdarg.h>
 
-#if defined HAVE_LIBDMALLOC
-#include <dmalloc.h>
-#endif
-
 // A type needed for panda_traversepanda_objects
   typedef void (*traverseFunct) (panda_pdf *, panda_object *);
 
@@ -126,9 +122,11 @@ extern "C"
   Memory.c
 ******************************************************************************/
 
-  void *panda_xmalloc (size_t);
-  void *panda_xrealloc (void *, size_t);
-
+  //void *panda_xmalloc (size_t);
+  #define panda_xmalloc malloc
+  //void *panda_xrealloc (void *, size_t);
+  #define panda_xrealloc realloc
+  
 /******************************************************************************
   Panda.c
 ******************************************************************************/
@@ -150,6 +148,8 @@ extern "C"
   void *panda_getdictvalue (panda_dictionary *);
   panda_dictionary *panda_getdict (panda_dictionary *, char *);
   void panda_freeobject (panda_pdf *, panda_object *);
+  void panda_freetempobject (panda_pdf *, panda_object *, int);
+  void panda_freeobjectactual (panda_pdf *, panda_object *, int, int);
   void panda_freedictionary (panda_dictionary *);
   void panda_writeobject (panda_pdf *, panda_object *);
   void panda_writedictionary (panda_pdf *, panda_object *,
@@ -262,6 +262,14 @@ extern "C"
 ******************************************************************************/
 
   void panda_writexref (panda_pdf *);
+
+/******************************************************************************
+  dmalloc needs to be at the end of the file
+******************************************************************************/
+
+#if defined HAVE_LIBDMALLOC
+#include <dmalloc.h>
+#endif
 
 #ifdef __cplusplus
 }

@@ -15,12 +15,28 @@ automake
 autoconf
 ./configure
 make clean
+make
 
 # Get rid of core files
 for item in `find . | grep core`
 do
   rm -i $item
 done
+
+# Make sure that the release passes some simple dmalloc tests
+dmalloc -b -l log -i 100 low
+cd examples
+./pandademo > /dev/null
+
+if [ `grep "not freed" log | wc -l | tr -d " "` -gt 0 ]
+then
+  echo ""
+  echo ""
+  echo "Prospective release failed the memory leak test"
+  exit 42
+fi
+
+cd ..
 
 # Get rid of compiled files that make clean wont remove
 find . -name "*obj" -type f -exec rm -i {} \; -print
