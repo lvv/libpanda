@@ -21,7 +21,7 @@ This package is only needed if you intend to develop and/or compile programs bas
 
 %prep
 %setup -q
-./configure --prefix=/usr
+./configure --prefix=/usr --enable-berkeley-db
 
 %build
 make

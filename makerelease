@@ -13,9 +13,6 @@ then
 fi
 
 # Clean everything up. This should be a fresh checkout.
-./autogen.sh --prefix=/usr
-make clean
-(cd examples && make clean)
 rmlist="*core* *~ #*# Makefile Makefile.in *.o *.lo *.obj config.cache config.log config.status logfile math config.h *.pdf .deps panda.ncb panda.opt autom4te.cache CVS panda.db"
 for i in $rmlist
 do
@@ -32,6 +29,7 @@ echo "Creating Win32 package."
 # Everyone else
 echo "Creating standard release."
 aclocal
+mkdir config
 libtoolize --force
 autoheader
 autoconf
@@ -49,7 +47,7 @@ automake --add-missing --copy
 (cd .. && tar cvjf $reldir/panda-noexamples-$relver.tar.bz2 panda-$relver)
 
 # RPM
-./configure --prefix=/usr
+./configure --prefix=/usr --enable-berkeley-db
 sudo cp $reldir/panda-$relver.tar.bz2 /usr/src/RPM/SOURCES/panda-$relver.tar.bz2
 sudo rpmbuild -ba panda.spec
 cp /usr/src/RPM/RPMS/i586/panda-$relver-1.i586.rpm /usr/src/RPM/RPMS/i586/panda-devel-$relver-1.i586.rpm $reldir
