@@ -86,3 +86,12 @@ Release 0.3 -> Release 0.4
   * Uncompressed TIFF images may now be inserted into PDF documents.
 
   * Grayscale TIFF images now can be embedded as well...
+
+========================== 0.4 RC 1 Released ==================================
+
+  * Documented all of the function calls in curves.c using autodocbook
+
+  * Documented all of the function calls in dates.c using autodocbook
+
+  * Fixed the date code so that it actually determines the timezone and the 
+	current time properly... I need to make sure this is portable still...

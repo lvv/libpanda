@@ -1,4 +1,4 @@
-SUBDIRS = panda man
+SUBDIRS = panda
 
 noinst_PROGRAMS = pandademo pandademolegacy
 lib_LIBRARIES = libpanda.a

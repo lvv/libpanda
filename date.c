@@ -10,6 +10,7 @@
 
 #include <panda/constants.h>
 #include <panda/functions.h>
+#include <time.h>
 
 /******************************************************************************
 DOCBOOK START
@@ -46,11 +47,16 @@ panda_makedate (int year, int month, int day, int hour, int minutes,
 {
   char *dateString, zulu = '+';
   int gmthours = 10, gmtminutes = 0;
+  struct tm *gmtoffset;
+  time_t curtime;
 
   // We need to work out how to decide what this machine's relationship to GMT
-  // (zulu) is in a portable manner. I have a feeling that glibc offers some
-  // assistance in this regard, but I need to have a look at the doco before
-  // I can decide.
+  // (zulu) so that we can provide this in the date string for the PDF.
+  curtime = time (NULL);
+  gmtoffset = (struct tm *) localtime(&curtime);
+  gmthours = gmtoffset->tm_gmtoff / 60 / 60;
+  gmtminutes = (gmtoffset->tm_gmtoff - gmthours * 60 * 60) / 60;
+  if(gmthours < 0) zulu = '-';
 
   // Make some space for the string we are going to return. We know this is
   // always going to be 21 characters long (so we say 30 characters to be
@@ -105,8 +111,16 @@ DOCBOOK END
 char *
 panda_nowdate ()
 {
+  struct tm *timenow;
+  time_t curtime;
 
+  // Get the current time...
+  curtime = time (NULL);
+  timenow = (struct tm *) localtime(&curtime);
 
+  printf("%d %d %d %d %d %d\n", timenow->tm_year, timenow->tm_mon, timenow->tm_mday, 
+	 timenow->tm_hour, timenow->tm_min, timenow->tm_sec);
 
-  return panda_makedate (2000, 9, 4, 12, 42, 14);
+  return panda_makedate (1900 + timenow->tm_year, timenow->tm_mon + 1, timenow->tm_mday, 
+			 timenow->tm_hour, timenow->tm_min, timenow->tm_sec);
 }
