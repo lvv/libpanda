@@ -41,7 +41,7 @@ imagebox (pdf * output, page * target, int top, int left,
 // A redistribution point for image insertions based on type of image
 void
 imageboxrot (pdf * output, page * target, int top, int left,
-	  int bottom, int right, char *filename, int type)
+	  int bottom, int right, double angle, char *filename, int type)
 {
   object *imageObj, *xobjrefsubdict, *xobjrefsubsubdict;
 
@@ -83,20 +83,41 @@ imageboxrot (pdf * output, page * target, int top, int left,
   // unique unless the actual image is the same
   adddictitem (imageObj->dict, "Name", gTextValue, filename);
 
-  // --------------------------------------------------------------------------
-  // Now we do the things that are image format specific...
+  // Now we do the things that are image format specific... This is also
+  // where we check if support has been compiled in for the libraries we need.
   switch (type)
     {
     case gImageTiff:
+#if defined D_HAVE_LIBTIFF
       insertTiff (output, target, imageObj, filename);
+#else
+      #warning "TIFF support missing at compile time"
+      fprintf(stderr, "%s %s\n",
+	      "TIFF support not compiled into Panda because libtiff was not",
+	      "found at compile time.");
+#endif
       break;
 
     case gImageJpeg:
+#if defined D_HAVE_LIBJPEG
       insertJpeg (output, target, imageObj, filename);
+#else
+      #warning "JPEG support missing at compile time"
+      fprintf(stderr, "%s %s\n",
+	      "JPEG support not compiled into Panda because libjpeg was not",
+	      "found at compile time.");
+#endif
       break;
 
     case gImagePNG:
+#if defined D_HAVE_LIBPNG
       insertPNG (output, target, imageObj, filename);
+#else
+      #warning "PNG support missing at compile time"
+      fprintf(stderr, "%s %s\n",
+	      "PNG support not compiled into Panda because libpng was not",
+	      "found at compile time.");
+#endif
       break;
     }
   // --------------------------------------------------------------------------

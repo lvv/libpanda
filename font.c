@@ -39,6 +39,10 @@ createfont (pdf * output, char *fontname, int type, char *encoding)
   adddictitem (font->dict, "BaseFont", gTextValue, fontname);
   adddictitem (font->dict, "Encoding", gTextValue, encoding);
 
+#if defined DEBUG
+  printf("Returning the font ident \"%s\"\n", fontident);
+#endif
+
   return fontident;
 }
 
@@ -64,6 +68,10 @@ getfontobj (pdf * output, char *fontident)
   child *thisChild;
   dictionary *thisDict;
   char valueString[20];
+
+#if defined DEBUG
+  printf("Looking in pdf for font object \"%s\"\n", fontident);
+#endif
 
   // The value string needs to have a / out the front
   sprintf (valueString, "/%s", fontident);

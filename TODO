@@ -50,3 +50,7 @@
   * More work on the lexer
 
   * PNG support
+
+  * New font ids are handed out too often -- what about font reuse?
+
+  * Handle image reuse better
