@@ -12,7 +12,8 @@ starttime=`date`
 # performance has improved or degraded.
 
 # This variable is a list of libaries to test
-libs="clibpdf-202r1 pdflib-30 panda-02"
+#libs="clibpdf-202r1 pdflib-30 panda-02"
+libs="panda-01"
 
 # This variable is a list of tests
 tests="hello manytextboxes"
@@ -26,7 +27,7 @@ do
   for lib in $libs
   do
     # Every test for every library
-    make $test-$lib
+#    make $test-$lib
 
     # Make sure that make made!
     if [ $? -gt 0 ]
@@ -53,7 +54,7 @@ do
       do
         utime=`echo $item | sed 's/user.*//'`
         stime=`echo $item | sed 's/.*user_//' | sed 's/system.*//'`
-	time=`/.math $utime + $stime`
+	time=`./math $utime + $stime`
         runningtime=`./math $runningtime + $time`
       done
 
