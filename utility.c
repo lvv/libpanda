@@ -18,6 +18,29 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_printf
+PURPOSE output a formatted string to the PDF file
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_printf (panda_pdf * file, char *format, ...);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function call behaves just like <command>printf</command>(), but the output goes to a PDF file, instead of to stdout.
+
+RETURNS Nothing
+
+EXAMPLE START
+This is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+EXAMPLE END
+SEEALSO panda_streamprintf, panda_putc, panda_print
+DOCBOOK END
+******************************************************************************/
+
 // Print a possibly complex string into the PDF file and make sure the offset
 // into the PDF file is stored correctly (dispite Windows)
 void
@@ -136,6 +159,29 @@ panda_printf (panda_pdf * file, char *format, ...)
   va_end (argPtr);
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_streamprintf
+PURPOSE output a formatted string to the text stream associated with a given object
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+char *panda_streamprintf (char *stream, char *format, ...);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function call behaves just like <command>printf</command>(), but the output goes to a textstream within a PDF object, instead of to stdout. Set the value of the textstream to the value returned...
+
+RETURNS Nothing
+
+EXAMPLE START
+This is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+EXAMPLE END
+SEEALSO panda_printf, panda_putc, panda_print
+DOCBOOK END
+******************************************************************************/
+
 // Append some text to the stream that we are creating for a given page
 char *
 panda_streamprintf (char *stream, char *format, ...)
@@ -180,6 +226,29 @@ panda_streamprintf (char *stream, char *format, ...)
   return stream;
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_putc
+PURPOSE output a single character to the PDF file
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_printf (panda_pdf * file, char c);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function call behaves just like <command>putc</command>(), but the output goes to a PDF file, instead of to stdout.
+
+RETURNS Nothing
+
+EXAMPLE START
+This is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+EXAMPLE END
+SEEALSO panda_print, panda_printf, panda_streamprintf
+DOCBOOK END
+******************************************************************************/
+
 // Put just one character into the PDF file, while updating the offset so that
 // the xref table works later on
 void
@@ -188,6 +257,29 @@ panda_putc (panda_pdf * output, int c)
   fputc (c, output->file);
   output->byteOffset++;
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_print
+PURPOSE output a simple string to the PDF file
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_print (panda_pdf * file, char *chars);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function call behaves just like <command>putc</command>(), but the output goes to a PDF file, instead of to stdout. It also writes more than one character at a time to the file, which is faster than doing this with a panda_printf.
+
+RETURNS Nothing
+
+EXAMPLE START
+This is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+EXAMPLE END
+SEEALSO panda_putc, panda_printf, panda_streamprintf
+DOCBOOK END
+******************************************************************************/
 
 // Put some known text into the PDF file, also update the offset
 // Don't forget to do the \n to \r\n conversion as well

@@ -13,6 +13,28 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_writetrailer
+PURPOSE write out the trailer for the PDF document
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_writetrailer (panda_pdf *output);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This command is used to write out the trailer of the PDF document, which contains information about the PDF document, including a pointer to the XREF table.
+
+RETURNS Nothing
+
+EXAMPLE START
+Why would you need an example?
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_writetrailer (panda_pdf * output)
 {

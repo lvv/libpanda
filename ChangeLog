@@ -122,3 +122,9 @@ Release 0.3 -> Release 0.4
   * Documented all the function calls in panda.c using autodocbook
 
   * Documented all the function calls in text.c using autodocbook
+
+  * Documented all the function calls in trailer.c using autodocbook
+
+  * Documented all the function calls in utility.c using autodocbook
+
+  * Documented all the function calls in xref.c using autodocbook

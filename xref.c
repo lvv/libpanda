@@ -12,6 +12,28 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_writexref
+PURPOSE write out the table that lists object locations in the file
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_writexref (panda_pdf * output);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Write out the XREF table in the PDF file that we have just generated.
+
+RETURNS Nothing
+
+EXAMPLE START
+This command is internal to Panda, and you shouldn't ever need to call it...
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_writexref (panda_pdf * output)
 {

@@ -74,6 +74,9 @@ main (int argc, char *argv[])
   panda_imageboxrot (demo, currPage, 300, 200, 400, 300, 0.0,
 		     "gnu.png", panda_image_png);
 
+  panda_imageboxrot (demo, currPage, 100, 420, 310, 620, 36.0,
+		     "RedbrushAlpha.png", panda_image_png);
+
   // (c) statement
   panda_setfont (demo, tempPtr = panda_createfont (demo, "Times-Roman", 1,
 						   "MacRomanEncoding"));
@@ -81,6 +84,8 @@ main (int argc, char *argv[])
 		 "The background image on this page is Copyright 2000 Andrew Cagney");
   panda_textbox (demo, currPage, 620, 10, 720, 300,
 		 "and is distributed under the terms of the GPL...");
+  panda_textbox (demo, currPage, 310, 320, 330, 800,
+		 "Flower (c) 1999 Pieter S. van der Meulen");
   free(tempPtr);
   
   ///////////////////////////////////////////////////////////////////////////

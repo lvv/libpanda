@@ -812,7 +812,7 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   png_read_update_info(png, info);
 
   rowbytes = png_get_rowbytes(png, info);
-  imageObj->binarystream = (unsigned char *) panda_xmalloc(rowbytes * height);
+  imageObj->binarystream = (unsigned char *) panda_xmalloc((rowbytes * height) + 1);
   imageObj->binarystreamLength = rowbytes * height;
   row_pointers = panda_xmalloc(height * sizeof(png_bytep));
 
