@@ -77,3 +77,5 @@ Release 0.2 -> Release 0.3
 
   * You can now have various layers of images and texboxes, the textboxes are
 	now no longer in the foreground.
+
+  * Got Automake working!

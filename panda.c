@@ -148,7 +148,7 @@ pdfopen_actual (char *filename, char *mode, int suppress)
 
 	  // Add some stuff
 	  adddictitem (openedpdf->info->dict, "Producer", gBracketedTextValue,
-		       "Panda 0.2");
+		       "Panda 0.3");
 	  adddictitem (openedpdf->info->dict, "CreationDate",
 		       gBracketedTextValue, tempPtr = nowdate ());
 	  free (tempPtr);
