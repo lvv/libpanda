@@ -46,7 +46,9 @@ cvs commit
 # Autotools
 echo "------------------------------------------------------------------------"
 echo "Running the autotools"
-automake
+libtoolize --force
+aclocal
+automake --add-missing
 autoconf
 ./configure
 make clean
