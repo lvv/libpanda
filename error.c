@@ -77,7 +77,7 @@ panda_error (int fatal, char *message)
   
 #else
     fprintf (stderr, "%s\n", message);
-#endif	/*  */
+#endif /*  */
   if (fatal == panda_true)
     exit (42);
 }

@@ -63,13 +63,15 @@ panda_dbopen (panda_pdf * document)
 #if defined DEBUG
   printf ("Opening the database\n");
 #endif
-
+  
 #if defined _WINDOWS
-  panda_windbopen(document);
+    panda_windbopen (document);
+  
 #else
-  document->db = tdb_open ("panda.tdb", 0,
-			   TDB_CLEAR_IF_FIRST, O_RDWR | O_CREAT | O_TRUNC,
-			   0600);
+    document->db = tdb_open ("panda.tdb", 0,
+			     TDB_CLEAR_IF_FIRST, O_RDWR | O_CREAT | O_TRUNC,
+			     0600);
+  
 #endif
 }
 
@@ -102,11 +104,13 @@ panda_dbclose (panda_pdf * document)
 #if defined DEBUG
   printf ("Closing the database\n");
 #endif
-
+  
 #if defined _WINDOWS
-  panda_windbclose(document);
+    panda_windbclose (document);
+  
 #else
-  tdb_close (document->db);
+    tdb_close (document->db);
+  
 #endif
 }
 
@@ -136,10 +140,12 @@ DOCBOOK END
 void
 panda_dbwrite (panda_pdf * document, char *key, char *value)
 {
+  
 #if defined _WINDOWS
-	panda_windbwrite(document, key, value);
+    panda_windbwrite (document, key, value);
+  
 #else
-  TDB_DATA dbkey, dbdata;
+    TDB_DATA dbkey, dbdata;
 
 #if defined DEBUG
   printf ("Storing (%s, %s) in 0x%08x\n", key, value, document->db);
@@ -160,6 +166,7 @@ panda_dbwrite (panda_pdf * document, char *key, char *value)
     {
       panda_error (panda_true, "Database error");
     }
+  
 #endif
 }
 
@@ -188,10 +195,12 @@ DOCBOOK END
 char *
 panda_dbread (panda_pdf * document, char *key)
 {
+  
 #if defined _WINDOWS
-	return panda_windbread(document, key);
+    return panda_windbread (document, key);
+  
 #else
-  TDB_DATA dbkey, dbdata;
+    TDB_DATA dbkey, dbdata;
 
   if (key == NULL)
     panda_error (panda_true, "Cannot read a NULL key\n");
@@ -207,5 +216,6 @@ panda_dbread (panda_pdf * document, char *key)
 #endif
 
   return dbdata.dptr;
+  
 #endif
 }

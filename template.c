@@ -105,7 +105,7 @@ panda_newtemplate (panda_pdf * output, char *pageSize)
   panda_adddictitem (output, template->obj, "Resources/ProcSet",
 		     panda_literaltextvalue, "[/PDF]");
 
-    // Copy the pageSize string somewhere safe, and then clobber the copy.
+  // Copy the pageSize string somewhere safe, and then clobber the copy.
   // We can't clobber the original because it is a constant anyway and it would
   // be rude to screw with another person's data
   pageSizeCopy =
@@ -167,12 +167,13 @@ panda_applytemplate (panda_pdf * output, panda_page * target,
   int left = 0, right = 200, top = 0, bottom = 200;
   char *dictkey;
 
-  if(template->isTemplate == panda_false){
-    panda_error(panda_false, 
-		"Attempt to use a non-template page as a template");
-    return;
-  }
-    
+  if (template->isTemplate == panda_false)
+    {
+      panda_error (panda_false,
+		   "Attempt to use a non-template page as a template");
+      return;
+    }
+
   // We also need to add some information to the layout stream for the contents
   // object for the page that the image is being displayed on. This information
   // consists of the following [moved to internal.c]
@@ -180,11 +181,11 @@ panda_applytemplate (panda_pdf * output, panda_page * target,
 
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream, "/template-%d Do\n",
-  			template->obj->number);
+			template->obj->number);
 
   panda_exitgraphicsmode (target);
 
-  dictkey = panda_xsnprintf ("Resources/XObject/template-%d", 
+  dictkey = panda_xsnprintf ("Resources/XObject/template-%d",
 			     template->obj->number);
   panda_adddictitem (output, target->obj, dictkey,
 		     panda_objectvalue, template->obj);

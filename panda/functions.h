@@ -115,6 +115,10 @@ extern "C"
   void panda_insertTIFF (panda_pdf *, panda_page *, panda_object *, char *);
   void panda_insertJPEG (panda_pdf *, panda_page *, panda_object *, char *);
   void panda_insertPNG (panda_pdf *, panda_page *, panda_object *, char *);
+  void panda_imagesize (int *, int *, char *, int);
+  void panda_imagesizeTIFF (int *, int *, char *);
+  void panda_imagesizeJPEG (int *, int *, char *);
+  void panda_imagesizePNG (int *, int *, char *);
 
 /******************************************************************************
   Info.c

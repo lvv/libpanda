@@ -30,86 +30,86 @@
 ******************************************************************************/
 
 #include "stdafx.h"
-
-typedef struct panda_internal_windb
+typedef struct panda_internal_windb 
 {
-  char *key;
-  char *value;
-  struct panda_internal_windb *next;
-}
-panda_windb;
-
-void panda_windbopen(panda_pdf *document)
+  char *key;
+   char *value;
+   struct panda_internal_windb *next;
+ }
+ panda_windb;
+void
+panda_windbopen (panda_pdf * document) 
 {
-	document->db = panda_xmalloc(sizeof(panda_windb));
-	((panda_windb *) document->db)->next = NULL;
-	((panda_windb *) document->db)->key = NULL;
-	((panda_windb *) document->db)->value = NULL;
-
-	if(((panda_windb *) document->db)->next != NULL)
-		panda_error(panda_true, "Could not set a database pointer to NULL");
-}
-
-void panda_windbclose(panda_pdf *document)
+  document->db = panda_xmalloc (sizeof (panda_windb));
+  ((panda_windb *) document->db)->next = NULL;
+  ((panda_windb *) document->db)->key = NULL;
+  ((panda_windb *) document->db)->value = NULL;
+  if (((panda_windb *) document->db)->next != NULL)
+    panda_error (panda_true, "Could not set a database pointer to NULL");
+}
+void
+panda_windbclose (panda_pdf * document) 
 {
-	panda_windb *now, *nextnow;
-
-	now = document->db;
-	while(now->next != NULL)
-	{
-		nextnow = now->next;
-		panda_xfree(now->key);
-		panda_xfree(now->value);
-		panda_xfree(now);
-		now = nextnow;
-	}
-
-	panda_xfree(now);
-}
-
-void panda_windbwrite(panda_pdf *document, char *key, char *value)
+  panda_windb * now, *nextnow;
+  now = document->db;
+  while (now->next != NULL)
+    
+    {
+      nextnow = now->next;
+      panda_xfree (now->key);
+      panda_xfree (now->value);
+      panda_xfree (now);
+      now = nextnow;
+    }
+  panda_xfree (now);
+}
+void
+panda_windbwrite (panda_pdf * document, char *key, char *value) 
 {
-	panda_windb *now;
-
-	// Find the item, or the end -- I have to do it this way so that Visual Studio doesn't
-	// complain
-	now = (panda_windb *) document->db;
-	while(now->next != NULL)
-	{
-		if(strcmp(now->key, key) == 0)
-			break;
-		now = now->next;
-	}
-
-	// We are appending to the chain
-	if(now->next == NULL)
-	{
-		now->next = (panda_windb *) panda_xmalloc(sizeof(panda_windb));
-		now->next->next = NULL;
-		now->next->key = NULL;
-		now->next->value = NULL;
-		now->key = panda_xsnprintf("%s", key);
-		now->value = panda_xsnprintf("%s", value);
-		return;
-	}
-	
-	// We are overwriting an existing value (a memory leak for the moment)
-	now->value = panda_xsnprintf("%s", value);
-}
-
-char *panda_windbread(panda_pdf *document, char *key)
+  panda_windb * now;
+  
+    // Find the item, or the end -- I have to do it this way so that Visual Studio doesn't
+    // complain
+    now = (panda_windb *) document->db;
+  while (now->next != NULL)
+    
+    {
+      if (strcmp (now->key, key) == 0)
+	break;
+      now = now->next;
+    }
+  
+    // We are appending to the chain
+    if (now->next == NULL)
+    
+    {
+      now->next = (panda_windb *) panda_xmalloc (sizeof (panda_windb));
+      now->next->next = NULL;
+      now->next->key = NULL;
+      now->next->value = NULL;
+      now->key = panda_xsnprintf ("%s", key);
+      now->value = panda_xsnprintf ("%s", value);
+      return;
+    }
+  
+    // We are overwriting an existing value (a memory leak for the moment)
+    now->value = panda_xsnprintf ("%s", value);
+}
+char *
+panda_windbread (panda_pdf * document, char *key) 
 {
-	panda_windb *now;
-
-	// Find the item, or the end
-	now = (panda_windb *) document->db;
-	while(now->next != NULL)
-	{
-		if(strcmp(now->key, key) == 0)
-			break;
-		now = now->next;
-	}
-
-	// now->next = NULL means at the end of the list
-	return (now->next == NULL) ? NULL : panda_xsnprintf("%s", now->value);
-}
+  panda_windb * now;
+  
+    // Find the item, or the end
+    now = (panda_windb *) document->db;
+  while (now->next != NULL)
+    
+    {
+      if (strcmp (now->key, key) == 0)
+	break;
+      now = now->next;
+    }
+  
+    // now->next = NULL means at the end of the list
+    return (now->next == NULL) ? NULL : panda_xsnprintf ("%s", now->value);
+}

@@ -425,7 +425,8 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
   unsigned long imageOffset;
   char *tempstream, *stripBuffer, *errMessage;
   uint16 tiffResponse16, compression, fillorder;
-  uint32 height, width;
+  int height, width;
+  uint32 theight, twidth;
 
   // Open the file and make sure that it exists and is a TIFF file
   if ((image = TIFFOpen (filename, "r")) == NULL)
@@ -505,28 +506,19 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       panda_error (panda_true, "Unsupported TIFF compression algorithm.");
       break;
     }
-
-  // Width of the image
-  if (TIFFGetField (image, TIFFTAG_IMAGEWIDTH, &width) != 0)
-    {
-      panda_adddictitem (output, imageObj, "DecodeParms/Columns",
-			 panda_integervalue, width);
-      panda_adddictitem (output, imageObj, "Width", panda_integervalue,
-			 width);
-    }
-  else
-    panda_error (panda_true, "Could not get the width of the TIFF image.");
+  
+    // Get the width and height of the image
+    panda_imagesizeTIFF (&width, &height, filename);
+  
+    // Width of the image
+    panda_adddictitem (output, imageObj, "DecodeParms/Columns",
+		       panda_integervalue, width);
+  panda_adddictitem (output, imageObj, "Width", panda_integervalue, width);
 
   // Height of the image
-  if (TIFFGetField (image, TIFFTAG_IMAGELENGTH, &height) != 0)
-    {
-      panda_adddictitem (output, imageObj, "DecodeParms/Rows",
-			 panda_integervalue, height);
-      panda_adddictitem (output, imageObj, "Height", panda_integervalue,
-			 height);
-    }
-  else
-    panda_error (panda_true, "Could not get the height of the TIFF image.");
+  panda_adddictitem (output, imageObj, "DecodeParms/Rows",
+		     panda_integervalue, height);
+  panda_adddictitem (output, imageObj, "Height", panda_integervalue, height);
 
   // Fillorder determines whether we convert on the fly or not, although
   // multistrip images also need to be converted
@@ -586,8 +578,10 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       // We also need to copy some of the attributes of the tiff image
       // Bits per sample has to be 1 because this is going to be a G4/G3 image
       // (and all other image formats were stripped out above).
-      TIFFSetField (conv, TIFFTAG_IMAGEWIDTH, width);
-      TIFFSetField (conv, TIFFTAG_IMAGELENGTH, height);
+      twidth = width;
+      theight = height;
+      TIFFSetField (conv, TIFFTAG_IMAGEWIDTH, twidth);
+      TIFFSetField (conv, TIFFTAG_IMAGELENGTH, theight);
       TIFFSetField (conv, TIFFTAG_BITSPERSAMPLE, 1);
       TIFFSetField (conv, TIFFTAG_COMPRESSION, compression);
       TIFFSetField (conv, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
@@ -832,7 +826,7 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 		 panda_object * imageObj, char *filename)
 {
   FILE *image;
-  unsigned long imageBufSize, width, height;
+  unsigned long width, height;
   int bitdepth, colourtype, outColourType;
   png_uint_32 i, rowbytes;
   png_structp png;
@@ -1279,3 +1273,160 @@ void
 libpngDummyFlushProc (png_structp png)
 {
 }
+
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_imagesize
+PURPOSE determine the size of an image
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_panda_imagesize (int *width, int *height, char *filename, int type);
+SYNOPSIS END
+
+DESCRIPTION This function can be used to determine the size of an image before a <command>panda_imagebox</command>() function call.
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+int height, width;
+
+panda_init ();
+  
+panda_imagesize (&width, &height, "input.tif", panda_image_tiff);
+EXAMPLE END
+SEEALSO panda_imagebox, panda_imageboxrot
+DOCBOOK END
+******************************************************************************/ 
+void 
+panda_imagesize (int *width, int *height, char *filename, int type) 
+{
+  width = 0;
+  height = 0;
+  switch (type)
+    
+    {
+    case panda_image_tiff:
+      
+#if defined HAVE_LIBTIFF
+	panda_imagesizeTIFF (width, height, filename);
+      
+#else	/*  */
+	fprintf (stderr, "%s %s\n",
+		 "TIFF support not compiled into Panda because libtiff was",
+		 "not found at compile time.");
+      
+#endif	/*  */
+	break;
+    case panda_image_jpeg:
+      
+#if defined HAVE_LIBJPEG
+	panda_imagesizeJPEG (width, height, filename);
+      
+#else	/*  */
+	fprintf (stderr, "%s %s\n",
+		 "JPEG support not compiled into Panda because libjpeg was",
+		 "not found at compile time.");
+      
+#endif	/*  */
+	break;
+    case panda_image_png:
+      
+#if defined HAVE_LIBPNG
+	panda_imagesizePNG (width, height, filename);
+      
+#else	/*  */
+	fprintf (stderr, "%s %s\n",
+		 "PNG support not compiled into Panda because libpng was not",
+		 "found at compile time.");
+      
+#endif	/*  */
+	break;
+    }
+}
+void
+panda_imagesizeTIFF (int *width, int *height, char *filename) 
+{
+  uint32 twidth, theight;
+  TIFF * image;
+  if ((image = TIFFOpen (filename, "r")) == NULL)
+    panda_error (panda_true, "Could not open TIFF image to determine size");
+  TIFFGetField (image, TIFFTAG_IMAGEWIDTH, &twidth);
+  TIFFGetField (image, TIFFTAG_IMAGELENGTH, &theight);
+  *width = twidth;
+  *height = theight;
+}
+void
+panda_imagesizeJPEG (int *width, int *height, char *filename) 
+{
+  struct jpeg_decompress_struct cinfo;
+  struct jpeg_error_mgr jerr;
+  FILE * image;
+  
+    // Open the file -- why is this a memory leak?
+    if ((image = fopen (filename, "rb")) == NULL)
+    panda_error (panda_true, "Could not open the specified JPEG file.");
+  
+    // Setup the decompression options
+    cinfo.err = jpeg_std_error (&jerr);
+  
+    // Start decompressing
+    jpeg_create_decompress (&cinfo);
+  jpeg_stdio_src (&cinfo, image);
+  jpeg_read_header (&cinfo, TRUE);
+  *width = cinfo.image_width;
+  *height = cinfo.image_height;
+  
+    // This cleans things up for us in the JPEG library
+    jpeg_destroy_decompress (&cinfo);
+  fclose (image);
+}
+void
+panda_imagesizePNG (int *width, int *height, char *filename) 
+{
+  FILE * image;
+  unsigned long pwidth, pheight;
+  int bitdepth, colourtype;
+  png_structp png;
+  png_infop info;
+  unsigned char sig[8];
+  
+    // Open the file
+    if ((image = fopen (filename, "rb")) == NULL)
+    panda_error (panda_true, "Could not open the specified PNG file.");
+  
+    // Check that it really is a PNG file
+    fread (sig, 1, 8, image);
+  if (!png_check_sig (sig, 8))
+    panda_error (panda_true, "PNG file was invalid");
+  
+    // Start decompressing
+    if ((png =
+	 png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL, NULL,
+				 NULL)) == NULL)
+    panda_error (panda_true,
+		  "Could not create a PNG read structure (out of memory?)");
+  if ((info = png_create_info_struct (png)) == NULL)
+    panda_error (panda_true,
+		  "Could not create PNG info structure (out of memory?)");
+  
+    // If panda_error did not exit, we would have to call png_destroy_read_struct
+    if (setjmp (png_jmpbuf (png)))
+    panda_error (panda_true, "Could not set PNG jump value");
+  
+    // Get ready for IO and tell the API we have already read the image signature
+    // The IHDR chunk inside the PNG defines some info we need about the picture
+    // (see PNG specification 1.2, page 15).
+    png_init_io (png, image);
+  png_set_sig_bytes (png, 8);
+  png_read_info (png, info);
+  png_get_IHDR (png, info, &pwidth, &pheight, &bitdepth, &colourtype, NULL,
+		 NULL, NULL);
+  *width = pwidth;
+  *height = pheight;
+}

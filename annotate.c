@@ -73,66 +73,66 @@ DOCBOOK END
 
 // docbook out of date
 void
-panda_textannotation(panda_pdf *document, panda_page *page, int open,
-		     char *text, char *title,
-		     int top, int left, int bottom, int right,
-		     double red, double green, double blue,
-		     int icon, int flags)
+panda_textannotation (panda_pdf * document, panda_page * page, int open,
+		      char *text, char *title,
+		      int top, int left, int bottom, int right,
+		      double red, double green, double blue,
+		      int icon, int flags)
 {
   panda_object *annotation;
 
 #if defined DEBUG
-  printf("Inserting a text annotation\n");
+  printf ("Inserting a text annotation\n");
 #endif
 
-  annotation = panda_insertannotation(document, page, title,
-				      top, left, bottom, right,
-				      red, green, blue, flags);
-  
-  panda_adddictitem(document, annotation, "Open",
-		    panda_booleanvalue, open);
-  panda_adddictitem(document, annotation, "Subtype", 
-		    panda_textvalue, "Text");
-  panda_adddictitem(document, annotation, "Contents", 
-		    panda_brackettedtextvalue, text);  
+  annotation = panda_insertannotation (document, page, title,
+				       top, left, bottom, right,
+				       red, green, blue, flags);
+
+  panda_adddictitem (document, annotation, "Open", panda_booleanvalue, open);
+  panda_adddictitem (document, annotation, "Subtype",
+		     panda_textvalue, "Text");
+  panda_adddictitem (document, annotation, "Contents",
+		     panda_brackettedtextvalue, text);
 
   // Icons
-  switch(icon){
-  case panda_icon_comment:
-    panda_adddictitem(document, annotation, "Name",
-		      panda_textvalue, "Comment");
-    break;
+  switch (icon)
+    {
+    case panda_icon_comment:
+      panda_adddictitem (document, annotation, "Name",
+			 panda_textvalue, "Comment");
+      break;
 
-  case panda_icon_help:
-    panda_adddictitem(document, annotation, "Name",
-		      panda_textvalue, "Help");
-    break;
+    case panda_icon_help:
+      panda_adddictitem (document, annotation, "Name",
+			 panda_textvalue, "Help");
+      break;
 
-  case panda_icon_insert:
-    panda_adddictitem(document, annotation, "Name",
-		      panda_textvalue, "Insert");
-    break;
+    case panda_icon_insert:
+      panda_adddictitem (document, annotation, "Name",
+			 panda_textvalue, "Insert");
+      break;
 
-  case panda_icon_key:
-    panda_adddictitem(document, annotation, "Name",
-		      panda_textvalue, "Key");
-    break;
+    case panda_icon_key:
+      panda_adddictitem (document, annotation, "Name",
+			 panda_textvalue, "Key");
+      break;
 
-  case panda_icon_newparagraph:
-    panda_adddictitem(document, annotation, "Name",
-		      panda_textvalue, "NewParagraph");
-    break;
+    case panda_icon_newparagraph:
+      panda_adddictitem (document, annotation, "Name",
+			 panda_textvalue, "NewParagraph");
+      break;
 
-  case panda_icon_note:
-    panda_adddictitem(document, annotation, "Name",
-		      panda_textvalue, "Note");
-    break;
+    case panda_icon_note:
+      panda_adddictitem (document, annotation, "Name",
+			 panda_textvalue, "Note");
+      break;
 
-  case panda_icon_paragraph:
-    panda_adddictitem(document, annotation, "Name",
-		      panda_textvalue, "Paragraph");
-    break;
-  }
+    case panda_icon_paragraph:
+      panda_adddictitem (document, annotation, "Name",
+			 panda_textvalue, "Paragraph");
+      break;
+    }
 }
 
 /******************************************************************************
@@ -176,64 +176,64 @@ DOCBOOK END
 
 // docbook out of date
 void
-panda_freetextannotation(panda_pdf *document, panda_page *page,
-			 char *text, char *title,
-			 int top, int left, int bottom, int right,
-			 double red, double green, double blue,
-			 int flags)
+panda_freetextannotation (panda_pdf * document, panda_page * page,
+			  char *text, char *title,
+			  int top, int left, int bottom, int right,
+			  double red, double green, double blue, int flags)
 {
   panda_object *annotation;
 
 #if defined DEBUG
-  printf("Inserting a freetext annotation\n");
+  printf ("Inserting a freetext annotation\n");
 #endif
 
-  annotation = panda_insertannotation(document, page, title,
-				      top, left, bottom, right,
-				      red, green, blue, flags);
-  
-  panda_adddictitem(document, annotation, "Subtype", 
-		    panda_textvalue, "FreeText");
-  panda_adddictitem(document, annotation, "Contents", 
-		    panda_brackettedtextvalue, text);  
+  annotation = panda_insertannotation (document, page, title,
+				       top, left, bottom, right,
+				       red, green, blue, flags);
+
+  panda_adddictitem (document, annotation, "Subtype",
+		     panda_textvalue, "FreeText");
+  panda_adddictitem (document, annotation, "Contents",
+		     panda_brackettedtextvalue, text);
   //panda_adddictitem(document, annotation, "DA",
-  //		    panda_textvalue, 
+  //                panda_textvalue, 
 
   // todo_mikal
 }
 
 void
-panda_linkannotation(panda_pdf *document, panda_page *page)
+panda_linkannotation (panda_pdf * document, panda_page * page)
 {
   // todo_mikal
 }
 
 void
-panda_lineannotation(panda_pdf *document, panda_page *page,
-		     char *text, char *title, int x1, int y1, int x2, int y2,
-		     int top, int left, int bottom, int right, 
-		     double red, double green, double blue, int flags)
+panda_lineannotation (panda_pdf * document, panda_page * page,
+		      char *text, char *title, int x1, int y1, int x2, int y2,
+		      int top, int left, int bottom, int right,
+		      double red, double green, double blue, int flags)
 {
   panda_object *annotation;
   char *lineString;
 
 #if defined DEBUG
-  printf("Inserting a line annotation\n");
+  printf ("Inserting a line annotation\n");
 #endif
 
-  annotation = panda_insertannotation(document, page, title, top, left, bottom,
-				      right, red, green, blue, flags);
-  
-  panda_adddictitem(document, annotation, "Subtype", 
-		    panda_textvalue, "Line");
-  panda_adddictitem(document, annotation, "Contents", 
-		    panda_brackettedtextvalue, text);    
-  
-  lineString = panda_xsnprintf("[%d %d %d %d]", x1, page->height - y1, 
-			       x2, page->height - y2);
-  panda_adddictitem(document, annotation, "L",
-		    panda_literaltextvalue, lineString);
-  panda_xfree(lineString);
+  annotation =
+    panda_insertannotation (document, page, title, top, left, bottom, right,
+			    red, green, blue, flags);
+
+  panda_adddictitem (document, annotation, "Subtype",
+		     panda_textvalue, "Line");
+  panda_adddictitem (document, annotation, "Contents",
+		     panda_brackettedtextvalue, text);
+
+  lineString = panda_xsnprintf ("[%d %d %d %d]", x1, page->height - y1,
+				x2, page->height - y2);
+  panda_adddictitem (document, annotation, "L",
+		     panda_literaltextvalue, lineString);
+  panda_xfree (lineString);
 }
 
 /******************************************************************************
@@ -264,46 +264,44 @@ DOCBOOK END
 
 // docbook out of dater
 
-panda_object *panda_insertannotation(panda_pdf *document, panda_page *page,
-				     char *title,
-				     int top, int left, int bottom, int right,
-				     double red, double green, double blue,
-				     int flags)
+panda_object *
+panda_insertannotation (panda_pdf * document, panda_page * page,
+			char *title,
+			int top, int left, int bottom, int right,
+			double red, double green, double blue, int flags)
 {
   panda_object *annotation;
   char *rectString, *dateString, *colourString;
 
   // Each annotation is stored in it's own object because we can
-  annotation = panda_newobject(document, panda_normal);
-  panda_addchild(document->pages, annotation);
+  annotation = panda_newobject (document, panda_normal);
+  panda_addchild (document->pages, annotation);
 
   // Add this to the list of annotations for the named page
-  panda_adddictitem(document, page->obj, "Annots",
-		    panda_objectarrayvalue, annotation);
-  panda_adddictitem(document, annotation, "Type", 
-		    panda_textvalue, "Annot");
-  panda_adddictitem(document, annotation, "F",
-  		    panda_integervalue, flags);
-  panda_adddictitem(document, annotation, "M",
-  		    panda_brackettedtextvalue, dateString = panda_nowdate());
-  panda_xfree(dateString);
-  panda_adddictitem(document, annotation, "P",
-		    panda_objectvalue, page->obj);
-  panda_adddictitem(document, annotation, "T",
-		    panda_brackettedtextvalue, title);
+  panda_adddictitem (document, page->obj, "Annots",
+		     panda_objectarrayvalue, annotation);
+  panda_adddictitem (document, annotation, "Type", panda_textvalue, "Annot");
+  panda_adddictitem (document, annotation, "F", panda_integervalue, flags);
+  panda_adddictitem (document, annotation, "M",
+		     panda_brackettedtextvalue, dateString =
+		     panda_nowdate ());
+  panda_xfree (dateString);
+  panda_adddictitem (document, annotation, "P", panda_objectvalue, page->obj);
+  panda_adddictitem (document, annotation, "T",
+		     panda_brackettedtextvalue, title);
 
   // The colour of the annotation
-  colourString = panda_xsnprintf("[%.2f %.2f %.2f]", red, green, blue);
-  panda_adddictitem(document, annotation, "C",
-		    panda_literaltextvalue, colourString);
-  panda_xfree(colourString);
+  colourString = panda_xsnprintf ("[%.2f %.2f %.2f]", red, green, blue);
+  panda_adddictitem (document, annotation, "C",
+		     panda_literaltextvalue, colourString);
+  panda_xfree (colourString);
 
   // The onscreen rectangle
-  rectString = panda_xsnprintf("[%d %d %d %d]", left, page->height - bottom, 
-			       right, page->height - top);
-  panda_adddictitem(document, annotation, "Rect",
-		    panda_literaltextvalue, rectString);
-  panda_xfree(rectString);  
+  rectString = panda_xsnprintf ("[%d %d %d %d]", left, page->height - bottom,
+				right, page->height - top);
+  panda_adddictitem (document, annotation, "Rect",
+		     panda_literaltextvalue, rectString);
+  panda_xfree (rectString);
 
   return annotation;
 }

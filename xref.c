@@ -76,8 +76,7 @@ panda_writexref (panda_pdf * output)
 
   while (currentXREF->next != NULL)
     {
-      panda_printf (output, "%010d %05d n\n", currentXREF->me->byteOffset,
-		    0);
+      panda_printf (output, "%010d %05d n\n", currentXREF->me->byteOffset, 0);
       currentXREF = currentXREF->next;
     }
 }

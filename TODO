@@ -77,10 +77,6 @@ L * New font ids are handed out too often -- what about font reuse?
   * Allow callers to specify the date that annotations are created on if they
 	want.
 
-*****************************
-* CONVERSION TASKS          *
-*****************************
-
   * Optomise database accesses
 
   * Possible caching implementation for the tdb stuff

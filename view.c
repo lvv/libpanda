@@ -68,8 +68,8 @@ DOCBOOK END
 void
 panda_hidetoolbar (panda_pdf * document, int onoff)
 {
-  panda_adddictitem (document, document->catalog, 
-		     "ViewerPreferences/HideToolbar", 
+  panda_adddictitem (document, document->catalog,
+		     "ViewerPreferences/HideToolbar",
 		     panda_booleanvalue, onoff);
 }
 
@@ -106,8 +106,8 @@ DOCBOOK END
 void
 panda_hidemenubar (panda_pdf * document, int onoff)
 {
-  panda_adddictitem (document, document->catalog, 
-		     "ViewerPreferences/HideMenubar", 
+  panda_adddictitem (document, document->catalog,
+		     "ViewerPreferences/HideMenubar",
 		     panda_booleanvalue, onoff);
 }
 
@@ -144,7 +144,7 @@ DOCBOOK END
 void
 panda_hidewindowui (panda_pdf * document, int onoff)
 {
-  panda_adddictitem (document, document->catalog, 
+  panda_adddictitem (document, document->catalog,
 		     "ViewerPreferences/HideWindowUI",
 		     panda_booleanvalue, onoff);
 }
@@ -182,7 +182,7 @@ DOCBOOK END
 void
 panda_fitwindow (panda_pdf * document, int onoff)
 {
-  panda_adddictitem (document, document->catalog, 
+  panda_adddictitem (document, document->catalog,
 		     "ViewerPreferences/FitWindow",
 		     panda_booleanvalue, onoff);
 }
@@ -220,7 +220,7 @@ DOCBOOK END
 void
 panda_centerwindow (panda_pdf * document, int onoff)
 {
-  panda_adddictitem (document, document->catalog, 
+  panda_adddictitem (document, document->catalog,
 		     "ViewerPreferences/CenterWindow",
 		     panda_booleanvalue, onoff);
 }
@@ -263,19 +263,19 @@ panda_nfspagemode (panda_pdf * document, int pagemode)
     {
     case panda_window_usenone:
       panda_adddictitem (document, document->catalog,
-			 "ViewerPreferences/NonFullScreenPageMode", 
+			 "ViewerPreferences/NonFullScreenPageMode",
 			 panda_textvalue, "UseNone");
       break;
 
     case panda_window_useoutlines:
       panda_adddictitem (document, document->catalog,
-			 "ViewerPreferences/NonFullScreenPageMode", 
+			 "ViewerPreferences/NonFullScreenPageMode",
 			 panda_textvalue, "UseOutlines");
       break;
 
     case panda_window_usethumbs:
       panda_adddictitem (document, document->catalog,
-			 "ViewerPreferences/NonFullScreenPageMode", 
+			 "ViewerPreferences/NonFullScreenPageMode",
 			 panda_textvalue, "UseThumbs");
       break;
 
@@ -365,13 +365,13 @@ panda_textdirection (panda_pdf * document, int dir)
   switch (dir)
     {
     case panda_textdirection_l2r:
-      panda_adddictitem (document, document->catalog, 
+      panda_adddictitem (document, document->catalog,
 			 "ViewerPreferences/Direction",
 			 panda_textvalue, "L2R");
       break;
 
     case panda_textdirection_r2l:
-      panda_adddictitem (document, document->catalog, 
+      panda_adddictitem (document, document->catalog,
 			 "ViewerPreferences/Direction",
 			 panda_textvalue, "R2L");
       break;
