@@ -290,7 +290,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 #if defined DEBUG
 	    printf("Freeing the creation date\n");
 #endif
-	    free (tempPtr);
+	    panda_xfree (tempPtr);
 	  }
 	}
       else
@@ -470,8 +470,7 @@ panda_close (panda_pdf * openedpdf)
   if (openedpdf->fonts != NULL)
     panda_traverseobjects (openedpdf, openedpdf->fonts, panda_up,
 			   panda_freeobject);
-  if (openedpdf->currentFont != NULL)
-    free(openedpdf->currentFont);
+  panda_xfree(openedpdf->currentFont);
 
 #if defined DEBUG
   printf("Cleaning up page holder items\n");
@@ -481,20 +480,18 @@ panda_close (panda_pdf * openedpdf)
   while(pagelist->next != NULL){
     pagevictim = pagelist;
     pagelist = pagelist->next;
-
-    if(pagevictim->me != NULL){
-      free(pagevictim->me);
-
+    
+    panda_xfree(pagevictim->me);
+    
 #if defined DEBUG
-      printf("Cleaned up a page item\n");
+    printf("Cleaned up a page item\n");
 #endif
-    }
-
-    free(pagevictim);
   }
- 
+  
+  panda_xfree(pagevictim);
+
   // Clean up the last one
-  free(pagelist);
+  panda_xfree(pagelist);
 
   // Clean up some document level things
   fclose (openedpdf->file);
@@ -510,7 +507,7 @@ panda_close (panda_pdf * openedpdf)
 	  xnow = xnow->next;
 	}
 
-      free (xnow);
+      panda_xfree (xnow);
       if (xprev != NULL)
 	xprev->next = NULL;
     }
@@ -520,11 +517,9 @@ panda_close (panda_pdf * openedpdf)
 	 openedpdf->totalObjectNumber);
 #endif
 
-  free (openedpdf->xrefList);
-  //free (openedpdf->dummyObj);
-  
+  panda_xfree (openedpdf->xrefList);
   panda_dbclose(openedpdf);
-  free (openedpdf);
+  panda_xfree (openedpdf);
 }
 
 /******************************************************************************
@@ -591,8 +586,7 @@ panda_newpage (panda_pdf * output, char *pageSize)
   newPage->width = atoi (strtok (NULL, " "));
   newPage->height = atoi (strtok (NULL, " "));
 
-  free (pageSizeCopy);
-
+  panda_xfree (pageSizeCopy);
   return newPage;
 }
 

@@ -66,8 +66,7 @@ panda_createfont (panda_pdf * output, char *fontname, int type,
 
   tempBuffer = panda_xsnprintf ("Type%d", type);
   panda_adddictitem (output, font, "Subtype", panda_textvalue, tempBuffer);
-  if(tempBuffer != NULL)
-    free(tempBuffer);
+  panda_xfree(tempBuffer);
   
   // Make a font identifier string for this font
   fontident = panda_xsnprintf ("F%08d", output->nextFontNumber);
@@ -121,8 +120,7 @@ void
 panda_setfont (panda_pdf * output, char *fontident)
 {
   // Free on a NULL should do nothing (check for other platforms)
-  if (output->currentFont != NULL)
-    free (output->currentFont);
+  panda_xfree (output->currentFont);
 
   output->currentFont =
     panda_xmalloc ((strlen (fontident) + 1) * sizeof (char));
@@ -238,8 +236,8 @@ panda_getfontobj (panda_pdf * output, char *fontident)
 	  printf("The value for this key was: %s\n", found);
 #endif
 
-	  free(found);
-	  free(foundkey);
+	  panda_xfree(found);
+	  panda_xfree(foundkey);
 	  return thisChild->me;
 	}
 

@@ -113,8 +113,7 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
     panda_setfont (output,
 		   tempPtr = panda_createfont (output, "Helvetica", 1,
 					       "MacRomanEncoding"));
-    if(tempPtr != NULL)
-      free(tempPtr);
+    panda_xfree(tempPtr);
   }
 
   // If the font is not defined on this page
@@ -151,7 +150,7 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
       dictkey = panda_xsnprintf("Resources/Font/%s", output->currentFont);
       panda_adddictitem (output, thisPage->obj, dictkey,
 			 panda_objectvalue, fontObj);
-      free(dictkey);
+      panda_xfree(dictkey);
     }
 
   return;
@@ -250,10 +249,7 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
 			    output->currentFont, output->currentFontSize);
 
       // If we previously had one set, then get rid of it
-      if(textobj->currentSetFont != NULL)
-	{
-	  free(textobj->currentSetFont);
-	}
+      panda_xfree(textobj->currentSetFont);
 
       // Make space for the new name
 #if defined DEBUG
@@ -348,5 +344,5 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
     }
 
   // Free temp data
-  free (strtokVictim);
+  panda_xfree (strtokVictim);
 }

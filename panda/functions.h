@@ -139,7 +139,8 @@ extern "C"
 
   //  void *panda_xmalloc (size_t);
   //  void *panda_xrealloc (void *, size_t);
-  
+  void panda_xfree(void *);
+
   #define panda_xmalloc malloc
   #define panda_xrealloc realloc
 

@@ -171,7 +171,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   dictkey = panda_xsnprintf("Resources/XObject/%s", pdfFilename);
   panda_adddictitem (output, target->obj, dictkey, panda_objectvalue,
 		     imageObj);
-  free(dictkey);
+  panda_xfree(dictkey);
 
   // We put some information based on a stat of the image file into the object
   // This will allow us to determine if this file's image is included in the

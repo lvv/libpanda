@@ -83,5 +83,3 @@ L * New font ids are handed out too often -- what about font reuse?
   * Optomise database accesses
 
   * Possible caching implementation for the tdb stuff
-
-  * Implement a panda_xfree() which is a safe version of free

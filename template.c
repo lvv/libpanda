@@ -103,5 +103,5 @@ panda_applytemplate(panda_pdf *output, panda_page *target,
   dictkey = panda_xsnprintf("Resources/XObject/%s", template->templatename);
   panda_adddictitem (output, target->obj, dictkey, 
 		     panda_objectvalue, template->obj);
-  free(dictkey);
+  panda_xfree(dictkey);
 }

@@ -102,3 +102,38 @@ panda_xrealloc (void *memory, size_t size)
   return buffer;
 }
 */
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_xfree
+PURPOSE deallocate memory in a safe manner
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_xfree (void *p);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Deallocate a block of memory in a safe manner. For instance, some systems will not allow you to free a NULL pointer...
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+char *p;
+p = panda_xmalloc(42);
+panda_xrealloc(p);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void
+panda_xfree (void *memory)
+{
+  if(memory != NULL)
+    free(memory);
+}
+

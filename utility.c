@@ -107,7 +107,7 @@ panda_printf (panda_pdf * file, char *format, ...)
     }
 
   // We don't need strtokVictim any more
-  free (strtokVictim);
+  panda_xfree (strtokVictim);
 
   // We might have missed at \n the end
   if (format[strlen (format) - 1] == '\n')
@@ -124,7 +124,7 @@ panda_printf (panda_pdf * file, char *format, ...)
   if ((actualLen = vsnprintf (buffer, 1024, formatString, argPtr)) > 1020)
     {
       // We did not fit! Try again...
-      free (buffer);
+      panda_xfree (buffer);
 
 #if defined DEBUG
       printf
@@ -161,8 +161,8 @@ panda_printf (panda_pdf * file, char *format, ...)
   fprintf (file->file, "%s", buffer);
 
   // Free the temp data structures
-  free (formatString);
-  free (buffer);
+  panda_xfree (formatString);
+  panda_xfree (buffer);
   va_end (argPtr);
 }
 
@@ -336,7 +336,7 @@ panda_print (panda_pdf * output, char *format)
     strcat (formatString, "\r\n");
 
   // We don't need strtokVictim any more
-  free (strtokVictim);
+  panda_xfree (strtokVictim);
 #endif
 
   fprintf (output->file, "%s", formatString);
@@ -345,7 +345,7 @@ panda_print (panda_pdf * output, char *format)
   // With windows we might also need to update the newline count here
 
   // Clean up
-  free(formatString);
+  panda_xfree(formatString);
 }
 
 /******************************************************************************

@@ -77,8 +77,8 @@ panda_newobject (panda_pdf * doc, int type)
   dbkey = panda_xsnprintf("obj-%d-dictno", created->number);
   dbdata = panda_xsnprintf("%d", dictno);
   panda_dbwrite(doc, dbkey, dbdata);
-  free(dbkey);
-  free(dbdata);
+  panda_xfree(dbkey);
+  panda_xfree(dbdata);
 
   // We have no children at the moment
   created->children = (panda_child *) panda_xmalloc (sizeof (panda_child));
@@ -155,13 +155,13 @@ panda_adddict(panda_pdf *document)
   }
   else{
     max = atoi(dbdata);
-    free(dbdata);
+    panda_xfree(dbdata);
   } 
 
   // Increment that count
   dbdata = panda_xsnprintf("%d", ++max);
   panda_dbwrite(document, "dict-count", dbdata);
-  free(dbdata);
+  panda_xfree(dbdata);
   return max;
 }
 
@@ -233,8 +233,8 @@ panda_adddictitem (panda_pdf *document, panda_object * input, char *name,
   dictelem = panda_getdictelem(document, dictno, name);
   retval = panda_adddictiteminternal(document, dictno, dictelem, 
 				     name, valueType, dictdata);
-  free(dictdata);
-  free(retval);
+  panda_xfree(dictdata);
+  panda_xfree(retval);
 }
 
 // Insert data into the dictionary at a given location
@@ -263,7 +263,7 @@ panda_adddictiteminternal(panda_pdf *document, int passeddictno, int dictelem,
     dbkey = panda_finddictiteminternal(document, passeddictno, namebit);
     if(dbkey != NULL){
       dbdata = panda_dbread (document, dbkey);
-      free(dbkey);
+      panda_xfree(dbkey);
     }
     else{
       dbdata = NULL;
@@ -271,7 +271,7 @@ panda_adddictiteminternal(panda_pdf *document, int passeddictno, int dictelem,
     
     if(dbdata != NULL){
       dictno = atoi(dbdata);
-      free(dbdata);
+      panda_xfree(dbdata);
     }
     else{
 #if defined DEBUG
@@ -286,8 +286,8 @@ panda_adddictiteminternal(panda_pdf *document, int passeddictno, int dictelem,
       						  namebit), namebit,
       				panda_dictionaryvalue, dbdata);
 
-      free(dbdata);
-      free(retval);
+      panda_xfree(dbdata);
+      panda_xfree(retval);
       dictno = pdictno;
     }
 
@@ -299,7 +299,7 @@ panda_adddictiteminternal(panda_pdf *document, int passeddictno, int dictelem,
     dictelem = panda_getdictelem(document, dictno, therest);
     retval = panda_adddictiteminternal(document, dictno, dictelem,
 				       therest, valueType, value);
-    free(tempname);
+    panda_xfree(tempname);
 
 #if defined DEBUG
     printf("Rolling up sudictionary creation\n");
@@ -318,13 +318,13 @@ panda_adddictiteminternal(panda_pdf *document, int passeddictno, int dictelem,
 
   dbkey = panda_xsnprintf("dict-%d-%d-name", dictno, dictelem);
   panda_dbwrite(document, dbkey, name);
-  free(dbkey);
+  panda_xfree(dbkey);
 
   dbkey = panda_xsnprintf("dict-%d-%d-type", dictno, dictelem);
   dbdata = panda_xsnprintf("%d", valueType);
   panda_dbwrite(document, dbkey, dbdata);
-  free(dbkey);
-  free(dbdata);
+  panda_xfree(dbkey);
+  panda_xfree(dbdata);
 
   // If this is a panda_objectarrayvalue, then we append to the end
   dbkey = panda_xsnprintf("dict-%d-%d-value", dictno, dictelem);
@@ -341,12 +341,9 @@ panda_adddictiteminternal(panda_pdf *document, int passeddictno, int dictelem,
 
   panda_dbwrite(document, dbkey, dbdata2);
 
-  if(tempname != NULL)
-    free(tempname);
-  if(dbkey != NULL)
-    free(dbkey);
-  if(dbdata2 != NULL)
-    free(dbdata2);
+  panda_xfree(tempname);
+  panda_xfree(dbkey);
+  panda_xfree(dbdata2);
 
   // todo_mikal: I think there should be a free here, dmalloc disagrees
   //if(dbdata != NULL)
@@ -375,11 +372,11 @@ int panda_getobjdictno(panda_pdf *document, panda_object *input)
   if((dbdata = panda_dbread(document, dbkey)) == NULL){
     panda_error(panda_true, "Object lacks a dictionary");
   }
-  free(dbkey);
+  panda_xfree(dbkey);
   
   // Now we can get the count of the current entries in the dictionary
   dictno = atoi(dbdata);
-  free(dbdata);
+  panda_xfree(dbdata);
 
   if(dictno == 0)
     panda_error(panda_true, "Object does not have a dictionary\n");
@@ -415,10 +412,8 @@ int panda_getdictelem(panda_pdf *document, int dictno, char *name){
       return count;
     }
 
-    free(dbkey);
-    if(dbdata != NULL)
-      free(dbdata);
-
+    panda_xfree(dbkey);
+    panda_xfree(dbdata);
     count++;
 
 #if defined DEBUG
@@ -466,15 +461,14 @@ char *panda_finddictiteminternal(panda_pdf *document, int dictno, char *name){
 
     // Do the names match?
     if((dbdata != NULL) && (strcmp(name, dbdata) == 0)){
-      free(dbdata);
-      free(dbkey);
+      panda_xfree(dbdata);
+      panda_xfree(dbkey);
       dbkey = panda_xsnprintf("dict-%d-%d-value", dictno, count);
       return dbkey;
     }
 
-    free(dbkey);
-    if(dbdata != NULL)
-      free(dbdata);
+    panda_xfree(dbkey);
+    panda_xfree(dbdata);
 
 #if defined DEBUG
   if(count > 1000)
@@ -546,31 +540,16 @@ panda_freeobjectactual (panda_pdf * output, panda_object * freeVictim,
       printf("Actually freeing this object (not a placeholder)\n");
 #endif
 
-      // Free the object and all it's bits -- free of a NULL does nothing! But
-      // not in dmalloc!!!
-      if (freeVictim->layoutstream != NULL)
-	free (freeVictim->layoutstream);
-#if defined DEBUG
-      else printf("No layout stream to free\n");
-#endif
-
-      if (freeVictim->binarystream != NULL)
-	free (freeVictim->binarystream);
-#if defined DEBUG
-      else printf("No binary stream to free\n");
-#endif
-
-      if (freeVictim->currentSetFont != NULL)
-	free (freeVictim->currentSetFont);
-#if defined DEBUG
-      else printf("No currently set font to free\n");
-#endif
+      panda_xfree (freeVictim->layoutstream);
+      panda_xfree (freeVictim->binarystream);
+      
+      panda_xfree (freeVictim->currentSetFont);
     }
 
   if(freekids == panda_true) 
-    free (freeVictim->children);
+    panda_xfree (freeVictim->children);
   
-  free (freeVictim);
+  panda_xfree (freeVictim);
 }
 
 /******************************************************************************
@@ -691,7 +670,7 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 
 		  // Now we need to make the stream use the compressed one,
 		  // and record the length
-		  free (dumpTarget->layoutstream);
+		  panda_xfree (dumpTarget->layoutstream);
 		  dumpTarget->layoutstream = compressed;
 		  dumpTarget->layoutstreamLength = compressedLen;
 		}
@@ -799,20 +778,19 @@ void panda_writedictionaryinternal(panda_pdf *output, int dictno, int depth){
   // clobbering this one
   count = 0;
   do{
-    if(dbname != NULL)
-      free(dbname);
+    panda_xfree(dbname);
 
     dbkey = panda_xsnprintf("dict-%d-%d-name", dictno, count);
     dbname = panda_dbread(output, dbkey);
-    free(dbkey);
+    panda_xfree(dbkey);
 
     dbkey = panda_xsnprintf("dict-%d-%d-value", dictno, count);
     dbvalue = panda_dbread(output, dbkey);
-    free(dbkey);
+    panda_xfree(dbkey);
 
     dbkey = panda_xsnprintf("dict-%d-%d-type", dictno, count);
     dbtype = panda_dbread(output, dbkey);
-    free(dbkey);
+    panda_xfree(dbkey);
 
     if(dbname != NULL){
       for(dcount = 0; dcount < depth; dcount ++)
@@ -826,8 +804,8 @@ void panda_writedictionaryinternal(panda_pdf *output, int dictno, int depth){
       else
 	panda_printf (output, "%s\n", dbvalue);
 
-      free(dbtype);
-      free(dbvalue);
+      panda_xfree(dbtype);
+      panda_xfree(dbvalue);
     }
     
 #if defined DEBUG
