@@ -1,0 +1,117 @@
+<html>
+<body>
+<pre>
+<h1>Build Log</h1>
+<h3>
+--------------------Configuration: panda - Win32 Debug--------------------
+</h3>
+<h3>Command Lines</h3>
+Creating temporary file "C:\WIN98\TEMP\RSP30.TMP" with contents
+[
+/nologo /MTd /W3 /Gm /GX /ZI /Od /I "panda" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "PANDA_EXPORTS" /FR"Debug/" /Fp"Debug/panda.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\curves.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\date.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\error.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\font.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\images.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\info.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\internal.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\memory.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\objects.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\panda.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\template.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\text.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\trailer.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\utility.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\xref.c"
+"C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\windows.c"
+]
+Creating command line "cl.exe @C:\WIN98\TEMP\RSP30.TMP" 
+Creating temporary file "C:\WIN98\TEMP\RSP0031.TMP" with contents
+[
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:yes /pdb:"Debug/panda.pdb" /debug /machine:I386 /out:"Debug/panda.dll" /implib:"Debug/panda.lib" /pdbtype:sept 
+".\Debug\curves.obj"
+".\Debug\date.obj"
+".\Debug\error.obj"
+".\Debug\font.obj"
+".\Debug\images.obj"
+".\Debug\info.obj"
+".\Debug\internal.obj"
+".\Debug\memory.obj"
+".\Debug\objects.obj"
+".\Debug\panda.obj"
+".\Debug\template.obj"
+".\Debug\text.obj"
+".\Debug\trailer.obj"
+".\Debug\utility.obj"
+".\Debug\xref.obj"
+".\contrib\libtiff\libtiff.lib"
+".\contrib\libjpeg\libjpeg.lib"
+".\contrib\libz\zlib.lib"
+".\contrib\libpng\libpng.lib"
+".\Debug\windows.obj"
+]
+Creating command line "link.exe @C:\WIN98\TEMP\RSP0031.TMP"
+<h3>Output Window</h3>
+Compiling...
+curves.c
+date.c
+error.c
+font.c
+images.c
+c:\my documents\panda-0.4-rc3\panda-0.4-rc3\contrib\libjpeg\jmorecfg.h(161) : warning C4142: benign redefinition of type
+c:\my documents\panda-0.4-rc3\panda-0.4-rc3\contrib\libjpeg\jmorecfg.h(215) : warning C4005: 'FAR' : macro redefinition
+        c:\program files\microsoft visual studio\vc98\include\windef.h(135) : see previous definition of 'FAR'
+C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\images.c(160) : warning C4018: '<' : signed/unsigned mismatch
+C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\images.c(548) : warning C4018: '<' : signed/unsigned mismatch
+C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\images.c(727) : warning C4101: 'imageBufSize' : unreferenced local variable
+info.c
+internal.c
+memory.c
+objects.c
+C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\objects.c(372) : warning C4047: 'return' : 'void *' differs in levels of indirection from 'int '
+C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\objects.c(597) : warning C4244: '=' : conversion from 'double ' to 'unsigned long ', possible loss of data
+panda.c
+template.c
+text.c
+trailer.c
+utility.c
+C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\utility.c(73) : warning C4018: '<' : signed/unsigned mismatch
+C:\My Documents\panda-0.4-rc3\panda-0.4-rc3\utility.c(309) : warning C4018: '<' : signed/unsigned mismatch
+xref.c
+windows.c
+Linking...
+windows.obj : error LNK2005: _panda_setlinestart already defined in curves.obj
+LINK : warning LNK4098: defaultlib "LIBC" conflicts with use of other libs; use /NODEFAULTLIB:library
+Debug/panda.dll : fatal error LNK1169: one or more multiply defined symbols found
+Error executing link.exe.
+Creating temporary file "C:\WIN98\TEMP\RSPF2.TMP" with contents
+[
+/nologo /o"Debug/panda.bsc" 
+".\Debug\curves.sbr"
+".\Debug\date.sbr"
+".\Debug\error.sbr"
+".\Debug\font.sbr"
+".\Debug\images.sbr"
+".\Debug\info.sbr"
+".\Debug\internal.sbr"
+".\Debug\memory.sbr"
+".\Debug\objects.sbr"
+".\Debug\panda.sbr"
+".\Debug\template.sbr"
+".\Debug\text.sbr"
+".\Debug\trailer.sbr"
+".\Debug\utility.sbr"
+".\Debug\xref.sbr"
+".\Debug\windows.sbr"]
+Creating command line "bscmake.exe @C:\WIN98\TEMP\RSPF2.TMP"
+Creating browse info file...
+<h3>Output Window</h3>
+
+
+
+<h3>Results</h3>
+panda.dll - 2 error(s), 10 warning(s)
+</pre>
+</body>
+</html>
