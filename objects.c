@@ -155,13 +155,13 @@ void adddictitem(object *input, char *name, int valueType, ...){
 
     // Some stuff for different types
     if(valueType != gLiteralTextValue) strcat(dictNow->textValue, "/");
-    if(valueType != gBracketedTextValue) strcat(dictNow->textValue, "(");
+    if(valueType == gBracketedTextValue) strcat(dictNow->textValue, "(");
 
     // The string
     strcat(dictNow->textValue, value);
 
     // Some more stuff for different types
-    if(valueType != gBracketedTextValue) strcat(dictNow->textValue, ")");
+    if(valueType == gBracketedTextValue) strcat(dictNow->textValue, ")");
     break;
 
   case gIntValue:
