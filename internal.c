@@ -156,14 +156,14 @@ panda_createandinsertpage (panda_pdf * output){
   newPage = (panda_page *) panda_xmalloc (sizeof (panda_page));
 
   // Make the new page object
-  newPage->obj = panda_newobject (output, panda_normal);
+  newPage->obj = (panda_object *) panda_newobject (output, panda_normal);
 
   // Add it to the object tree
   panda_addchild (output->pages, newPage->obj);
 
   // We also need to do the same sort of thing for the contents object
   // that each page owns
-  newPage->contents = panda_newobject (output, panda_normal);
+  newPage->contents = (panda_object *) panda_newobject (output, panda_normal);
   panda_addchild (newPage->obj, newPage->contents);
   panda_adddictitem (newPage->obj->dict, "Contents", panda_objectvalue,
 		     newPage->contents);
