@@ -129,7 +129,18 @@ pdf *pdfopen(char *filename, char *mode){
     adddictitem(openedpdf->info->dict, "CreationDate", gBracketedTextValue,
       tempPtr = nowdate());
     free(tempPtr);
- 
+
+    // Remember the mode and create the linear object if needed
+    if((mode[1] == 'l') || (mode[1] == 'L')){
+      openedpdf->mode = gWriteLinear;
+      openedpdf->linear = newobject(openedpdf, gNormal);
+      adddictitem(openedpdf->linear->dict, "Linearised", gIntValue, 1); 
+    }
+    else{
+      openedpdf->mode = gWrite;
+      openedpdf->linear = NULL;
+    }
+
     // We did open the PDF file ok
     return openedpdf;
     break;
@@ -145,30 +156,58 @@ pdf *pdfopen(char *filename, char *mode){
 
 // Finish operations on a given PDF document and write the result to disc
 void pdfclose(pdf *openedpdf){
+  // The header was written when we created the file on disk
+
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
   adddictitem(openedpdf->pages->dict, "Count", gIntValue, 
     openedpdf->pageCount);
-  
-  // We need to write out the objects into the PDF file and then close the
-  // file -- any object which heads an object tree, or lives outside the tree
-  // structure will need a traverseObjects call here...
-  traverseObjects(openedpdf, openedpdf->catalog, gDown, writeObject);
-  traverseObjects(openedpdf, openedpdf->fonts, gDown, writeObject);
+
+  // We do some different things to write out the PDF depending on the mode
+  switch(openedpdf->mode){
+  case gWrite:
+    // We need to write out the objects into the PDF file and then close the
+    // file -- any object which heads an object tree, or lives outside the tree
+    // structure will need a traverseObjects call here...
+    traverseObjects(openedpdf, openedpdf->catalog, gDown, writeObject);
+    traverseObjects(openedpdf, openedpdf->fonts, gDown, writeObject);
  
+    // Write our the XREF object -- this MUST happen after all objects have 
+    // been written, or the byte offsets will not be known
+    writeXref(openedpdf);
+  
+    // Write the trailer
+    writeTrailer(openedpdf);
+    break;
+
+  case gWriteLinear:
+    // Are there any pages in the PDF? There needs to be at least one...
+    if(((child *) openedpdf->pages->children)->me == NULL)
+      error("Linearised PDFs need at least one page.");
+
+    writeObject(openedpdf, openedpdf->linear);
+
+    // We need the xref entries for the first page now
+    
+    // And the catalog object
+    writeObject(openedpdf, openedpdf->catalog);
+
+    // The primary hint stream
+
+    // We now need all of the objects for the first page
+    traverseObjects(openedpdf, 
+     ((child *) openedpdf->pages->children)->me, gDown, writeObject);
+
+    
+    break;
+  }
+
   // We also need to free all the memory that we no longer need. This is done
   // separately because sometimes we want to write out but not do this
-  // in other words I am leaving space for later movement...
+  // in other words I a=inm leaving space for later movement...
   traverseObjects(openedpdf, openedpdf->catalog, gUp, freeObject);
   traverseObjects(openedpdf, openedpdf->fonts, gUp, freeObject);
  
-  // Write our the XREF object -- this MUST happen after all objects have been
-  // written, or the byte offsets will not be known
-  writeXref(openedpdf);
-  
-  // Write the trailer
-  writeTrailer(openedpdf);
-
   fclose(openedpdf->file);
 }
 

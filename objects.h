@@ -67,10 +67,11 @@ typedef struct __xref{
 
 typedef struct __pdf{
   FILE             *file;  
-  object           *catalog, *pages, *fonts, *info;
+  object           *catalog, *pages, *fonts, *info, *linear;
   unsigned long    byteOffset, xrefOffset;
   int              nextObjectNumber, pageCount;
   xref             *xrefList, *xrefTail;
+  int              mode;
 
   // These store the state of the drawing environment
   char             *currentFont;

@@ -2,8 +2,14 @@
 
 # Panda 0.2 Makefile
 
+# These are used to define where we would like to be installed to
+prefix=/usr/local
+exec_prefix=${prefix}
+
 # Use the debug flag to help debug the program. It won't produce valid PDF
 # files though...
+DODEBUG = NO
+#DODEBUG = DEBUG
 
 # This is used to do the Windows specific I/O things we have to do.
 # this is now defined by the configure script. If you don't use that script,
@@ -11,12 +17,9 @@
 #PLATFORM = WINDOWS
 #PLATFORM = LINUX
 
-DODEBUG = NO
-#DODEBUG = DEBUG
-
 # The first one of these will make a profiling library
-PROFILING = -pg
-#PROFILING = 
+#PROFILING = -pg
+PROFILING = 
 
 # Use dmalloc to find memory allocation bugs?
 DMALLOC = NO
@@ -38,7 +41,7 @@ COMPILER_FLAGS = -g -c -D@PLATFORM@ -D$(DODEBUG) -D$(DMALLOC) -Wall $(PROFILING)
 OBJFILES = date.o error.o font.o images.o info.o objects.o panda.o text.o trailer.o utility.o xref.o
 
 # Build panda (including the sample application) -- <at>LIBS<at>
-# (@LIBS)
+# (@LIBS@)
 # is the autoconf variable for the library path and for the names of the 
 # libraries we need. See configure.in for a list of the libraries we need at 
 # the moment...
@@ -54,11 +57,11 @@ lib:		$(OBJFILES)
 # This installs the library and header files in the right places
 # I would have used -b here as well, but it is not supported on FreeBSD...
 install:	lib
-		install -m 664 libpanda.a @libdir@/libpanda.a
-		install -m 664 -d @includedir@/panda
-		install -m 664 -D *.h @includedir@/panda/
-		install -m 664 -d @mandir@/man3
-		install -m 664 -D man/*.3 @mandir@/man3
+		@INSTALL@ -m 664 libpanda.a @libdir@/libpanda.a
+		@INSTALL@ -m 664 -d @includedir@/panda
+		@INSTALL@ -m 664 -D *.h @includedir@/panda/
+		@INSTALL@ -m 664 -d @mandir@/man3
+		@INSTALL@ -m 664 -D man/*.3 @mandir@/man3
 
 # This is used in my testing of make install. It does not uninstall the man
 # pages yet because I am not sure of the neatest way of doing this just yet...
