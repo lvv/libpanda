@@ -16,17 +16,27 @@
 
 // Set the start point of a line on the page
 void
-panda_setlinestart(panda_page *target)
+panda_setlinestart(panda_page *target, int x, int y)
 {
-  //  panda_entergraphicsmode(target);
-
   target->contents->layoutstream = 
     panda_streamprintf(target->contents->layoutstream,
-		       "100 100 m\n200 200 l\nS\n");
-
-  //  panda_exitgraphicsmode(target);
+		       "%d %d m\n", x, target->height - y);
 }
 
+// Add a point to the line that we are drawing (a straight line segment)
+void
+panda_addlinesegment(panda_page *target, int x, int y)
+{
+  target->contents->layoutstream = 
+    panda_streamprintf(target->contents->layoutstream,
+		       "%d %d l\n", x, target->height - y);
+}
 
-
-
+// Make the line be drawn by the viewer
+void
+panda_endline(panda_page *target)
+{
+  target->contents->layoutstream = 
+    panda_streamprintf(target->contents->layoutstream,
+		       "S\n");
+}

@@ -122,7 +122,11 @@ main (int argc, char *argv[])
       free(tempPtr);
 
       // We also put in some lines and curves so that we can test that
-      panda_setlinestart(currPage);
+      panda_setlinestart(currPage, 100, 100);
+      panda_addlinesegment(currPage, 150, 120);
+      panda_addlinesegment(currPage, 200, 176);
+      panda_addlinesegment(currPage, 86, 12);
+      panda_endline(currPage);
     }
 
   panda_close (demo);
