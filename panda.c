@@ -173,6 +173,8 @@ pdf *pdfopen_actual(char *filename, char *mode, int suppress){
 
 // Finish operations on a given PDF document and write the result to disc
 void pdfclose(pdf *openedpdf){
+  xref     *xnow, *xprev;
+
   // The header was written when we created the file on disk
 
   // It is now worth our time to count the number of pages and make the count
@@ -237,7 +239,25 @@ void pdfclose(pdf *openedpdf){
   if(openedpdf->fonts != NULL)
     traverseObjects(openedpdf, openedpdf->fonts, gUp, freeObject);
  
+  // Clean up some document level things
   fclose(openedpdf->file);
+
+  while(openedpdf->xrefList->next != NULL){
+    xnow = openedpdf->xrefList;
+    xprev = NULL;
+
+    while(xnow->next != NULL){
+      xprev = xnow;
+      xnow = xnow->next;
+    }
+
+    free(xnow);
+    if(xprev != NULL) xprev->next = NULL;
+  }
+
+  free(openedpdf->xrefList);
+
+  free(openedpdf);
 }
 
 // Insert a page into the PDF
@@ -284,8 +304,11 @@ page *pdfpage(pdf *output, char *pageSize){
   newPage->width = atoi(strtok(NULL, " "));
   newPage->height = atoi(strtok(NULL, " "));
 
+  free(pageSizeCopy);
+
   // Increment the page count for the PDF
   output->pageCount++;  
 
   return newPage;
 }
+

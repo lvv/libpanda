@@ -112,6 +112,7 @@ dictionary *adddictitem(dictionary *input, char *name, int valueType, ...){
     dictNow->next->next = NULL;
     dictNow->objectArrayValue = NULL;
     dictNow->dictValue = NULL;
+    dictNow->textValue = NULL;
 
 #if defined DEBUG
     printf(" (This is a new dictionary element)\n");
@@ -319,18 +320,62 @@ dictionary *getdict(dictionary *head, char *name){
 }
 
 void freeObject(pdf *output, object *freeVictim){
-  // Free the object and all it's bits -- free of a NULL does nothing! But not
-  // in dmalloc!!!
-  //  if(freeVictim->textstream != NULL) free(freeVictim->textstream);
-  //  if(freeVictim->binarystream != NULL) free(freeVictim->binarystream);
-  //  if(freeVictim->xobjectstream != NULL) free(freeVictim->xobjectstream);
-  //  if(freeVictim->currentSetFont != NULL) free(freeVictim->currentSetFont);
 
-  // Still need to free the dictionary...
+#if defined DEBUG
+  printf("Cleaning up object number %d\n", freeVictim->number);
+#endif
+  
+  // We should skip placeholder objects (I think)
+  if(freeVictim->number != -1){
+    // Free the object and all it's bits -- free of a NULL does nothing! But
+    // not in dmalloc!!!
+    if(freeVictim->textstream != NULL) free(freeVictim->textstream);
+    if(freeVictim->binarystream != NULL) free(freeVictim->binarystream);
+    if(freeVictim->xobjectstream != NULL) free(freeVictim->xobjectstream);
+    if(freeVictim->currentSetFont != NULL) free(freeVictim->currentSetFont);
 
+    freeDictionary(freeVictim->dict);
+  }
 
-  //  free(freeVictim);
+  // free(freeVictim);
 }
+
+void freeDictionary(dictionary *freeDict){
+  dictionary    *now, *prev;
+  int           endoftheline = gTrue;
+
+  // Still need to free the dictionary... This can be made more efficient
+  while(freeDict->next != NULL){
+    now = freeDict;
+    prev = NULL;
+    
+    while(now->next != NULL){
+      prev = now;
+      now = now->next;
+    }
+    
+    if(endoftheline == gFalse){
+      free(now->name);
+      if(now->textValue != NULL) free(now->textValue);
+      if(now->dictValue != NULL) freeDictionary(now->dictValue);
+    }
+    else endoftheline = gFalse;
+    
+    free(now);
+    
+    if(prev != NULL) prev->next = NULL;
+  }
+  
+  // And free that initial dictionary element
+  if(freeDict != NULL){
+    free(freeDict->name);
+    if(freeDict->textValue != NULL) free(freeDict->textValue);
+    if(freeDict->dictValue != NULL) freeDictionary(freeDict->dictValue);
+    
+    free(freeDict);
+  }
+}
+
 
 void writeObject(pdf *output, object *dumpTarget){
   // Do all that is needed to dump a PDF object to disk

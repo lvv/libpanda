@@ -91,6 +91,7 @@ dictionary *adddictitem(dictionary *, char *, int, ...);
 void       *getdictvalue(dictionary *);
 dictionary *getdict(dictionary *, char *);
 void       freeObject(pdf *, object *);
+void       freeDictionary(dictionary *);
 void       writeObject(pdf *, object *);
 void       writeDictionary(pdf *, object *, dictionary *);
 void       addchild(object *, object *);

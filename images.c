@@ -328,10 +328,10 @@ static size_t libtiffDummyReadProc(thandle_t fd, tdata_t buf, tsize_t size){
 static size_t libtiffDummyWriteProc(thandle_t fd, tdata_t buf, tsize_t size){
   // libtiff will try to write an 8 byte header into the tiff file. We need
   // to ignore this because PDF does not use it...
-  if((size == 8) && (buf[0] == 'I') && (buf[1] == 'I') && (buf[2] == 42)){
+  // if((size == 8) && (buf[0] == 'I') && (buf[1] == 'I') && (buf[2] == 42)){
     // Skip the header
-  }
-  else{
-  }
+  //}
+  //else{
+  //}
 }
     
