@@ -82,6 +82,22 @@ main (int argc, char *argv[])
       imagebox (demo, currPage, 434, 434, 551, 551, "gnu_box.jpg",
 		gImageJpeg);
 
+      // Do an imageboxrot or two to test the code included by Ceasar Miquel
+      imageboxrot (demo, currPage, 600, 0, 717, 117, 15.0, "gnu_box.jpg",
+		gImageJpeg);
+
+      imageboxrot (demo, currPage, 600, 200, 717, 317, 30.0, "gnu_box.jpg",
+		gImageJpeg);
+
+      imageboxrot (demo, currPage, 600, 400, 717, 517, 42.0, "gnu_box.jpg",
+		gImageJpeg);
+
+      imageboxrot (demo, currPage, 700, 0, 817, 117, 90.0, "gnu_box.jpg",
+		gImageJpeg);
+
+      imageboxrot (demo, currPage, 700, 200, 817, 317, 132.0, "gnu_box.jpg",
+		gImageJpeg);
+
 #if defined DEBUG
       printf ("Created textbox and inserted first image\n");
 #endif
