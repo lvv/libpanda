@@ -1,1 +1,3 @@
 See the file named ChangeLog
+
+Please note that for this release Annotations shouldn't be used (they are still under active development). For users requiring the Windows COM wrapper, it is recommended that they stick to Panda 0.4 until the 0.5 release has stabilised further...
