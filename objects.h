@@ -39,6 +39,7 @@ typedef struct __object{
   unsigned long  byteOffset;
   dictionary     *dict;
   char           *textstream;
+  char           *currentSetFont;
   unsigned long  textstreamLength;
 
   void           *children;

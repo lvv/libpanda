@@ -57,6 +57,9 @@ object *newobject(pdf *doc, int type){
   created->textstream = NULL;
   created->textstreamLength = 0;
 
+  // There is no font defined
+  created->currentSetFont = NULL;
+
   // New objects have a generation number of 0 by definition
   created->generation = 0;
 

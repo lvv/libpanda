@@ -118,9 +118,23 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     textstreamprintf(textobj, "%.2f TL\n", output->currentLeading);
   }
 
-  // Set the font that we want to use
-  textstreamprintf(textobj, "/%s %d Tf\n", 
-    output->currentFont, output->currentFontSize);
+  // If the font that we are using on the page is not the font that is
+  // currently set, then the font has changed and we will need to define the
+  // font here
+  if((textobj->currentSetFont == NULL) || 
+    (strcmp(output->currentFont, textobj->currentSetFont) != 0)){
+    // Set the font that we want to use
+    textstreamprintf(textobj, "/%s %d Tf\n", 
+      output->currentFont, output->currentFontSize);
+
+    // Make space for the new name
+    if((textobj->currentSetFont = malloc(
+      sizeof(char) * strlen(output->currentFont))) == NULL)
+        error("Could not copy the font to the new page.");
+
+    // Store the name so we know what is happening
+    strcpy(textobj->currentSetFont, output->currentFont);
+  }
 
   /***************************************************************************
     PDFs are funny in that we have to specify where line breaks are to occur.
