@@ -87,7 +87,7 @@ page  *pdfpage(pdf *, char *);
 ******************************************************************************/
 
 object     *newobject(pdf *, int);
-void       adddictitem(dictionary *, char *, int, ...);
+dictionary *adddictitem(dictionary *, char *, int, ...);
 void       *getdictvalue(dictionary *);
 dictionary *getdict(dictionary *, char *);
 void       freeObject(pdf *, object *);

@@ -1,10 +1,4 @@
 %{
-  /***************************************************************************
-    WARNING. AT THE MOMENT THIS CODE DOES NOT FREE ANY OF THE LVALUES THAT IT
-    GETS FROM THE FLEX LEXER. THIS IS A BAD THING AND NEEDS TO BE FIXED...
-  ***************************************************************************/
-
-
   #include "constants.h"
   #include "functions.h"
 
@@ -44,6 +38,7 @@ header    : VERSION binary {
                       // the version seems to have all of the header 
                       // information...
                       pdfprintf(yypdf, "%s", $1);
+		      free($1);
                                                                              }
           ;
 
@@ -66,19 +61,31 @@ object    : INT INT OBJ {
           ;
 
 dict      : NAME STRING dict {
+                      adddictitem(yycurobj->dict, $1, gLiteralTextValue, $2);
+		      free($1);
+		      free($2);
                                                                              }
           | NAME NAME dict {
-	              // Add the dictionary item
-	    //adddictitem(yycurobj->dict, $1, gLiteralTextValue, $2);
-	    printf("Adddictitem %s --> %s\n", $1, $2);
+                      ((dictionary *) 
+ 		        adddictitem(yycurobj->dict, $1, gLiteralTextValue, $2))
+                        ->valueType = gTextValue;
+		      free($1);
+		      free($2);
                                                                              }
           | NAME ARRAY arrayvals ENDARRAY dict {
                                                                              }
           | NAME OBJREF dict {
+                      ((dictionary *) 
+ 		        adddictitem(yycurobj->dict, $1, gLiteralTextValue, $2))
+                        ->valueType = gObjValue;
+		      free($1);
+		      free($2);
                                                                              }
           | NAME DBLLT dict DBLGT dict {
                                                                              }
           | NAME INT dict {
+	              adddictitem(yycurobj->dict, $1, gIntValue, $2);
+		      free($1);
                                                                              }
           |
           ;
@@ -92,9 +99,20 @@ stream    : STREAM { binaryMode = 1; } binary { binaryMode = 0; } ENDSTREAM
           |
           ;
 
-binary    : ANYTHING binary 
+binary    : ANYTHING binary {
+                        if($2 != NULL){
+			  if(($$ = malloc(sizeof($1) + sizeof($2))) == NULL)
+			    error("Could not build the binary stream.");
+
+			  strcat($$, $1);
+			  strcat($$, $2);
+			  free($1);
+			  free($2);
+			}
+			else $$ = $1;
+                                                                             }
           | {
-                      $$ = NULL;
+                        $$ = NULL;
                                                                              }
           ;
 

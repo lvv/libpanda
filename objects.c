@@ -82,7 +82,7 @@ object *newobject(pdf *doc, int type){
   return created;
 }
 
-void adddictitem(dictionary *input, char *name, int valueType, ...){
+dictionary *adddictitem(dictionary *input, char *name, int valueType, ...){
   // Add an item to the dictionary in the object
   dictionary  *dictNow;
   va_list     argPtr;
@@ -285,6 +285,9 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
 
   // Stop dealing with arguments
   va_end(argPtr);
+
+  // Return the dictionary item we changed (used in the lexer)
+  return dictNow;
 }
 
 void *getdictvalue(dictionary *dictValue){

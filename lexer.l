@@ -21,7 +21,7 @@ char *returnStr(char *);
                           }                                                  }
 
 \/[a-zA-Z\-0-9\.]+      { debuglex(yytext, "name", binaryMode);
-                          yylval.textVal = (char *) returnStr(yytext);
+                          yylval.textVal = (char *) returnStr(yytext + 1);
                           return((binaryMode == 0) ? NAME : ANYTHING);       }
 
                         /* --- stuff required for objects ---               */
@@ -105,9 +105,14 @@ void debuglex(char *text, char *desc, int binMode){
 char *returnStr(char *yytext){
   char *lval;
 
+  #if defined DEBUG
+     if(binaryMode == 0) printf("Calling returnStr on %s\n", yytext);
+     printf("yytext was %d characters long\n", strlen(yytext));
+  #endif
+
   if((lval = malloc(sizeof(char) * strlen(yytext))) == NULL)
     error("Could not make space for lexer return.");
-  strcpy(lval, yytext);
+  strncpy(lval, yytext, strlen(yytext));
 
   return lval;
 }
