@@ -88,6 +88,10 @@ panda_newobject (panda_pdf * doc, int type)
       // This is a placeholder object, therefore it's number is -1
       created->number = -1;
 
+#if defined DEBUG
+      printf("Created temporary object\n");
+#endif
+
       return created;
     }
 
@@ -450,7 +454,7 @@ panda_freeobjectactual (panda_pdf * output, panda_object * freeVictim,
   printf ("Freeing object number %d\n", freeVictim->number);
 #endif
 
-  // We should skip placeholder objects (I think)
+  // Skip placeholder objects
   if (freeVictim->number != -1)
     {
 #if defined DEBUG

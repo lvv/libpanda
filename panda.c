@@ -512,6 +512,7 @@ panda_close (panda_pdf * openedpdf)
 #endif
 
   free (openedpdf->xrefList);
+  //free (openedpdf->dummyObj);
   free (openedpdf);
 }
 
