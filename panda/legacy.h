@@ -68,6 +68,14 @@ extern "C" {
 #define pdfprint panda_print
 #define writeXref panda_writexref
 
+#define objectArray panda_objectarray
+#define dictionary panda_dictionary
+#define object panda_object
+#define page panda_page
+#define child panda_child
+#define xref panda_xref
+#define pdf panda_pdf
+
 #ifdef __cplusplus
 }
 #endif

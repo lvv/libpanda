@@ -1,5 +1,5 @@
 /******************************************************************************
-  Panda
+  Panda Legacy
 
   Change Control:                                                      DDMMYYYY
     Michael Still    File created                                      03062000
