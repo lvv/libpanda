@@ -25,20 +25,20 @@ panda_createfont (panda_pdf * output, char *fontname, int type, char *encoding)
   panda_addchild (output->fonts, font);
 
   // Setup some values within the font object
-  panda_adddictitem (font->dict, "Type", gTextValue, "Font");
+  panda_adddictitem (font->dict, "Type", panda_textvalue, "Font");
 
   sprintf (tempBuffer, "Type%d", type);
-  panda_adddictitem (font->dict, "Subtype", gTextValue, tempBuffer);
+  panda_adddictitem (font->dict, "Subtype", panda_textvalue, tempBuffer);
 
   // Make a font identifier string for this font
   fontident = panda_xmalloc(10 * sizeof (char));
   sprintf (fontident, "F%08d", output->nextFontNumber);
   output->nextFontNumber++;
 
-  panda_adddictitem (font->dict, "Name", gTextValue, fontident);
+  panda_adddictitem (font->dict, "Name", panda_textvalue, fontident);
 
-  panda_adddictitem (font->dict, "BaseFont", gTextValue, fontname);
-  panda_adddictitem (font->dict, "Encoding", gTextValue, encoding);
+  panda_adddictitem (font->dict, "BaseFont", panda_textvalue, fontname);
+  panda_adddictitem (font->dict, "Encoding", panda_textvalue, encoding);
 
 #if defined DEBUG
   printf("Returning the font ident \"%s\"\n", fontident);

@@ -31,7 +31,7 @@ panda_setauthor (panda_pdf * document, char *author)
   panda_checkinfo (document);
 
   // Add the author bit to it
-  panda_adddictitem (document->info->dict, "Author", gBracketedTextValue, author);
+  panda_adddictitem (document->info->dict, "Author", panda_brackettedtextvalue, author);
 }
 
 // Set the creator string for this document
@@ -42,7 +42,7 @@ panda_setcreator (panda_pdf * document, char *creator)
   panda_checkinfo (document);
 
   // Add the creator bit to it
-  panda_adddictitem (document->info->dict, "Creator", gBracketedTextValue, creator);
+  panda_adddictitem (document->info->dict, "Creator", panda_brackettedtextvalue, creator);
 }
 
 // Set the title string for this document
@@ -53,7 +53,7 @@ panda_settitle (panda_pdf * document, char *title)
   panda_checkinfo (document);
 
   // Add the title bit to it
-  panda_adddictitem (document->info->dict, "Title", gBracketedTextValue, title);
+  panda_adddictitem (document->info->dict, "Title", panda_brackettedtextvalue, title);
 }
 
 // Set the subject string for this document
@@ -64,7 +64,7 @@ panda_setsubject (panda_pdf * document, char *subject)
   panda_checkinfo (document);
 
   // Add the subject bit to it
-  panda_adddictitem (document->info->dict, "Subject", gBracketedTextValue, subject);
+  panda_adddictitem (document->info->dict, "Subject", panda_brackettedtextvalue, subject);
 }
 
 // Set the keywords string for this document
@@ -75,6 +75,6 @@ panda_setkeywords (panda_pdf * document, char *keywords)
   panda_checkinfo (document);
 
   // Add the keywords bit to it
-  panda_adddictitem (document->info->dict, "Keywords", gBracketedTextValue,
+  panda_adddictitem (document->info->dict, "Keywords", panda_brackettedtextvalue,
 	       keywords);
 }

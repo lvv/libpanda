@@ -36,7 +36,7 @@ panda_newobject (panda_pdf * doc, int type)
   created->dict->next = NULL;
 
   // By default this object is not a pages object
-  created->isPages = gFalse;
+  created->isPages = panda_false;
 
   if (type == gPlaceholder)
     {
@@ -61,7 +61,7 @@ panda_newobject (panda_pdf * doc, int type)
   created->currentSetFont = NULL;
 
   // We are not in text mode within the layout stream at the start
-  created->textmode = gFalse;
+  created->textmode = panda_false;
 
   // New objects have a generation number of 0 by definition
   created->generation = 0;
@@ -89,7 +89,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
   panda_object *objValue;
   panda_objectarray *currentObjectArray;
   panda_dictionary *dictValue, *prevDictValue;
-  int overwriting = gFalse;
+  int overwriting = panda_false;
 
 #if defined DEBUG
   printf ("Added dictionary item %s to object (type = %d)\n", name,
@@ -124,14 +124,14 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 #if defined DEBUG
       printf (" (Overwriting a dictionary element)\n");
 #endif
-      overwriting = gTrue;
+      overwriting = panda_true;
     }
 
   // Work with the last argument
   va_start (argPtr, valueType);
 
   // And add some content to this entry if needed
-  if (overwriting == gFalse)
+  if (overwriting == panda_false)
     {
       dictNow->name = (char *) panda_xmalloc((strlen (name) + 1) * sizeof (char));
       strcpy (dictNow->name, name);
@@ -161,7 +161,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
     case panda_literaltextvalue:
     case panda_brackettedtextvalue:
       // Are we overwriting?
-      if ((overwriting == gTrue) && (dictNow->textValue != NULL))
+      if ((overwriting == panda_true) && (dictNow->textValue != NULL))
 	free (dictNow->textValue);
 
       // Get the value
@@ -190,7 +190,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 
     case panda_objectvalue:
       // Are we overwriting?
-      if ((overwriting == gTrue) && (dictNow->textValue != NULL))
+      if ((overwriting == panda_true) && (dictNow->textValue != NULL))
 	free (dictNow->textValue);
 
       objValue = va_arg (argPtr, panda_object *);
@@ -232,7 +232,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       // This is a sub-dictionary
       dictValue = va_arg (argPtr, panda_dictionary *);
 
-      if (overwriting == gFalse)
+      if (overwriting == panda_false)
 	{
 	  // This is a new dictionary item, just copy the info across
 	  dictNow->dictValue = dictValue;
@@ -369,7 +369,7 @@ void
 panda_freedictionary (panda_dictionary * freeDict)
 {
   panda_dictionary *now, *prev;
-  int endoftheline = gTrue;
+  int endoftheline = panda_true;
 
   // Still need to free the dictionary... This can be made more efficient
   while (freeDict->next != NULL)
@@ -383,7 +383,7 @@ panda_freedictionary (panda_dictionary * freeDict)
 	  now = now->next;
 	}
 
-      if (endoftheline == gFalse)
+      if (endoftheline == panda_false)
 	{
 	  free (now->name);
 	  if (now->textValue != NULL)
@@ -392,7 +392,7 @@ panda_freedictionary (panda_dictionary * freeDict)
 	    panda_freedictionary (now->dictValue);
 	}
       else
-	endoftheline = gFalse;
+	endoftheline = panda_false;
 
       free (now);
 
@@ -496,7 +496,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
   // Recursively write the dictionary out (including sub-dictionaries)
   panda_objectarray *currentObjectArray;
   panda_dictionary *dictNow;
-  int atBegining = gTrue;
+  int atBegining = panda_true;
   panda_child *currentKid;
 
 #if defined DEBUG
@@ -527,7 +527,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 	  // If the type is type, then possibly output the Kids line for the pages
 	  // object
 	  if ((strcmp (dictNow->name, "Type") == 0)
-	      && (obj->isPages == gTrue))
+	      && (obj->isPages == panda_true))
 	    {
 	      panda_print (output, "\t/Kids [");
 
@@ -536,10 +536,10 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 
 	      while (currentKid->next != NULL)
 		{
-		  if (atBegining == gFalse)
+		  if (atBegining == panda_false)
 		    panda_print (output, " ");
 		  else
-		    atBegining = gFalse;
+		    atBegining = panda_false;
 
 		  panda_printf (output, "%d %d R",
 			     currentKid->me->number,
@@ -571,7 +571,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 #endif
 
 	  // Start the array in the file
-	  atBegining = gTrue;
+	  atBegining = panda_true;
 
 	  panda_printf (output, "\t/%s [", dictNow->name);
 
@@ -579,8 +579,8 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 	  currentObjectArray = dictNow->objectarrayValue;
 	  while (currentObjectArray->next != NULL)
 	    {
-	      if (atBegining == gTrue)
-		atBegining = gFalse;
+	      if (atBegining == panda_true)
+		atBegining = panda_false;
 	      else
 		panda_print (output, " ");
 
@@ -659,7 +659,7 @@ panda_traverseobjects (panda_pdf * output, panda_object * dumpTarget, int direct
     }
 
   // Otherwise, for me and then for all children
-  if (direction == gDown)
+  if (direction == panda_down)
     function (output, dumpTarget);
 
   currentChild = dumpTarget->children;
@@ -669,6 +669,6 @@ panda_traverseobjects (panda_pdf * output, panda_object * dumpTarget, int direct
       currentChild = currentChild->next;
     }
 
-  if (direction == gUp)
+  if (direction == panda_up)
     function (output, dumpTarget);
 }

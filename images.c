@@ -71,14 +71,14 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   // We make an object not just a dictionary because this is what
   // adddictitem needs
   xobjrefsubsubdict = panda_newobject (output, gPlaceholder);
-  panda_adddictitem (xobjrefsubsubdict->dict, pdfFilename, gObjValue, imageObj);
+  panda_adddictitem (xobjrefsubsubdict->dict, pdfFilename, panda_objectvalue, imageObj);
 
   xobjrefsubdict = panda_newobject (output, gPlaceholder);
-  panda_adddictitem (xobjrefsubdict->dict, "XObject", gDictionaryValue,
+  panda_adddictitem (xobjrefsubdict->dict, "XObject", panda_dictionaryvalue,
 	       xobjrefsubsubdict->dict);
 
   // And put this into the PDF
-  panda_adddictitem (target->obj->dict, "Resources", gDictionaryValue,
+  panda_adddictitem (target->obj->dict, "Resources", panda_dictionaryvalue,
 	       xobjrefsubdict->dict);
 
   // We put some information based on a stat of the image file into the object
@@ -91,12 +91,12 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 
   // We now add some dictionary elements to the image object to say that it is
   // a TIFF image
-  panda_adddictitem (imageObj->dict, "Type", gTextValue, "XObject");
-  panda_adddictitem (imageObj->dict, "Subtype", gTextValue, "Image");
+  panda_adddictitem (imageObj->dict, "Type", panda_textvalue, "XObject");
+  panda_adddictitem (imageObj->dict, "Subtype", panda_textvalue, "Image");
 
   // This line will need to be changed to gaurantee that the internal name is
   // unique unless the actual image is the same
-  panda_adddictitem (imageObj->dict, "Name", gTextValue, pdfFilename);
+  panda_adddictitem (imageObj->dict, "Name", panda_textvalue, pdfFilename);
 
   // Now we do the things that are image format specific... This is also
   // where we check if support has been compiled in for the libraries we need.
@@ -110,7 +110,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 	  fprintf(stderr, "%s %s\n",
 		  "TIFF support not compiled into Panda because libtiff was",
 		  "not found at compile time.");
-	  panda_adddictitem(imageObj->dict, "TIFF_Support_Missing", gIntValue, 1);
+	  panda_adddictitem(imageObj->dict, "TIFF_Support_Missing", panda_integervalue, 1);
 	}
       break;
 
@@ -122,7 +122,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 	  fprintf(stderr, "%s %s\n",
 		  "JPEG support not compiled into Panda because libjpeg was",
 		  "not found at compile time.");
-	  panda_adddictitem(imageObj->dict, "JPEG_Support_Missing", gIntValue, 1);
+	  panda_adddictitem(imageObj->dict, "JPEG_Support_Missing", panda_integervalue, 1);
 	}
       break;
 
@@ -134,7 +134,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 	  fprintf(stderr, "%s %s\n",
 		  "PNG support not compiled into Panda because libpng was not",
 		  "found at compile time.");
-	  panda_adddictitem(imageObj->dict, "PNG_Support_Missing", gIntValue, 1);
+	  panda_adddictitem(imageObj->dict, "PNG_Support_Missing", panda_integervalue, 1);
 	}
       break;
     }
@@ -213,12 +213,12 @@ panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageO
 #endif
 
   // This dictionary item is TIFF specific
-  panda_adddictitem (imageObj->dict, "Filter", gTextValue, "CCITTFaxDecode");
+  panda_adddictitem (imageObj->dict, "Filter", panda_textvalue, "CCITTFaxDecode");
 
   // Bits per component is per colour component, not per sample. Does this
   // matter?
   if (TIFFGetField (image, TIFFTAG_BITSPERSAMPLE, &tiffResponse16) != 0)
-    panda_adddictitem (imageObj->dict, "BitsPerComponent", gIntValue,
+    panda_adddictitem (imageObj->dict, "BitsPerComponent", panda_integervalue,
 		 tiffResponse16);
   else
     panda_error ("Could not get the colour depth for the tiff image.");
@@ -227,11 +227,11 @@ panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageO
   switch (tiffResponse16)
     {
     case 1:
-      panda_adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceGray");
+      panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue, "DeviceGray");
       break;
 
     default:
-      panda_adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceRGB");
+      panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue, "DeviceRGB");
       break;
     }
 
@@ -249,11 +249,11 @@ panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageO
   switch (compression)
     {
     case COMPRESSION_CCITTFAX3:
-      panda_adddictitem (subdict->dict, "K", gIntValue, 0);
+      panda_adddictitem (subdict->dict, "K", panda_integervalue, 0);
       break;
 
     case COMPRESSION_CCITTFAX4:
-      panda_adddictitem (subdict->dict, "K", gIntValue, -1);
+      panda_adddictitem (subdict->dict, "K", panda_integervalue, -1);
       break;
 
     case COMPRESSION_LZW:
@@ -268,8 +268,8 @@ panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageO
   // Width of the image
   if (TIFFGetField (image, TIFFTAG_IMAGEWIDTH, &width) != 0)
     {
-      panda_adddictitem (subdict->dict, "Columns", gIntValue, width);
-      panda_adddictitem (imageObj->dict, "Width", gIntValue, width);
+      panda_adddictitem (subdict->dict, "Columns", panda_integervalue, width);
+      panda_adddictitem (imageObj->dict, "Width", panda_integervalue, width);
     }
   else
     panda_error ("Could not get the width of the TIFF image.");
@@ -277,14 +277,14 @@ panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageO
   // Height of the image
   if (TIFFGetField (image, TIFFTAG_IMAGELENGTH, &height) != 0)
     {
-      panda_adddictitem (subdict->dict, "Rows", gIntValue, height);
-      panda_adddictitem (imageObj->dict, "Height", gIntValue, height);
+      panda_adddictitem (subdict->dict, "Rows", panda_integervalue, height);
+      panda_adddictitem (imageObj->dict, "Height", panda_integervalue, height);
     }
   else
     panda_error ("Could not get the height of the TIFF image.");
 
   // And put this into the PDF
-  panda_adddictitem (imageObj->dict, "DecodeParms", gDictionaryValue,
+  panda_adddictitem (imageObj->dict, "DecodeParms", panda_dictionaryvalue,
 	       subdict->dict);
 
   // Fillorder determines whether we convert on the fly or not, although
@@ -442,24 +442,24 @@ panda_insertJPEG (panda_pdf * output, panda_page * target, panda_object * imageO
   jpeg_read_header (&cinfo, TRUE);
 
   // This dictionary item is JPEG specific
-  panda_adddictitem (imageObj->dict, "Filter", gTextValue, "DCTDecode");
+  panda_adddictitem (imageObj->dict, "Filter", panda_textvalue, "DCTDecode");
 
   // Bits per component -- I'm not sure exactly how this works with libjpeg.
   // Is it possible to have a black and white jpeg? Ceasar Miquel
   // (miquel@df.uba.ar) has submitted patches suggesting that this should
   // always be 8, but this seems to work so I will leave it like this for now
-  panda_adddictitem (imageObj->dict, "BitsPerComponent", gIntValue,
+  panda_adddictitem (imageObj->dict, "BitsPerComponent", panda_integervalue,
 	       cinfo.data_precision);
 
   // The colour device will change based on this number as well
   switch (cinfo.jpeg_color_space)
     {
     case JCS_GRAYSCALE:
-      panda_adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceGray");
+      panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue, "DeviceGray");
       break;
 
     default:
-      panda_adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceRGB");
+      panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue, "DeviceRGB");
       break;
     }
 
@@ -467,8 +467,8 @@ panda_insertJPEG (panda_pdf * output, panda_page * target, panda_object * imageO
      Some details of the image
   ****************************************************************************/
 
-  panda_adddictitem (imageObj->dict, "Width", gIntValue, cinfo.image_width);
-  panda_adddictitem (imageObj->dict, "Height", gIntValue, cinfo.image_height);
+  panda_adddictitem (imageObj->dict, "Width", panda_integervalue, cinfo.image_width);
+  panda_adddictitem (imageObj->dict, "Height", panda_integervalue, cinfo.image_height);
 
   /****************************************************************************
     Read the image into it's memory buffer

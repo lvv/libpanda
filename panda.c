@@ -34,13 +34,13 @@ panda_init ()
 panda_pdf *
 panda_open (char *filename, char *mode)
 {
-  return panda_open_actual (filename, mode, gFalse);
+  return panda_open_actual (filename, mode, panda_false);
 }
 
 panda_pdf *
 panda_open_suppress (char *filename, char *mode)
 {
-  return panda_open_actual (filename, mode, gTrue);
+  return panda_open_actual (filename, mode, panda_true);
 }
 
 panda_pdf *
@@ -91,7 +91,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
       openedpdf->byteOffset = 0;
 
       // This stuff is avoided by the lexer
-      if (suppress == gFalse)
+      if (suppress == panda_false)
 	{
 	  // The file will need to have a PDF header to it
 	  panda_printf (openedpdf, "%s%s\n", panda_magicheaderstring,
@@ -113,7 +113,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
 	  // We now need to setup some information in the pages object
 	  panda_adddictitem (openedpdf->pages->dict, "Type", panda_textvalue, "Pages");
-	  openedpdf->pages->isPages = gTrue;
+	  openedpdf->pages->isPages = panda_true;
 
 	  // There is no font currently selected
 	  openedpdf->currentFont = NULL;
@@ -160,13 +160,13 @@ panda_open_actual (char *filename, char *mode, int suppress)
       // Remember the mode and create the linear object if needed
       if ((mode[1] == 'l') || (mode[1] == 'L'))
 	{
-	  openedpdf->mode = gWriteLinear;
+	  openedpdf->mode = panda_writelinear;
 	  openedpdf->linear = panda_newobject (openedpdf, gNormal);
 	  panda_adddictitem (openedpdf->linear->dict, "Linearised", panda_integervalue, 1);
 	}
       else
 	{
-	  openedpdf->mode = gWrite;
+	  openedpdf->mode = panda_write;
 	  openedpdf->linear = NULL;
 	}
 
@@ -201,24 +201,24 @@ panda_close (panda_pdf * openedpdf)
   // textmode if we have entered one on one of the pages. This is because
   // we need to modify the layout stream before we have the possibility of
   // having had it written out to disk
-  panda_traverseobjects(openedpdf, openedpdf->pages, gDown, panda_closetext);
+  panda_traverseobjects(openedpdf, openedpdf->pages, panda_down, panda_closetext);
 
   // We do some different things to write out the PDF depending on the mode
   switch (openedpdf->mode)
     {
-    case gWrite:
+    case panda_write:
       // We need to write out the objects into the PDF file and then close the
       // file -- any object which heads an object tree, or lives outside the 
       // tree structure will need a traverseobjects call here...
       if (openedpdf->catalog != NULL)
-	panda_traverseobjects (openedpdf, openedpdf->catalog, gDown, panda_writeobject);
+	panda_traverseobjects (openedpdf, openedpdf->catalog, panda_down, panda_writeobject);
 
       if (openedpdf->fonts != NULL)
-	panda_traverseobjects (openedpdf, openedpdf->fonts, gDown, panda_writeobject);
+	panda_traverseobjects (openedpdf, openedpdf->fonts, panda_down, panda_writeobject);
 
       // We need to traverse the dummy object so we pick up the manually 
       // created objects from the lexer
-      panda_traverseobjects (openedpdf, openedpdf->dummyObj, gDown, panda_writeobject);
+      panda_traverseobjects (openedpdf, openedpdf->dummyObj, panda_down, panda_writeobject);
 
       if (openedpdf->pages != NULL)
 	{
@@ -231,7 +231,7 @@ panda_close (panda_pdf * openedpdf)
 	}
       break;
 
-    case gWriteLinear:
+    case panda_writelinear:
       // Are there any pages in the PDF? There needs to be at least one...
       if (((panda_child *) openedpdf->pages->children)->me == NULL)
 	panda_error ("Linearised PDFs need at least one page.");
@@ -247,7 +247,7 @@ panda_close (panda_pdf * openedpdf)
 
       // We now need all of the objects for the first page
       panda_traverseobjects (openedpdf,
-		       ((panda_child *) openedpdf->pages->children)->me, gDown,
+		       ((panda_child *) openedpdf->pages->children)->me, panda_down,
 		       panda_writeobject);
 
 
@@ -258,9 +258,9 @@ panda_close (panda_pdf * openedpdf)
   // separately because sometimes we want to write out but not do this
   // in other words I a=inm leaving space for later movement...
   if (openedpdf->catalog != NULL)
-    panda_traverseobjects (openedpdf, openedpdf->catalog, gUp, panda_freeobject);
+    panda_traverseobjects (openedpdf, openedpdf->catalog, panda_up, panda_freeobject);
   if (openedpdf->fonts != NULL)
-    panda_traverseobjects (openedpdf, openedpdf->fonts, gUp, panda_freeobject);
+    panda_traverseobjects (openedpdf, openedpdf->fonts, panda_up, panda_freeobject);
 
   // Clean up some document level things
   fclose (openedpdf->file);
@@ -353,11 +353,11 @@ panda_closetext(panda_pdf *opened, panda_object *obj){
   printf("closetext() traversal struct object numbered %d\n", obj->number);
 #endif
 
-  if(obj->textmode == gTrue)
+  if(obj->textmode == panda_true)
     {
       obj->layoutstream =
 	panda_streamprintf(obj->layoutstream, "\nET\n\n\n");
-      obj->textmode = gFalse;
+      obj->textmode = panda_false;
 
 #if defined DEBUG
       printf("Finalised textmode in an object numbered %d\n",
