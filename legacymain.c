@@ -28,8 +28,8 @@ main (int argc, char *argv[])
   initpanda ();
 
   // Open our demo PDF
-  if ((demo = pdfopen ("output.pdf", "w")) == NULL)
-    error ("demo: could not open output.pdf to write to.");
+  if ((demo = pdfopen ("legacy.pdf", "w")) == NULL)
+    error ("demo: could not open legacy.pdf to write to.");
 
   // For every text mode in v 1.3
   for (lineDepth = 0; lineDepth < 8; lineDepth++)
@@ -39,7 +39,7 @@ main (int argc, char *argv[])
 #endif
 
       // Create a page
-      currPage = pdfpage (demo, gPageSizeA4);
+      currPage = pdfpage(demo, gPageSizeA4);
 
       // Put in the background images
       imagebox (demo, currPage, 0, 0, currPage->height / 2, currPage->width,
