@@ -142,8 +142,8 @@ char *streamprintf(char *stream, char *format, ...){
   va_end(argPtr);
 
   // Determine some lengths for the various strings
-  if(stream != NULL) currentlen = strlen(stream);
-  len = strlen(buffer);
+  if(stream != NULL) currentlen = strlen(stream) + 1;
+  len = strlen(buffer) + 1;
 
   // Make space for the new information
   if((stream = (char *) realloc(stream, 
