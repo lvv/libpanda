@@ -3,6 +3,7 @@
 set -x
 
 # This script makes the world nice-looking for the world.
+cvs up
 cvs commit
 
 # Name of the release?
@@ -12,12 +13,12 @@ read relname
 echo -n "Tag this release (y/n)? "
 read tag
 
-#if [ $tag = "y" ]
-#then
-#  echo -n "CVS tag name (e.g) panda-release-041: "
-#  read tagname
-#  cvs tag -b $tagname
-#fi
+if [ $tag = "y" ]
+then
+  echo -n "CVS tag name (e.g) panda-release-041: "
+  read tagname
+  cvs tag -b $tagname
+fi
 
 # Get a clean copy of the source
 rm -rf temp
@@ -39,6 +40,8 @@ do
 done
 
 mv *.3 man/
+cvs up
+cvs commit
 
 # Autotools
 echo "------------------------------------------------------------------------"
