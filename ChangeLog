@@ -68,3 +68,6 @@ Release 0.4 -> Release 0.5
 
 2004-05-11 Michael Still mikal@stillhq.com
 	Compile time fixes, including getting the Berkeley DB stuff to compile properly. Better checking for which image libraries were found during the configure script. Randomized the filename for the database file so that we can be producing more than one PDF at a time.
+
+2004-05-18 Michael Still mikal@stillhq.com
+	More fully implemented TIFFClientOpen, which results in some edge case TIFF format image files from now working.
