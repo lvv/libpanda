@@ -1,27 +1,26 @@
 #!/bin/bash
 
 # This script makes the world nice-looking for the world.
+cvs commit
 
 # Name of the release?
 echo -n "Release name (e.g) panda-0.4.1: "
 read relname
-echo -n "CVS tag name (e.g) panda-release-041: "
-read tagname
 
 echo -n "Tag this release (y/n)? "
 read tag
 
-cvs commit
-
 #if [ $tag = "y" ]
 #then
+#  echo -n "CVS tag name (e.g) panda-release-041: "
+#  read tagname
 #  cvs tag -b $tagname
 #fi
 
 # Get a clean copy of the source
 mkdir temp
 cd temp
-export CVSROOT="/home/cvs"
+export CVSROOT="/home/httpd/html/cvs"
 cvs co panda
 cd panda
 
