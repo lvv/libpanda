@@ -6,7 +6,7 @@
 cvs commit
 
 echo "Name this version e.g. panda-release-02"
-read $version
+read version
 echo "Version was $version"
 cvs tag $version
 
