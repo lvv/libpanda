@@ -32,36 +32,37 @@ extern "C"
 #endif
 
   // General values
-  enum{
+  enum
+  {
     // True and false
     panda_true = 0,
     panda_false,
 
     // We sometimes need to specify what type of value we are passing to a 
     // function. These are the supported types.
-      panda_brackettedtextvalue,
-      panda_dictionaryvalue,
-      panda_integervalue,
-      panda_textvalue,
-      panda_literaltextvalue,
-      panda_objectvalue,
-      panda_objectarrayvalue,
-      panda_booleanvalue,
-      panda_doublevalue,
+    panda_brackettedtextvalue,
+    panda_dictionaryvalue,
+    panda_integervalue,
+    panda_textvalue,
+    panda_literaltextvalue,
+    panda_objectvalue,
+    panda_objectarrayvalue,
+    panda_booleanvalue,
+    panda_doublevalue,
 
     // Up and down movement for the traversal functions
-      panda_up,
-      panda_down,
+    panda_up,
+    panda_down,
 
-      // File modes for the PDF object
-      panda_write,
-      panda_writelinear,
+    // File modes for the PDF object
+    panda_write,
+    panda_writelinear,
 
-      // We have the concept of placeholder objects, that do not get written out to
-      // the PDF
-      panda_placeholder,
-      panda_normal
-      };
+    // We have the concept of placeholder objects, that do not get written out to
+    // the PDF
+    panda_placeholder,
+    panda_normal
+  };
 
 // Standard page sizes -- these are expressed in inches, with 72 dots per inch
 // with no fractional values shown. As many values as needed can be added here
@@ -161,24 +162,20 @@ extern "C"
     panda_scope_cascade = 0,
     panda_scope_local
   };
-
+   
 #if defined _WINDOWS
 // The abstraction types that we use
-  enum
-  {
-    windows_panda_abs_pdf = 0,
-	windows_panda_abs_page,
-	windows_panda_abs_font,
-	windows_panda_abs_max
+  enum 
+  { windows_panda_abs_pdf =
+      0, windows_panda_abs_page, windows_panda_abs_font,
+      windows_panda_abs_max 
   };
-#endif
-
+   
+#endif	/*  */
 // Sometimes we need PI
 #define panda_pi 3.1415926535
-
 // The default compression level
 #define panda_default_compress_level 6
-
 #ifdef __cplusplus
 }
 #endif

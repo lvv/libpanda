@@ -10,11 +10,11 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 #include <stdio.h>
@@ -133,7 +133,6 @@ DOCBOOK END
 void
 panda_xfree (void *memory)
 {
-  if(memory != NULL)
-    free(memory);
+  if (memory != NULL)
+    free (memory);
 }
-

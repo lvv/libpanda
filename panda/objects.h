@@ -14,13 +14,13 @@
 #define PANDA_OBJECTS_H 1
 
 #if defined _WINDOWS
-  #if defined _DEMO
-    #include "../panda/constants.h"
-  #else
-    #include "panda/constants.h"
-  #endif
-#else
-  #include <panda/constants.h>
+#if defined _DEMO
+#include "../panda/constants.h"
+#else	/*  */
+#include "panda/constants.h"
+#endif	/*  */
+#else	/*  */
+#include <panda/constants.h>
 #endif
 
 #include <tdb.h>
@@ -125,24 +125,23 @@ extern "C"
     TDB_CONTEXT *db;
   }
   panda_pdf;
-
-  //#if defined _WINDOWS
-  //  typedef struct windows_panda_internal_ptrlist
-  //  {
-  //    void *me;
-  //	int number;
-  //    struct windows_panda_internal_ptrlist *next;
-  //  }
-  //  windows_panda_ptrlist;
-
-  //  typedef struct windows_panda_internal_abs
-  //  {
-  //    int highest;
-  //	windows_panda_ptrlist *list;
-  //  }
-  //  windows_panda_abs;
-  //#endif
-
+   
+    //#if defined _WINDOWS
+    //  typedef struct windows_panda_internal_ptrlist
+    //  {
+    //    void *me;
+    //    int number;
+    //    struct windows_panda_internal_ptrlist *next;
+    //  }
+    //  windows_panda_ptrlist;
+   
+    //  typedef struct windows_panda_internal_abs
+    //  {
+    //    int highest;
+    //    windows_panda_ptrlist *list;
+    //  }
+    //  windows_panda_abs;
+    //#endif
 #ifdef __cplusplus
 }
 #endif

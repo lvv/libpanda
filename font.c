@@ -9,11 +9,11 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 /******************************************************************************
@@ -66,14 +66,14 @@ panda_createfont (panda_pdf * output, char *fontname, int type,
 
   tempBuffer = panda_xsnprintf ("Type%d", type);
   panda_adddictitem (output, font, "Subtype", panda_textvalue, tempBuffer);
-  panda_xfree(tempBuffer);
-  
+  panda_xfree (tempBuffer);
+
   // Make a font identifier string for this font
   fontident = panda_xsnprintf ("F%08d", output->nextFontNumber);
   output->nextFontNumber++;
 
   panda_adddictitem (output, font, "Name", panda_textvalue, fontident);
-  
+
   panda_adddictitem (output, font, "BaseFont", panda_textvalue, fontname);
   panda_adddictitem (output, font, "Encoding", panda_textvalue, encoding);
 
@@ -220,36 +220,40 @@ panda_getfontobj (panda_pdf * output, char *fontident)
   while (thisChild->next != NULL)
     {
 #if defined DEBUG
-      printf("Checking the object numbered %d\n", thisChild->me->number);
+      printf ("Checking the object numbered %d\n", thisChild->me->number);
 #endif
 
       // We are now going to go through this dictionary
-      if((foundkey = panda_finddictitem(output, thisChild->me, "Name")) 
-	 != NULL){
+      if ((foundkey = panda_finddictitem (output, thisChild->me, "Name"))
+	  != NULL)
+	{
 #if defined DEBUG
-	printf("Found a contender key: %s\n", foundkey);
+	  printf ("Found a contender key: %s\n", foundkey);
 #endif
 
-	if(((found = panda_dbread(output, foundkey)) != NULL) && 
-	   (strcmp(found, valueString) == 0)){
+	  if (((found = panda_dbread (output, foundkey)) != NULL) &&
+	      (strcmp (found, valueString) == 0))
+	    {
 #if defined DEBUG
-	  printf("The value for this key was: %s\n", found);
+	      printf ("The value for this key was: %s\n", found);
 #endif
 
-	  panda_xfree(found);
-	  panda_xfree(foundkey);
-	  return thisChild->me;
+	      panda_xfree (found);
+	      panda_xfree (foundkey);
+	      return thisChild->me;
+	    }
+
+	  if (found != NULL)
+	    {
+#if defined DEBUG
+	      printf ("Found font contender: (%s) (%s)\n", found,
+		      valueString);
+#endif
+	      free (found);
+	    }
+
+	  free (foundkey);
 	}
-
-	if(found != NULL){
-#if defined DEBUG
-	  printf("Found font contender: (%s) (%s)\n", found, valueString);
-#endif
-	  free(found);
-	}
-	
-	free(foundkey);
-      }
 
       thisChild = thisChild->next;
     }

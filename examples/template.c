@@ -30,7 +30,7 @@ main (int argc, char *argv[])
   // Test template functionality
   ///////////////////////////////////////////////////////////////////////////
 
-  templatePage = panda_newtemplate(demo, panda_pagesize_a4);
+  templatePage = panda_newtemplate (demo, panda_pagesize_a4);
   panda_setfillcolor (templatePage, 112, 138, 37);
   panda_setlinewidth (templatePage, 5);
   panda_setlinestart (templatePage, 0, 0);
@@ -40,8 +40,8 @@ main (int argc, char *argv[])
   panda_fillline (templatePage);
   panda_endline (templatePage);
 
-  currPage = panda_newpage(demo, panda_pagesize_a4);
-  panda_applytemplate(demo, currPage, templatePage);
+  currPage = panda_newpage (demo, panda_pagesize_a4);
+  panda_applytemplate (demo, currPage, templatePage);
 
   // Finished all the demoing, close the PDF document
   panda_close (demo);

@@ -12,12 +12,12 @@
 #define  GLOBALS	here
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
-#endif
+#include <panda/constants.h>
+#include <panda/functions.h>
+#endif	/*  */
 
 /******************************************************************************
 DOCBOOK START
@@ -168,7 +168,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
   openedpdf = (panda_pdf *) panda_xmalloc (sizeof (panda_pdf));
 
   // Every PDF needs a database
-  panda_dbopen(openedpdf);
+  panda_dbopen (openedpdf);
 
   // Every PDF is going to have to have some xref information associated with
   // it at some stage.
@@ -190,7 +190,8 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	switch (mode[1])
 	  {
 	  case '+':
-	    panda_error (panda_true, "Unsupported file I/O mode handed to panda.");
+	    panda_error (panda_true,
+			 "Unsupported file I/O mode handed to panda.");
 	    break;
 	  }
 
@@ -236,12 +237,12 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  openedpdf->pageCount = 0;
 
 	  // And we store a list of the pages we have allocated so far
-	  openedpdf->pageholders = panda_xmalloc(sizeof(panda_pagelist));
+	  openedpdf->pageholders = panda_xmalloc (sizeof (panda_pagelist));
 	  openedpdf->pageholders->next = NULL;
 
 	  // We now need to setup some information in the pages object
-	  panda_adddictitem (openedpdf, openedpdf->pages, "Type", panda_textvalue,
-			     "Pages");
+	  panda_adddictitem (openedpdf, openedpdf->pages, "Type",
+			     panda_textvalue, "Pages");
 	  openedpdf->pages->isPages = panda_true;
 
 	  // There is no font currently selected
@@ -267,17 +268,18 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  panda_checkinfo (openedpdf);
 	  if (openedpdf->info == NULL)
 	    panda_error
-	      (panda_true, "Failed to make an info object for the PDF. Not sure why...");
+	      (panda_true,
+	       "Failed to make an info object for the PDF. Not sure why...");
 
 	  // Add some stuff
 	  panda_adddictitem (openedpdf, openedpdf->info, "Producer",
-			     panda_brackettedtextvalue, 
+			     panda_brackettedtextvalue,
 #if defined _WINDOWS
-				 "Panda 0.4.2 MS Windows Version"
+			     "Panda 0.4.2 MS Windows Version"
 #else
-				 "Panda 0.4.2"
-#endif			 
-				 );
+			     "Panda 0.4.2"
+#endif
+	    );
 	  panda_adddictitem (openedpdf, openedpdf->info, "CreationDate",
 			     panda_brackettedtextvalue, tempPtr =
 			     panda_nowdate ());
@@ -286,12 +288,13 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  printf ("Inserted the creation date\n");
 #endif
 
-	  if (tempPtr != NULL){
+	  if (tempPtr != NULL)
+	    {
 #if defined DEBUG
-	    printf("Freeing the creation date\n");
+	      printf ("Freeing the creation date\n");
 #endif
-	    panda_xfree (tempPtr);
-	  }
+	      panda_xfree (tempPtr);
+	    }
 	}
       else
 	{
@@ -388,8 +391,8 @@ panda_close (panda_pdf * openedpdf)
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
   if (openedpdf->pages != NULL)
-    panda_adddictitem (openedpdf, openedpdf->pages, "Count", panda_integervalue,
-		       openedpdf->pageCount);
+    panda_adddictitem (openedpdf, openedpdf->pages, "Count",
+		       panda_integervalue, openedpdf->pageCount);
 
   // Before we do anything, we need to make sure that we have ended the
   // textmode if we have entered one on one of the pages. This is because
@@ -456,7 +459,7 @@ panda_close (panda_pdf * openedpdf)
   // separately because sometimes we want to write out but not do this
   // in other words I a=inm leaving space for later movement...
 #if defined DEBUG
-  printf("Cleaning up catalog items\n");
+  printf ("Cleaning up catalog items\n");
 #endif
 
   if (openedpdf->catalog != NULL)
@@ -464,34 +467,35 @@ panda_close (panda_pdf * openedpdf)
 			   panda_freeobject);
 
 #if defined DEBUG
-  printf("Cleaning up font items\n");
+  printf ("Cleaning up font items\n");
 #endif
 
   if (openedpdf->fonts != NULL)
     panda_traverseobjects (openedpdf, openedpdf->fonts, panda_up,
 			   panda_freeobject);
-  panda_xfree(openedpdf->currentFont);
+  panda_xfree (openedpdf->currentFont);
 
 #if defined DEBUG
-  printf("Cleaning up page holder items\n");
+  printf ("Cleaning up page holder items\n");
 #endif
 
   pagelist = openedpdf->pageholders;
-  while(pagelist->next != NULL){
-    pagevictim = pagelist;
-    pagelist = pagelist->next;
-    
-    panda_xfree(pagevictim->me);
-    
+  while (pagelist->next != NULL)
+    {
+      pagevictim = pagelist;
+      pagelist = pagelist->next;
+
+      panda_xfree (pagevictim->me);
+
 #if defined DEBUG
-    printf("Cleaned up a page item\n");
+      printf ("Cleaned up a page item\n");
 #endif
-  }
-  
-  panda_xfree(pagevictim);
+    }
+
+  panda_xfree (pagevictim);
 
   // Clean up the last one
-  panda_xfree(pagelist);
+  panda_xfree (pagelist);
 
   // Clean up some document level things
   fclose (openedpdf->file);
@@ -513,12 +517,12 @@ panda_close (panda_pdf * openedpdf)
     }
 
 #if defined DEBUG
-  printf("Total number of objects in document = %d\n", 
-	 openedpdf->totalObjectNumber);
+  printf ("Total number of objects in document = %d\n",
+	  openedpdf->totalObjectNumber);
 #endif
 
   panda_xfree (openedpdf->xrefList);
-  panda_dbclose(openedpdf);
+  panda_dbclose (openedpdf);
   panda_xfree (openedpdf);
 }
 

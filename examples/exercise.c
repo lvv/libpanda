@@ -44,9 +44,9 @@ main (int argc, char *argv[])
       panda_setproperty (demo->pages, panda_scope_cascade,
 			 panda_object_property_compress_level, 9);
     }
-  else if(argc > 1)
+  else if (argc > 1)
     {
-      blockend = atoi(argv[1]);
+      blockend = atoi (argv[1]);
     }
   else
     printf ("For compressed sample, use %s compressed\n", argv[0]);
@@ -68,8 +68,8 @@ main (int argc, char *argv[])
 		  panda_image_jpeg);
   panda_imagebox (demo, currPage, 434, 434, 551, 551, "images/gnu_box.jpg",
 		  panda_image_jpeg);
-  if(blockend == 1)
-    exit(320);
+  if (blockend == 1)
+    exit (320);
 
   // Do an panda_imageboxrot or two to test the code included by Ceasar Miquel
   panda_imageboxrot (demo, currPage, 600, 0, 717, 117, 15.0,
@@ -86,8 +86,8 @@ main (int argc, char *argv[])
 
   panda_imageboxrot (demo, currPage, 700, 200, 817, 317, 132.0,
 		     "images/gnu_box.jpg", panda_image_jpeg);
-  if(blockend == 2)
-    exit(320);
+  if (blockend == 2)
+    exit (320);
 
   // Insert a PNG to show that I can
   panda_imageboxrot (demo, currPage, 100, 200, 200, 300, 0.0,
@@ -98,8 +98,8 @@ main (int argc, char *argv[])
 
   panda_imageboxrot (demo, currPage, 100, 420, 310, 620, 36.0,
 		     "images/RedbrushAlpha.png", panda_image_png);
-  if(blockend == 3)
-    exit(320);
+  if (blockend == 3)
+    exit (320);
 
   // (c) statement
   panda_setfont (demo, tempPtr = panda_createfont (demo, "Times-Roman", 1,
@@ -116,10 +116,10 @@ main (int argc, char *argv[])
 		 panda_createfont (demo, "Helvetica-Bold", 1,
 				   "MacRomanEncoding"));
   panda_textboxrot (demo, currPage, 200, 30, 230,
-		 30, 45.0, "With new improved angled text!");
+		    30, 45.0, "With new improved angled text!");
   free (tempPtr);
-  if(blockend == 4)
-    exit(320);
+  if (blockend == 4)
+    exit (320);
 
   ///////////////////////////////////////////////////////////////////////////
   // Text functionality (with a few images thrown in as well)
@@ -155,8 +155,8 @@ main (int argc, char *argv[])
 
   panda_textbox (demo, currPage, 300, 10, 400, 50,
 		 "A second textbox on the page");
-  if(blockend == 5)
-    exit(320);
+  if (blockend == 5)
+    exit (320);
 
   ///////////////////////////////////////////////////////////////////////////
   // Demonstrate the supported text modes
@@ -216,14 +216,14 @@ main (int argc, char *argv[])
       panda_setcharacterspacing (demo, (double) lineDepth);
       panda_setwordspacing (demo, (double) lineDepth * 10);
       panda_sethorizontalscaling (demo, (double) 1 - (lineDepth * 0.1));
-      
+
       panda_setfontmode (demo, lineDepth);
       panda_textbox (demo, currPage, 20 + (lineDepth * 20), 200,
 		     40 + (lineDepth * 20), 400,
 		     "Demonstration of a text mode");
     }
-  if(blockend == 6)
-    exit(320);
+  if (blockend == 6)
+    exit (320);
 
   ///////////////////////////////////////////////////////////////////////////
   // Demonstrate the supported lines and curve thingies -- note that no
@@ -381,15 +381,15 @@ main (int argc, char *argv[])
   panda_closeline (currPage);
   panda_strokeline (currPage);
   panda_endline (currPage);
-  if(blockend == 7)
-    exit(320);
+  if (blockend == 7)
+    exit (320);
 
   ///////////////////////////////////////////////////////////////////////////
   // We can also setup template pages to make life a little easier (and the
   // document a little smaller)
   ///////////////////////////////////////////////////////////////////////////
 
-  templatePage = panda_newtemplate(demo, panda_pagesize_a4);
+  templatePage = panda_newtemplate (demo, panda_pagesize_a4);
   panda_setfillcolor (templatePage, 112, 138, 37);
   panda_setlinestart (templatePage, 210, 410);
   panda_setlinewidth (templatePage, 5);
@@ -399,10 +399,10 @@ main (int argc, char *argv[])
   panda_closeline (templatePage);
   //panda_strokeline (templatePage);
   panda_fillline (templatePage);
-  panda_endline (templatePage);  
+  panda_endline (templatePage);
 
-  currPage = panda_newpage(demo, panda_pagesize_a4);
-  panda_applytemplate(demo, currPage, templatePage);
+  currPage = panda_newpage (demo, panda_pagesize_a4);
+  panda_applytemplate (demo, currPage, templatePage);
 
 
   // Finished all the demoing, close the PDF document

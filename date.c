@@ -9,14 +9,14 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 
-  #include <sys/types.h>
-  #include <sys/timeb.h>
+#include <sys/types.h>
+#include <sys/timeb.h>
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 #include <time.h>
@@ -62,7 +62,7 @@ panda_makedate (int year, int month, int day, int hour, int minutes,
   struct _timeb tstruct;
 
   // Setup the timezone in Windows land
-  _tzset();
+  _tzset ();
 #else
   struct tm *gmtoffset;
 #endif
@@ -75,16 +75,16 @@ panda_makedate (int year, int month, int day, int hour, int minutes,
   // operating systems
 #if defined _WINDOWS
   // tstruct.timezone is the distance to GMT in minutes
-  _ftime( &tstruct );
+  _ftime (&tstruct);
   gmthours = tstruct.timezone / 60 / 60;
-  gmtminutes = (tstruct.timezone - gmthours * 60 * 60) / 60; 
+  gmtminutes = (tstruct.timezone - gmthours * 60 * 60) / 60;
 #else
   // gmtoffset->tm_gmtoff is the distance to GMT in seconds (linux)
   gmtoffset = (struct tm *) localtime (&curtime);
   gmthours = gmtoffset->tm_gmtoff / 60 / 60;
   gmtminutes = (gmtoffset->tm_gmtoff - gmthours * 60 * 60) / 60;
 #endif
-  
+
   if (gmthours < 0)
     zulu = '-';
 

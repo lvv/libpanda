@@ -16,13 +16,13 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 
-  #define vsnprintf _vsnprintf
+#define vsnprintf _vsnprintf
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 /******************************************************************************
@@ -218,7 +218,8 @@ panda_streamprintf (char *stream, char *format, ...)
 				      sizeof (char) * (len + currentlen))) ==
 	  NULL)
 	panda_error
-	  (panda_true, "Could not append to an object's stream (of some form).");
+	  (panda_true,
+	   "Could not append to an object's stream (of some form).");
 
       // Do the actual appending
       strncat (stream, buffer, len + currentlen);
@@ -345,7 +346,7 @@ panda_print (panda_pdf * output, char *format)
   // With windows we might also need to update the newline count here
 
   // Clean up
-  panda_xfree(formatString);
+  panda_xfree (formatString);
 }
 
 /******************************************************************************
@@ -388,7 +389,7 @@ panda_xsnprintf (char *format, ...)
 
       if (result == -1)
 	{
-	  /* Up to glibc 2.0.6 and Microsoft's implementation*/
+	  /* Up to glibc 2.0.6 and Microsoft's implementation */
 	  size += 100;
 	}
       else
@@ -400,7 +401,7 @@ panda_xsnprintf (char *format, ...)
 	  /* Glibc from now on */
 	  size = result + 1;
 	}
-  }
+    }
 
   va_end (ap);
   return output;

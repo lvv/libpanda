@@ -106,7 +106,7 @@ main (int argc, char *argv[])
 		 panda_createfont (demo, "Helvetica-Bold", 1,
 				   "MacRomanEncoding"));
   panda_textboxrot (demo, currPage, 200, 30, 230,
-		 30, 45.0, "With new improved angled text!");
+		    30, 45.0, "With new improved angled text!");
   free (tempPtr);
 
   ///////////////////////////////////////////////////////////////////////////
@@ -371,7 +371,7 @@ main (int argc, char *argv[])
   // document a little smaller)
   ///////////////////////////////////////////////////////////////////////////
 
-  templatePage = panda_newtemplate(demo, panda_pagesize_a4);
+  templatePage = panda_newtemplate (demo, panda_pagesize_a4);
   panda_setfillcolor (templatePage, 112, 138, 37);
   panda_setlinestart (templatePage, 210, 410);
   panda_setlinewidth (templatePage, 5);
@@ -381,22 +381,22 @@ main (int argc, char *argv[])
   panda_closeline (templatePage);
   //panda_strokeline (templatePage);
   panda_fillline (templatePage);
-  panda_endline (templatePage);  
+  panda_endline (templatePage);
 
-  currPage = panda_newpage(demo, panda_pagesize_a4);
-  panda_applytemplate(demo, currPage, templatePage);
+  currPage = panda_newpage (demo, panda_pagesize_a4);
+  panda_applytemplate (demo, currPage, templatePage);
 
   ///////////////////////////////////////////////////////////////////////////
   // Let's try some transitions
   ///////////////////////////////////////////////////////////////////////////
-  
-  for(trans = 0; trans < panda_pagetrans_none; trans++)
+
+  for (trans = 0; trans < panda_pagetrans_none; trans++)
     {
-      currPage = panda_newpage(demo, panda_pagesize_a4);
-      panda_pageduration(demo, currPage, 5);
-      panda_transduration(demo, currPage, 5.0);
-      panda_transstyle(demo, currPage, trans);
-      
+      currPage = panda_newpage (demo, panda_pagesize_a4);
+      panda_pageduration (demo, currPage, 5);
+      panda_transduration (demo, currPage, 5.0);
+      panda_transstyle (demo, currPage, trans);
+
       panda_setlinecolor (currPage, trans * 20, 0, trans * 10);
       panda_setfillcolor (currPage, trans * 20, 0, trans * 10);
       panda_setlinestart (currPage, 0, 0);
@@ -409,7 +409,7 @@ main (int argc, char *argv[])
       panda_endline (currPage);
     }
 
-  currPage = panda_newpage(demo, panda_pagesize_a4);
+  currPage = panda_newpage (demo, panda_pagesize_a4);
 
   // Finished all the demoing, close the PDF document
   panda_close (demo);

@@ -10,13 +10,13 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #if defined _DEMO
-    #include "../panda/objects.h"
-  #else
-    #include "panda/objects.h"
-  #endif
+#if defined _DEMO
+#include "../panda/objects.h"
 #else
-  #include <panda/objects.h>
+#include "panda/objects.h"
+#endif	/*  */
+#else
+#include <panda/objects.h>
 #endif
 
 #ifndef PANDA_FUNCTIONS_H
@@ -34,17 +34,13 @@ extern "C"
 
 // A type needed for panda_traversepanda_objects
   typedef void (*traverseFunct) (panda_pdf *, panda_object *);
-
+   
 /******************************************************************************
   Annotation.c
 ******************************************************************************/
-
-  
-
 /******************************************************************************
   Curves.c
 ******************************************************************************/
-
   void panda_setlinestart (panda_page *, int, int);
   void panda_addlinesegment (panda_page *, int, int);
   void panda_addcubiccurvesegment (panda_page *, int, int, int, int, int,
@@ -67,10 +63,10 @@ extern "C"
   Database.c
 ******************************************************************************/
 
-  void panda_dbopen(panda_pdf *);
-  void panda_dbclose(panda_pdf *);
-  void panda_dbwrite(panda_pdf *, char *, char *);
-  char *panda_dbread(panda_pdf *, char *);
+  void panda_dbopen (panda_pdf *);
+  void panda_dbclose (panda_pdf *);
+  void panda_dbwrite (panda_pdf *, char *, char *);
+  char *panda_dbread (panda_pdf *, char *);
 
 /******************************************************************************
   Date.c
@@ -96,10 +92,10 @@ extern "C"
 		       int);
   void panda_imageboxrot (panda_pdf *, panda_page *, int, int, int, int,
 			  double, char *, int);
-  void panda_imageboxactual(panda_pdf *, panda_page *, int, int, int, int,
-			    double, char *, int);
-  void panda_imageboxinternal(panda_pdf *, panda_page *, int, int, int, int,
-			      double, char *, int, int, char *, int);
+  void panda_imageboxactual (panda_pdf *, panda_page *, int, int, int, int,
+			     double, char *, int);
+  void panda_imageboxinternal (panda_pdf *, panda_page *, int, int, int, int,
+			       double, char *, int, int, char *, int);
   void panda_insertTIFF (panda_pdf *, panda_page *, panda_object *, char *);
   void panda_insertJPEG (panda_pdf *, panda_page *, panda_object *, char *);
   void panda_insertPNG (panda_pdf *, panda_page *, panda_object *, char *);
@@ -143,10 +139,10 @@ extern "C"
 
   //  void *panda_xmalloc (size_t);
   //  void *panda_xrealloc (void *, size_t);
-  void panda_xfree(void *);
+  void panda_xfree (void *);
 
-  #define panda_xmalloc malloc
-  #define panda_xrealloc realloc
+#define panda_xmalloc malloc
+#define panda_xrealloc realloc
 
 /******************************************************************************
   Panda.c
@@ -166,14 +162,14 @@ extern "C"
 ******************************************************************************/
 
   panda_object *panda_newobject (panda_pdf *, int);
-  
-  int panda_adddict(panda_pdf *);
+
+  int panda_adddict (panda_pdf *);
   void panda_adddictitem (panda_pdf *, panda_object *, char *, int, ...);
-  char * panda_adddictiteminternal(panda_pdf *document, int dictno, 
-				   int dictelem, char *name, int valueType, 
+  char *panda_adddictiteminternal (panda_pdf * document, int dictno,
+				   int dictelem, char *name, int valueType,
 				   char *value);
-  int panda_getobjdictno(panda_pdf *, panda_object *);
-  int panda_getdictelem(panda_pdf *, int, char *);
+  int panda_getobjdictno (panda_pdf *, panda_object *);
+  int panda_getdictelem (panda_pdf *, int, char *);
   char *panda_finddictitem (panda_pdf *, panda_object *, char *);
   char *panda_finddictiteminternal (panda_pdf *, int, char *);
 
@@ -204,7 +200,7 @@ extern "C"
 ******************************************************************************/
 
   void panda_textbox (panda_pdf *, panda_page *, int, int, int, int, char *);
-  void panda_textboxrot (panda_pdf *, panda_page *, int, int, int, int, 
+  void panda_textboxrot (panda_pdf *, panda_page *, int, int, int, int,
 			 double, char *);
 
 /******************************************************************************
@@ -237,79 +233,80 @@ extern "C"
   void panda_textdirection (panda_pdf *, int);
   void panda_pageduration (panda_pdf *, panda_page *, int);
   void panda_transduration (panda_pdf *, panda_page *, double);
-  void panda_transstyle (panda_pdf *,panda_page *, int);
+  void panda_transstyle (panda_pdf *, panda_page *, int);
 
 /******************************************************************************
   Windows.c -- Windows specific function calls
-******************************************************************************/
-
+******************************************************************************/ 
+   
 #if defined _WINDOWS
-  void __stdcall windows_panda_init();
-  int __stdcall windows_panda_test(char *, char *);
-
-  // Curves.c
+  void __stdcall windows_panda_init ();
+   int __stdcall windows_panda_test (char *, char *);
+   
+    // Curves.c
   void __stdcall windows_panda_setlinestart (int, int, int);
-  void __stdcall windows_panda_addlinesegment (int, int, int);
-  void __stdcall windows_panda_addcubiccurvesegment (int, int, int, int, int, int,
-				   int);
-  void __stdcall windows_panda_addquadraticcurvesegmentone (int, int, int, int, int);
-  void __stdcall windows_panda_addquadraticcurvesegmenttwo (int, int, int, int, int);
-  void __stdcall windows_panda_closeline (int);
-  void __stdcall windows_panda_rectangle (int, int, int, int, int);
-  void __stdcall windows_panda_endline (int);
-  void __stdcall windows_panda_strokeline (int);
-  void __stdcall windows_panda_fillline (int);
-  void __stdcall windows_panda_setlinewidth (int, int);
-  void __stdcall windows_panda_setlinecap (int, int);
-  void __stdcall windows_panda_setlinejoin (int, int);
-  void __stdcall windows_panda_setlinedash (int, int, int, int);
-  void __stdcall windows_panda_setfillcolor (int, int, int, int);
-  void __stdcall windows_panda_setlinecolor (int, int, int, int);
-
-  // Images.c
+   void __stdcall windows_panda_addlinesegment (int, int, int);
+   void __stdcall windows_panda_addcubiccurvesegment (int, int, int, int,
+						       int, int, int);
+   void __stdcall windows_panda_addquadraticcurvesegmentone (int, int, int,
+							      int, int);
+   void __stdcall windows_panda_addquadraticcurvesegmenttwo (int, int, int,
+							      int, int);
+   void __stdcall windows_panda_closeline (int);
+   void __stdcall windows_panda_rectangle (int, int, int, int, int);
+   void __stdcall windows_panda_endline (int);
+   void __stdcall windows_panda_strokeline (int);
+   void __stdcall windows_panda_fillline (int);
+   void __stdcall windows_panda_setlinewidth (int, int);
+   void __stdcall windows_panda_setlinecap (int, int);
+   void __stdcall windows_panda_setlinejoin (int, int);
+   void __stdcall windows_panda_setlinedash (int, int, int, int);
+   void __stdcall windows_panda_setfillcolor (int, int, int, int);
+   void __stdcall windows_panda_setlinecolor (int, int, int, int);
+   
+    // Images.c
   void __stdcall windows_panda_imagebox (int, int, int, int, int, int, char *,
-		       int);
-  void __stdcall windows_panda_imageboxrot (int, int, int, int, int, int,
-			  double, char *, int);
-
-  // Info.c
+					 int);
+   void __stdcall windows_panda_imageboxrot (int, int, int, int, int, int,
+					      double, char *, int);
+   
+    // Info.c
   void __stdcall windows_panda_setauthor (int, char *);
-  void __stdcall windows_panda_setcreator (int, char *);
-  void __stdcall windows_panda_settitle (int, char *);
-  void __stdcall windows_panda_setsubject (int, char *);
-  void __stdcall windows_panda_setkeywords (int, char *);
-
-  // Font.c
+   void __stdcall windows_panda_setcreator (int, char *);
+   void __stdcall windows_panda_settitle (int, char *);
+   void __stdcall windows_panda_setsubject (int, char *);
+   void __stdcall windows_panda_setkeywords (int, char *);
+   
+    // Font.c
   int __stdcall windows_panda_createfont (int, char *, int, char *);
-  void __stdcall windows_panda_setfont (int, int);
-  void __stdcall windows_panda_setfontsize (int, int);
-  void __stdcall windows_panda_setfontmode (int, int);
-  void __stdcall windows_panda_setcharacterspacing (int, double);
-  void __stdcall windows_panda_setwordspacing (int, double);
-  void __stdcall windows_panda_sethorizontalscaling (int, double);
-  void __stdcall windows_panda_setleading (int, double);
-
-  // Panda.c
-  int __stdcall windows_panda_open(char *, char *);
-  void __stdcall windows_panda_close(int);
-  int __stdcall windows_panda_newpage(int, char *);
-
-  // Template.c
+   void __stdcall windows_panda_setfont (int, int);
+   void __stdcall windows_panda_setfontsize (int, int);
+   void __stdcall windows_panda_setfontmode (int, int);
+   void __stdcall windows_panda_setcharacterspacing (int, double);
+   void __stdcall windows_panda_setwordspacing (int, double);
+   void __stdcall windows_panda_sethorizontalscaling (int, double);
+   void __stdcall windows_panda_setleading (int, double);
+   
+    // Panda.c
+  int __stdcall windows_panda_open (char *, char *);
+   void __stdcall windows_panda_close (int);
+   int __stdcall windows_panda_newpage (int, char *);
+   
+    // Template.c
   int __stdcall windows_panda_newtemplate (int, char *);
-  void __stdcall windows_panda_applytemplate (int, int, int);
-
-  // Text.c
+   void __stdcall windows_panda_applytemplate (int, int, int);
+   
+    // Text.c
   void __stdcall windows_panda_textbox (int, int, int, int, int, int, char *);
-
-  // Internal
-  void *windows_panda_deabs(int, int);
-  int windows_panda_reabs(int, void *);
-#endif
-
+   
+    // Internal
+  void *windows_panda_deabs (int, int);
+   int windows_panda_reabs (int, void *);
+   
+#endif	/*  */
 /******************************************************************************
   XREF.c
 ******************************************************************************/
-
   void panda_writexref (panda_pdf *);
 
 /******************************************************************************

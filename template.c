@@ -12,11 +12,11 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 #include <math.h>
@@ -39,7 +39,7 @@ panda_newtemplate (panda_pdf * output, char *pageSize)
 
   // We also need to do the same sort of thing for the contents object
   // that each page owns
-  template->contents = template->obj;  
+  template->contents = template->obj;
   template->contents->isContents = panda_true;
 
   // Setup some stuff in the contents object that we need later
@@ -47,29 +47,32 @@ panda_newtemplate (panda_pdf * output, char *pageSize)
   template->contents->insidegraphicsblock = panda_false;
 
   // Add the required dictionary elements for a template page
-  panda_adddictitem (output, template->obj, "Type", panda_textvalue, "XObject");
-  panda_adddictitem (output, template->obj, "Subtype", panda_textvalue, "Form");
-  panda_adddictitem (output, template->obj, "FormType", panda_integervalue, 1);
+  panda_adddictitem (output, template->obj, "Type", panda_textvalue,
+		     "XObject");
+  panda_adddictitem (output, template->obj, "Subtype", panda_textvalue,
+		     "Form");
+  panda_adddictitem (output, template->obj, "FormType", panda_integervalue,
+		     1);
   panda_adddictitem (output, template->obj, "BBox", panda_literaltextvalue,
 		     pageSize);
   panda_adddictitem (output, template->obj, "Matrix", panda_literaltextvalue,
 		     "[1 0 0 1 0 0]");
-  panda_adddictitem (output, template->obj, "Resources/ProcSet", 
+  panda_adddictitem (output, template->obj, "Resources/ProcSet",
 		     panda_literaltextvalue, "[/PDF]");
 
   // There is a pdf wide name that we use in resources sections to refer to
   // this template
-  template->templatename = panda_xsnprintf("template%d%d", 
-					   template->obj->number,
-					   template->obj->generation);
+  template->templatename = panda_xsnprintf ("template%d%d",
+					    template->obj->number,
+					    template->obj->generation);
 
   return template;
 }
 
 // Use the template on this page
 void
-panda_applytemplate(panda_pdf *output, panda_page *target, 
-		    panda_page *template)
+panda_applytemplate (panda_pdf * output, panda_page * target,
+		     panda_page * template)
 {
   int left = 0, right = 200, top = 0, bottom = 200;
   char *dictkey;
@@ -78,30 +81,30 @@ panda_applytemplate(panda_pdf *output, panda_page *target,
   // object for the page that the image is being displayed on. This information
   // consists of the following [moved to internal.c]
   panda_entergraphicsmode (target);
-  
+
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
-                        "\n1.0 0.0 0.0 1.0 0.0 0.0 cm\n");
-                        
+			"\n1.0 0.0 0.0 1.0 0.0 0.0 cm\n");
+
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
-                        "%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
-                        // The second matrix
-                        (double) 100.0,        // x size
-                        0.0,    // ???
-                        0.0,    // ???
-                        (double) 100.0,        // y size
-                        0.0,    // ???
-                        0.0);   // ???
+			"%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
+			// The second matrix
+			(double) 100.0,	// x size
+			0.0,	// ???
+			0.0,	// ???
+			(double) 100.0,	// y size
+			0.0,	// ???
+			0.0);	// ???
 
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream, "/%s Do\n",
-                        template->templatename);
+			template->templatename);
 
   panda_exitgraphicsmode (target);
 
-  dictkey = panda_xsnprintf("Resources/XObject/%s", template->templatename);
-  panda_adddictitem (output, target->obj, dictkey, 
+  dictkey = panda_xsnprintf ("Resources/XObject/%s", template->templatename);
+  panda_adddictitem (output, target->obj, dictkey,
 		     panda_objectvalue, template->obj);
-  panda_xfree(dictkey);
+  panda_xfree (dictkey);
 }

@@ -10,11 +10,11 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 /******************************************************************************
@@ -161,16 +161,17 @@ panda_createandinsertpage (panda_pdf * output)
 
   // Make some space for the object
   newPage = (panda_page *) panda_xmalloc (sizeof (panda_page));
-  
+
   // Store the page in the pagelist
   lastPage = output->pageholders;
-  while(lastPage->next != NULL){
-    lastPage = lastPage->next;
-  }
+  while (lastPage->next != NULL)
+    {
+      lastPage = lastPage->next;
+    }
 
   // Add the page to the list
   lastPage->me = newPage;
-  lastPage->next = panda_xmalloc(sizeof(panda_pagelist));
+  lastPage->next = panda_xmalloc (sizeof (panda_pagelist));
   lastPage->next->next = NULL;
 
   // Make the new page object

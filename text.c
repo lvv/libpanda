@@ -9,11 +9,11 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 #include <math.h>
@@ -92,8 +92,8 @@ DOCBOOK END
 ******************************************************************************/
 
 void
-panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
-	       int bottom, int right, double angle, char *text)
+panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top,
+		  int left, int bottom, int right, double angle, char *text)
 {
   // Add a box with some text in it into the PDF page
   panda_object *textobj;
@@ -109,12 +109,13 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
   textobj = thisPage->contents;
 
   // Is there a font setup? Does this work with changing the font?
-  if (output->currentFont == NULL){
-    panda_setfont (output,
-		   tempPtr = panda_createfont (output, "Helvetica", 1,
-					       "MacRomanEncoding"));
-    panda_xfree(tempPtr);
-  }
+  if (output->currentFont == NULL)
+    {
+      panda_setfont (output,
+		     tempPtr = panda_createfont (output, "Helvetica", 1,
+						 "MacRomanEncoding"));
+      panda_xfree (tempPtr);
+    }
 
   // If the font is not defined on this page
   if (thisPage->obj->currentSetFont == NULL)
@@ -143,14 +144,14 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
 	panda_error (panda_true, "Could not find the font requested.");
 
 #if defined DEBUG
-      printf("Found 0x%08x (num %d gen %d)\n", fontObj, fontObj->number,
-	     fontObj->generation);
+      printf ("Found 0x%08x (num %d gen %d)\n", fontObj, fontObj->number,
+	      fontObj->generation);
 #endif
 
-      dictkey = panda_xsnprintf("Resources/Font/%s", output->currentFont);
+      dictkey = panda_xsnprintf ("Resources/Font/%s", output->currentFont);
       panda_adddictitem (output, thisPage->obj, dictkey,
 			 panda_objectvalue, fontObj);
-      panda_xfree(dictkey);
+      panda_xfree (dictkey);
     }
 
   return;
@@ -172,7 +173,7 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
   // We know the width and height from the page object
   internalTop = thisPage->height - top - output->currentFontSize;
   internalLeft = left;
-  
+
   /***************************************************************************
     Back to inserting the text
   ***************************************************************************/
@@ -193,7 +194,7 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
   // PS matrix environment well enough to be writing this sort of code. I am
   // going to have to have a look into this a little more...
   textobj->layoutstream =
-    panda_streamprintf (textobj->layoutstream, 
+    panda_streamprintf (textobj->layoutstream,
 			"%.2f %.2f %.2f %.2f %d %d Tm\n",
 			cos (angle * panda_pi / 180.0),
 			sin (angle * panda_pi / 180.0),
@@ -249,11 +250,12 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
 			    output->currentFont, output->currentFontSize);
 
       // If we previously had one set, then get rid of it
-      panda_xfree(textobj->currentSetFont);
+      panda_xfree (textobj->currentSetFont);
 
       // Make space for the new name
 #if defined DEBUG
-      printf("Defining the current set font for object %d\n", textobj->number);
+      printf ("Defining the current set font for object %d\n",
+	      textobj->number);
 #endif
 
       textobj->currentSetFont =

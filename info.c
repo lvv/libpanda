@@ -9,11 +9,11 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 /******************************************************************************
@@ -184,8 +184,8 @@ panda_settitle (panda_pdf * document, char *title)
   panda_checkinfo (document);
 
   // Add the title bit to it
-  panda_adddictitem (document, document->info, "Title", panda_brackettedtextvalue,
-		     title);
+  panda_adddictitem (document, document->info, "Title",
+		     panda_brackettedtextvalue, title);
 }
 
 /******************************************************************************

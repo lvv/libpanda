@@ -10,15 +10,15 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 
-  #include "contrib/libz/zlib.h"
+#include "contrib/libz/zlib.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 
-  #include <zlib.h>
+#include <zlib.h>
 #endif
 
 /******************************************************************************
@@ -67,18 +67,18 @@ panda_newobject (panda_pdf * doc, int type)
   doc->totalObjectNumber++;
 
   // Initialise the object number
-  if(type == panda_placeholder)
+  if (type == panda_placeholder)
     created->number = -doc->nextPHObjectNumber++;
   else
     created->number = doc->nextObjectNumber++;
 
   // Create the dictionary for this object in the database
-  dictno = panda_adddict(doc);
-  dbkey = panda_xsnprintf("obj-%d-dictno", created->number);
-  dbdata = panda_xsnprintf("%d", dictno);
-  panda_dbwrite(doc, dbkey, dbdata);
-  panda_xfree(dbkey);
-  panda_xfree(dbdata);
+  dictno = panda_adddict (doc);
+  dbkey = panda_xsnprintf ("obj-%d-dictno", created->number);
+  dbdata = panda_xsnprintf ("%d", dictno);
+  panda_dbwrite (doc, dbkey, dbdata);
+  panda_xfree (dbkey);
+  panda_xfree (dbdata);
 
   // We have no children at the moment
   created->children = (panda_child *) panda_xmalloc (sizeof (panda_child));
@@ -89,8 +89,9 @@ panda_newobject (panda_pdf * doc, int type)
   // By default this object is not a pages object
   created->isPages = panda_false;
   created->isTemplate = panda_false;
-  created->isPlaceholder = type == panda_placeholder ? panda_true : panda_false;
-  
+  created->isPlaceholder =
+    type == panda_placeholder ? panda_true : panda_false;
+
 #if defined DEBUG
   printf ("Created object %d\n", created->number);
 #endif
@@ -108,9 +109,10 @@ panda_newobject (panda_pdf * doc, int type)
   // We are by default not a contents object
   created->isContents = panda_false;
 
-  if(type == panda_placeholder){
-    return created;
-  }
+  if (type == panda_placeholder)
+    {
+      return created;
+    }
 
   // New objects have a generation number of 0 by definition
   created->generation = 0;
@@ -140,28 +142,30 @@ panda_newobject (panda_pdf * doc, int type)
 
 // Create a new dictionary
 int
-panda_adddict(panda_pdf *document)
+panda_adddict (panda_pdf * document)
 {
   char *dbkey, *dbdata;
   int max;
 
   // Determine how many dictionaries we currently have
 #if defined DEBUG
-  printf("Determining how many dictionaries are currently defined\n");
+  printf ("Determining how many dictionaries are currently defined\n");
 #endif
 
-  if((dbdata = panda_dbread(document, "dict-count")) == NULL){
-    max = 0;
-  }
-  else{
-    max = atoi(dbdata);
-    panda_xfree(dbdata);
-  } 
+  if ((dbdata = panda_dbread (document, "dict-count")) == NULL)
+    {
+      max = 0;
+    }
+  else
+    {
+      max = atoi (dbdata);
+      panda_xfree (dbdata);
+    }
 
   // Increment that count
-  dbdata = panda_xsnprintf("%d", ++max);
-  panda_dbwrite(document, "dict-count", dbdata);
-  panda_xfree(dbdata);
+  dbdata = panda_xsnprintf ("%d", ++max);
+  panda_dbwrite (document, "dict-count", dbdata);
+  panda_xfree (dbdata);
   return max;
 }
 
@@ -170,7 +174,7 @@ panda_adddict(panda_pdf *document)
 // this implies that we are adding a subdictionary. The valuetype for this
 // first key should have been panda_dictvalue. No longer return a value...
 void
-panda_adddictitem (panda_pdf *document, panda_object * input, char *name, 
+panda_adddictitem (panda_pdf * document, panda_object * input, char *name,
 		   int valueType, ...)
 {
   // Add an item to the dictionary in the object
@@ -180,241 +184,259 @@ panda_adddictitem (panda_pdf *document, panda_object * input, char *name,
   panda_object *obj;
 
 #if defined DEBUG
-  printf("Adddictitem called for object numbered %d\n", input->number);
+  printf ("Adddictitem called for object numbered %d\n", input->number);
 #endif
 
   // Get this object's dictionary number
-  dictno = panda_getobjdictno(document, input);
+  dictno = panda_getobjdictno (document, input);
 
   // Gain access like variable
   va_start (argPtr, valueType);
 
   // Before we can find where to put the data, we need to turn the
   // data into something which we can store
-  switch(valueType){
-  case panda_objectarrayvalue:
-    obj = (panda_object *) va_arg(argPtr, panda_object *);
-    dictdata = panda_xsnprintf("%d %d R", obj->number, obj->generation);
-    break;
+  switch (valueType)
+    {
+    case panda_objectarrayvalue:
+      obj = (panda_object *) va_arg (argPtr, panda_object *);
+      dictdata = panda_xsnprintf ("%d %d R", obj->number, obj->generation);
+      break;
 
-  case panda_textvalue:
-    dictdata = panda_xsnprintf("/%s", (char *) va_arg (argPtr, char *));
-    break;
-    
-  case panda_literaltextvalue:
-    dictdata = panda_xsnprintf("%s", (char *) va_arg(argPtr, char *));
-    break;
+    case panda_textvalue:
+      dictdata = panda_xsnprintf ("/%s", (char *) va_arg (argPtr, char *));
+      break;
 
-  case panda_brackettedtextvalue:
-    dictdata = panda_xsnprintf("(%s)", (char *) va_arg(argPtr, char *));
-    break;
+    case panda_literaltextvalue:
+      dictdata = panda_xsnprintf ("%s", (char *) va_arg (argPtr, char *));
+      break;
 
-  case panda_integervalue:
-    dictdata = panda_xsnprintf("%d", (int) va_arg(argPtr, int));
-    break;
+    case panda_brackettedtextvalue:
+      dictdata = panda_xsnprintf ("(%s)", (char *) va_arg (argPtr, char *));
+      break;
 
-  case panda_objectvalue:
-    obj = (panda_object *) va_arg(argPtr, panda_object *);
-    dictdata = panda_xsnprintf("%d %d R", obj->number, obj->generation);
-    break;
+    case panda_integervalue:
+      dictdata = panda_xsnprintf ("%d", (int) va_arg (argPtr, int));
+      break;
 
-  case panda_booleanvalue:
-    dictdata = panda_xsnprintf("%s", 
-		    (((int) va_arg(argPtr, int)) == panda_true) ? "trie" :
-		    "false");
-    break;
+    case panda_objectvalue:
+      obj = (panda_object *) va_arg (argPtr, panda_object *);
+      dictdata = panda_xsnprintf ("%d %d R", obj->number, obj->generation);
+      break;
 
-  case panda_doublevalue:
-    dictdata = panda_xsnprintf("%f", (double) va_arg(argPtr, double));
-    break;
-  }
+    case panda_booleanvalue:
+      dictdata = panda_xsnprintf ("%s",
+				  (((int) va_arg (argPtr, int)) ==
+				   panda_true) ? "trie" : "false");
+      break;
+
+    case panda_doublevalue:
+      dictdata = panda_xsnprintf ("%f", (double) va_arg (argPtr, double));
+      break;
+    }
 
   // Store in the dictionary
-  dictelem = panda_getdictelem(document, dictno, name);
-  retval = panda_adddictiteminternal(document, dictno, dictelem, 
-				     name, valueType, dictdata);
-  panda_xfree(dictdata);
-  panda_xfree(retval);
+  dictelem = panda_getdictelem (document, dictno, name);
+  retval = panda_adddictiteminternal (document, dictno, dictelem,
+				      name, valueType, dictdata);
+  panda_xfree (dictdata);
+  panda_xfree (retval);
 }
 
 // Insert data into the dictionary at a given location
 char *
-panda_adddictiteminternal(panda_pdf *document, int passeddictno, int dictelem,
-			  char *name, int valueType, char *value)
+panda_adddictiteminternal (panda_pdf * document, int passeddictno,
+			   int dictelem, char *name, int valueType,
+			   char *value)
 {
-  char *dbkey, *dbdata, *dbdata2, *dbname, *tempname, *namebit, *therest, 
+  char *dbkey, *dbdata, *dbdata2, *dbname, *tempname, *namebit, *therest,
     *retval;
   int dictno, pdictelem, pdictno;
 
 #if defined DEBUG
-  printf("Add dictionary item internally (name %s, dict %d, element %d)\n",
-	 name, passeddictno, dictelem);
+  printf ("Add dictionary item internally (name %s, dict %d, element %d)\n",
+	  name, passeddictno, dictelem);
 #endif
 
   // We need to determine if the key we have been handed really refers to
   // a subdictionary
-  tempname = panda_xsnprintf("%s", name);
-  namebit = strtok(tempname, "/");
-  therest = strtok(NULL, "");
+  tempname = panda_xsnprintf ("%s", name);
+  namebit = strtok (tempname, "/");
+  therest = strtok (NULL, "");
 
   // If this is a dictionary reference, then we should do that instead
-  if((therest != NULL) && (strlen(therest) > 0)){ 
-    // Get the dictionary number for this sub item
-    dbkey = panda_finddictiteminternal(document, passeddictno, namebit);
-    if(dbkey != NULL){
-      dbdata = panda_dbread (document, dbkey);
-      panda_xfree(dbkey);
-    }
-    else{
-      dbdata = NULL;
-    }
-    
-    if(dbdata != NULL){
-      dictno = atoi(dbdata);
-      panda_xfree(dbdata);
-    }
-    else{
+  if ((therest != NULL) && (strlen (therest) > 0))
+    {
+      // Get the dictionary number for this sub item
+      dbkey = panda_finddictiteminternal (document, passeddictno, namebit);
+      if (dbkey != NULL)
+	{
+	  dbdata = panda_dbread (document, dbkey);
+	  panda_xfree (dbkey);
+	}
+      else
+	{
+	  dbdata = NULL;
+	}
+
+      if (dbdata != NULL)
+	{
+	  dictno = atoi (dbdata);
+	  panda_xfree (dbdata);
+	}
+      else
+	{
 #if defined DEBUG
-      printf("Needed to create a new subdictionary\n");
+	  printf ("Needed to create a new subdictionary\n");
 #endif
 
-      // We need to add the dictionary item here
-      pdictno = panda_adddict(document);
-      dbdata = panda_xsnprintf("%d", pdictno);
-      retval = panda_adddictiteminternal(document, passeddictno,
-      				panda_getdictelem(document, passeddictno, 
-      						  namebit), namebit,
-      				panda_dictionaryvalue, dbdata);
+	  // We need to add the dictionary item here
+	  pdictno = panda_adddict (document);
+	  dbdata = panda_xsnprintf ("%d", pdictno);
+	  retval = panda_adddictiteminternal (document, passeddictno,
+					      panda_getdictelem (document,
+								 passeddictno,
+								 namebit),
+					      namebit, panda_dictionaryvalue,
+					      dbdata);
 
-      panda_xfree(dbdata);
-      panda_xfree(retval);
-      dictno = pdictno;
+	  panda_xfree (dbdata);
+	  panda_xfree (retval);
+	  dictno = pdictno;
+	}
+
+#if defined DEBUG
+      printf ("Create a subdictionary\n");
+#endif
+
+      // We need the element number for the dictionary
+      dictelem = panda_getdictelem (document, dictno, therest);
+      retval = panda_adddictiteminternal (document, dictno, dictelem,
+					  therest, valueType, value);
+      panda_xfree (tempname);
+
+#if defined DEBUG
+      printf ("Rolling up sudictionary creation\n");
+#endif
+
+      return retval;
     }
-
-#if defined DEBUG
-    printf("Create a subdictionary\n");
-#endif
-
-    // We need the element number for the dictionary
-    dictelem = panda_getdictelem(document, dictno, therest);
-    retval = panda_adddictiteminternal(document, dictno, dictelem,
-				       therest, valueType, value);
-    panda_xfree(tempname);
-
-#if defined DEBUG
-    printf("Rolling up sudictionary creation\n");
-#endif
-
-    return retval;
-  }
   else
     dictno = passeddictno;
-     
+
   // Otherwise, we do some stuff
 #if defined DEBUG
-  printf("Storing a dictionary item: dict = %d, element = %d\n",
-	 dictno, dictelem);
+  printf ("Storing a dictionary item: dict = %d, element = %d\n",
+	  dictno, dictelem);
 #endif
 
-  dbkey = panda_xsnprintf("dict-%d-%d-name", dictno, dictelem);
-  panda_dbwrite(document, dbkey, name);
-  panda_xfree(dbkey);
+  dbkey = panda_xsnprintf ("dict-%d-%d-name", dictno, dictelem);
+  panda_dbwrite (document, dbkey, name);
+  panda_xfree (dbkey);
 
-  dbkey = panda_xsnprintf("dict-%d-%d-type", dictno, dictelem);
-  dbdata = panda_xsnprintf("%d", valueType);
-  panda_dbwrite(document, dbkey, dbdata);
-  panda_xfree(dbkey);
-  panda_xfree(dbdata);
+  dbkey = panda_xsnprintf ("dict-%d-%d-type", dictno, dictelem);
+  dbdata = panda_xsnprintf ("%d", valueType);
+  panda_dbwrite (document, dbkey, dbdata);
+  panda_xfree (dbkey);
+  panda_xfree (dbdata);
 
   // If this is a panda_objectarrayvalue, then we append to the end
-  dbkey = panda_xsnprintf("dict-%d-%d-value", dictno, dictelem);
-  if(valueType == panda_objectarrayvalue){
-    dbdata = panda_dbread(document, dbkey);
-    
-    if(dbdata != NULL)
-      dbdata2 = panda_xsnprintf("%s %s", dbdata, value);
-    else
-      dbdata2 = panda_xsnprintf("%s", value);
-  }
+  dbkey = panda_xsnprintf ("dict-%d-%d-value", dictno, dictelem);
+  if (valueType == panda_objectarrayvalue)
+    {
+      dbdata = panda_dbread (document, dbkey);
+
+      if (dbdata != NULL)
+	dbdata2 = panda_xsnprintf ("%s %s", dbdata, value);
+      else
+	dbdata2 = panda_xsnprintf ("%s", value);
+    }
   else
-    dbdata2 = panda_xsnprintf("%s", value);
+    dbdata2 = panda_xsnprintf ("%s", value);
 
-  panda_dbwrite(document, dbkey, dbdata2);
+  panda_dbwrite (document, dbkey, dbdata2);
 
-  panda_xfree(tempname);
-  panda_xfree(dbkey);
-  panda_xfree(dbdata2);
+  panda_xfree (tempname);
+  panda_xfree (dbkey);
+  panda_xfree (dbdata2);
 
   // todo_mikal: I think there should be a free here, dmalloc disagrees
   //if(dbdata != NULL)
   //  free(dbdata);
 
 #if defined DEBUG
-  printf("Finished inserting dictionary item\n");
+  printf ("Finished inserting dictionary item\n");
 #endif
 
-  return panda_xsnprintf("dict-%d-%d-", dictno, dictelem);
+  return panda_xsnprintf ("dict-%d-%d-", dictno, dictelem);
 }
 
 // Get the dictionary number associated with an object
-int panda_getobjdictno(panda_pdf *document, panda_object *input)
+int
+panda_getobjdictno (panda_pdf * document, panda_object * input)
 {
   int dictno;
   char *dbkey, *dbdata;
 
 #if defined DEBUG
-  printf("Getting the dictionary number for the object numbered %d\n",
-	 input->number);
+  printf ("Getting the dictionary number for the object numbered %d\n",
+	  input->number);
 #endif
 
   // We need to get the dictionary number for this object
-  dbkey = panda_xsnprintf("obj-%d-dictno", input->number);
-  if((dbdata = panda_dbread(document, dbkey)) == NULL){
-    panda_error(panda_true, "Object lacks a dictionary");
-  }
-  panda_xfree(dbkey);
-  
-  // Now we can get the count of the current entries in the dictionary
-  dictno = atoi(dbdata);
-  panda_xfree(dbdata);
+  dbkey = panda_xsnprintf ("obj-%d-dictno", input->number);
+  if ((dbdata = panda_dbread (document, dbkey)) == NULL)
+    {
+      panda_error (panda_true, "Object lacks a dictionary");
+    }
+  panda_xfree (dbkey);
 
-  if(dictno == 0)
-    panda_error(panda_true, "Object does not have a dictionary\n");
+  // Now we can get the count of the current entries in the dictionary
+  dictno = atoi (dbdata);
+  panda_xfree (dbdata);
+
+  if (dictno == 0)
+    panda_error (panda_true, "Object does not have a dictionary\n");
 
   return dictno;
 }
 
 // Find the dictionary element we are looking for
-int panda_getdictelem(panda_pdf *document, int dictno, char *name){
+int
+panda_getdictelem (panda_pdf * document, int dictno, char *name)
+{
   int count;
   char *dbkey, *dbdata;
 
 #if defined DEBUG
-  printf("Searching for a dictionary element named %s in dictionary %d\n", name, dictno);
+  printf ("Searching for a dictionary element named %s in dictionary %d\n",
+	  name, dictno);
 #endif
 
-  if(dictno == 0)
-    panda_error(panda_true, "Invalid dictionary number\n");
+  if (dictno == 0)
+    panda_error (panda_true, "Invalid dictionary number\n");
 
   count = 0;
-  do{
-    dbkey = panda_xsnprintf("dict-%d-%d-name", dictno, count);
-    dbdata = panda_dbread(document, dbkey);
+  do
+    {
+      dbkey = panda_xsnprintf ("dict-%d-%d-name", dictno, count);
+      dbdata = panda_dbread (document, dbkey);
 
-    // Do the names match?
-    if((dbdata != NULL) && (strcmp(name, dbdata) == 0)){
-      return count;
-    }
+      // Do the names match?
+      if ((dbdata != NULL) && (strcmp (name, dbdata) == 0))
+	{
+	  return count;
+	}
 
-    panda_xfree(dbkey);
-    panda_xfree(dbdata);
-    count++;
+      panda_xfree (dbkey);
+      panda_xfree (dbdata);
+      count++;
 
 #if defined DEBUG
-  if(count > 1000)
-    panda_error(panda_true, "Counter too big!\n");
+      if (count > 1000)
+	panda_error (panda_true, "Counter too big!\n");
 #endif
-  } while(dbdata != NULL);
+    }
+  while (dbdata != NULL);
 
   // -1 because of the increment above
   return count - 1;
@@ -422,55 +444,61 @@ int panda_getdictelem(panda_pdf *document, int dictno, char *name){
 
 // Find a given dictionary item, and return the database key for the value 
 // element
-char *panda_finddictitem(panda_pdf *document, panda_object *input, char *name)
+char *
+panda_finddictitem (panda_pdf * document, panda_object * input, char *name)
 {
   int dictno;
   char *dbdata, *dbkey;
 
 #if defined DEBUG
-  printf("Finding a dictionary item for the object numbered %d\n", 
-	 input->number);
+  printf ("Finding a dictionary item for the object numbered %d\n",
+	  input->number);
 #endif
 
   // We need to get the dictionary number for this object
-  dictno = panda_getobjdictno(document, input);
-  return panda_finddictiteminternal(document, dictno, name);
+  dictno = panda_getobjdictno (document, input);
+  return panda_finddictiteminternal (document, dictno, name);
 }
 
 // Internal version of the find
-char *panda_finddictiteminternal(panda_pdf *document, int dictno, char *name){
+char *
+panda_finddictiteminternal (panda_pdf * document, int dictno, char *name)
+{
   char *dbdata, *dbkey;
   int count;
 
 #if defined DEBUG
-  printf("Searching for %s in dictionary %d\n", name, dictno);
+  printf ("Searching for %s in dictionary %d\n", name, dictno);
 #endif
 
   // We can now go through the dictionary elements and see if we are
   // clobbering this one
   count = 0;
-  do{
-    dbkey = panda_xsnprintf("dict-%d-%d-name", dictno, count);
-    dbdata = panda_dbread(document, dbkey); // NULL here is ok
+  do
+    {
+      dbkey = panda_xsnprintf ("dict-%d-%d-name", dictno, count);
+      dbdata = panda_dbread (document, dbkey);	// NULL here is ok
 
-    // Do the names match?
-    if((dbdata != NULL) && (strcmp(name, dbdata) == 0)){
-      panda_xfree(dbdata);
-      panda_xfree(dbkey);
-      dbkey = panda_xsnprintf("dict-%d-%d-value", dictno, count);
-      return dbkey;
-    }
+      // Do the names match?
+      if ((dbdata != NULL) && (strcmp (name, dbdata) == 0))
+	{
+	  panda_xfree (dbdata);
+	  panda_xfree (dbkey);
+	  dbkey = panda_xsnprintf ("dict-%d-%d-value", dictno, count);
+	  return dbkey;
+	}
 
-    panda_xfree(dbkey);
-    panda_xfree(dbdata);
+      panda_xfree (dbkey);
+      panda_xfree (dbdata);
 
 #if defined DEBUG
-  if(count > 1000)
-    panda_error(panda_true, "Counter too big!\n");
+      if (count > 1000)
+	panda_error (panda_true, "Counter too big!\n");
 #endif
 
-    count++;
-  } while(dbdata != NULL);
+      count++;
+    }
+  while (dbdata != NULL);
 
   return NULL;
 }
@@ -509,14 +537,16 @@ DOCBOOK END
 ******************************************************************************/
 
 void
-panda_freeobject(panda_pdf *output, panda_object *freeVictim){
-  panda_freeobjectactual(output, freeVictim, panda_true, panda_true);
+panda_freeobject (panda_pdf * output, panda_object * freeVictim)
+{
+  panda_freeobjectactual (output, freeVictim, panda_true, panda_true);
 }
 
 void
-panda_freetempobject(panda_pdf *output, panda_object *freeVictim,
-		     int freedict){
-  panda_freeobjectactual(output, freeVictim, freedict, panda_true);
+panda_freetempobject (panda_pdf * output, panda_object * freeVictim,
+		      int freedict)
+{
+  panda_freeobjectactual (output, freeVictim, freedict, panda_true);
 }
 
 void
@@ -531,18 +561,18 @@ panda_freeobjectactual (panda_pdf * output, panda_object * freeVictim,
   if (freeVictim->number != -1)
     {
 #if defined DEBUG
-      printf("Actually freeing this object (not a placeholder)\n");
+      printf ("Actually freeing this object (not a placeholder)\n");
 #endif
 
       panda_xfree (freeVictim->layoutstream);
       panda_xfree (freeVictim->binarystream);
-      
+
       panda_xfree (freeVictim->currentSetFont);
     }
 
-  if(freekids == panda_true) 
+  if (freekids == panda_true)
     panda_xfree (freeVictim->children);
-  
+
   panda_xfree (freeVictim);
 }
 
@@ -616,7 +646,7 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
       if (dumpTarget->layoutstream != NULL)
 	{
 #if defined DEBUG
-	  printf("Processing the layoutstream\n");
+	  printf ("Processing the layoutstream\n");
 #endif
 	  dumpTarget->layoutstreamLength = strlen (dumpTarget->layoutstream);
 
@@ -671,14 +701,14 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 	    }
 
 #if defined DEBUG
-	  printf("Writing out the length of the stream\n");
+	  printf ("Writing out the length of the stream\n");
 #endif
 
 	  panda_adddictitem (output, dumpTarget, "Length", panda_integervalue,
 			     dumpTarget->layoutstreamLength);
 
 #if defined DEBUG
-	  printf("Finished with layoutstream\n");
+	  printf ("Finished with layoutstream\n");
 #endif
 	}
 
@@ -710,7 +740,7 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 		    dumpTarget->number, dumpTarget->generation);
 
 #if defined DEBUG
-      printf("Writing out the dictionary\n");
+      printf ("Writing out the dictionary\n");
 #endif
 
       panda_writedictionary (output, dumpTarget);
@@ -748,71 +778,76 @@ panda_writedictionary (panda_pdf * output, panda_object * obj)
   int dictno;
 
 #if defined DEBUG
-  printf("Writing out the dictionary items for the object numbered %d\n",
-	 obj->number);
+  printf ("Writing out the dictionary items for the object numbered %d\n",
+	  obj->number);
 #endif
 
   // Recursively write the dictionary out (including sub-dictionaries)
-  dictno = panda_getobjdictno(output, obj);
-  panda_writedictionaryinternal(output, dictno, 1);
+  dictno = panda_getobjdictno (output, obj);
+  panda_writedictionaryinternal (output, dictno, 1);
 }
 
 // Dump a specific dictionary to the PDF file
-void panda_writedictionaryinternal(panda_pdf *output, int dictno, int depth){
+void
+panda_writedictionaryinternal (panda_pdf * output, int dictno, int depth)
+{
   int count, dcount;
   char *dbkey, *dbname = NULL, *dbvalue, *dbtype;
 
 #if defined DEBUG
-  printf("Internal call to write the dictionary\n");
+  printf ("Internal call to write the dictionary\n");
 #endif
 
-  panda_print(output, "<<\n");
-  
+  panda_print (output, "<<\n");
+
   // We can now go through the dictionary elements and see if we are
   // clobbering this one
   count = 0;
-  do{
-    panda_xfree(dbname);
+  do
+    {
+      panda_xfree (dbname);
 
-    dbkey = panda_xsnprintf("dict-%d-%d-name", dictno, count);
-    dbname = panda_dbread(output, dbkey);
-    panda_xfree(dbkey);
+      dbkey = panda_xsnprintf ("dict-%d-%d-name", dictno, count);
+      dbname = panda_dbread (output, dbkey);
+      panda_xfree (dbkey);
 
-    dbkey = panda_xsnprintf("dict-%d-%d-value", dictno, count);
-    dbvalue = panda_dbread(output, dbkey);
-    panda_xfree(dbkey);
+      dbkey = panda_xsnprintf ("dict-%d-%d-value", dictno, count);
+      dbvalue = panda_dbread (output, dbkey);
+      panda_xfree (dbkey);
 
-    dbkey = panda_xsnprintf("dict-%d-%d-type", dictno, count);
-    dbtype = panda_dbread(output, dbkey);
-    panda_xfree(dbkey);
+      dbkey = panda_xsnprintf ("dict-%d-%d-type", dictno, count);
+      dbtype = panda_dbread (output, dbkey);
+      panda_xfree (dbkey);
 
-    if(dbname != NULL){
-      for(dcount = 0; dcount < depth; dcount ++)
-	panda_printf(output, "\t");
-      panda_printf (output, "/%s ", dbname);
+      if (dbname != NULL)
+	{
+	  for (dcount = 0; dcount < depth; dcount++)
+	    panda_printf (output, "\t");
+	  panda_printf (output, "/%s ", dbname);
 
-      if(atoi(dbtype) == panda_dictionaryvalue)
-	panda_writedictionaryinternal(output, atoi(dbvalue), depth + 1);
-      else if(atoi(dbtype) == panda_objectarrayvalue)
-	panda_printf(output, "[%s]\n", dbvalue);
-      else
-	panda_printf (output, "%s\n", dbvalue);
+	  if (atoi (dbtype) == panda_dictionaryvalue)
+	    panda_writedictionaryinternal (output, atoi (dbvalue), depth + 1);
+	  else if (atoi (dbtype) == panda_objectarrayvalue)
+	    panda_printf (output, "[%s]\n", dbvalue);
+	  else
+	    panda_printf (output, "%s\n", dbvalue);
 
-      panda_xfree(dbtype);
-      panda_xfree(dbvalue);
-    }
-    
+	  panda_xfree (dbtype);
+	  panda_xfree (dbvalue);
+	}
+
 #if defined DEBUG
-  if(count > 1000)
-    panda_error(panda_true, "Counter too big!\n");
+      if (count > 1000)
+	panda_error (panda_true, "Counter too big!\n");
 #endif
 
-    count++;
-  } while(dbname != NULL);
+      count++;
+    }
+  while (dbname != NULL);
 
-  for(dcount = 0; dcount < depth - 1; dcount++)
-    panda_print(output, "\t");
-  panda_print(output, ">>\n");
+  for (dcount = 0; dcount < depth - 1; dcount++)
+    panda_print (output, "\t");
+  panda_print (output, ">>\n");
 }
 
 
@@ -919,7 +954,7 @@ panda_traverseobjects (panda_pdf * output, panda_object * dumpTarget,
   panda_child *currentChild;
 
 #if defined DEBUG
-  printf("Cleaning up object number %d\n", dumpTarget->number);
+  printf ("Cleaning up object number %d\n", dumpTarget->number);
 #endif
 
   // No children
@@ -1012,6 +1047,6 @@ panda_setproperty (panda_object * target, int scope, int key, int value)
 
     default:
       // Do nothing -- Windows requires the semi colon for some reason
-	  ;
+      ;
     }
 }

@@ -10,27 +10,27 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 
-  #include "contrib/libtiff/tiffio.h"
-  #include "contrib/libjpeg/jpeglib.h"
-  #include "contrib/libpng/png.h"
+#include "contrib/libtiff/tiffio.h"
+#include "contrib/libjpeg/jpeglib.h"
+#include "contrib/libpng/png.h"
 
-  #include <windows.h>
+#include <windows.h>
 
-  HANDLE winmutex;
+HANDLE winmutex;
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 
-  #include <tiffio.h>
-  #include <jpeglib.h>
-  #include <unistd.h>
-  #include <pthread.h>
-  #include <png.h>
+#include <tiffio.h>
+#include <jpeglib.h>
+#include <unistd.h>
+#include <pthread.h>
+#include <png.h>
 
-  pthread_mutex_t convMutex = PTHREAD_MUTEX_INITIALIZER;
+pthread_mutex_t convMutex = PTHREAD_MUTEX_INITIALIZER;
 #endif
 
 #include <math.h>
@@ -93,7 +93,7 @@ panda_imagebox (panda_pdf * output, panda_page * target, int top, int left,
 		int bottom, int right, char *filename, int type)
 {
   panda_imageboxrot (output, target, top, left, bottom, right, 0.0,
-			    filename, type);
+		     filename, type);
 }
 
 /******************************************************************************
@@ -146,59 +146,62 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   int count;
 
 #if defined DEBUG
-  printf("Check to see if we have used this image before (%s)\n",
-	 filename);
+  printf ("Check to see if we have used this image before (%s)\n", filename);
 #endif
 
   count = 0;
-  dbkey = panda_xsnprintf("image-%d-name", count);
-  while((dbdata = panda_dbread(output, dbkey)) != NULL){
-    panda_xfree(dbkey);
+  dbkey = panda_xsnprintf ("image-%d-name", count);
+  while ((dbdata = panda_dbread (output, dbkey)) != NULL)
+    {
+      panda_xfree (dbkey);
 
-    if(strcmp(dbdata, filename) == 0){
+      if (strcmp (dbdata, filename) == 0)
+	{
 #if defined DEBUG
-      printf("Found that this is a repeat ref to an image, and recycled\n");
+	  printf
+	    ("Found that this is a repeat ref to an image, and recycled\n");
 #endif
 
-      dbkey = panda_xsnprintf("image-%d-objectreference", count);
-      imageref = panda_dbread(output, dbkey);
-      panda_imageboxinternal(output, target, top, left, bottom, right, angle,
-			     filename, type, panda_false, imageref, -1);
-      panda_xfree(imageref);
-      panda_xfree(dbkey);
-      panda_xfree(dbdata);
-      return;
+	  dbkey = panda_xsnprintf ("image-%d-objectreference", count);
+	  imageref = panda_dbread (output, dbkey);
+	  panda_imageboxinternal (output, target, top, left, bottom, right,
+				  angle, filename, type, panda_false,
+				  imageref, -1);
+	  panda_xfree (imageref);
+	  panda_xfree (dbkey);
+	  panda_xfree (dbdata);
+	  return;
+	}
+
+      panda_xfree (dbdata);
+      dbkey = panda_xsnprintf ("image-%d-name", ++count);
     }
 
-    panda_xfree(dbdata);
-    dbkey = panda_xsnprintf("image-%d-name", ++count);
-  }
+  panda_imageboxinternal (output, target, top, left, bottom, right, angle,
+			  filename, type, panda_true, NULL, count);
 
-  panda_imageboxinternal(output, target, top, left, bottom, right, angle,
-		       filename, type, panda_true, NULL, count);
- 
-  panda_dbwrite(output, dbkey, filename);
-  panda_xfree(dbkey);
+  panda_dbwrite (output, dbkey, filename);
+  panda_xfree (dbkey);
 }
 
 // todo_mikal: doco
 // People might want to force me to add an image
 void
-panda_imageboxactual(panda_pdf * output, panda_page * target, int top, 
-		     int left, int bottom, int right, double angle, 
-		     char *filename, int type)
+panda_imageboxactual (panda_pdf * output, panda_page * target, int top,
+		      int left, int bottom, int right, double angle,
+		      char *filename, int type)
 {
-  panda_imageboxinternal(output, target, top, left, bottom, right, angle,
-		       filename, type, panda_true, NULL, -1);
+  panda_imageboxinternal (output, target, top, left, bottom, right, angle,
+			  filename, type, panda_true, NULL, -1);
 }
 
 // todo_mikal doco
 // Redistribute the image types
 void
-panda_imageboxinternal(panda_pdf * output, panda_page * target, int top, 
-		       int left, int bottom, int right, double angle, 
-		       char *filename, int type, int addImage,
-		       char *objref, int databasecount)
+panda_imageboxinternal (panda_pdf * output, panda_page * target, int top,
+			int left, int bottom, int right, double angle,
+			char *filename, int type, int addImage,
+			char *objref, int databasecount)
 {
   panda_object *imageObj;
   char *pdfFilename, *dictkey, *dbkey, *dbdata;
@@ -209,25 +212,27 @@ panda_imageboxinternal(panda_pdf * output, panda_page * target, int top,
 	  databasecount);
 #endif
 
-  if(addImage == panda_true){
-    // Now we need an object to contain the image
-    imageObj = (panda_object *) panda_newobject (output, panda_normal);
-    panda_addchild (target->obj, imageObj);
+  if (addImage == panda_true)
+    {
+      // Now we need an object to contain the image
+      imageObj = (panda_object *) panda_newobject (output, panda_normal);
+      panda_addchild (target->obj, imageObj);
 
-    if(databasecount != -1){
-      dbkey = panda_xsnprintf("image-%d-objectreference", databasecount);
-      dbdata = panda_xsnprintf("%d %d R",
-			       imageObj->number, imageObj->generation);
-      panda_dbwrite(output, dbkey, dbdata);
-      panda_xfree(dbkey);
-      panda_xfree(dbdata);
+      if (databasecount != -1)
+	{
+	  dbkey = panda_xsnprintf ("image-%d-objectreference", databasecount);
+	  dbdata = panda_xsnprintf ("%d %d R",
+				    imageObj->number, imageObj->generation);
+	  panda_dbwrite (output, dbkey, dbdata);
+	  panda_xfree (dbkey);
+	  panda_xfree (dbdata);
+	}
     }
-  }
-  else if(objref == NULL)
-    panda_error(panda_true, "Invalid image processing state\n");
+  else if (objref == NULL)
+    panda_error (panda_true, "Invalid image processing state\n");
 #if defined DEBUG
   else
-    printf("Code is now recycling image... Good for the environment\n");
+    printf ("Code is now recycling image... Good for the environment\n");
 #endif
 
   // We cannot have some characters in the filename that we embed into the PDF,
@@ -245,14 +250,14 @@ panda_imageboxinternal(panda_pdf * output, panda_page * target, int top,
 	  filename, pdfFilename);
 #endif
 
-  dictkey = panda_xsnprintf("Resources/XObject/%s", pdfFilename);
-  if(objref == NULL)
+  dictkey = panda_xsnprintf ("Resources/XObject/%s", pdfFilename);
+  if (objref == NULL)
     panda_adddictitem (output, target->obj, dictkey, panda_objectvalue,
 		       imageObj);
   else
     panda_adddictitem (output, target->obj, dictkey, panda_literaltextvalue,
 		       objref);
-  panda_xfree(dictkey);
+  panda_xfree (dictkey);
 
   // We put some information based on a stat of the image file into the object
   // This will allow us to determine if this file's image is included in the
@@ -262,16 +267,20 @@ panda_imageboxinternal(panda_pdf * output, panda_page * target, int top,
   // and some form of object searching by a rational and efficient manner (a
   // binary search tree?)
 
-  if(addImage == panda_true){
-    // We now add some dictionary elements to the image object to say that 
-    // it is a TIFF image
-    panda_adddictitem (output, imageObj, "Type", panda_textvalue, "XObject");
-    panda_adddictitem (output, imageObj, "Subtype", panda_textvalue, "Image");
+  if (addImage == panda_true)
+    {
+      // We now add some dictionary elements to the image object to say that 
+      // it is a TIFF image
+      panda_adddictitem (output, imageObj, "Type", panda_textvalue,
+			 "XObject");
+      panda_adddictitem (output, imageObj, "Subtype", panda_textvalue,
+			 "Image");
 
-    // This line will need to be changed to gaurantee that the internal name is
-    // unique unless the actual image is the same
-    panda_adddictitem (output, imageObj, "Name", panda_textvalue, pdfFilename);
-  }
+      // This line will need to be changed to gaurantee that the internal name is
+      // unique unless the actual image is the same
+      panda_adddictitem (output, imageObj, "Name", panda_textvalue,
+			 pdfFilename);
+    }
 
   // Now we do the things that are image format specific... This is also
   // where we check if support has been compiled in for the libraries we need.
@@ -279,7 +288,7 @@ panda_imageboxinternal(panda_pdf * output, panda_page * target, int top,
     {
     case panda_image_tiff:
 #if defined HAVE_LIBTIFF
-      if(addImage == panda_true)
+      if (addImage == panda_true)
 	panda_insertTIFF (output, target, imageObj, filename);
 #else
       fprintf (stderr, "%s %s\n",
@@ -292,7 +301,7 @@ panda_imageboxinternal(panda_pdf * output, panda_page * target, int top,
 
     case panda_image_jpeg:
 #if defined HAVE_LIBJPEG
-      if(addImage == panda_true)
+      if (addImage == panda_true)
 	panda_insertJPEG (output, target, imageObj, filename);
 #else
       fprintf (stderr, "%s %s\n",
@@ -305,7 +314,7 @@ panda_imageboxinternal(panda_pdf * output, panda_page * target, int top,
 
     case panda_image_png:
 #if defined HAVE_LIBPNG
-      if(addImage == panda_true)
+      if (addImage == panda_true)
 	panda_insertPNG (output, target, imageObj, filename);
 #else
       fprintf (stderr, "%s %s\n",
@@ -351,7 +360,7 @@ panda_imageboxinternal(panda_pdf * output, panda_page * target, int top,
     panda_streamprintf (target->contents->layoutstream, "/%s Do\n",
 			pdfFilename);
 
-  free(pdfFilename);
+  free (pdfFilename);
   panda_exitgraphicsmode (target);
 
 #if defined DEBUG
@@ -420,15 +429,17 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
   // Bits per component is per colour component, not per sample. Does this
   // matter?
   if (TIFFGetField (image, TIFFTAG_BITSPERSAMPLE, &tiffResponse16) != 0)
-    panda_adddictitem (output, imageObj, "BitsPerComponent", panda_integervalue,
-		       tiffResponse16);
+    panda_adddictitem (output, imageObj, "BitsPerComponent",
+		       panda_integervalue, tiffResponse16);
   else
-    panda_error (panda_true, "Could not get the colour depth for the tiff image.");
+    panda_error (panda_true,
+		 "Could not get the colour depth for the tiff image.");
 
   // The colour device will change based on the number of samples per pixel
   if (TIFFGetField (image, TIFFTAG_SAMPLESPERPIXEL, &tiffResponse16) == 0)
     panda_error
-      (panda_true, "Could not get number of samples per pixel for a tiff image.");
+      (panda_true,
+       "Could not get number of samples per pixel for a tiff image.");
 
   switch (tiffResponse16)
     {
@@ -455,14 +466,14 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
     case COMPRESSION_CCITTFAX3:
       panda_adddictitem (output, imageObj, "Filter", panda_textvalue,
 			 "CCITTFaxDecode");
-      panda_adddictitem (output, imageObj, "DecodeParms/K", 
+      panda_adddictitem (output, imageObj, "DecodeParms/K",
 			 panda_integervalue, 0);
       break;
 
     case COMPRESSION_CCITTFAX4:
       panda_adddictitem (output, imageObj, "Filter", panda_textvalue,
 			 "CCITTFaxDecode");
-      panda_adddictitem (output, imageObj, "DecodeParms/K", 
+      panda_adddictitem (output, imageObj, "DecodeParms/K",
 			 panda_integervalue, -1);
       break;
 
@@ -471,8 +482,8 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       break;
 
     case COMPRESSION_LZW:
-      panda_error(panda_true, 
-		  "LZW is encumbered with patents and therefore not supported.");
+      panda_error (panda_true,
+		   "LZW is encumbered with patents and therefore not supported.");
       break;
 
     default:
@@ -483,9 +494,10 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
   // Width of the image
   if (TIFFGetField (image, TIFFTAG_IMAGEWIDTH, &width) != 0)
     {
-      panda_adddictitem (output, imageObj, "DecodeParms/Columns", 
+      panda_adddictitem (output, imageObj, "DecodeParms/Columns",
 			 panda_integervalue, width);
-      panda_adddictitem (output, imageObj, "Width", panda_integervalue, width);
+      panda_adddictitem (output, imageObj, "Width", panda_integervalue,
+			 width);
     }
   else
     panda_error (panda_true, "Could not get the width of the TIFF image.");
@@ -493,7 +505,7 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
   // Height of the image
   if (TIFFGetField (image, TIFFTAG_IMAGELENGTH, &height) != 0)
     {
-      panda_adddictitem (output, imageObj, "DecodeParms/Rows", 
+      panda_adddictitem (output, imageObj, "DecodeParms/Rows",
 			 panda_integervalue, height);
       panda_adddictitem (output, imageObj, "Height", panda_integervalue,
 			 height);
@@ -522,13 +534,13 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       // have already used global tiff buffer, because we are still using it's
       // old contents...
 #if defined _WINDOWS
-	  winmutex = CreateMutex(NULL, TRUE, "Panda");
-	  WaitForSingleObject(winmutex, INFINITE);
+      winmutex = CreateMutex (NULL, TRUE, "Panda");
+      WaitForSingleObject (winmutex, INFINITE);
 #else
-	  pthread_mutex_lock (&convMutex);
+      pthread_mutex_lock (&convMutex);
 #endif
-      
-	  globalImageBuffer = NULL;
+
+      globalImageBuffer = NULL;
       globalImageBufferOffset = 0;
 
       // Open the dummy document (which actually only exists in memory)
@@ -595,9 +607,9 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       imageObj->binarystreamLength = globalImageBufferOffset;
 
 #if defined _WINDOWS
-	  ReleaseMutex(winmutex);
+      ReleaseMutex (winmutex);
 #else
-	  pthread_mutex_unlock (&convMutex);
+      pthread_mutex_unlock (&convMutex);
 #endif
     }
 
@@ -673,7 +685,7 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
   FILE *image;
   int c;
   unsigned long imageBufSize;
-  
+
 #if defined DEBUG
   printf ("Inserting a JPEG image on page with object number %d.\n",
 	  target->obj->number);
@@ -682,7 +694,7 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
   // Open the file -- why is this a memory leak?
   if ((image = fopen (filename, "rb")) == NULL)
     panda_error (panda_true, "Could not open the specified JPEG file.");
-  
+
   // Setup the decompression options
   cinfo.err = jpeg_std_error (&jerr);
 
@@ -692,7 +704,8 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
   jpeg_read_header (&cinfo, TRUE);
 
   // This dictionary item is JPEG specific
-  panda_adddictitem (output, imageObj, "Filter", panda_textvalue, "DCTDecode");
+  panda_adddictitem (output, imageObj, "Filter", panda_textvalue,
+		     "DCTDecode");
 
   // Bits per component -- I'm not sure exactly how this works with libjpeg.
   // Is it possible to have a black and white jpeg? Ceasar Miquel
@@ -705,7 +718,7 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
   switch (cinfo.jpeg_color_space)
     {
     case JCS_GRAYSCALE:
-      panda_adddictitem (output,imageObj, "ColorSpace", panda_textvalue,
+      panda_adddictitem (output, imageObj, "ColorSpace", panda_textvalue,
 			 "DeviceGray");
       break;
 
@@ -747,7 +760,8 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
 
 	  if ((imageObj->binarystream = realloc (imageObj->binarystream,
 						 imageBufSize)) == NULL)
-	    panda_error (panda_true, "Could not make enough space for the JPEG image.");
+	    panda_error (panda_true,
+			 "Could not make enough space for the JPEG image.");
 	}
 
       // Store the info
@@ -755,10 +769,10 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
     }
 
   imageObj->binarystream[imageObj->binarystreamLength++] = 0;
-  fclose(image);
+  fclose (image);
 
 #if defined DEBUG
-  printf("Finished inserting the JPEG\n");
+  printf ("Finished inserting the JPEG\n");
 #endif
 }
 
@@ -828,10 +842,12 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   // Start decompressing
   if ((png = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL,
 				     NULL, NULL)) == NULL)
-    panda_error (panda_true, "Could not create a PNG read structure (out of memory?)");
+    panda_error (panda_true,
+		 "Could not create a PNG read structure (out of memory?)");
 
   if ((info = png_create_info_struct (png)) == NULL)
-    panda_error (panda_true, "Could not create PNG info structure (out of memory?)");
+    panda_error (panda_true,
+		 "Could not create PNG info structure (out of memory?)");
 
   // If panda_error did not exit, we would have to call png_destroy_read_struct
 
@@ -857,11 +873,11 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 
   // I can't find any documentation for why the predictor should always be
   // 15. If I ever do, then I will update this...
-  panda_adddictitem (output, imageObj, "DecodeParms/Predictor", 
+  panda_adddictitem (output, imageObj, "DecodeParms/Predictor",
 		     panda_integervalue, 15);
-  panda_adddictitem (output, imageObj, "DecodeParms/Columns", 
+  panda_adddictitem (output, imageObj, "DecodeParms/Columns",
 		     panda_integervalue, width);
-  panda_adddictitem (output, imageObj, "DecodeParms/BitsPerComponent", 
+  panda_adddictitem (output, imageObj, "DecodeParms/BitsPerComponent",
 		     panda_integervalue, bitdepth);
 
   // The colour device will change based on this number as well
@@ -871,7 +887,7 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
     case PNG_COLOR_TYPE_GRAY_ALPHA:
       panda_adddictitem (output, imageObj, "ColorSpace", panda_textvalue,
 			 "DeviceGray");
-      panda_adddictitem (output, imageObj, "DecodeParms/Colors", 
+      panda_adddictitem (output, imageObj, "DecodeParms/Colors",
 			 panda_integervalue, 1);
       outColourType = PNG_COLOR_TYPE_GRAY;
       break;
@@ -879,7 +895,7 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
     default:
       panda_adddictitem (output, imageObj, "ColorSpace", panda_textvalue,
 			 "DeviceRGB");
-      panda_adddictitem (output, imageObj, "DecodeParms/Colors", 
+      panda_adddictitem (output, imageObj, "DecodeParms/Colors",
 			 panda_integervalue, 3);
       outColourType = PNG_COLOR_TYPE_RGB;
       break;
@@ -936,25 +952,26 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
      compressed) via some funky callbacks to libpng...
   ****************************************************************************/
 
-  if (
-      (png =
+  if ((png =
        png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL,
 				NULL)) == NULL)
-    panda_error (panda_true, "Could not create write structure for PNG (out of memory?)");
+    panda_error (panda_true,
+		 "Could not create write structure for PNG (out of memory?)");
 
   if ((info = png_create_info_struct (png)) == NULL)
     panda_error
-      (panda_true, "Could not create PNG info structure for writing (out of memory?)");
+      (panda_true,
+       "Could not create PNG info structure for writing (out of memory?)");
 
   if (setjmp (png_jmpbuf (png)))
     panda_error (panda_true, "Could not set the PNG jump value for writing");
 
   // If this call is done before png_create_write_struct, then everything seg faults...
 #if defined _WINDOWS
-	  winmutex = CreateMutex(NULL, TRUE, "Panda");
-	  WaitForSingleObject(winmutex, INFINITE);
+  winmutex = CreateMutex (NULL, TRUE, "Panda");
+  WaitForSingleObject (winmutex, INFINITE);
 #else
-	  pthread_mutex_lock (&convMutex);
+  pthread_mutex_lock (&convMutex);
 #endif
 
   png_set_write_fn (png, NULL, (png_rw_ptr) libpngDummyWriteProc,
@@ -977,20 +994,20 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   ****************************************************************************/
 
   // Sometimes this might clobber and existing binary stream
-  if(imageObj->binarystream != NULL)
-    free(imageObj->binarystream);
+  if (imageObj->binarystream != NULL)
+    free (imageObj->binarystream);
 
   // We don't need row_pointers any more
-  if(row_pointers != NULL)
-    free(row_pointers);
+  if (row_pointers != NULL)
+    free (row_pointers);
 
   imageObj->binarystream = globalImageBuffer;
   imageObj->binarystreamLength = globalImageBufferOffset;
 
 #if defined _WINDOWS
-	  ReleaseMutex(winmutex);
+  ReleaseMutex (winmutex);
 #else
-	  pthread_mutex_unlock (&convMutex);
+  pthread_mutex_unlock (&convMutex);
 #endif
 }
 
@@ -1087,7 +1104,8 @@ libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size)
 						     (size * sizeof (char)) +
 						     globalImageBufferOffset))
 	      == NULL)
-	    panda_error (panda_true, "Could not grow the tiff conversion memory buffer.");
+	    panda_error (panda_true,
+			 "Could not grow the tiff conversion memory buffer.");
 	}
 
       // Now move the image data into the buffer
@@ -1205,7 +1223,8 @@ libpngDummyWriteProc (png_structp png, png_bytep data, png_uint_32 len)
 						     (len * sizeof (char)) +
 						     globalImageBufferOffset))
 	      == NULL)
-	    panda_error (panda_true, "Could not grow the png conversion memory buffer.");
+	    panda_error (panda_true,
+			 "Could not grow the png conversion memory buffer.");
 	}
 
       // Now move the image data into the buffer

@@ -13,11 +13,11 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 /******************************************************************************
@@ -50,10 +50,11 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_hidetoolbar(panda_pdf *document, int onoff)
+void
+panda_hidetoolbar (panda_pdf * document, int onoff)
 {
-  panda_adddictitem(document, document->viewerPrefs, "HideToolbar", 
-		    panda_booleanvalue, onoff);
+  panda_adddictitem (document, document->viewerPrefs, "HideToolbar",
+		     panda_booleanvalue, onoff);
 }
 
 /******************************************************************************
@@ -86,10 +87,11 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_hidemenubar(panda_pdf *document, int onoff)
+void
+panda_hidemenubar (panda_pdf * document, int onoff)
 {
-  panda_adddictitem(document, document->viewerPrefs, "HideMenubar", 
-		    panda_booleanvalue, onoff);
+  panda_adddictitem (document, document->viewerPrefs, "HideMenubar",
+		     panda_booleanvalue, onoff);
 }
 
 /******************************************************************************
@@ -122,10 +124,11 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_hidewindowui(panda_pdf *document, int onoff)
+void
+panda_hidewindowui (panda_pdf * document, int onoff)
 {
-  panda_adddictitem(document, document->viewerPrefs, "HideWindowUI", 
-		    panda_booleanvalue, onoff);
+  panda_adddictitem (document, document->viewerPrefs, "HideWindowUI",
+		     panda_booleanvalue, onoff);
 }
 
 /******************************************************************************
@@ -158,10 +161,11 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_fitwindow(panda_pdf *document, int onoff)
+void
+panda_fitwindow (panda_pdf * document, int onoff)
 {
-  panda_adddictitem(document, document->viewerPrefs, "FitWindow", 
-		    panda_booleanvalue, onoff);
+  panda_adddictitem (document, document->viewerPrefs, "FitWindow",
+		     panda_booleanvalue, onoff);
 }
 
 /******************************************************************************
@@ -194,10 +198,11 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_centerwindow(panda_pdf *document, int onoff)
+void
+panda_centerwindow (panda_pdf * document, int onoff)
 {
-  panda_adddictitem(document, document->viewerPrefs, "CenterWindow", 
-		    panda_booleanvalue, onoff);
+  panda_adddictitem (document, document->viewerPrefs, "CenterWindow",
+		     panda_booleanvalue, onoff);
 }
 
 /******************************************************************************
@@ -231,31 +236,35 @@ SEEALSO panda_fullscreen
 DOCBOOK END
 ******************************************************************************/
 
-void panda_nfspagemode(panda_pdf *document, int pagemode)
+void
+panda_nfspagemode (panda_pdf * document, int pagemode)
 {
-  switch(pagemode)
+  switch (pagemode)
     {
     case panda_window_usenone:
-      panda_adddictitem(document, document->viewerPrefs, "NonFullScreenPageMode", 
-			panda_textvalue, "UseNone");
+      panda_adddictitem (document, document->viewerPrefs,
+			 "NonFullScreenPageMode", panda_textvalue, "UseNone");
       break;
 
     case panda_window_useoutlines:
-      panda_adddictitem(document, document->viewerPrefs, "NonFullScreenPageMode", 
-			panda_textvalue, "UseOutlines");
+      panda_adddictitem (document, document->viewerPrefs,
+			 "NonFullScreenPageMode", panda_textvalue,
+			 "UseOutlines");
       break;
 
     case panda_window_usethumbs:
-      panda_adddictitem(document,document->viewerPrefs, "NonFullScreenPageMode", 
-			panda_textvalue, "UseThumbs");
+      panda_adddictitem (document, document->viewerPrefs,
+			 "NonFullScreenPageMode", panda_textvalue,
+			 "UseThumbs");
       break;
 
     default:
-      panda_error(panda_false, 
-		  "Attempt to set a value for the non fullscreen page mode which is invalid");
+      panda_error (panda_false,
+		   "Attempt to set a value for the non fullscreen page mode which is invalid");
       break;
     }
 }
+
 /******************************************************************************
 DOCBOOK START
 
@@ -286,16 +295,17 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_fullscreen(panda_pdf *document, int onoff)
+void
+panda_fullscreen (panda_pdf * document, int onoff)
 {
   // todo_mikal
 
-  if(onoff == panda_true)
-    panda_adddictitem(document, document->catalog, "PageMode", 
-		      panda_textvalue, "FullScreen");
+  if (onoff == panda_true)
+    panda_adddictitem (document, document->catalog, "PageMode",
+		       panda_textvalue, "FullScreen");
   else
-    panda_adddictitem(document, document->catalog, "PageMode", 
-		      panda_textvalue, "TODO");
+    panda_adddictitem (document, document->catalog, "PageMode",
+		       panda_textvalue, "TODO");
 }
 
 /******************************************************************************
@@ -328,22 +338,23 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_textdirection(panda_pdf *document, int dir)
+void
+panda_textdirection (panda_pdf * document, int dir)
 {
-  switch(dir)
+  switch (dir)
     {
     case panda_textdirection_l2r:
-      panda_adddictitem(document, document->viewerPrefs, "Direction", 
-			panda_textvalue, "L2R");
+      panda_adddictitem (document, document->viewerPrefs, "Direction",
+			 panda_textvalue, "L2R");
       break;
 
     case panda_textdirection_r2l:
-      panda_adddictitem(document, document->viewerPrefs, "Direction", 
-			panda_textvalue, "R2L");
+      panda_adddictitem (document, document->viewerPrefs, "Direction",
+			 panda_textvalue, "R2L");
       break;
 
     default:
-      panda_error(panda_false, "Invalid text direction specified");
+      panda_error (panda_false, "Invalid text direction specified");
       break;
     }
 }
@@ -381,9 +392,11 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_pageduration(panda_pdf *document, panda_page *target, int duration)
+void
+panda_pageduration (panda_pdf * document, panda_page * target, int duration)
 {
-  panda_adddictitem(document, target->obj, "Dur", panda_integervalue, duration);
+  panda_adddictitem (document, target->obj, "Dur", panda_integervalue,
+		     duration);
 }
 
 /******************************************************************************
@@ -419,9 +432,11 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_transduration(panda_pdf *document, panda_page *target, double duration)
+void
+panda_transduration (panda_pdf * document, panda_page * target,
+		     double duration)
 {
-  panda_adddictitem(document, target->obj, "D", panda_doublevalue, duration);
+  panda_adddictitem (document, target->obj, "D", panda_doublevalue, duration);
 }
 
 /******************************************************************************
@@ -482,55 +497,59 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_transstyle(panda_pdf *document, panda_page *target, int style)
+void
+panda_transstyle (panda_pdf * document, panda_page * target, int style)
 {
 #if defined DEBUG
-  printf("Defined transition style for object number %d\n", 
-	 target->obj->number);
+  printf ("Defined transition style for object number %d\n",
+	  target->obj->number);
 #endif
 
-  switch(style)
+  switch (style)
     {
     case panda_pagetrans_split_yi:
     case panda_pagetrans_split_yo:
     case panda_pagetrans_split_xi:
     case panda_pagetrans_split_xo:
-      panda_adddictitem(document, target->obj, "S", panda_textvalue,
-			"Split");
-      panda_adddictitem(document, target->obj, "Dm", panda_textvalue,
-			style < panda_pagetrans_split_xi ? "V" : "H");
-      
-      if((style == panda_pagetrans_split_yi) ||
-	 (style == panda_pagetrans_split_xi))
+      panda_adddictitem (document, target->obj, "S", panda_textvalue,
+			 "Split");
+      panda_adddictitem (document, target->obj, "Dm", panda_textvalue,
+			 style < panda_pagetrans_split_xi ? "V" : "H");
+
+      if ((style == panda_pagetrans_split_yi) ||
+	  (style == panda_pagetrans_split_xi))
 	{
-	  panda_adddictitem(document, target->obj, "M", panda_textvalue, "I");
+	  panda_adddictitem (document, target->obj, "M", panda_textvalue,
+			     "I");
 	}
       else
 	{
-	  panda_adddictitem(document, target->obj, "M", panda_textvalue, "O");
+	  panda_adddictitem (document, target->obj, "M", panda_textvalue,
+			     "O");
 	}
       break;
 
     case panda_pagetrans_blinds_y:
     case panda_pagetrans_blinds_x:
-      panda_adddictitem(document, target->obj, "S", panda_textvalue,
-			"Blinds");
-      panda_adddictitem(document, target->obj, "Dm", panda_textvalue,
-			style == panda_pagetrans_blinds_y ? "V" : "H");
+      panda_adddictitem (document, target->obj, "S", panda_textvalue,
+			 "Blinds");
+      panda_adddictitem (document, target->obj, "Dm", panda_textvalue,
+			 style == panda_pagetrans_blinds_y ? "V" : "H");
       break;
 
     case panda_pagetrans_box_i:
     case panda_pagetrans_box_o:
-      panda_adddictitem(document, target->obj, "S", panda_textvalue,
-			"Box");
+      panda_adddictitem (document, target->obj, "S", panda_textvalue, "Box");
 
-      if(style == panda_pagetrans_box_i)
+      if (style == panda_pagetrans_box_i)
 	{
-	  panda_adddictitem(document, target->obj, "M", panda_textvalue, "I");
+	  panda_adddictitem (document, target->obj, "M", panda_textvalue,
+			     "I");
 	}
       else
 	{
-	  panda_adddictitem(document, target->obj, "M", panda_textvalue, "O");
+	  panda_adddictitem (document, target->obj, "M", panda_textvalue,
+			     "O");
 	}
 
       break;
@@ -539,69 +558,67 @@ void panda_transstyle(panda_pdf *document, panda_page *target, int style)
     case panda_pagetrans_wipe_90:
     case panda_pagetrans_wipe_180:
     case panda_pagetrans_wipe_270:
-      panda_adddictitem(document, target->obj, "S", panda_textvalue,
-			"Wipe");
+      panda_adddictitem (document, target->obj, "S", panda_textvalue, "Wipe");
 
-      switch(style)
+      switch (style)
 	{
 	case panda_pagetrans_wipe_0:
-	  panda_adddictitem(document, target->obj, "Di", panda_integervalue,
-			    0);
+	  panda_adddictitem (document, target->obj, "Di", panda_integervalue,
+			     0);
 	  break;
 
 	case panda_pagetrans_wipe_90:
-	  panda_adddictitem(document, target->obj, "Di", panda_integervalue,
-			    90);
+	  panda_adddictitem (document, target->obj, "Di", panda_integervalue,
+			     90);
 	  break;
 
 	case panda_pagetrans_wipe_180:
-	  panda_adddictitem(document, target->obj, "Di", panda_integervalue,
-			    180);
+	  panda_adddictitem (document, target->obj, "Di", panda_integervalue,
+			     180);
 	  break;
 
 	case panda_pagetrans_wipe_270:
-	  panda_adddictitem(document, target->obj, "Di", panda_integervalue,
-			    270);
+	  panda_adddictitem (document, target->obj, "Di", panda_integervalue,
+			     270);
 	  break;
 	}
       break;
 
     case panda_pagetrans_dissolve:
-      panda_adddictitem(document, target->obj, "S", panda_textvalue,
-			"Dissolve");
+      panda_adddictitem (document, target->obj, "S", panda_textvalue,
+			 "Dissolve");
       break;
 
     case panda_pagetrans_glitter_0:
     case panda_pagetrans_glitter_270:
     case panda_pagetrans_glitter_315:
-      panda_adddictitem(document, target->obj, "S", panda_textvalue,
-			"Glitter");
+      panda_adddictitem (document, target->obj, "S", panda_textvalue,
+			 "Glitter");
 
-      switch(style)
+      switch (style)
 	{
 	case panda_pagetrans_glitter_0:
-	  panda_adddictitem(document, target->obj, "Di", panda_integervalue,
-			    0);
+	  panda_adddictitem (document, target->obj, "Di", panda_integervalue,
+			     0);
 	  break;
 
 	case panda_pagetrans_glitter_270:
-	  panda_adddictitem(document, target->obj, "Di", panda_integervalue,
-			    270);
+	  panda_adddictitem (document, target->obj, "Di", panda_integervalue,
+			     270);
 	  break;
 
 	case panda_pagetrans_glitter_315:
-	  panda_adddictitem(document, target->obj, "Di", panda_integervalue,
-			    315);
+	  panda_adddictitem (document, target->obj, "Di", panda_integervalue,
+			     315);
 	  break;
 	}
       break;
 
     case panda_pagetrans_none:
-      panda_adddictitem(document, target->obj, "S", panda_textvalue,
-			"R");
+      panda_adddictitem (document, target->obj, "S", panda_textvalue, "R");
       break;
-     
+
     default:
-      panda_error(panda_false, "Unknown page transition requested");
+      panda_error (panda_false, "Unknown page transition requested");
     }
 }

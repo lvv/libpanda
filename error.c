@@ -15,13 +15,13 @@
 #include <stdlib.h>
 
 #if defined _WINDOWS
-  #include "panda/constants.h"
-  #include "panda/functions.h"
+#include "panda/constants.h"
+#include "panda/functions.h"
 
-  #include <windows.h>
+#include <windows.h>
 #else
-  #include <panda/constants.h>
-  #include <panda/functions.h>
+#include <panda/constants.h>
+#include <panda/functions.h>
 #endif
 
 /******************************************************************************
@@ -54,13 +54,16 @@ DOCBOOK END
 void
 panda_error (int fatal, char *message)
 {
+  
 #if defined _WINDOWS
-  MessageBox(NULL, message, 
-	  (fatal == panda_true) ? "Fatal Panda Windows DLL error" :
-                              "Non-fatal Panda Windows DLL error", MB_OK);
+    MessageBox (NULL, message, 
+		(fatal ==
+		 panda_true) ? "Fatal Panda Windows DLL error" :
+		"Non-fatal Panda Windows DLL error", MB_OK);
+  
 #else
-  fprintf (stderr, "%s\n", message);
-#endif
-
-  if(fatal == panda_true) exit (42);
+    fprintf (stderr, "%s\n", message);
+#endif	/*  */
+  if (fatal == panda_true)
+    exit (42);
 }
