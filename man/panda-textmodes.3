@@ -19,25 +19,20 @@
 .\" License along with this manual; if not, write to the Free
 .\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
 .\" USA.
-.TH INITPANDA 3  "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
-.SH NAME
-initpanda
-.SH SYNOPSIS
-.B #include <panda.h>
-.sp
-.BI "void initpanda(void);"
-.SH DESCRIPTION
-The function
-.B initpanda
-sets up the panda PDF generation library ready for operations. These operations are currently limited to the generation of new PDF documents, although editing of existing documents will be added in a subsequent version. Any number of PDF documents may be generated simultaneously.
-.SH EXAMPLE
+.TH PANDA 3  "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Spec Compatibility"
+.SH SPECIFICATION VERSION
+Panda is currently working on version 1.3 of the PDF specification coompilance. A copy of the specification is available for download from http://www.adobe.com
+.SH TEXT MODE COMPLIANCE
+This document outlines Panda's complicance with the various text modes outlined in the PDF specification version specified above.
+.SH TEXT MODES
 .br
-Simply use:
+Text rendering (Tr operator)
 .RS
-.nf
-#include <panda.h>
-initpanda();
-.fi
+The definition of this operator may be found on page 343 of the PDF specification.
+
+The mode is fully implemented in Panda, and is accessible through the
+.B setfontmode (3)
+function call in Panda.
 .RE
 .SH AUTHOR
 .br
