@@ -3,107 +3,83 @@
 <pre>
 <h1>Build Log</h1>
 <h3>
---------------------Configuration: panda - Win32 Release--------------------
+--------------------Configuration: panda - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\DOCUME~1\still\LOCALS~1\Temp\RSP1DA.tmp" with contents
+Creating temporary file "C:\DOCUME~1\STILLT~1.000\LOCALS~1\Temp\RSP745.tmp" with contents
 [
-/nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "PANDA_EXPORTS" /Fp"Release/panda.pch" /YX /Fo"Release/" /Fd"Release/" /FD /c 
-"C:\mikal\opensource\panda-0.5-2\annotate.c"
-"C:\mikal\opensource\panda-0.5-2\curves.c"
-"C:\mikal\opensource\panda-0.5-2\database.c"
-"C:\mikal\opensource\panda-0.5-2\date.c"
-"C:\mikal\opensource\panda-0.5-2\error.c"
-"C:\mikal\opensource\panda-0.5-2\font.c"
-"C:\mikal\opensource\panda-0.5-2\images.c"
-"C:\mikal\opensource\panda-0.5-2\info.c"
-"C:\mikal\opensource\panda-0.5-2\internal.c"
-"C:\mikal\opensource\panda-0.5-2\memory.c"
-"C:\mikal\opensource\panda-0.5-2\objects.c"
-"C:\mikal\opensource\panda-0.5-2\panda.c"
-"C:\mikal\opensource\panda-0.5-2\template.c"
-"C:\mikal\opensource\panda-0.5-2\text.c"
-"C:\mikal\opensource\panda-0.5-2\trailer.c"
-"C:\mikal\opensource\panda-0.5-2\utility.c"
-"C:\mikal\opensource\panda-0.5-2\view.c"
-"C:\mikal\opensource\panda-0.5-2\windows.c"
-"C:\mikal\opensource\panda-0.5-2\xref.c"
+/nologo /MTd /W3 /Gm /GX /ZI /Od /I "panda" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "HAVE_LIBTIFF" /D "HAVE_LIBJPEG" /D "HAVE_LIBPNG" /D "HAVE_LIBZ" /D "_MBCS" /D "_USRDLL" /D "PANDA_EXPORTS" /FR"Debug/" /Fp"Debug/panda.pch" /YX /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"\\203.17.68.123\opensource\panda\utility.c"
 ]
-Creating command line "cl.exe @C:\DOCUME~1\still\LOCALS~1\Temp\RSP1DA.tmp" 
-Creating temporary file "C:\DOCUME~1\still\LOCALS~1\Temp\RSP1DB.tmp" with contents
+Creating command line "cl.exe @C:\DOCUME~1\STILLT~1.000\LOCALS~1\Temp\RSP745.tmp" 
+Creating temporary file "C:\DOCUME~1\STILLT~1.000\LOCALS~1\Temp\RSP746.tmp" with contents
 [
-kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:no /pdb:"Release/panda.pdb" /machine:I386 /def:".\panda.def" /out:"Release/panda.dll" /implib:"Release/panda.lib" 
-".\Release\annotate.obj"
-".\Release\curves.obj"
-".\Release\database.obj"
-".\Release\date.obj"
-".\Release\error.obj"
-".\Release\font.obj"
-".\Release\images.obj"
-".\Release\info.obj"
-".\Release\internal.obj"
-".\Release\memory.obj"
-".\Release\objects.obj"
-".\Release\panda.obj"
-".\Release\template.obj"
-".\Release\text.obj"
-".\Release\trailer.obj"
-".\Release\utility.obj"
-".\Release\view.obj"
-".\Release\windows.obj"
-".\Release\xref.obj"
-".\contrib\libtiff\libtiff.lib"
-".\contrib\libjpeg\libjpeg.lib"
-".\contrib\libz\zlib.lib"
-".\contrib\libpng\libpng.lib"
+kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /incremental:yes /pdb:"Debug/panda.pdb" /debug /machine:I386 /def:".\panda.def" /out:"Debug/panda.dll" /implib:"Debug/panda.lib" /pdbtype:sept 
+.\Debug\annotate.obj
+.\Debug\curves.obj
+.\Debug\database.obj
+.\Debug\date.obj
+.\Debug\error.obj
+.\Debug\font.obj
+.\Debug\images.obj
+.\Debug\info.obj
+.\Debug\internal.obj
+.\Debug\memory.obj
+.\Debug\objects.obj
+.\Debug\panda.obj
+.\Debug\template.obj
+.\Debug\text.obj
+.\Debug\trailer.obj
+.\Debug\utility.obj
+.\Debug\view.obj
+.\Debug\windows.obj
+.\Debug\xref.obj
+.\contrib\libtiff\libtiff.lib
+.\contrib\libjpeg\libjpeg.lib
+.\contrib\libz\zlib.lib
+.\contrib\libpng\libpng.lib
+.\Debug\md5c.obj
 ]
-Creating command line "link.exe @C:\DOCUME~1\still\LOCALS~1\Temp\RSP1DB.tmp"
+Creating command line "link.exe @C:\DOCUME~1\STILLT~1.000\LOCALS~1\Temp\RSP746.tmp"
 <h3>Output Window</h3>
 Compiling...
-annotate.c
-curves.c
-database.c
-date.c
-error.c
-font.c
-images.c
-C:\mikal\opensource\panda-0.5-2\contrib/libjpeg/jmorecfg.h(161) : warning C4142: benign redefinition of type
-C:\mikal\opensource\panda-0.5-2\contrib/libjpeg/jmorecfg.h(215) : warning C4005: 'FAR' : macro redefinition
-        C:\PROGRAM FILES\MICROSOFT PLATFORM SDK\INCLUDE\windef.h(135) : see previous definition of 'FAR'
-C:\mikal\opensource\panda-0.5-2\images.c(259) : warning C4018: '<' : signed/unsigned mismatch
-C:\mikal\opensource\panda-0.5-2\images.c(645) : warning C4018: '<' : signed/unsigned mismatch
-info.c
-internal.c
-C:\mikal\opensource\panda-0.5-2\internal.c(188) : warning C4133: '=' : incompatible types - from 'struct panda_internal_page *' to 'struct panda_internal_object *'
-C:\mikal\opensource\panda-0.5-2\internal.c(175) : warning C4101: 'prevPage' : unreferenced local variable
-memory.c
-objects.c
-C:\mikal\opensource\panda-0.5-2\objects.c(161) : warning C4101: 'dbkey' : unreferenced local variable
-C:\mikal\opensource\panda-0.5-2\objects.c(196) : warning C4101: 'dbdata' : unreferenced local variable
-C:\mikal\opensource\panda-0.5-2\objects.c(196) : warning C4101: 'dbkey' : unreferenced local variable
-C:\mikal\opensource\panda-0.5-2\objects.c(267) : warning C4101: 'pdictelem' : unreferenced local variable
-C:\mikal\opensource\panda-0.5-2\objects.c(265) : warning C4101: 'dbname' : unreferenced local variable
-C:\mikal\opensource\panda-0.5-2\objects.c(465) : warning C4101: 'dbdata' : unreferenced local variable
-C:\mikal\opensource\panda-0.5-2\objects.c(465) : warning C4101: 'dbkey' : unreferenced local variable
-C:\mikal\opensource\panda-0.5-2\objects.c(682) : warning C4244: '=' : conversion from 'double ' to 'unsigned long ', possible loss of data
-panda.c
-template.c
-text.c
-trailer.c
 utility.c
-C:\mikal\opensource\panda-0.5-2\utility.c(88) : warning C4018: '<' : signed/unsigned mismatch
-C:\mikal\opensource\panda-0.5-2\utility.c(325) : warning C4018: '<' : signed/unsigned mismatch
-view.c
-windows.c
-xref.c
+\\203.17.68.123\opensource\panda\utility.c(94) : warning C4018: '<' : signed/unsigned mismatch
+\\203.17.68.123\opensource\panda\utility.c(331) : warning C4018: '<' : signed/unsigned mismatch
+\\203.17.68.123\opensource\panda\utility.c(500) : warning C4047: 'function' : 'char *' differs in levels of indirection from 'char '
+\\203.17.68.123\opensource\panda\utility.c(500) : warning C4024: 'sprintf' : different types for formal and actual parameter 1
 Linking...
-   Creating library Release/panda.lib and object Release/panda.exp
-LINK : warning LNK4098: defaultlib "LIBC" conflicts with use of other libs; use /NODEFAULTLIB:library
+Creating temporary file "C:\DOCUME~1\STILLT~1.000\LOCALS~1\Temp\RSP748.tmp" with contents
+[
+/nologo /o"Debug/panda.bsc" 
+.\Debug\annotate.sbr
+.\Debug\curves.sbr
+.\Debug\database.sbr
+.\Debug\date.sbr
+.\Debug\error.sbr
+.\Debug\font.sbr
+.\Debug\images.sbr
+.\Debug\info.sbr
+.\Debug\internal.sbr
+.\Debug\memory.sbr
+.\Debug\objects.sbr
+.\Debug\panda.sbr
+.\Debug\template.sbr
+.\Debug\text.sbr
+.\Debug\trailer.sbr
+.\Debug\utility.sbr
+.\Debug\view.sbr
+.\Debug\windows.sbr
+.\Debug\xref.sbr
+.\Debug\md5c.sbr]
+Creating command line "bscmake.exe @C:\DOCUME~1\STILLT~1.000\LOCALS~1\Temp\RSP748.tmp"
+Creating browse info file...
+<h3>Output Window</h3>
 
 
 
 <h3>Results</h3>
-panda.dll - 0 error(s), 17 warning(s)
+panda.dll - 0 error(s), 4 warning(s)
 </pre>
 </body>
 </html>

@@ -32,16 +32,19 @@
 ******************************************************************************/
 
 #if defined _WINDOWS
-#include "stdafx.h"
 
+#include "stdafx.h"
 #define vsnprintf _vsnprintf
+
 #else
+
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+#endif
+
 #include "md5-global.h"
 #include "md5.h"
-#endif
 
 /******************************************************************************
 DOCBOOK START
@@ -491,8 +494,13 @@ panda_hexstring(char *input){
   length = strlen(input);
   output = panda_xmalloc((length + 1) * sizeof(char));
 
+  // todo_mikal: not sure I like the windows version of this code
   for(count = 0; count < length; count++){
-    snprintf(output[count], 1, "%2x", input[count]);
+#if defined _WINDOWS
+	  sprintf(output[count], "%2x", input[count]);
+#else
+	  snprintf(output[count], 1, "%2x", input[count]);
+#endif
   }
 
   output[length + 1] = 0;

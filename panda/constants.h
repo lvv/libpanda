@@ -25,6 +25,10 @@ extern "C"
 #define  panda_headerstring         "Panda, 2000"
 #define  panda_binarychar(x)        256 - x
 
+#ifndef VERSION
+#define VERSION "0.5.2d"
+#endif
+
 #if defined GLOBALS
   char panda_binaryheaderstring[14];
 #else
@@ -190,12 +194,17 @@ extern "C"
 #if defined _WINDOWS
 // The abstraction types that we use
   enum 
-  { windows_panda_abs_pdf =
-      0, windows_panda_abs_page, windows_panda_abs_font,
-      windows_panda_abs_max 
+  { 
+windows_panda_abs_pdf =
+      0, 
+windows_panda_abs_page, 
+windows_panda_abs_font,
+      
+windows_panda_abs_max 
   };
    
-#endif	/*  */
+#endif	/* 
+ */
 // Sometimes we need PI
 #define panda_pi 3.1415926535
 // The default compression level
