@@ -22,8 +22,7 @@
 // into the PDF file is stored correctly (dispite Windows)
 void pdfprintf(pdf *file, char *format, ...){
   char     *buffer, *formatString, *token, *strtokVictim;
-  int      newlineCount = 0, counter = 0, indent = 0, actualLen, value,
-           targetNo, digits;
+  int      newlineCount = 0, counter = 0, actualLen;
   va_list  argPtr;
 
   // This is a little strange... On a windows machine, printf inserts \r's 

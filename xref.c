@@ -14,7 +14,6 @@
 
 void writeXref(pdf *output){
   xref  *currentXREF;
-  int  prevNumber;
 
   // Save the offset of the xref section for the trailer
   output->xrefOffset = output->byteOffset;

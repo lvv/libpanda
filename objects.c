@@ -185,7 +185,7 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
 
   case gObjValue:
     // Are we overwriting?
-    if(overwriting == gTrue)
+    if((overwriting == gTrue) && (dictNow->textValue != NULL))
       free(dictNow->textValue);
 
     objValue = va_arg(argPtr, object *);
@@ -195,6 +195,7 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
     if((dictNow->textValue =
       (char *) malloc(sizeof(char) * 20)) == NULL)
       error("Could not make space for the new dictionary object value.");
+
     sprintf(dictNow->textValue, "%d %d R", objValue->number,
       objValue->generation);
     break;
