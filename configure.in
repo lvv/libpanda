@@ -1,14 +1,20 @@
 dnl Process this file with autoconf to produce a configure script.
 AC_INIT(panda.c)
 AC_CONFIG_AUX_DIR(config)
+AC_CONFIG_HEADER
 AC_REVISION
 AM_INIT_AUTOMAKE(panda, 0.4)
 AM_MAINTAINER_MODE
+
+dnl Libtool
+AC_LIBTOOL_WIN32_DLL
+AC_LIBTOOL_DLOPEN
 
 dnl Checks for programs.
 AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_RANLIB
+AM_PROG_LIBTOOL
 
 dnl Checks for libraries.
 dnl The syntax is library name, function, action if found, action if not found
@@ -19,14 +25,14 @@ dnl and #defined HAVE_LIB<lib>
 dnl -lm:
 AC_CHECK_LIB(m, atan)
 
-dnl -lpng:
-AC_CHECK_LIB(png, png_libpng_ver)
+dnl -lpng::
+AC_CHECK_LIB(png, png_libpng_ver, CFLAGS="$CFLAGS -DHAVE_LIBPNG" LDFLAGS="$LDFLAGS -lpng" )
 
 dnl -ltiff:
-AC_CHECK_LIB(tiff, TIFFOpen)
+AC_CHECK_LIB(tiff, TIFFOpen, CFLAGS="$CFLAGS -DHAVE_LIBTIFF"  LDFLAGS="$LDFLAGS -ltiff")
 
 dnl -ljpeg:
-AC_CHECK_LIB(jpeg, jpeg_std_error)
+AC_CHECK_LIB(jpeg, jpeg_std_error, CFLAGS="$CFLAGS -DHAVE_LIBJPEG"  LDFLAGS="$LDFLAGS -ljpeg")
 
 dnl Checks for header files.
 dnl STDC checks for stdlib.h stdarg.h string.h and float.h
@@ -50,7 +56,7 @@ dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Checks for library functions.
 AC_FUNC_VPRINTF
-AC_FUNC_SNPRINTF
+AC_CHECK_LIB(libc,snprintf)
 
 
 AC_OUTPUT(examples/Makefile panda/Makefile Makefile)

@@ -142,3 +142,8 @@ Release 0.3 -> Release 0.4
 	of the PDF document that is produced. If you ask for stream compression
 	and the stream ends up being longer compressed, the stream will be 
 	written out UNCOMPRESSED.
+
+  * Minor changes to the autoconf and automake to support linux shared 
+	libraries (Dave <dave@valinux.com>)
+
+  * Cleaned up use of config defines in images code (Dave <dave@valinux.com>)

@@ -188,42 +188,39 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   switch (type)
     {
     case panda_image_tiff:
-      if (HAVE_LIBTIFF)
+#if defined HAVE_LIBTIFF
 	panda_insertTIFF (output, target, imageObj, filename);
-      else
-	{
+#else
 	  fprintf (stderr, "%s %s\n",
 		   "TIFF support not compiled into Panda because libtiff was",
 		   "not found at compile time.");
 	  panda_adddictitem (imageObj->dict, "TIFF_Support_Missing",
 			     panda_integervalue, 1);
-	}
+#endif
       break;
 
     case panda_image_jpeg:
-      if (HAVE_LIBJPEG)
+#if defined HAVE_LIBJPEG
 	panda_insertJPEG (output, target, imageObj, filename);
-      else
-	{
+#else
 	  fprintf (stderr, "%s %s\n",
 		   "JPEG support not compiled into Panda because libjpeg was",
 		   "not found at compile time.");
 	  panda_adddictitem (imageObj->dict, "JPEG_Support_Missing",
 			     panda_integervalue, 1);
-	}
+#endif
       break;
 
     case panda_image_png:
-      if (HAVE_LIBPNG)
+#if defined HAVE_LIBPNG
 	panda_insertPNG(output, target, imageObj, filename);
-      else
-	{
+#else
 	  fprintf (stderr, "%s %s\n",
 		   "PNG support not compiled into Panda because libpng was not",
 		   "found at compile time.");
 	  panda_adddictitem (imageObj->dict, "PNG_Support_Missing",
 			     panda_integervalue, 1);
-	}
+#endif
       break;
     }
   // --------------------------------------------------------------------------

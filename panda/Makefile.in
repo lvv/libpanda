@@ -57,10 +57,19 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+host_alias = @host_alias@
+host_triplet = @host@
+AS = @AS@
 CC = @CC@
+DLLTOOL = @DLLTOOL@
+LD = @LD@
 LEX = @LEX@
+LIBTOOL = @LIBTOOL@
+LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
+NM = @NM@
+OBJDUMP = @OBJDUMP@
 PACKAGE = @PACKAGE@
 PLATFORM = @PLATFORM@
 RANLIB = @RANLIB@
@@ -146,7 +155,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$d/$$file $(distdir)/$$file; \
+	    cp -pr $$/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -198,6 +207,7 @@ clean-am:  clean-tags clean-generic mostlyclean-am
 clean: clean-am
 
 distclean-am:  distclean-tags distclean-generic clean-am
+	-rm -f libtool
 
 distclean: distclean-am
 
