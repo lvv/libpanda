@@ -36,7 +36,7 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
       createfont(output, "Helvetica", 1, "MacRomanEncoding"));
 
   // If the font is not defined on this page
-  if(thisPage->currentFont == NULL){
+  if(thisPage->obj->currentSetFont == NULL){
     /************************************************************************
     This font has to be referred to in the resources entry in the dictionary.
 

@@ -32,7 +32,7 @@ object *newobject(pdf *doc, int type){
     error("Could not make a child for the new object.");
 
   ((child *) created->children)->next = NULL;
-  ((child *) created->cachedLastChild = NULL;
+  (child *) created->cachedLastChild = NULL;
 
   // Initialise the dictionary
   if((created->dict = (dictionary *) malloc(sizeof(dictionary))) == NULL)
@@ -336,7 +336,7 @@ void addchild(object *parentObj, object *childObj){
   currentChild->me = childObj;
 
   // Cache it
-  parentObj->cachedLastChild = childObj;
+  parentObj->cachedLastChild = currentChild;
 }
 
 void traverseObjects(pdf *output, object *dumpTarget, traverseFunct function){
