@@ -485,66 +485,45 @@ panda_freeobjectactual (panda_pdf * output, panda_object * freeVictim,
   free (freeVictim);
 }
 
+// Dictionaries have an empty item at the end ready for next time, so we need to be
+// ready for that here
 void
 panda_freedictionary (panda_dictionary * freeDict)
 {
-  panda_dictionary *now, *prev;
-  int endoftheline = panda_true;
+  panda_dictionary *now, *next;
 
-  // Still need to free the dictionary... This can be made more efficient
-  while (freeDict->next != NULL)
-    {
-      now = freeDict;
-      prev = NULL;
-
-      while (now->next != NULL)
-        {
-          prev = now;
-          now = now->next;
-        }
-
-      if (endoftheline == panda_false)
-        {
 #if defined DEBUG
-          printf ("Free dictionary item named %s\n", now->name);
+  printf("Freeing a dictionary\n");
 #endif
 
-	  if(freeDict->name != NULL)
-	    free (now->name);
-          if (now->textValue != NULL)
-            free (now->textValue);
-          if (now->dictValue != NULL)
-            panda_freedictionary (now->dictValue);
-        }
-      else{
-#ifdef DEBUG
-	printf("Found end of dictionary list\n");
-#endif
-        endoftheline = panda_false;
-      }
+  now = freeDict;
+  while(now->next != NULL)
+    {
+      if(now->name != NULL)
+	free(now->name);
 
-      free (now);
+      if(now->textValue != NULL)
+	free(now->textValue);
 
-      if (prev != NULL)
-        prev->next = NULL;
+      if(now->dictValue != NULL)
+	panda_freedictionary(now->dictValue);
+
+      if(now->objectarrayValue != NULL)
+	printf("WE NEED TO FREE OBJECT ARRAYS!\n");
+
+      // Save the next one along
+      next = now->next;
+      
+      if(now != NULL)
+	free(now);
+
+      if(next != NULL)
+	now = next;
     }
 
-  // And free that initial dictionary element
-  if (freeDict != NULL)
-    {
-#if defined DEBUG
-      printf("Free the final dictionary item\n");
-#endif
-
-      if(freeDict->name != NULL)
-	free (freeDict->name);
-      if (freeDict->textValue != NULL)
-        free (freeDict->textValue);
-      if (freeDict->dictValue != NULL)
-        panda_freedictionary (freeDict->dictValue);
-
-      free (freeDict);
-    }
+  // And free the empty one at the end
+  if(now != NULL)
+    free(now);
 }
 
 /******************************************************************************

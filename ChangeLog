@@ -2,3 +2,9 @@ Release 0.4 -> Release 0.5
 
 2001-07-22 Michael Still mikal@stillhq.com
 	Chased memory leaks until blue in the face.
+
+2002-01-07 Michael Still mikal@stillhq.com
+	Fixed more memory leaks
+
+2002-01-07 Michael Still mikal@stillhq.com
+	Worked on generating the documentation as a single big PS or PDF file
