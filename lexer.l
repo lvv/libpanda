@@ -110,9 +110,9 @@ char *returnStr(char *yytext){
      printf("yytext was %d characters long\n", strlen(yytext));
   #endif
 
-  if((lval = malloc(sizeof(char) * strlen(yytext))) == NULL)
+  if((lval = malloc(sizeof(char) * strlen(yytext) + 1)) == NULL)
     error("Could not make space for lexer return.");
-  strncpy(lval, yytext, strlen(yytext));
+  strncpy(lval, yytext, strlen(yytext) + 1);
 
   return lval;
 }

@@ -14,10 +14,7 @@
 #include <tiffio.h>
 #include <jpeglib.h>
 #include <sys/stat.h>
-//#include <sys/mman.h>
-//#include <sys/types.h>
 #include <unistd.h>
-//#include <fcntl.h>
 
 // A redistribution point for image insertions based on type of image
 void imagebox(pdf *output, page *target, int top, int left,
@@ -99,18 +96,18 @@ void imagebox(pdf *output, page *target, int top, int left,
     0.0, // rot and scale?
     0.0, // ???
     1.0, // yscale
-    right - left, // x size
-    bottom - top); // y size
+    (double) left,                     // x start
+    (double) target->height - bottom); // y start
 
   target->contents->xobjectstream =
     streamprintf(target->contents->xobjectstream,
     "%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
 
     // The second matrix
-    (double) target->width - left, // x left offset
+    (double) (right - left), // x size
     0.0, // ???
     0.0, // ???
-    (double) target->height - top, // y bottom offset
+    (double) (bottom - top), // y size
     0.0, // ???
     0.0); // ???
 
@@ -251,7 +248,7 @@ void insertJpeg(pdf *output, page *target, object *imageObj, char *filename){
   // Bits per component -- I'm not sure exactly how this works with libjpeg.
   // Is it possible to have a black and white jpeg?
   adddictitem(imageObj->dict, "BitsPerComponent", gIntValue, 
-    cinfo.num_components * 8);
+    cinfo.data_precision);
 
   // The colour device will change based on this number as well
   switch(cinfo.jpeg_color_space){

@@ -51,9 +51,12 @@ int main(int argc, char *argv[]){
       tempString);
 
     // Insert some images
-    imagebox(demo, currPage, 10, 10, 20, 20, "input.tif", gImageTiff);
-    imagebox(demo, currPage, 200, 200, 250, 250, "gnu-head.jpg", gImageJpeg);
-    //    imagebox(demo, currPage, 300, 300, 310, 310, "gnu_box.jpg", gImageJpeg);
+    imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
+      "input.tif", gImageTiff);
+    imagebox(demo, currPage, currPage->height / 2, 0, currPage->height, 
+      currPage->width, "input2.tif", gImageTiff);
+    imagebox(demo, currPage, 100, 100, 150, 150, "gnu-head.jpg", gImageJpeg);
+    imagebox(demo, currPage, 200, 200, 317, 317, "gnu_box.jpg", gImageJpeg);
 
 #if defined DEBUG
     printf("Created textbox and inserted first image\n");

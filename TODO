@@ -14,8 +14,6 @@
 	the result of the strlen in a manner that allows the size of char to
 	change.
 
-  * Make the use of autoconf a little more intelligent
-
   * Start using automake
 
   * Handling of vsnprintf return number based on the differnt ways that
@@ -34,3 +32,8 @@
 
   * Documentation!
 
+  * JPEG support needs the following things done:
+	* Multiple jpegs on the one page causes a segmentation fault
+	* Image placement on the page does not work correctly
+
+  * Linearisation (also known as optimised PDF)

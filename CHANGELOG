@@ -3,3 +3,23 @@ Release 0.2 -> Release 0.3
   	/usr/local/include
 
   * Added JPEG support to imagebox
+
+  * Got colour JPEG working as well
+
+  * Started to implement the pdf lexer so that we can open and then modify
+	existing documents. This also aids in the reverse engineering
+	required for the development of linearized (optomised) pdf
+
+  * Implemented better use of autoconf
+
+  * Changed the return value of adddictitem from a void to a dictionary *.
+	This should not affect existing users because of the change from void,
+	but allows the lexer to easily manipulate the pdf document as it
+	reads it in.
+
+  * Added the suppressed pdfopen option for the benefit of the lexer. This will
+	not affect existing users.
+
+  * Fixed erroneous image placement code which resulted in unpredictable image
+	location on pages
+

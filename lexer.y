@@ -100,16 +100,16 @@ stream    : STREAM { binaryMode = 1; } binary { binaryMode = 0; } ENDSTREAM
           ;
 
 binary    : ANYTHING binary {
-                        if($2 != NULL){
-			  if(($$ = malloc(sizeof($1) + sizeof($2))) == NULL)
-			    error("Could not build the binary stream.");
-
-			  strcat($$, $1);
-			  strcat($$, $2);
-			  free($1);
-			  free($2);
-			}
-			else $$ = $1;
+  if($2 != NULL){
+  		  if(($$ = malloc(sizeof($1) + sizeof($2))) == NULL)
+  		    error("Could not build the binary stream.");
+		  printf("%s ___ %s\n", $1, $2);
+  		  //strcpy($$, $2);
+  //		  strcat($$, $2);
+  //		  free($1);
+  //		  free($2);
+  		}
+  		else $$ = $1;
                                                                              }
           | {
                         $$ = NULL;
