@@ -59,3 +59,8 @@ enum{
   gTextModeFillStrokeClipped,
   gTextModeClipped
   };
+
+// The image types supported
+enum{
+  gTiff = 0
+  };

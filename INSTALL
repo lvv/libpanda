@@ -4,6 +4,11 @@ This code is covered by the GNU Public License. Please respect the conditions
 of this license, which is included in this distribution. All of this code is 
 (c) Michael Still, 2000.
 
+DEPENDENCIES
+
+libtiff must be installed on this machine before you can compile Panda. 
+libtiff is available from http://www.freshmeat.net -- do a search for it...
+
 INSTALLATION
 
 Type "make all" to build a demo application. Type "make lib" and "make install"

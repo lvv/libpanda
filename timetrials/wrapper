@@ -1,9 +1,10 @@
 #!/bin/bash
 
 # Check we are not running already
-if [ `ps -aux | grep wrapper | wc -l | tr -d " "` -gt 2 ]
+data=`ps -aux | grep wrapper | wc -l | tr -d " "`
+if [ $data -gt 3 ]
 then
-  echo "Already running"
+  echo "Already running ($data)"
   exit 42
 fi
 
