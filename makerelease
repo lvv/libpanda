@@ -2,6 +2,11 @@
 
 # This script makes the world nice-looking for the world.
 
+for item in `ls *.c`
+do
+  ~mikal/autodocbook/autodocbook $item
+done
+
 automake
 autoconf
 ./configure
