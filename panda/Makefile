@@ -68,7 +68,7 @@ VERSION = 0.4
 YACC = bison -y
 
 pandaincludedir = $(includedir)/panda
-pandainclude_HEADERS = constants.h functions.h objects.h
+pandainclude_HEADERS = constants.h functions.h objects.h legacy.h
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_CLEAN_FILES = 
 HEADERS =  $(pandainclude_HEADERS)

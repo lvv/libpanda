@@ -48,7 +48,7 @@ extern "C" {
 #define pdfopen_suppress panda_opensuppress
 #define pdfopen_actual panda_openactual
 #define pdfclose panda_close
-#define pdfpage panda_page
+#define pdfpage panda_newpage
 #define closeText panda_closetext
 #define newobject panda_newobject
 #define adddictitem panda_adddictitem
