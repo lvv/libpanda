@@ -155,6 +155,7 @@ void pdfclose(pdf *openedpdf){
   // structure will need a traverseObjects call here...
   traverseObjects(openedpdf, openedpdf->catalog, writeObject);
   traverseObjects(openedpdf, openedpdf->fonts, writeObject);
+  traverseObjects(openedpdf, openedpdf->info, writeObject);
   
   // Write our the XREF object -- this MUST happen after all objects have been
   // written, or the byte offsets will not be known

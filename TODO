@@ -17,3 +17,6 @@
   * Make the use of autoconf a little more intelligent
 
   * Start using automake
+
+  * Handling of vsnprintf return number based on the differnt ways that
+	glibc behaves...

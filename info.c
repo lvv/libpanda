@@ -16,7 +16,7 @@ void checkInfo(pdf *document){
   if(document->info == NULL){
     // We need to create an info object
     document->info = newobject(document, gNormal);
-    addchild(document->pages, document->info);
+    addchild(document->catalog, document->info);
   }
 }
 

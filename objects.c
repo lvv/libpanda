@@ -96,7 +96,7 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
   char        *value;
   object      *objValue;
   objectArray *currentObjectArray;
-  dictionary  *dictValue;
+  dictionary  *dictValue, *prevDictValue;
 
 #if defined DEBUG
   printf("Added dictionary item %s to object\n", name);
@@ -256,12 +256,9 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
 	  break;
 	}
 
+	prevDictValue = dictValue;
 	dictValue = dictValue->next;
       }
-
-      // Clean up the duplicated memory
-      
-
     }
     break;
   }
@@ -540,6 +537,11 @@ void appendtextstream(object *target, char *data, unsigned long len){
   // We are going to append to the textstream that the object already has
   unsigned long  initial, count;
   
+#if defined DEBUG
+  printf("Appending to a ts \"%s\" (%d length reported)\n", data, len);
+  printf("Previous length was: %d\n", target->textstreamLength);
+#endif
+
   initial = count = target->textstreamLength;
 
   // Increase the length of the textstream
@@ -550,9 +552,8 @@ void appendtextstream(object *target, char *data, unsigned long len){
     sizeof(char) * target->textstreamLength)) == NULL)
     error("Could not append to an object's textstream.");
 
-  // Append
-  for(; count < target->textstreamLength; count++)
-    target->textstream[count] = data[count - initial];
+  // Do the actual appending
+  strcat(target->textstream, data);
 }
 
 void appendxobjectstream(object *target, char *data, unsigned long len){
