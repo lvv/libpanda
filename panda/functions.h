@@ -66,6 +66,10 @@ SUPPRESSEX (panda_setfont, cmd)
        void panda_lineannotation (panda_pdf *, panda_page *, char *, char *,
 				  int, int, int, int, int, int, int, int,
 				  double, double, double, int);
+       void panda_urilink(panda_pdf *, panda_page *, char *, int, int, int,
+			  int, int);
+       void panda_link(panda_pdf *, panda_page *, int, int, int, panda_page *,
+		       int, int, int, int, int );
 
        panda_object *panda_insertannotation (panda_pdf *, panda_page *,
 					     char *, int, int, int, int,

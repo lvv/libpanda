@@ -71,7 +71,7 @@ SEEALSO panda_freetextannotation, panda_insertannotation
 DOCBOOK END
 ******************************************************************************/
 
-// docbook out of date
+// TODO: docbook out of date
 void
 panda_textannotation (panda_pdf * document, panda_page * page, int open,
 		      char *text, char *title,
@@ -174,7 +174,7 @@ SEEALSO panda_textannotation, panda_insertannotation
 DOCBOOK END
 ******************************************************************************/
 
-// docbook out of date
+// TODO: docbook out of date
 void
 panda_freetextannotation (panda_pdf * document, panda_page * page,
 			  char *text, char *title,
@@ -198,12 +198,6 @@ panda_freetextannotation (panda_pdf * document, panda_page * page,
   //panda_adddictitem(document, annotation, "DA",
   //                panda_textvalue, 
 
-  // todo_mikal
-}
-
-void
-panda_linkannotation (panda_pdf * document, panda_page * page)
-{
   // todo_mikal
 }
 
@@ -262,8 +256,7 @@ SEEALSO panda_textannotation, panda_freetextannotation
 DOCBOOK END
 ******************************************************************************/
 
-// docbook out of dater
-
+// TODO: docbook out of date
 panda_object *
 panda_insertannotation (panda_pdf * document, panda_page * page,
 			char *title,
@@ -304,4 +297,167 @@ panda_insertannotation (panda_pdf * document, panda_page * page,
   panda_xfree (rectString);
 
   return annotation;
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_internallink
+PURPOSE do work common to panda_urilink and panda_link
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+void panda_internallink (panda_pdf * document, panda_object * link,
+		    panda_page * page, int top, int left, int bottom,
+		    int right, int border)
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function will create set up common properties of a link annotation.
+
+RETURNS Nothing.
+
+EXAMPLE START
+You shouldn't need an example because this is an internal call
+EXAMPLE END
+SEEALSO panda_urilink, panda_link
+DOCBOOK END
+******************************************************************************/
+
+void
+panda_internallink (panda_pdf * document, panda_object * link,
+		    panda_page * page, int top, int left, int bottom,
+		    int right, int border)
+{
+  char *tmpPtr;
+
+  panda_adddictitem (document, page->obj, "Annots", panda_objectarrayvalue,
+		     link);
+  panda_adddictitem (document, link, "Type", panda_textvalue, "Annot");
+  panda_adddictitem (document, link, "Subtype", panda_textvalue, "Link");
+  panda_adddictitem (document, link, "Rect", panda_literaltextvalue,
+		     tmpPtr =
+		     panda_xsnprintf ("[%d %d %d %d]", left,
+				      page->height - bottom, right,
+				      page->height - top));
+  panda_xfree (tmpPtr);
+  panda_adddictitem (document, link, "Border", panda_literaltextvalue,
+		     tmpPtr = panda_xsnprintf ("[0 0 %d]", border));
+  panda_xfree (tmpPtr);
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_urilink
+PURPOSE insert link to a URI.
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+void panda_urilink (panda_pdf * document, panda_page * page, char *uri, int top,
+	       int left, int bottom, int right, int border)
+SYNOPSIS END
+
+DESCRIPTION This function will create a link to a URI based on the supplied arguments
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *demo;
+panda_page *currPage;
+
+panda_init();
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+    panda_error (panda_true, "demo: could not open output.pdf to write to.");
+currPage = panda_newpage (demo, panda_pagesize_a4);
+
+panda_urilink (demo, currPage, "http://www.google.com/", 5, 5, 100, 100, 1);
+EXAMPLE END
+SEEALSO panda_link
+DOCBOOK END
+******************************************************************************/
+
+void
+panda_urilink (panda_pdf * document, panda_page * page, char *uri, int top,
+	       int left, int bottom, int right, int border)
+{
+  panda_object *link;
+  char *tmpPtr;
+
+
+  link = panda_newobject (document, panda_normal);
+  panda_addchild (document->pages, link);
+
+  panda_internallink (document, link, page, top, left, bottom, right, border);
+  panda_adddictitem (document, link, "A", panda_literaltextvalue,
+		     tmpPtr =
+		     panda_xsnprintf ("<< /S /URI /URI (%s) >>", uri));
+  panda_xfree (tmpPtr);
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_link
+PURPOSE Create a link to an internal location in a PDF.
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+void
+panda_link (panda_pdf * document, panda_page * dest, int dest_top,
+	    int dest_left, int zoom, panda_page * source, int top, int left,
+	    int bottom, int right, int border)
+SYNOPSIS END
+
+DESCRIPTION This function will create a link to the specified location, at a specified location.
+
+RETURNS Nothing.
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *demo;
+panda_page *Page1, *Page2;
+
+panda_init();
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+    panda_error (panda_true, "demo: could not open output.pdf to write to.");
+Page1 = panda_newpage (demo, panda_pagesize_a4);
+Page2 = panda_newpage (demo, panda_pagesize_a4);
+
+panda_link (demo, Page1, 0, 0, 0, Page2, 5, 5, 100, 100, 1);
+EXAMPLE END
+SEEALSO panda_urilink
+DOCBOOK END
+******************************************************************************/
+
+void
+panda_link (panda_pdf * document, panda_page * dest, int dest_top,
+	    int dest_left, int zoom, panda_page * source, int top, int left,
+	    int bottom, int right, int border)
+{
+  panda_object *link;
+  char *tmpPtr;
+
+
+  link = panda_newobject (document, panda_normal);
+  panda_addchild (document->pages, link);
+
+  panda_internallink (document, link, source, top, left, bottom, right,
+		      border);
+  panda_adddictitem (document, link, "Dest", panda_literaltextvalue, tmpPtr =
+		     panda_xsnprintf ("[%d %d R /XYZ %d %d %d]",
+				      dest->obj->number,
+				      dest->obj->generation, dest_left,
+				      dest->height - dest_top, zoom));
+  panda_xfree (tmpPtr);
 }
