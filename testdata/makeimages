@@ -1,8 +1,17 @@
 #!/bin/bash
 
+# Sometimes we just want to be lazy and make one compression format. See if 
+# this is so
+if [ `echo $1 | wc -c | tr -d " "` -gt 0 ]
+then
+  compressionOptions=$1
+else
+  compressionOptions="none packbits jpeg zip g3 g4"
+fi
+
 for endian in B L
 do
-  for compression in none packbits jpeg zip g3 g4
+  for compression in $compressionOptions
   do
     for fill in msb2lsb lsb2msb
     do

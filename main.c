@@ -16,7 +16,7 @@
 int main(int argc, char *argv[]){
   pdf    *demo;
   page   *currPage;
-  int    lineDepth, boxx, boxy;
+  int    lineDepth;
   char   tempString[1024];
 
   printf("Welcome to the Panda 0.2 sample application...\n");
@@ -49,6 +49,14 @@ int main(int argc, char *argv[]){
     sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.", 4, 6, 5);
     textbox(demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30, 
       tempString);
+
+    setfont(demo, "Helvetica-Bold");
+    textbox(demo, currPage, lineDepth * 20 + 30, 30 + lineDepth, 100, 30,
+      "A line in Helvetica-Bold");
+
+    setfont(demo, "Symbol");
+    textbox(demo, currPage, lineDepth * 20 + 50, 10 + lineDepth, 100, 30,
+      "Symbol");
 
     // Insert some images
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -138,5 +146,8 @@ int main(int argc, char *argv[]){
   return 0;
 }
 
-
-
+// Allow a callback to be setup to display a dialog box for an error or
+// whatever before we terminate the application
+void errorCallback(char *description){
+  fprintf(stderr, "Callback: %s\n", description);
+}

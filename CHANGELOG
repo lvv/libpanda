@@ -59,12 +59,11 @@ Release 0.2 -> Release 0.3
 	The testimages I used may be found in the testdata directory, and are
 	generated using the makeimages script in that directory. To clean up,
 	use the removeimages script.
+  
+  * Improved the doco about what fonts are always present based on the PDF spec		second edition, page 296.
 
+  * The setfont(3) man page was just plain wrong. I don't know what I was
+	thinking when I wrote it. It is now fixed.
 
-
-
-
-
-
-
-
+  * The createfont(3) call, and the new createdefaultfont(3) calls are now
+	documented.

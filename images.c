@@ -263,7 +263,7 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
 
     for(stripCount = 0; stripCount < stripMax; stripCount++){
 #if defined DEBUG
-      printf("Read a strip of the input image with offset %d\n", imageOffset);
+      printf("Read a strip of the input image with offset %l\n", imageOffset);
 #endif
 
       imageOffset += TIFFReadEncodedStrip(image, stripCount, 
@@ -292,7 +292,7 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
       TIFFSetField(conv, TIFFTAG_GROUP4OPTIONS, 0);
 
 #if defined DEBUG
-    printf("The image buffer is %d bytes long\n", imageOffset);
+    printf("The image buffer is ld bytes long\n", imageOffset);
 #endif
 
     // Actually do the conversion
@@ -302,7 +302,7 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
     free(stripBuffer);
 
 #if defined DEBUG
-    printf("The global tiff buffer became %d bytes long\n", 
+    printf("The global tiff buffer became %l bytes long\n", 
       globalTiffBufferOffset);
 #endif
 
