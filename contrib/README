@@ -1,0 +1,6 @@
+The role of this directory is to store stuff that is needed for the Windows port that is assumed to be there already or installed separately for the Unix versions of the library.
+
+These libraries are (c) the relevant authors, and are all compiled for Windows.
+
+Michael Still (mikal@stillhq.com)
+21 June 2001
