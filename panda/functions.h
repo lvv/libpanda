@@ -96,6 +96,10 @@ extern "C"
 		       int);
   void panda_imageboxrot (panda_pdf *, panda_page *, int, int, int, int,
 			  double, char *, int);
+  void panda_imageboxactual(panda_pdf *, panda_page *, int, int, int, int,
+			    double, char *, int);
+  void panda_imageboxinternal(panda_pdf *, panda_page *, int, int, int, int,
+			      double, char *, int, int, char *, int);
   void panda_insertTIFF (panda_pdf *, panda_page *, panda_object *, char *);
   void panda_insertJPEG (panda_pdf *, panda_page *, panda_object *, char *);
   void panda_insertPNG (panda_pdf *, panda_page *, panda_object *, char *);

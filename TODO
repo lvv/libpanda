@@ -35,8 +35,6 @@ N * TIFF support does not currently include the following compression options:
 
 L * New font ids are handed out too often -- what about font reuse?
 
-  * Handle image reuse better
-
   * At the moment if we can't change font we stop the whole schmozzle - should
 	we just report an error and keep going in the old font?
 
@@ -83,3 +81,7 @@ L * New font ids are handed out too often -- what about font reuse?
   * Optomise database accesses
 
   * Possible caching implementation for the tdb stuff
+
+  * Man pages!
+
+  * Panic handler (based on Tridge's talk)

@@ -26,3 +26,6 @@ Release 0.4 -> Release 0.5
 
 2002-01-25 Michael Still mikal@stillhq.com
 	Removed the unused panda_objectarray structure...
+
+2002-01-26 Michael Still mikal@stillhq.com
+	Implemented the image reuse detection code. This means that if you have an image named foo.tif, and use it more than once in the document, it is only stored once in the PDF file that is generated. This is faster and makes smaller PDF documents. You can still force panda to give you two copies of the image in the PDF by using the panda_imageboxrotactual() call -- this might be of use when you know that foo.tif at 10am doesn't equal foo.tif at 10:01am...

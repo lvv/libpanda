@@ -401,12 +401,6 @@ int panda_getdictelem(panda_pdf *document, int dictno, char *name){
     dbkey = panda_xsnprintf("dict-%d-%d-name", dictno, count);
     dbdata = panda_dbread(document, dbkey);
 
-#if defined DEBUG
-    if(dbdata != NULL){
-      printf(" >> %s << %s\n", name, dbdata);
-    }
-#endif
-
     // Do the names match?
     if((dbdata != NULL) && (strcmp(name, dbdata) == 0)){
       return count;

@@ -251,7 +251,8 @@ void panda_nfspagemode(panda_pdf *document, int pagemode)
       break;
 
     default:
-      panda_error(panda_false, "Attempt to set a value for the non fullscreen page mode which is invalid");
+      panda_error(panda_false, 
+		  "Attempt to set a value for the non fullscreen page mode which is invalid");
       break;
     }
 }

@@ -109,6 +109,9 @@ void panda_panda_imageboxrot (panda_pdf * output, panda_page * target, int top, 
 SYNOPSIS END
 
 DESCRIPTION This function call inserts an image into the PDF document at the specified location, including the ability to rotate the image on the page. It should be noted that xpdf will sometimes make the rotated image look quite sickly. This is in fact a bug in xpdf (which has beenr eported), and not a bug in <command>Panda</command>. The image types accepted by this call are: panda_image_tiff, panda_image_jpeg and panda_image_png.
+</para>
+<para>
+<emphasis>Note that this function now holds your hand and will save you from inerting an image with the same name over and over. Instead of regrabbing the image, it will just put a pointer to it inside the PDF itself. If you really want to use the same filename over and over with different images inside it, then use the</emphasis> <command>panda_imageboxactual</command>() call.
 
 RETURNS Nothing
 
@@ -133,23 +136,99 @@ SEEALSO panda_imagebox
 DOCBOOK END
 ******************************************************************************/
 
-// A redistribution point for image insertions based on type of image
+// Check to see if we already have the image
 void
 panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 		   int bottom, int right, double angle, char *filename,
 		   int type)
 {
+  char *dbkey, *dbdata, *imageref;
+  int count;
+
+#if defined DEBUG
+  printf("Check to see if we have used this image before (%s)\n",
+	 filename);
+#endif
+
+  count = 0;
+  dbkey = panda_xsnprintf("image-%d-name", count);
+  while((dbdata = panda_dbread(output, dbkey)) != NULL){
+    panda_xfree(dbkey);
+
+    if(strcmp(dbdata, filename) == 0){
+#if defined DEBUG
+      printf("Found that this is a repeat ref to an image, and recycled\n");
+#endif
+
+      dbkey = panda_xsnprintf("image-%d-objectreference", count);
+      imageref = panda_dbread(output, dbkey);
+      panda_imageboxinternal(output, target, top, left, bottom, right, angle,
+			     filename, type, panda_false, imageref, -1);
+      panda_xfree(imageref);
+      panda_xfree(dbkey);
+      panda_xfree(dbdata);
+      return;
+    }
+
+    panda_xfree(dbdata);
+    dbkey = panda_xsnprintf("image-%d-name", ++count);
+  }
+
+  panda_imageboxinternal(output, target, top, left, bottom, right, angle,
+		       filename, type, panda_true, NULL, count);
+ 
+  panda_dbwrite(output, dbkey, filename);
+  panda_xfree(dbkey);
+}
+
+// todo_mikal: doco
+// People might want to force me to add an image
+void
+panda_imageboxactual(panda_pdf * output, panda_page * target, int top, 
+		     int left, int bottom, int right, double angle, 
+		     char *filename, int type)
+{
+  panda_imageboxinternal(output, target, top, left, bottom, right, angle,
+		       filename, type, panda_true, NULL, -1);
+}
+
+// todo_mikal doco
+// Redistribute the image types
+void
+panda_imageboxinternal(panda_pdf * output, panda_page * target, int top, 
+		       int left, int bottom, int right, double angle, 
+		       char *filename, int type, int addImage,
+		       char *objref, int databasecount)
+{
   panda_object *imageObj;
-  char *pdfFilename, *dictkey;
+  char *pdfFilename, *dictkey, *dbkey, *dbdata;
   int i;
 
 #if defined DEBUG
-  printf ("Started inserting an image.\n");
+  printf ("Started inserting an image (%d, %s, %d)\n", addImage, objref,
+	  databasecount);
 #endif
 
-  // Now we need an object to contain the image
-  imageObj = (panda_object *) panda_newobject (output, panda_normal);
-  panda_addchild (target->obj, imageObj);
+  if(addImage == panda_true){
+    // Now we need an object to contain the image
+    imageObj = (panda_object *) panda_newobject (output, panda_normal);
+    panda_addchild (target->obj, imageObj);
+
+    if(databasecount != -1){
+      dbkey = panda_xsnprintf("image-%d-objectreference", databasecount);
+      dbdata = panda_xsnprintf("%d %d R",
+			       imageObj->number, imageObj->generation);
+      panda_dbwrite(output, dbkey, dbdata);
+      panda_xfree(dbkey);
+      panda_xfree(dbdata);
+    }
+  }
+  else if(objref == NULL)
+    panda_error(panda_true, "Invalid image processing state\n");
+#if defined DEBUG
+  else
+    printf("Code is now recycling image... Good for the environment\n");
+#endif
 
   // We cannot have some characters in the filename that we embed into the PDF,
   // so we fix them here
@@ -166,11 +245,13 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 	  filename, pdfFilename);
 #endif
 
-  // We make an object not just a dictionary because this is what
-  // adddictitem needs
   dictkey = panda_xsnprintf("Resources/XObject/%s", pdfFilename);
-  panda_adddictitem (output, target->obj, dictkey, panda_objectvalue,
-		     imageObj);
+  if(objref == NULL)
+    panda_adddictitem (output, target->obj, dictkey, panda_objectvalue,
+		       imageObj);
+  else
+    panda_adddictitem (output, target->obj, dictkey, panda_literaltextvalue,
+		       objref);
   panda_xfree(dictkey);
 
   // We put some information based on a stat of the image file into the object
@@ -181,14 +262,16 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   // and some form of object searching by a rational and efficient manner (a
   // binary search tree?)
 
-  // We now add some dictionary elements to the image object to say that it is
-  // a TIFF image
-  panda_adddictitem (output, imageObj, "Type", panda_textvalue, "XObject");
-  panda_adddictitem (output, imageObj, "Subtype", panda_textvalue, "Image");
+  if(addImage == panda_true){
+    // We now add some dictionary elements to the image object to say that 
+    // it is a TIFF image
+    panda_adddictitem (output, imageObj, "Type", panda_textvalue, "XObject");
+    panda_adddictitem (output, imageObj, "Subtype", panda_textvalue, "Image");
 
-  // This line will need to be changed to gaurantee that the internal name is
-  // unique unless the actual image is the same
-  panda_adddictitem (output, imageObj, "Name", panda_textvalue, pdfFilename);
+    // This line will need to be changed to gaurantee that the internal name is
+    // unique unless the actual image is the same
+    panda_adddictitem (output, imageObj, "Name", panda_textvalue, pdfFilename);
+  }
 
   // Now we do the things that are image format specific... This is also
   // where we check if support has been compiled in for the libraries we need.
@@ -196,7 +279,8 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
     {
     case panda_image_tiff:
 #if defined HAVE_LIBTIFF
-      panda_insertTIFF (output, target, imageObj, filename);
+      if(addImage == panda_true)
+	panda_insertTIFF (output, target, imageObj, filename);
 #else
       fprintf (stderr, "%s %s\n",
 	       "TIFF support not compiled into Panda because libtiff was",
@@ -208,7 +292,8 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 
     case panda_image_jpeg:
 #if defined HAVE_LIBJPEG
-      panda_insertJPEG (output, target, imageObj, filename);
+      if(addImage == panda_true)
+	panda_insertJPEG (output, target, imageObj, filename);
 #else
       fprintf (stderr, "%s %s\n",
 	       "JPEG support not compiled into Panda because libjpeg was",
@@ -220,7 +305,8 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 
     case panda_image_png:
 #if defined HAVE_LIBPNG
-      panda_insertPNG (output, target, imageObj, filename);
+      if(addImage == panda_true)
+	panda_insertPNG (output, target, imageObj, filename);
 #else
       fprintf (stderr, "%s %s\n",
 	       "PNG support not compiled into Panda because libpng was not",
@@ -240,8 +326,9 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
 			"\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
-			// The first matrix -- this has been modified because of
-			// patches submitted by Ceasar Miquel (miquel@df.uba.ar)
+			// The first matrix -- this has been modified 
+			// because of patches submitted by Ceasar Miquel 
+			// (miquel@df.uba.ar)
 			cos (angle * panda_pi / 180.0),	// x scale
 			sin (angle * panda_pi / 180.0),	// rotate and scale
 			-sin (angle * panda_pi / 180.0),	// ???

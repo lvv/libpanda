@@ -1,0 +1,45 @@
+The backend database new to this version stores name value tuples. The following tuples are currently in use... The backend database is tdb, which was initially developed for the Samba project...
+
+The database stores raw blocks of data, so the list below also provides an indication of the datatype which is stored in that key.
+
+Dictionaries:			* IMPLEMENTED
+  dict-<no>-<elemno>-name	*
+  dict-<no>-<elemno>-type	*
+  dict-<no>-<elemno>-value	*
+  dict-count			*
+
+Implemented:
+  image-<no>-name
+  image-<no>-objectreference
+
+Object arrays:
+  oa-<no>-count
+  oa-<no>-<elemno>
+
+Objects:
+  obj-<no>-type
+  obj-<no>-number
+  obj-<no>-generation
+  obj-<no>-textmode
+  obj-<no>-insidegraphicsblock
+  obj-<no>-byteoffset
+  obj-<no>-dictno
+  obj-<no>-transdictno
+  obj-<no>-currentfont
+  obj-<no>-layoutstream
+  obj-<no>-binarystream
+  obj-<no>-childcount
+  obj-<no>-child-<elemno>
+  obj-<no>-ispages
+  obj-<no>-iscontents
+  obj-<no>-istemplate
+  obj-<no>-cascadeproperties
+  obj-<no>-localproperties
+
+Pages:
+  page-<no>-objno
+  page-<no>-contents
+  page-<no>-annotations
+  page-<no>-height
+  page-<no>-width
+  page-<no>-templatename
