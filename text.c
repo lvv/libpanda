@@ -45,7 +45,7 @@ SYNOPSIS START
 void panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int bottom, int right, char *text);
 SYNOPSIS END
 
-DESCRIPTION This function call creates a textbox on the specified page, and then displays the specified text within that page. The current font mode and style et cetera will be used. Sometime in the near future, line wrapping will be used...
+DESCRIPTION This function call creates a textbox on the specified page, and then displays the specified text within that page. The current font mode and style et cetera will be used.
 
 RETURNS Nothing
 
@@ -85,7 +85,7 @@ SYNOPSIS START
 void panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int bottom, int right, double angle, char *text);
 SYNOPSIS END
 
-DESCRIPTION This function call creates a textbox on the specified page, and then displays the specified text within that page. The text is displayed at the spefied angle. The current font mode and style et cetera will be used. Sometime in the near future, line wrapping will be used...
+DESCRIPTION This function call creates a textbox on the specified page, and then displays the specified text within that page. The text is displayed at the spefied angle. The current font mode and style et cetera will be used.
 
 RETURNS Nothing
 
