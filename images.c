@@ -1316,36 +1316,36 @@ panda_imagesize (int *width, int *height, char *filename, int type)
 #if defined HAVE_LIBTIFF
 	panda_imagesizeTIFF (width, height, filename);
       
-#else	/*  */
+#else /*  */
 	fprintf (stderr, "%s %s\n",
 		 "TIFF support not compiled into Panda because libtiff was",
 		 "not found at compile time.");
       
-#endif	/*  */
+#endif /*  */
 	break;
     case panda_image_jpeg:
       
 #if defined HAVE_LIBJPEG
 	panda_imagesizeJPEG (width, height, filename);
       
-#else	/*  */
+#else /*  */
 	fprintf (stderr, "%s %s\n",
 		 "JPEG support not compiled into Panda because libjpeg was",
 		 "not found at compile time.");
       
-#endif	/*  */
+#endif /*  */
 	break;
     case panda_image_png:
       
 #if defined HAVE_LIBPNG
 	panda_imagesizePNG (width, height, filename);
       
-#else	/*  */
+#else /*  */
 	fprintf (stderr, "%s %s\n",
 		 "PNG support not compiled into Panda because libpng was not",
 		 "found at compile time.");
       
-#endif	/*  */
+#endif /*  */
 	break;
     }
 }

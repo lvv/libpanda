@@ -29,15 +29,17 @@ typedef volatile unsigned long spinlock_t;
 #error Need to implement spinlock code in spinlock.h
 #endif
 
-typedef struct {
-	spinlock_t lock;
-	volatile int count;
-} tdb_rwlock_t;
+typedef struct
+{
+  spinlock_t lock;
+  volatile int count;
+}
+tdb_rwlock_t;
 
-int tdb_spinlock(TDB_CONTEXT *tdb, int list, int rw_type);
-int tdb_spinunlock(TDB_CONTEXT *tdb, int list, int rw_type);
-int tdb_create_rwlocks(int fd, unsigned int hash_size);
-int tdb_clear_spinlocks(TDB_CONTEXT *tdb);
+int tdb_spinlock (TDB_CONTEXT * tdb, int list, int rw_type);
+int tdb_spinunlock (TDB_CONTEXT * tdb, int list, int rw_type);
+int tdb_create_rwlocks (int fd, unsigned int hash_size);
+int tdb_clear_spinlocks (TDB_CONTEXT * tdb);
 
 #else /* !USE_SPINLOCKS */
 #if 0
@@ -45,11 +47,11 @@ int tdb_clear_spinlocks(TDB_CONTEXT *tdb);
 #define tdb_spinlock(tdb, list, rw_type) (-1)
 #define tdb_spinunlock(tdb, list, rw_type) (-1)
 #else
-int tdb_spinlock(TDB_CONTEXT *tdb, int list, int rw_type);
-int tdb_spinunlock(TDB_CONTEXT *tdb, int list, int rw_type);
-int tdb_create_rwlocks(int fd, unsigned int hash_size);
+int tdb_spinlock (TDB_CONTEXT * tdb, int list, int rw_type);
+int tdb_spinunlock (TDB_CONTEXT * tdb, int list, int rw_type);
+int tdb_create_rwlocks (int fd, unsigned int hash_size);
 #endif
-int tdb_clear_spinlocks(TDB_CONTEXT *tdb);
+int tdb_clear_spinlocks (TDB_CONTEXT * tdb);
 #endif
 
 #endif

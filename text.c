@@ -110,11 +110,23 @@ void
 panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top,
 		  int left, int bottom, int right, double angle, char *text)
 {
+  panda_textboxrotalign (output, thisPage, top, left, bottom, right, angle,
+			 panda_halign_left, panda_valign_top, text);
+}
+
+
+void
+panda_textboxrotalign (panda_pdf * output, panda_page * thisPage, int top,
+		       int left, int bottom, int right, double angle,
+		       int hAlign, int vAlign, char *text)
+{
   // Add a box with some text in it into the PDF page
   panda_object *textobj;
-  char *currentToken, *strtokVictim = NULL, *delim, *tempPtr, *dictkey;
-  int internalTop, internalLeft, displayedFirstPart = panda_false;
+  char *currentToken, *tempPtr, *dictkey, *buf, *p, *t;
+  int internalTop, internalLeft, wrapWidth, len, numSpaces;
+  double w, cw, Tw, lineWidth;
   panda_object *fontObj;
+  panda_fontmetric *fontmetric;
 
   /***************************************************************************
      Some text handling
@@ -306,59 +318,121 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top,
            \6N
   ***************************************************************************/
 
-  // Get the first token
-  strtokVictim = (char *) panda_xmalloc (sizeof (char) * (strlen (text) + 1));
-  strcpy (strtokVictim, text);
-
-  // Build the delimiter string
-  delim = panda_xsnprintf ("\n%c%c%c", 4, 5, 6);
-
-  currentToken = strtok (strtokVictim, delim);
-
-  while (currentToken != NULL)
+  fontmetric = panda_getfontmetric (output);
+  wrapWidth = right - left;
+  buf = NULL;
+  numSpaces = 0;
+  p = text;
+  while (p && *p)
     {
-      // If we haven't displayed that first part that would otherwise be missed
-      // do so now
-      if (displayedFirstPart == panda_false)
+      len =
+	panda_findlinebreak (output, p, fontmetric, wrapWidth, &lineWidth);
+      numSpaces = 0;
+      buf = panda_streamprintf (buf, "(");
+      for (t = p; t < (p + len); t++)
 	{
-	  textobj->layoutstream =
-	    panda_streamprintf (textobj->layoutstream, "(%s) '\n",
-				strtokVictim);
-	  displayedFirstPart = panda_true;
+	  switch (*t)
+	    {
+	    case '\0':
+	      panda_error (panda_true, "Unexpected NULL in panda_textboxrot");
+	      break;
+
+	    case '\r':
+	    case '\n':
+	      break;
+
+	    case 4:
+	      buf = panda_streamprintf (buf, ") Tj %c Ts (", *(++t));
+	      break;
+
+	    case 5:
+	      buf = panda_streamprintf (buf, ") Tj -%c Ts (", *(++t));
+	      break;
+
+	    case 6:
+	      buf = panda_streamprintf (buf, ") Tj 0 Ts (");
+	      break;
+
+	    case ' ':
+	      numSpaces++;
+	    default:
+	      if (*t == '(' || *t == ')' || *t == '\\')
+		{
+		  /* Need to escape any of: ()\ */
+		  buf = panda_streamprintf (buf, "\\%c", *t);
+		}
+	      else
+		{
+		  buf = panda_streamprintf (buf, "%c", *t);
+		}
+	      break;
+	    }
 	}
 
-      switch (text[currentToken - strtokVictim - 1])
+
+      switch (hAlign)
 	{
-	case '\n':
-	  textobj->layoutstream =
-	    panda_streamprintf (textobj->layoutstream, "(%s) '\n",
-				currentToken);
+	case panda_halign_center:
+	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
+						      "%.2f 0 Td %s) Tj -%.2f -%.2f Td\n",
+						      (wrapWidth -
+						       lineWidth) / 2, buf,
+						      (wrapWidth -
+						       lineWidth) / 2,
+						      output->currentLeading);
 	  break;
 
-	case 4:
+	case panda_halign_right:
 	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
-						      "%c Ts (%s) Tj\n",
-						      currentToken[0],
-						      currentToken + 1);
+						      "%.2f 0 Td %s) Tj -%.2f -%.2f Td\n",
+						      (wrapWidth - lineWidth),
+						      buf,
+						      (wrapWidth - lineWidth),
+						      output->currentLeading);
 	  break;
 
-	case 5:
+	case panda_halign_justify:
+	  t = (p + len - 1);
+	  if (numSpaces == 0 || *(t + 1) == '\0' || *t == '\r' || *t == '\n')
+	    {
+	      Tw = output->currentWordSpacing;
+	    }
+	  else
+	    {
+	      Tw = output->currentWordSpacing
+		+ ((wrapWidth - lineWidth) / numSpaces);
+	    }
 	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
-						      "-%c Ts (%s) Tj\n",
-						      currentToken[0],
-						      currentToken + 1);
+						      "%.2f Tw %s) Tj %.2f Tw 0 -%.2f Td\n",
+						      Tw,
+						      buf,
+						      output->
+						      currentWordSpacing,
+						      output->currentLeading);
+
+
 	  break;
 
-	case 6:
+	case panda_halign_left:
+	default:
 	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
-						      "0 Ts (%s) Tj\n",
-						      currentToken);
+						      "%s) Tj 0 -%.2f Td\n",
+						      buf,
+						      output->currentLeading);
 	  break;
+
 	}
 
-      currentToken = strtok (NULL, delim);
+      panda_xfree (buf);
+      buf = NULL;
+
+      p = (p + len);
+
+      /* Advance past any spaces */
+      if (*t != '\r' && *t != '\n' && *(t + 1) != '\0')
+	{
+	  while (*p == ' ')
+	    p++;
+	}
     }
-
-  // Free temp data
-  panda_xfree (strtokVictim);
 }

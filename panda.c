@@ -288,17 +288,17 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	       "Failed to make an info object for the PDF. Not sure why...");
 
 	  // Add some stuff
-	  verStr = panda_xsnprintf(
+	  verStr = panda_xsnprintf (
 #if defined _WINDOWS
-				   "Panda %s MS Windows Version"
+				     "Panda %s MS Windows Version"
 #else
-				   "Panda %s"
+				     "Panda %s"
 #endif
-				   , VERSION);
+				     , VERSION);
 
 	  panda_adddictitem (openedpdf, openedpdf->info, "Producer",
 			     panda_brackettedtextvalue, verStr);
-	  panda_xfree(verStr);
+	  panda_xfree (verStr);
 	  panda_adddictitem (openedpdf, openedpdf->info, "CreationDate",
 			     panda_brackettedtextvalue, tempPtr =
 			     panda_nowdate ());

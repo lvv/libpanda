@@ -35,17 +35,15 @@
 
 #include "stdafx.h"
 #define vsnprintf _vsnprintf
-
+  
 #else
 
 #include <panda/constants.h>
 #include <panda/functions.h>
-
 #endif
-
+  
 #include "md5-global.h"
 #include "md5.h"
-
 /******************************************************************************
 DOCBOOK START
 
@@ -68,10 +66,9 @@ EXAMPLE END
 SEEALSO panda_streamprintf, panda_putc, panda_print
 DOCBOOK END
 ******************************************************************************/
-
 // Print a possibly complex string into the PDF file and make sure the offset
 // into the PDF file is stored correctly (dispite Windows)
-void
+  void
 panda_printf (panda_pdf * file, char *format, ...)
 {
   char *buffer, *formatString, *token, *strtokVictim;
@@ -451,14 +448,15 @@ DOCBOOK END
 ******************************************************************************/
 
 char *
-panda_md5hash(char *input){
+panda_md5hash (char *input)
+{
   MD5_CTX context;
   unsigned char *digest;
 
-  digest = panda_xmalloc(16);
+  digest = panda_xmalloc (16);
 
   MD5Init (&context);
-  MD5Update (&context, input, strlen(input));
+  MD5Update (&context, input, strlen (input));
   MD5Final (digest, &context);
 
   return digest;
@@ -487,21 +485,25 @@ DOCBOOK END
 ******************************************************************************/
 
 char *
-panda_hexstring(char *input){
+panda_hexstring (char *input)
+{
   int length, count;
   char *output;
 
-  length = strlen(input);
-  output = panda_xmalloc((length + 1) * sizeof(char));
-
-  // todo_mikal: not sure I like the windows version of this code
-  for(count = 0; count < length; count++){
+  length = strlen (input);
+  output = panda_xmalloc ((length + 1) * sizeof (char));
+  
+    // todo_mikal: not sure I like the windows version of this code
+    for (count = 0; count < length; count++)
+    {
 #if defined _WINDOWS
-	  sprintf(output[count], "%2x", input[count]);
-#else
-	  snprintf(output[count], 1, "%2x", input[count]);
+      sprintf (output[count], "%2x", input[count]);
+      
+#else	/*  */
+      snprintf (output[count], 1, "%2x", input[count]);
+      
 #endif
-  }
+    }
 
   output[length + 1] = 0;
   return output;

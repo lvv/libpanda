@@ -1,6 +1,6 @@
-# Makefile.in generated automatically by automake 1.4 from Makefile.am
+# Makefile.in generated automatically by automake 1.4-p5 from Makefile.am
 
-# Copyright (C) 1994, 1995-8, 1999 Free Software Foundation, Inc.
+# Copyright (C) 1994, 1995-8, 1999, 2001 Free Software Foundation, Inc.
 # This Makefile.in is free software; the Free Software Foundation
 # gives unlimited permission to copy and/or distribute it,
 # with or without modifications, as long as this notice is preserved.
@@ -78,7 +78,7 @@ VERSION = @VERSION@
 SUBDIRS = . panda examples
 
 lib_LTLIBRARIES = libpanda.la
-libpanda_la_SOURCES = annotate.c curves.c database.c date.c font.c info.c memory.c panda.c trailer.c error.c images.c internal.c md5c.c objects.c spinlock.c tdb.c template.c text.c utility.c view.c xref.c
+libpanda_la_SOURCES = annotate.c curves.c database.c date.c font.c fontmetrics.c info.c memory.c panda.c trailer.c error.c images.c internal.c md5c.c objects.c spinlock.c tdb.c template.c text.c utility.c view.c xref.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -92,9 +92,9 @@ LIBS = @LIBS@
 libpanda_la_LDFLAGS = 
 libpanda_la_LIBADD = 
 libpanda_la_OBJECTS =  annotate.lo curves.lo database.lo date.lo font.lo \
-info.lo memory.lo panda.lo trailer.lo error.lo images.lo internal.lo \
-md5c.lo objects.lo spinlock.lo tdb.lo template.lo text.lo utility.lo \
-view.lo xref.lo
+fontmetrics.lo info.lo memory.lo panda.lo trailer.lo error.lo images.lo \
+internal.lo md5c.lo objects.lo spinlock.lo tdb.lo template.lo text.lo \
+utility.lo view.lo xref.lo
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -109,10 +109,11 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = gtar
 GZIP_ENV = --best
 DEP_FILES =  .deps/annotate.P .deps/curves.P .deps/database.P \
-.deps/date.P .deps/error.P .deps/font.P .deps/images.P .deps/info.P \
-.deps/internal.P .deps/md5c.P .deps/memory.P .deps/objects.P \
-.deps/panda.P .deps/spinlock.P .deps/tdb.P .deps/template.P \
-.deps/text.P .deps/trailer.P .deps/utility.P .deps/view.P .deps/xref.P
+.deps/date.P .deps/error.P .deps/font.P .deps/fontmetrics.P \
+.deps/images.P .deps/info.P .deps/internal.P .deps/md5c.P \
+.deps/memory.P .deps/objects.P .deps/panda.P .deps/spinlock.P \
+.deps/tdb.P .deps/template.P .deps/text.P .deps/trailer.P \
+.deps/utility.P .deps/view.P .deps/xref.P
 SOURCES = $(libpanda_la_SOURCES)
 OBJECTS = $(libpanda_la_OBJECTS)
 
@@ -230,7 +231,7 @@ maintainer-clean-recursive:
 	dot_seen=no; \
 	rev=''; list='$(SUBDIRS)'; for subdir in $$list; do \
 	  rev="$$subdir $$rev"; \
-	  test "$$subdir" = "." && dot_seen=yes; \
+	  test "$$subdir" != "." || dot_seen=yes; \
 	done; \
 	test "$$dot_seen" = "no" && rev=". $$rev"; \
 	target=`echo $@ | sed s/-recursive//`; \

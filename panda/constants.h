@@ -190,22 +190,38 @@ extern "C"
     panda_scope_cascade = 0,
     panda_scope_local
   };
-   
-#if defined _WINDOWS
-// The abstraction types that we use
-  enum 
-  { 
-windows_panda_abs_pdf =
-      0, 
-windows_panda_abs_page, 
-windows_panda_abs_font,
-      
-windows_panda_abs_max 
+
+  // Justifcation/Horiz Alignment Types
+  enum
+  {
+    panda_halign_left = 1,
+    panda_halign_right,
+    panda_halign_center,
+    panda_halign_justify
   };
-   
-#endif	/* 
- */
-// Sometimes we need PI
+
+  // Vertical alignment types
+  enum
+  {
+    panda_valign_top = 1,
+    panda_valign_bottom,
+    panda_valign_middle
+  };
+
+#if defined _WINDOWS
+  // The abstraction types that we use
+  enum
+  {
+    windows_panda_abs_pdf = 0,
+    windows_panda_abs_page,
+    windows_panda_abs_font,
+
+    windows_panda_abs_max
+  };
+
+#endif				/* 
+				 */
+  // Sometimes we need PI
 #define panda_pi 3.1415926535
 // The default compression level
 #define panda_default_compress_level 6

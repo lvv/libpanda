@@ -14,14 +14,14 @@
 #define PANDA_OBJECTS_H 1
 
 #if defined _WINDOWS
-  #if defined _DEMO
-    #include "../panda/constants.h"
-  #else
-    #include "panda/constants.h"
-  #endif
+#if defined _DEMO
+#include "../panda/constants.h"
 #else
-  #include <panda/constants.h>
-  #include <panda/panda_tdb.h>
+#include "panda/constants.h"
+#endif
+#else
+#include <panda/constants.h>
+#include <panda/panda_tdb.h>
 #endif
 
 #ifdef __cplusplus
@@ -118,31 +118,38 @@ extern "C"
 
     // Database for the internal representation of the PDF
 #if defined _WINDOWS
-	void *db;
+    void *db;
 #else
     TDB_CONTEXT *db;
 #endif
   }
   panda_pdf;
-   
-    //#if defined _WINDOWS
-    //  typedef struct windows_panda_internal_ptrlist
-    //  {
-    //    void *me;
-    //    int number;
-    //    struct windows_panda_internal_ptrlist *next;
-    //  }
-    //  windows_panda_ptrlist;
-   
-    //  typedef struct windows_panda_internal_abs
-    //  {
-    //    int highest;
-    //    windows_panda_ptrlist *list;
-    //  }
-    //  windows_panda_abs;
-    //#endif
+
+  //#if defined _WINDOWS
+  //  typedef struct windows_panda_internal_ptrlist
+  //  {
+  //    void *me;
+  //    int number;
+  //    struct windows_panda_internal_ptrlist *next;
+  //  }
+  //  windows_panda_ptrlist;
+
+  //  typedef struct windows_panda_internal_abs
+  //  {
+  //    int highest;
+  //    windows_panda_ptrlist *list;
+  //  }
+  //  windows_panda_abs;
+  //#endif
 #ifdef __cplusplus
 }
 #endif
 
-#endif				/* PANDA_OBJECTS_H */
+typedef struct panda_internal_fontmetric
+{
+  char *fontName;
+  int characterWidth[256];
+}
+panda_fontmetric;
+
+#endif /* PANDA_OBJECTS_H */
