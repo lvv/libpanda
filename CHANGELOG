@@ -1,8 +1,5 @@
-Release 0.2 -> Release 0.2.2
+Release 0.2 -> Release 0.3
   * Changed Makefile.in so that includes are looked for in /usr/include and
   	/usr/local/include
 
   * Added JPEG support to imagebox
-
-Release 0.2 -> Release 0.2.1
-  * Added RPM and SRPM
