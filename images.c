@@ -28,11 +28,13 @@ void imagebox(pdf *output, page *target, int top, int left, int bottom,
 void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   int right, char *filename){
   TIFF          *image;
-  object        *imageObj;
+  object        *imageObj, *subdict;
   int           stripCount;
   tsize_t       stripSize;
   unsigned long imageOffset;
   char          *tempstream;
+  uint16        tiffResponse16;
+  uint32        tiffResponse32;
 
   // Open the file and make sure that it exists and is a TIFF file
   if((image = TIFFOpen(filename, "r")) == NULL)
@@ -53,8 +55,66 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
 
   // We now add some dictionary elements to the image object to say that it is
   // a TIFF image
+  adddictitem(imageObj, "Type", gTextValue, "XObject");
+  adddictitem(imageObj, "Subtype", gTextValue, "Image");
+  
+  // This line will need to be changed to gaurantee that the internal name is
+  // unique unless the actual image is the same
+  adddictitem(imageObj, "Name", gTextValue, filename);
+
   adddictitem(imageObj, "Filter", gTextValue, "CCITTFaxDecode");
   
+  // Bits per component is per colour component, not per sample. Does this
+  // matter?
+  if(TIFFGetField(image, TIFFTAG_BITSPERSAMPLE, &tiffResponse16) != 0)
+    adddictitem(imageObj, "BitsPerComponent", gIntValue, tiffResponse16);
+  else error("Could not get the colour depth for the tiff image.");
+
+  // The colour device will change based on this number as well
+  switch(tiffResponse16){
+  case 1:
+    adddictitem(imageObj, "ColorSpace", gTextValue, "DeviceGray");
+    break;
+
+  default:
+    adddictitem(imageObj, "ColorSpace", gTextValue, "DeviceRGB");
+    break;
+  }
+
+  /****************************************************************************
+     We need to add a sub-dictionary with the parameters for the compression
+     filter in it.
+  ****************************************************************************/
+
+  // We make an object not just a dictionary because this is what
+  // adddictitem needs
+  subdict = newobject(output, gPlaceholder);
+
+  // There are several parameters that we need to set for the compression to be
+  // able to do its thing
+  adddictitem(subdict, "K", gIntValue, -1);
+
+  // Width of the image
+  if(TIFFGetField(image, TIFFTAG_IMAGEWIDTH, &tiffResponse32) != 0){
+    adddictitem(subdict, "Columns", gIntValue, tiffResponse32);
+    adddictitem(imageObj, "Width", gIntValue, tiffResponse32);
+  }
+  else error("Could not get the width of the TIFF image.");
+
+  // Height of the image
+  if(TIFFGetField(image, TIFFTAG_IMAGELENGTH, &tiffResponse32) != 0){
+    adddictitem(subdict, "Rows", gIntValue, tiffResponse32);
+    adddictitem(imageObj, "Height", gIntValue, tiffResponse32);
+  }
+  else error("Could not get the height of the TIFF image.");
+
+  // And put this into the PDF
+  adddictitem(imageObj, "Resources", gDictionaryValue, subdict->dict);
+
+  /****************************************************************************
+     Insert the image
+  ****************************************************************************/
+
   // We also need to add a binary stream to the object and put the image
   // data into this stream
   stripSize = TIFFStripSize(image);
