@@ -19,41 +19,17 @@
 .\" License along with this manual; if not, write to the Free
 .\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
 .\" USA.
-.TH SFM 3 "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
+.TH SL 3 "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
 .SH NAME
-setfontmode
+setleading
 .SH SYNOPSIS
 .B #include <panda.h>
 .sp
-.BI "void setfontmodepdf *, int mode);"
+.BI "void setleading(pdf *, double leading);"
 .SH DESCRIPTION
 The function
-.B setfontmode
-sets the text drawing method to be used for text within text boxes. The default mode is gTextModeNormal, and possible modes are:
-
-.B gTextModeNormal
-.br
-.B gTextModeOutline
-.br
-.B gTextModeFilledOutline
-.br
-.B gTextModeInvisible
-.br
-.B gTextModeFillClipped
-.br
-.B gTextModeStrokeClipped
-.br
-.B gTextModeFillStrokeClipped
-.br
-.B gTextModeClipped
-
-Modes once set are 'sticky' and therefore apply to all text boxes created after the mode is set. You will therefore need to change mode back (possibly to the default) if you no longer want to draw in that mode.
-.SH MODES
-To be completed
-.br
-.RS
-Definitions of each mode and what it looks like on paper should be added here.
-.RE
+.B setleading
+sets the text leading space, which is the amount of extra space between lines of text in a text box. The leading, once set, is 'sticky' and therefore apply to all text boxes created after the leading is set. You will therefore need to change the leading back (possibly to the default) if you no longer want to draw with that leading.
 .SH EXAMPLE
 .br
 Simply use:
@@ -64,7 +40,7 @@ Simply use:
 pdf *document;
 
 document = openpdf("filename", "w");
-setfontmode(document, gTextModeNormal);
+setleading(document, 42);
 .fi
 .RE
 .SH AUTHOR
