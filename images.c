@@ -63,13 +63,15 @@ void insertTiff(pdf *output, page *target, int top, int left,
 
   // We make an object not just a dictionary because this is what
   // adddictitem needs
-  xobjrefsubdict = newobject(output, gPlaceholder);
   xobjrefsubsubdict = newobject(output, gPlaceholder);
-
   adddictitem(xobjrefsubsubdict->dict, filename, gObjValue, imageObj);
-  adddictitem(xobjrefsubdict->dict, "XObject", gDictionaryValue,
+  
+  xobjrefsubdict = newobject(output, gPlaceholder);
+  adddictitem(xobjrefsubdict->dict, "XObject", gDictionaryValue, 
     xobjrefsubsubdict->dict);
-  adddictitem(target->obj->dict, "Resources", gDictionaryValue,
+  
+  // And put this into the PDF
+  adddictitem(target->obj->dict, "Resources", gDictionaryValue, 
     xobjrefsubdict->dict);
 
   // We put some information based on a stat of the image file into the object

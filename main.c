@@ -60,6 +60,11 @@ int main(int argc, char *argv[]){
 #if defined DEBUG
     printf("Created second textbox\n");
 #endif
+
+    textbox(demo, currPage, 600, 10, 700, 300, 
+      "The background image on this page is Copyright 2000 Andrew Cagney");
+    textbox(demo, currPage, 620, 10, 720, 300,
+      "and is distributed under the terms of the GPL...");
   }
 
   pdfclose(demo);

@@ -82,14 +82,15 @@ page  *pdfpage(pdf *, char *);
   Objects.c
 ******************************************************************************/
 
-object  *newobject(pdf *, int);
-void    adddictitem(dictionary *, char *, int, ...);
-void    *getdictvalue(dictionary *);
-void    freeObject(pdf *, object *);
-void    writeObject(pdf *, object *);
-void    writeDictionary(pdf *, object *, dictionary *);
-void    addchild(object *, object *);
-void    traverseObjects(pdf *, object *, int, traverseFunct);
+object     *newobject(pdf *, int);
+void       adddictitem(dictionary *, char *, int, ...);
+void       *getdictvalue(dictionary *);
+dictionary *getdict(dictionary *, char *);
+void       freeObject(pdf *, object *);
+void       writeObject(pdf *, object *);
+void       writeDictionary(pdf *, object *, dictionary *);
+void       addchild(object *, object *);
+void       traverseObjects(pdf *, object *, int, traverseFunct);
 
 /******************************************************************************
   Text.c

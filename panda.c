@@ -155,14 +155,12 @@ void pdfclose(pdf *openedpdf){
   // structure will need a traverseObjects call here...
   traverseObjects(openedpdf, openedpdf->catalog, gDown, writeObject);
   traverseObjects(openedpdf, openedpdf->fonts, gDown, writeObject);
-  traverseObjects(openedpdf, openedpdf->info, gDown, writeObject);
  
   // We also need to free all the memory that we no longer need. This is done
   // separately because sometimes we want to write out but not do this
   // in other words I am leaving space for later movement...
   traverseObjects(openedpdf, openedpdf->catalog, gUp, freeObject);
   traverseObjects(openedpdf, openedpdf->fonts, gUp, freeObject);
-  traverseObjects(openedpdf, openedpdf->info, gUp, freeObject);
  
   // Write our the XREF object -- this MUST happen after all objects have been
   // written, or the byte offsets will not be known

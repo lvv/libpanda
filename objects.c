@@ -93,7 +93,7 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
   int         overwriting = gFalse;
 
 #if defined DEBUG
-  printf("Added dictionary item %s to object\n", name);
+  printf("Added dictionary item %s to object (type = %d)\n", name, valueType);
   fflush(stdout);
 #endif
 
@@ -112,13 +112,16 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
     dictNow->next->next = NULL;
     dictNow->objectArrayValue = NULL;
     dictNow->dictValue = NULL;
+
+#if defined DEBUG
+    printf(" (This is a new dictionary element)\n");
+#endif
     }
   else{
 #if defined DEBUG
     printf(" (Overwriting a dictionary element)\n");
-    overwriting = gTrue;
-    fflush(stdout);
 #endif
+    overwriting = gTrue;
   }
 
   // Work with the last argument
@@ -145,7 +148,7 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
     break;
 
   default:
-    error("Overwriting non array objects not yet supported.");
+    error("Overwriting some dictionary types not yet supported.");
   }
 
   switch(valueType){
@@ -153,7 +156,7 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
   case gLiteralTextValue:
   case gBracketedTextValue:
     // Are we overwriting?
-    if(overwriting == gTrue)
+    if((overwriting == gTrue) && (dictNow->textValue != NULL))
       free(dictNow->textValue);
 
     // Get the value
@@ -227,12 +230,12 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
     dictValue = va_arg(argPtr, dictionary *);
 
     if(overwriting == gFalse){
-#if defined DEBUG
-      printf("This is a new dictionary value\n");
-#endif
-
       // This is a new dictionary item, just copy the info across
       dictNow->dictValue = dictValue;
+
+#if defined DEBUG
+      printf("Added a subdictionary in its full glory\n");
+#endif
     }
     else{
       // We are appending to a subdictionary item -- we need to go through all
@@ -240,16 +243,21 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
       // subdictionary that is already here
       while(dictValue->next != NULL){
 #if defined DEBUG
-	printf("Adding a subdictionary element named %s\n", dictNow->name);
+	printf("Adding a subdictionary element named %s to existing\n",
+          dictValue->name);
 #endif
 
-	switch(dictNow->valueType){
+	switch(dictValue->valueType){
 	case gTextValue:
 	case gBracketedTextValue:
 	case gLiteralTextValue:
-	case gObjValue:
 	  adddictitem(dictNow->dictValue, dictValue->name,
 	    dictValue->valueType, dictValue->textValue);
+	  break;
+
+	case gObjValue:
+	  adddictitem(dictNow->dictValue, dictValue->name,
+	    gLiteralTextValue, dictValue->textValue);
 	  break;
 
 	case gDictionaryValue:
@@ -299,6 +307,14 @@ void *getdictvalue(dictionary *dictValue){
   return NULL;
 }
 
+dictionary *getdict(dictionary *head, char *name){
+  while((strcmp(head->name, name) != 0) && (head->next != NULL))
+    head = head->next;
+
+  if(head->next == NULL) return NULL;
+  return head;
+}
+
 void freeObject(pdf *output, object *freeVictim){
   // Free the object and all it's bits -- free of a NULL does nothing! But not
   // in dmalloc!!!
@@ -339,8 +355,14 @@ void writeObject(pdf *output, object *dumpTarget){
 
     if(dumpTarget->textstream != NULL){
       // Do we also have an xobjectstream?
-      adddictitem(dumpTarget->dict, "Length", gIntValue, 
-        strlen(dumpTarget->textstream) + 6 + dumpTarget->xobjectstream);
+      if(dumpTarget->xobjectstream != NULL)
+	adddictitem(dumpTarget->dict, "Length", gIntValue, 
+          strlen(dumpTarget->textstream) + 6 + 
+          strlen(dumpTarget->xobjectstream));
+
+      else
+	adddictitem(dumpTarget->dict, "Length", gIntValue,
+	  strlen(dumpTarget->textstream) + 6);
     }
 
     // We cannot have a textstream and a binary stream in the same object
@@ -350,7 +372,7 @@ void writeObject(pdf *output, object *dumpTarget){
     }
 
     // We might also only have an xobjectstream here
-    if(dumpTarget->xobjectstream != NULL){
+    else if(dumpTarget->xobjectstream != NULL){
       adddictitem(dumpTarget->dict, "Length", gIntValue, 
 	strlen(dumpTarget->xobjectstream));
     }

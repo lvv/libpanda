@@ -24,3 +24,6 @@
   * Arbitrary image rotations
 
   * Make all kinds of TIFFs work
+
+  * At the moment you can only have background images, make foreground images
+	work as well...
