@@ -38,7 +38,7 @@ main (int argc, char *argv[])
 #endif
 
       // Create a page
-      currPage = panda_newpage (demo, gPageSizeA4);
+      currPage = panda_newpage (demo, panda_pagesize_a4);
 
       // Put in the background images
       panda_imagebox (demo, currPage, 0, 0, currPage->height / 2, currPage->width,

@@ -18,7 +18,7 @@ panda_checkinfo (panda_pdf * document)
   if (document->info == NULL)
     {
       // We need to create an info object
-      document->info = panda_newobject (document, gNormal);
+      document->info = panda_newobject (document, panda_normal);
       panda_addchild (document->catalog, document->info);
     }
 }

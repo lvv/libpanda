@@ -19,7 +19,7 @@ panda_createfont (panda_pdf * output, char *fontname, int type, char *encoding)
   char tempBuffer[10], *fontident;
 
   // Make the new object
-  font = panda_newobject (output, gNormal);
+  font = panda_newobject (output, panda_normal);
 
   // Add it to the tree of font objects
   panda_addchild (output->fonts, font);

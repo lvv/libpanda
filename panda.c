@@ -98,13 +98,13 @@ panda_open_actual (char *filename, char *mode, int suppress)
 		     panda_binaryheaderstring);
 
 	  // We need a catalog object with some elements within it's dictionary
-	  openedpdf->catalog = panda_newobject (openedpdf, gNormal);
+	  openedpdf->catalog = panda_newobject (openedpdf, panda_normal);
 	  panda_adddictitem (openedpdf->catalog->dict, "Type", panda_textvalue,
 		       "Catalog");
 
 	  // We need a reference to our pages object
 	  panda_addchild (openedpdf->catalog,
-		    openedpdf->pages = panda_newobject (openedpdf, gNormal));
+		    openedpdf->pages = panda_newobject (openedpdf, panda_normal));
 	  panda_adddictitem (openedpdf->catalog->dict, "Pages", panda_objectvalue,
 		       openedpdf->pages);
 
@@ -122,7 +122,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
 	  // The fonts object in the pdf * is a dummy which makes fonts external
 	  // to each page. This makes the PDF more efficient
-	  openedpdf->fonts = panda_newobject (openedpdf, gPlaceholder);
+	  openedpdf->fonts = panda_newobject (openedpdf, panda_placeholder);
 
 	  // Set the text mode to something basic
 	  panda_setfontmode (openedpdf, gTextModeNormal);
@@ -155,13 +155,13 @@ panda_open_actual (char *filename, char *mode, int suppress)
       // And this stuff is always done
 
       // Create a dummy object for when we print the pdf to a file
-      openedpdf->dummyObj = panda_newobject (openedpdf, gPlaceholder);
+      openedpdf->dummyObj = panda_newobject (openedpdf, panda_placeholder);
 
       // Remember the mode and create the linear object if needed
       if ((mode[1] == 'l') || (mode[1] == 'L'))
 	{
 	  openedpdf->mode = panda_writelinear;
-	  openedpdf->linear = panda_newobject (openedpdf, gNormal);
+	  openedpdf->linear = panda_newobject (openedpdf, panda_normal);
 	  panda_adddictitem (openedpdf->linear->dict, "Linearised", panda_integervalue, 1);
 	}
       else
@@ -312,7 +312,7 @@ panda_newpage (panda_pdf * output, char *pageSize)
   newPage = (panda_page *) panda_xmalloc(sizeof(panda_page));
 
   // Make the new page object
-  newPage->obj = panda_newobject (output, gNormal);
+  newPage->obj = panda_newobject (output, panda_normal);
 
   // Add it to the object tree
   panda_addchild (output->pages, newPage->obj);
@@ -324,7 +324,7 @@ panda_newpage (panda_pdf * output, char *pageSize)
 
   // We also need to do the same sort of thing for the contents object
   // that each page owns
-  newPage->contents = panda_newobject (output, gNormal);
+  newPage->contents = panda_newobject (output, panda_normal);
   panda_addchild (newPage->obj, newPage->contents);
   panda_adddictitem (newPage->obj->dict, "Contents", panda_objectvalue, newPage->contents);
 

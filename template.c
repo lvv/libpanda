@@ -23,10 +23,10 @@ panda_page *panda_newtemplate(panda_pdf *output, char *pageSize){
   template->obj = (object *) panda_xmalloc(sizeof(panda_object));
 
   // Add the required dictionary elements for a template page
-  panda_adddictitem(template->obj->dict, "Name", gTextValue, "XObject");
-  panda_adddictitem(template->obj->dict, "Subtype", gTextValue, "Form");
-  panda_adddictitem(template->obj->dict, "FormType", gIntValue, 1);
-  panda_adddictitem(template->obj->dict, "BBox", gTextValue, pageSize);
+  panda_adddictitem(template->obj->dict, "Name", panda_textvalue, "XObject");
+  panda_adddictitem(template->obj->dict, "Subtype", panda_textvalue, "Form");
+  panda_adddictitem(template->obj->dict, "FormType", panda_integervalue, 1);
+  panda_adddictitem(template->obj->dict, "BBox", panda_textvalue, pageSize);
   
   // Make sure it is written out at some point
   panda_addchild(output->contents, template->obj);

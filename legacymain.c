@@ -39,7 +39,7 @@ main (int argc, char *argv[])
 #endif
 
       // Create a page
-      currPage = pdfpage(demo, gPageSizeA4);
+      currPage = pdfpage(demo, panda_pagesize_a4);
 
       // Put in the background images
       imagebox (demo, currPage, 0, 0, currPage->height / 2, currPage->width,

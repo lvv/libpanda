@@ -38,7 +38,7 @@ panda_newobject (panda_pdf * doc, int type)
   // By default this object is not a pages object
   created->isPages = panda_false;
 
-  if (type == gPlaceholder)
+  if (type == panda_placeholder)
     {
       // This is a placeholder object, therefore it's number is -1
       created->number = -1;

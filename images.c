@@ -52,7 +52,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 #endif
 
   // Now we need an object to contain the image
-  imageObj = panda_newobject (output, gNormal);
+  imageObj = panda_newobject (output, panda_normal);
   panda_addchild (target->obj, imageObj);
 
   // We cannot have some characters in the filename that we embed into the PDF,
@@ -70,10 +70,10 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 
   // We make an object not just a dictionary because this is what
   // adddictitem needs
-  xobjrefsubsubdict = panda_newobject (output, gPlaceholder);
+  xobjrefsubsubdict = panda_newobject (output, panda_placeholder);
   panda_adddictitem (xobjrefsubsubdict->dict, pdfFilename, panda_objectvalue, imageObj);
 
-  xobjrefsubdict = panda_newobject (output, gPlaceholder);
+  xobjrefsubdict = panda_newobject (output, panda_placeholder);
   panda_adddictitem (xobjrefsubdict->dict, "XObject", panda_dictionaryvalue,
 	       xobjrefsubsubdict->dict);
 
@@ -242,7 +242,7 @@ panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageO
 
   // We make an object not just a dictionary because this is what
   // adddictitem needs
-  subdict = panda_newobject (output, gPlaceholder);
+  subdict = panda_newobject (output, panda_placeholder);
 
   // K will be minus one for g4 fax, and zero for g3 fax
   TIFFGetField (image, TIFFTAG_COMPRESSION, &compression);

@@ -23,11 +23,11 @@ panda_entergraphicsmode(panda_page *target)
   //  - use the image xobject we have created (Do operator, p 348 of spec)
   //  - restore the graphics state to the way it was previously (Q operator,
   //    p 386 of spec)
-  if(target->contents->textmode == gTrue)
+  if(target->contents->textmode == panda_true)
     {
       target->contents->layoutstream = 
 	panda_streamprintf(target->contents->layoutstream, "ET\nq\n");
-      target->contents->textmode = gFalse;
+      target->contents->textmode = panda_false;
       
 #if defined DEBUG
       printf("Ended textmode for object %d\n", target->contents->number);

@@ -54,15 +54,15 @@ extern char panda_binaryheaderstring[12];
 
 // Standard page sizes -- these are expressed in inches, with 72 dots per inch
 // with no fractional values shown. As many values as needed can be added here
-#define  gPageSizeA4                "[0 0 594 841]"
-#define  gPageSizeUsLetter          "[0 0 612 792]"
-#define  gPageSizeTemplateA4        "TEMPLATE [0 0 594 841]"
-#define  gPageSizeTemplayeUsLetter  "TEMPLATE [0 0 612 792]"
+#define  panda_pagesize_a4                "[0 0 594 841]"
+#define  panda_pagesize_usletter          "[0 0 612 792]"
+#define  panda_pagesize_template_a4       "TEMPLATE [0 0 594 841]"
+#define  panda_pagesize_template_usletter "TEMPLATE [0 0 612 792]"
 
 // We have the concept of placeholder objects, that do not get written out to
 // the PDF
-#define  gPlaceholder        0
-#define  gNormal             1
+#define  panda_placeholder        0
+#define  panda_normal             1
 
 // The text drawing modes (p 343 v 1.3)
 enum
