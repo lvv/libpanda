@@ -13,7 +13,7 @@ legacymain.o: legacymain.c ../panda/functions.h ../panda/objects.h \
   /usr/include/bits/sigset.h /usr/include/bits/time.h \
   /usr/include/sys/sysmacros.h /usr/include/alloca.h \
   /usr/include/string.h /usr/include/bits/string.h \
-  /usr/include/bits/string2.h ../panda/legacy.h
+  /usr/include/bits/string2.h /usr/include/dmalloc.h ../panda/legacy.h
 legacymain.c :
 ../panda/functions.h :
 ../panda/objects.h :
@@ -48,4 +48,5 @@ legacymain.c :
 /usr/include/string.h :
 /usr/include/bits/string.h :
 /usr/include/bits/string2.h :
+/usr/include/dmalloc.h :
 ../panda/legacy.h :

@@ -505,9 +505,9 @@ panda_freedictionary (panda_dictionary * freeDict)
 
       if (endoftheline == panda_false)
         {
-	  //#if defined DEBUG
+#if defined DEBUG
           printf ("Free dictionary item named %s\n", now->name);
-	  //#endif
+#endif
 
 	  if(freeDict->name != NULL)
 	    free (now->name);
@@ -530,7 +530,9 @@ panda_freedictionary (panda_dictionary * freeDict)
   // And free that initial dictionary element
   if (freeDict != NULL)
     {
+#if defined DEBUG
       printf("Free the final dictionary item\n");
+#endif
 
       if(freeDict->name != NULL)
 	free (freeDict->name);
