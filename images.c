@@ -534,6 +534,8 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       // The image offset is the total size of the binary stream as well
       imageObj->binarystreamLength = imageOffset;
     }
+
+  TIFFClose(image);
 }
 
 /******************************************************************************

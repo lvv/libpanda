@@ -1,15 +1,30 @@
+Panda is almost entirely written by Michael Still (mikal@stillhq.com). The assistance of the following people is gratefully acknowledged. If you have suggestions, comments or patches, please send them to panda-development@lists.sourceforge.net
+
+-------------------------------------------------------------------------------
+
 Ben Elliston                              provided advice whenever I needed it,
                                           also heaps of support with autoconf
                                           and automake
-
-Doug Jackson                              had ideas bounced off him a lot
 
 Ceasar Miquel   miquel@df.uba.ar          submitted patches for the jpeg
                                           support and added the imageboxrot
                                           call
 
-Phillip Rainey                            helped with the web page
+David Goehrig   dave@valinux.com          libtool, and autotools assistance
+                                          God of all things Freshmeat
+                                          assistance with imaging code
 
-Mirar		mirar@mirar.org	          can good enough to point out some
+Doug Jackson                              had ideas bounced off him a lot
+                                          understands a lot about black and
+                                          white tiff imaging
+
+Juan Herrero    juan_herrero@yahoo.com    bug reports
+                                          lots of work on the Windows 
+                                          compilation issues in 0.4 RC3
+
+Mirar		mirar@mirar.org	          was good enough to point out some
                                           usability issues with the 0.3.1
                                           release
+
+Phillip Rainey                            helped with the web page
+

@@ -147,3 +147,5 @@ Release 0.3 -> Release 0.4
 	libraries (Dave <dave@valinux.com>)
 
   * Cleaned up use of config defines in images code (Dave <dave@valinux.com>)
+
+  * Finished off the setup of libtool
