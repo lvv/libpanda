@@ -42,8 +42,9 @@ void  error(char *);
 ******************************************************************************/
 
 void  imagebox(pdf *, page *, int, int, int, int, char *, int);
-void  inserttiff(pdf *, page *, object *, char *);
-void  insertjpeg(pdf *, page *, object *, char *);
+void  insertTiff(pdf *, page *, object *, char *);
+void  insertJpeg(pdf *, page *, object *, char *);
+void  insertPNG(pdf *, page *, object *, char *);
 
 /******************************************************************************
   Info.c

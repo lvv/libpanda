@@ -66,11 +66,15 @@ void imagebox(pdf *output, page *target, int top, int left,
   // Now we do the things that are image format specific...
   switch(type){
   case gImageTiff:
-    inserttiff(output, target, imageObj, filename);
+    insertTiff(output, target, imageObj, filename);
     break;
 
   case gImageJpeg:
-    insertjpeg(output, target, imageObj, filename);
+    insertJpeg(output, target, imageObj, filename);
+    break;
+
+  case gImagePNG:
+    insertPNG(output, target, imageObj, filename);
     break;
   }
   // --------------------------------------------------------------------------
@@ -120,7 +124,7 @@ void imagebox(pdf *output, page *target, int top, int left,
 }
 
 // This function will insert a TIFF image into a PDF
-void inserttiff(pdf *output, page *target, object *imageObj, char *filename){
+void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
   TIFF          *image;
   object        *subdict;
   int           stripCount;
@@ -216,7 +220,7 @@ void inserttiff(pdf *output, page *target, object *imageObj, char *filename){
 }
 
 // This function will insert a JPEG image into a PDF
-void insertjpeg(pdf *output, page *target, object *imageObj, char *filename){
+void insertJpeg(pdf *output, page *target, object *imageObj, char *filename){
   struct jpeg_decompress_struct   cinfo;
   struct jpeg_error_mgr           jerr;
   FILE                            *image;
@@ -298,3 +302,11 @@ void insertjpeg(pdf *output, page *target, object *imageObj, char *filename){
   jpeg_destroy_decompress(&cinfo);
 }
 
+void insertPNG(pdf *output, page *target, object *imageObj, char *filename){
+  
+#if defined DEBUG
+  printf("Inserting a PNG / Flate image on page with object number %d.\n",
+    target->obj->number);
+#endif
+
+}

@@ -3,25 +3,52 @@ AC_INIT(constants.h)
 
 dnl Checks for programs.
 AC_PROG_CC
+AC_PROG_INSTALL
 
 dnl Checks for libraries.
-dnl Replace `main' with a function in -lcpdf:
-AC_CHECK_LIB(cpdf, cpdfInit)
-dnl Replace `main' with a function in -lm:
-AC_CHECK_LIB(m, sqrt)
-dnl Replace `main' with a function in -lpdf:
-AC_CHECK_LIB(pdf, )
-dnl Replace `main' with a function in -lpng:
-AC_CHECK_LIB(png, png_sig_cmp)
-dnl Replace `main' with a function in -ltiff:
-AC_CHECK_LIB(tiff, tiffopen)
+dnl The syntax is library name, function, action if found, action if not found
+dnl We just use the default if found action which adds -l<lib> to the LIBS var
+dnl and #defined HAVE_LIB<lib>
+
+
+dnl -lm:
+AC_CHECK_LIB(m, atan)
+
+dnl -lpng:
+AC_CHECK_LIB(png, png_libpng_ver)
+
+dnl -ltiff:
+AC_CHECK_LIB(tiff, TIFFOpen)
+
+dnl -ljpeg:
+AC_CHECK_LIB(jpeg, jpeg_std_error)
 
 dnl Checks for header files.
+dnl STDC checks for stdlib.h stdarg.h string.h and float.h
 AC_HEADER_STDC
+AC_CHECK_HEADERS(stdio.h)
+AC_CHECK_HEADERS(unistd.h)
+AC_CHECK_HEADERS(sys/stat.h)
+
+dnl Headers for libraries
+AC_CHECK_HEADERS(jpeglib.h)
+AC_CHECK_HEADERS(tiffio.h)
+
+dnl Windows specific headers
+AC_MSG_CHECKING(if this is a windows box)
+AC_MSG_RESULT()
+AC_CHECK_HEADERS(windows.h, PLATFORM=WINDOWS, PLATFORM=UNIX)
+AC_SUBST(PLATFORM)
 
 dnl Checks for typedefs, structures, and compiler characteristics.
 
 dnl Checks for library functions.
 AC_FUNC_VPRINTF
+AC_FUNC_SNPRINTF
+
 
 AC_OUTPUT(timetrials/Makefile regression/Makefile Makefile)
+
+
+
+

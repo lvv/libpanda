@@ -52,7 +52,7 @@ int main(int argc, char *argv[]){
 
     // Insert some images
     imagebox(demo, currPage, 10, 10, 20, 20, "input.tif", gImageTiff);
-    imagebox(demo, currPage, 200, 200, 250, 250, "gnu-head.jpg", gImageJpeg);
+    imagebox(demo, currPage, 200, 200, 250, 250, "doll.jpg", gImageJpeg);
 
 #if defined DEBUG
     printf("Created textbox and inserted first image\n");
@@ -67,7 +67,7 @@ int main(int argc, char *argv[]){
     setfont(demo,
       createfont(demo, "Times-Roman", 1, "MacRomanEncoding"));
     textbox(demo, currPage, 600, 10, 700, 300, 
-      "For attribution of the images on this page, see the IMAGES file in the source code directory");
+      "The background image on this page is Copyright 2000 Andrew Cagney");
     textbox(demo, currPage, 620, 10, 720, 300,
       "and is distributed under the terms of the GPL...");
   }
