@@ -1,11 +1,11 @@
 /******************************************************************************
-	GNUPDF
+	Panda
 
 	Change Control:													DDMMYYYY
 		Michael Still		File created							03062000
 
 	Purpose:
-		The GNUPDF codebase can be used in a variety of ways, one of them is as
+		The Panda codebase can be used in a variety of ways, one of them is as
 		as stand alone application. This file supports that methodology.
 ******************************************************************************/
 
@@ -18,7 +18,7 @@ int main(int argc, char *argv[]){
 	page	*firstpage;
 
 	// Initialise the library
-	initgnupdf();
+	initpanda();
 
 	// Open our demo PDF
 	if((demo = pdfopen("output.pdf", "w")) == NULL)

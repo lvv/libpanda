@@ -1,5 +1,5 @@
 /******************************************************************************
-	gnupdf.c
+	panda.c
 
 	Change Control:													DDMMYYYY
 		Michael Still		File created							17062000

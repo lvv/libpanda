@@ -36,10 +36,10 @@ void	setfontsize(pdf *, int);
 object	*getfontobj(pdf *, char *);
 
 /******************************************************************************
-	Gnupdf.c
+	Panda.c
 ******************************************************************************/
 
-void	initgnupdf();
+void	initpanda();
 pdf		*pdfopen(char *, char *);
 void	pdfclose(pdf *);
 page	*pdfpage(pdf *, char *);

@@ -12,16 +12,16 @@
 ******************************************************************************/
 
 // The text that we make binary to display in the first 100 bytes or so of the
-// PDF (forces some FTP clients into binary mode). The function initgnupdf
+// PDF (forces some FTP clients into binary mode). The function inipanda
 // actually generates the gBinaryHeaderString string value.
 #define	gMagicHeaderString		"%PDF-1.3 "
-#define	gHeaderString			"GNU PDF, 2000"
+#define	gHeaderString			"Panda, 2000"
 #define	gBinaryChar(x)			256 - x
 
 #if defined GLOBALS
 	char	gBinaryHeaderString[14];
 #else
-	extern char	gBinaryHeaderString[14];
+	extern char	gBinaryHeaderString[12];
 #endif
 
 // There are two kinds of dictionary values, ints and text. We need to say

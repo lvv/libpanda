@@ -8,7 +8,7 @@
 		Michael Still		Added XREF and object traversal code	18062000
 
 	Purpose:
-		GNUPDF is based on the concept of objects. This file contains all of
+		Panda is based on the concept of objects. This file contains all of
 		methods needed to maintain the objects that we have.
 ******************************************************************************/
 

@@ -1,5 +1,5 @@
 /******************************************************************************
-	gnupdf.c
+	Panda.c
 
 	Change Control:													DDMMYYYY
 		Michael Still		File created							08062000
@@ -15,7 +15,7 @@
 #include "constants.h"
 #include "functions.h"
 
-void initgnupdf(){
+void initpanda(){
 	int	generalCounter;
 
 	// We first need to create the binary string to include in our header
@@ -41,14 +41,14 @@ pdf *pdfopen(char *filename, char *mode){
 	switch(mode[0]){
 	case 'r':
 	case 'a':
-		error("Unsupported file I/O mode handed to gnu pdf.");
+		error("Unsupported file I/O mode handed to panda.");
 		break;
 
 	case 'w':
 		// We are opening a new PDF for writing (we hope)
 		if(strlen(mode) > 1) switch(mode[1]){
 		case '+':
-			error("Unsupported file I/O mode handed to gnu pdf.");
+			error("Unsupported file I/O mode handed to panda.");
 			break;
 		}
 
@@ -97,7 +97,7 @@ pdf *pdfopen(char *filename, char *mode){
 		break;
 
 	default:
-		error("Unknown file I/O mode handed to gnu pdf.");
+		error("Unknown file I/O mode handed to panda.");
 		break;
 	}
 

@@ -10,7 +10,7 @@
 							this into account in the byte offsets.
 
 	Purpose:
-		Utility functions for the gnu pdf library.
+		Utility functions for the panda library.
 ******************************************************************************/
 
 #include "constants.h"

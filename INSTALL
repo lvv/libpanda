@@ -1,14 +1,11 @@
-Welcome to GNU PDF 0.1.
+Welcome to Panda 0.1.
 
-As the name implies, this code is covered by the GNU Public License.
-Please respect the conditions of this license, which is included in
-this distribution.
+This code is covered by the GNU Public License. Please respect the conditions of this license, which is included in
+this distribution. All of this code is (c) Michael Still, 2000.
 
 INSTALLATION
 
-At the moment the codebase is very simple. Type gcc *.c -o gnupdf to
-make the library. You can then author hello world PDFs to your hearts
-content!
+Type "make all" to build the library...
 
 Michael Still (mikal@stillhq.com)
 24 June 2000
