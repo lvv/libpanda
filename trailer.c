@@ -15,7 +15,7 @@
 void writeTrailer(pdf *output){
   // Write out the trailer information for the PDF
   pdfprintf(output, "trailer\n<<\n/Size %d\n/Root %d %d R\n>>\nstartxref\n%d\n%sEOF\n",
-    output->xrefCount + 1,
+    output->nextObjectNumber + 1,
     output->catalog->number, output->catalog->generation,
     output->xrefOffset,
     "%%");

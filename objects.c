@@ -40,6 +40,9 @@ object *newobject(pdf *doc, int type){
 
   created->dict->next = NULL;
 
+  // By default this object is not a pages object
+  created->isPages = gFalse;
+
   if(type == gPlaceholder){
     // This is a placeholder object, therefore it's number is -1
     created->number = -1;
@@ -73,9 +76,6 @@ object *newobject(pdf *doc, int type){
     error("Could not add xref to the list for new object.");
   doc->xrefTail->next->next = NULL;
   doc->xrefTail = doc->xrefTail->next;
-
-  // By default this object is not a pages object
-  created->isPages = gFalse;
 
   // Return
   return created;
@@ -285,32 +285,6 @@ void writeDictionary(pdf *output, object *obj, dictionary *incoming){
   // The start of the dictionary
   pdfprint(output, "<<\n");
 
-  // If this is a pages object then we need to have a kids object created now
-  if(obj->isPages == gTrue){
-    pdfprint(output, "\t/Kids [");
-
-    // Do the dumping
-    currentKid = obj->children;
-
-    while(currentKid->next != NULL){
-      if(atBegining == gFalse) pdfprint(output, " ");
-      else atBegining = gFalse;
-
-      pdfprintf(output, "%d %d R", 
-	currentKid->me->number,
-	currentKid->me->generation);
-
-      // Next
-      currentKid = currentKid->next;
-    }
-
-    // End it all
-    pdfprint(output, "]\n");
-  }
-
-  // Restore atBegining
-  atBegining = gTrue;
-
   // Enumerate the dictionary elements
   dictNow = incoming;
 
@@ -320,6 +294,30 @@ void writeDictionary(pdf *output, object *obj, dictionary *incoming){
     case gObjValue:
     case gLiteralTextValue:
       pdfprintf(output, "\t/%s %s\n", dictNow->name, dictNow->textValue);
+
+      // If the type is type, then possibly output the Kids line for the pages
+      // object
+      if((strcmp(dictNow->name, "Type") == 0) && (obj->isPages == gTrue)){
+	pdfprint(output, "\t/Kids [");
+
+	// Do the dumping
+	currentKid = obj->children;
+
+	while(currentKid->next != NULL){
+	  if(atBegining == gFalse) pdfprint(output, " ");
+	  else atBegining = gFalse;
+
+	  pdfprintf(output, "%d %d R", 
+	    currentKid->me->number,
+	    currentKid->me->generation);
+
+	  // Next
+	  currentKid = currentKid->next;
+	}
+	
+	// End it all
+	pdfprint(output, "]\n");
+      }
       break;
 
     case gIntValue:
@@ -328,6 +326,8 @@ void writeDictionary(pdf *output, object *obj, dictionary *incoming){
 
     case gObjArrayValue:
       // Start the array in the file
+      atBegining = gTrue;
+
       pdfprintf(output, "\t/%s [", dictNow->name);
 
       // Go through the array list until the end

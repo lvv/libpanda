@@ -18,7 +18,6 @@ void writeXref(pdf *output){
 
   // Save the offset of the xref section for the trailer
   output->xrefOffset = output->byteOffset;
-  output->xrefCount = 0;
 
   // We need to write out the XREF table, the object number of the catalog
   // object is the lowest and %d is the object count. The first line is a 
@@ -34,13 +33,8 @@ void writeXref(pdf *output){
   currentXREF = output->xrefList;
 
   while(currentXREF->next != NULL){
-    pdfprintf(output, "%010d %05d n\n", currentXREF->this->byteOffset, 0);
+    pdfprintf(output, "%010d %05d n\n", 
+      currentXREF->this->byteOffset, 0);
     currentXREF = currentXREF->next;
   }
 }
-
-
-
-
-
-
