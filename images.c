@@ -28,11 +28,11 @@ void imagebox(pdf *output, page *target, int top, int left, int bottom,
 void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   int right, char *filename){
   TIFF          *image;
-  object        *imageObj, *subdict;
+  object        *imageObj, *subdict, *xobjrefsubdict;
   int           stripCount;
   tsize_t       stripSize;
   unsigned long imageOffset;
-  char          *tempstream;
+  char          *tempstream, xobjstr[255];
   uint16        tiffResponse16;
   uint32        tiffResponse32;
 
@@ -44,6 +44,15 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   imageObj = newobject(output, gNormal);
   addchild(target->obj, imageObj);
 
+  // We do not use the xobject stream here because the image is not inline (it
+  // is external to the stream that the page is described in)
+
+  // We make an object not just a dictionary because this is what
+  // adddictitem needs
+  xobjrefsubdict = newobject(output, gPlaceholder);
+  adddictitem(xobjrefsubdict, filename, gObjValue, imageObj);
+  adddictitem(target->obj, "XObject", gDictionaryValue, xobjrefsubdict->dict);
+
   // We put some information based on a stat of the image file into the object
   // This will allow us to determine if this file's image is included in the
   // document again later, which will allow us avoid repetition of the same
@@ -51,7 +60,6 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   // and we still need to add the existance check before the object is created
   // and some form of object searching by a rational and efficient manner (a
   // binary search tree?)
-
 
   // We now add some dictionary elements to the image object to say that it is
   // a TIFF image

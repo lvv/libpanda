@@ -41,3 +41,9 @@ Release 0.1 -> Release 0.2
 
   * Started implementing TIFF support, this means that libtiff is now required
 	by Panda.
+
+  * Added the binary stream. This is used for image data at the moment.
+
+  * Added the xobject stream. This will later be used for inline image data,
+	but is currently used to refer to the external image data that resides
+	in the xobject.

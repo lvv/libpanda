@@ -25,8 +25,8 @@
   extern char  gBinaryHeaderString[12];
 #endif
 
-// There are two kinds of dictionary values, ints and text. We need to say
-// which we are using
+// We sometimes need to specify what type of value we are passing to a 
+// function. These are the supported types.
 #define  gDictionaryValue    4
 #define  gIntValue           0
 #define  gTextValue          1
