@@ -40,17 +40,11 @@ L * New font ids are handed out too often -- what about font reuse?
 
   * AM_CONFIG_HEADER problems
 
-  * String length measuring with Freetype so that textboxes wrap nicely...
-
-  * More freeing of memory than we do now
-
   * If you set the character spacing or something like that to a very
 	negative number, then we should complain in some way...
 
   * Save the state that someone is built for lines and curves and stuff, and
 	allow them to restore that state later on if they would like to...
-
-  * Memory leaks
 
   * PNG images have their alpha channel ignored, with the background colour not
 	being used. PDF does "poor man's alpha channelling", which we should 
@@ -79,16 +73,10 @@ L * New font ids are handed out too often -- what about font reuse?
 
   * Optomise database accesses
 
-  * Possible caching implementation for the tdb stuff
-
   * Man pages!
 
   * Panic handler (based on Tridge's talk)
 
   * Documentation
 
-  * Local version of tdb
-
-  * Remove tdb when we are finished with it...
-
-  * Do the vnsprintf semantic match all the target operating systems?
+  * Do the vnsprintf semantics match all the target operating systems?

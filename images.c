@@ -428,6 +428,7 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
      - G3 and G4 are supported
   **************************************************************************/
 
+#if defined HAVE_LIBTIFF
   TIFF *image, *conv;
   int stripCount, stripMax;
   tsize_t stripSize;
@@ -668,6 +669,11 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
     }
 
   TIFFClose (image);
+#else
+#if defined DEBUG
+  printf("libtiff not installed\n");
+#endif
+#endif
 }
 
 /******************************************************************************
@@ -698,6 +704,7 @@ void
 panda_insertJPEG (panda_pdf * output, panda_page * target,
 		  panda_object * imageObj, char *filename)
 {
+#if defined HAVE_LIBJPEG
   struct jpeg_decompress_struct cinfo;
   struct jpeg_error_mgr jerr;
   FILE *image;
@@ -792,6 +799,11 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
 #if defined DEBUG
   printf ("Finished inserting the JPEG\n");
 #endif
+#else
+#if defined DEBUG
+  printf ("libjpeg not installed\n");
+#endif
+#endif
 }
 
 /******************************************************************************
@@ -834,6 +846,7 @@ void
 panda_insertPNG (panda_pdf * output, panda_page * target,
 		 panda_object * imageObj, char *filename)
 {
+#if defined HAVE_LIBPNG
   FILE *image;
   unsigned long width, height;
   int bitdepth, colourtype, outColourType;
@@ -1026,6 +1039,11 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   ReleaseMutex (winmutex);
 #else
   pthread_mutex_unlock (&convMutex);
+#endif
+#else
+#if defined DEBUG
+  printf("libpng not installed\n");
+#endif
 #endif
 }
 
@@ -1361,6 +1379,7 @@ panda_imagesize (int *width, int *height, char *filename, int type)
 void
 panda_imagesizeTIFF (int *width, int *height, char *filename) 
 {
+#if defined HAVE_LIBTIFF
   uint32 twidth, theight;
   TIFF * image;
   if ((image = TIFFOpen (filename, "r")) == NULL)
@@ -1369,10 +1388,15 @@ panda_imagesizeTIFF (int *width, int *height, char *filename)
   TIFFGetField (image, TIFFTAG_IMAGELENGTH, &theight);
   *width = twidth;
   *height = theight;
+#else
+  *width = -1;
+  #height = -1;
+#endif
 }
 void
 panda_imagesizeJPEG (int *width, int *height, char *filename) 
 {
+#if defined HAVE_LIBJPEG
   struct jpeg_decompress_struct cinfo;
   struct jpeg_error_mgr jerr;
   FILE * image;
@@ -1394,10 +1418,15 @@ panda_imagesizeJPEG (int *width, int *height, char *filename)
     // This cleans things up for us in the JPEG library
     jpeg_destroy_decompress (&cinfo);
   fclose (image);
+#else
+  *height = -1;
+  *width = -1;
+#endif
 }
 void
 panda_imagesizePNG (int *width, int *height, char *filename) 
 {
+#if defined HAVE_LIBPNG
   FILE * image;
   unsigned long pwidth, pheight;
   int bitdepth, colourtype;
@@ -1438,4 +1467,8 @@ panda_imagesizePNG (int *width, int *height, char *filename)
 		 NULL, NULL);
   *width = pwidth;
   *height = pheight;
+#else
+  *width = -1;
+  *height = -1;
+#endif
 }

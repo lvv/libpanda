@@ -1,12 +1,70 @@
 #!/bin/bash
 
-cat docbook/manual-start.sgml > manual.sgml
+set -x
 
+if test -z $DOCBOOK2MAN; then
+    echo "Trying to find docbook2man command."
+    DOCBOOK2MAN=`which docbook2man 2>/dev/null`
+else
+    echo "Attempting to use $DOCBOOK2MAN as docbook2man command."
+fi
+
+if test -e "$DOCBOOK2MAN";
+then
+    echo "Docbook found at $DOCBOOK2MAN"
+else
+    echo "Docbook not found. Try exporting the path to docbook2man as DOCBOOK2MAN."
+    exit
+fi
+
+if test -z "$1";
+then
+    echo -e "Usage: $0 FORMAT
+"
+    echo "FORMAT can be any combination of the following:"
+    ls `$DOCBOOK2MAN -b doesntexist 2>&1 | grep -oe " .* "`
+    echo "Or 'all'"
+    exit
+fi
+
+cat docbook/manual-start.sgml > manual.sgml
 for item in `ls *.sgml | grep -v manual.sgml`
 do
   echo "<chapter><title>$item</title>" >> manual.sgml
   grep -v DOCTYPE $item >> manual.sgml
   echo "</chapter>" >> manual.sgml
 done
-
 cat docbook/manual-end.sgml >> manual.sgml
+
+if test "$1" == "all"; then
+    FORMATS=`ls  $DOCBOOK2MAN -b doesntexist 2>&1 | grep -oe " .* " `
+else
+    FORMATS=$@
+fi
+
+for fmt in $FORMATS; do
+    if test -e $1; then
+ echo "Directory  $PWD/$fmt  already exists."
+    else
+ echo "Creating directory  $PWD/$fmt "
+ mkdir $fmt
+    fi
+
+    printf "Attempting to create manual in $fmt format... "
+    $DOCBOOK2MAN -o $fmt -b $fmt manual.sgml 1>/dev/null 2>/dev/null
+    echo -e "Done.
+"
+
+    if test "$fmt" == "html"; then
+ if test -z $TIDY; then
+     echo "Attempting to find the tidy command."
+     TIDY=`which tidy`
+ else
+     echo "Using $TIDY for tidy command."
+ fi
+
+ if test -e $TIDY; then
+     echo "Using $TIDY to clean output."
+     cd html
+     for item in `ls *.html`; do
+  printf "  Cleaning $item... "
