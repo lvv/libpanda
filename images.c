@@ -288,6 +288,9 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
     TIFFSetField(conv, TIFFTAG_XRESOLUTION, 300);
     TIFFSetField(conv, TIFFTAG_YRESOLUTION, 300);
     
+    if(compression == COMPRESSION_CCITTFAX4)
+      TIFFSetField(conv, TIFFTAG_GROUP4OPTIONS, 0);
+
 #if defined DEBUG
     printf("The image buffer is %d bytes long\n", imageOffset);
 #endif
@@ -458,7 +461,11 @@ static tsize_t libtiffDummyWriteProc(thandle_t fd, tdata_t buf, tsize_t size){
   // to ignore this because PDF does not use it...
   if((size == 8) && (((char *) buf)[0] == 'I') && (((char *) buf)[1] == 'I') 
     && (((char *) buf)[2] == 42)){
-    // Skip the header
+    // Skip the header -- little endian
+  }
+  else if((size == 8) && (((char *) buf)[0] == 'M') && 
+    (((char *) buf)[1] == 'M') && (((char *) buf)[2] == 42)){
+    // Skip the header -- big endian
   }
   else{
     // Have we done anything yet?
