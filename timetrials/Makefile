@@ -15,6 +15,8 @@ all:
 clean:		
 		rm *.o; rm timings*; rm output.pdf
 
+##############################################################################
+
 hello-clibpdf-202r1:	
 		$(COMPILER) $(COMPOPTS) hello-clibpdf-202r1.c -o hello-clibpdf-202r1.o -lcpdf -lm
 
@@ -23,6 +25,8 @@ hello-pdflib-30:
 
 hello-panda-02:
 		$(COMPILER) $(COMPOPTS) hello-panda-02.c -o hello-panda-02.o -lpanda
+
+##############################################################################
 
 manytextboxes-clibpdf-202r1:	
 		$(COMPILER) $(COMPOPTS) manytextboxes-clibpdf-202r1.c -o manytextboxes-clibpdf-202r1.o -lcpdf -lm
@@ -33,5 +37,7 @@ manytextboxes-pdflib-30:
 manytextboxes-panda-02:
 		$(COMPILER) $(COMPOPTS) manytextboxes-panda-02.c -o manytextboxes-panda-02.o -lpanda
 
-manytextboxes-panda-02-profiling:
-		$(COMPILER) $(COMPOPTS) manytextboxes-panda-02-profiling.c -o manytextboxes-panda-02-profiling.o -lpanda
+##############################################################################
+
+manypages-panda-02:
+		$(COMPILER) $(COMPOPTS) manypages-panda-02.c -o manypages-panda-02.o -lpanda	
