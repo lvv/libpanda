@@ -226,7 +226,7 @@ panda_adddictitem (panda_pdf * document, panda_object * input, char *name,
     case panda_booleanvalue:
       dictdata = panda_xsnprintf ("%s",
 				  (((int) va_arg (argPtr, int)) ==
-				   panda_true) ? "trie" : "false");
+				   panda_true) ? "true" : "false");
       break;
 
     case panda_doublevalue:
