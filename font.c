@@ -1,84 +1,88 @@
 /******************************************************************************
-	font.c
+  font.c
 
-	Change Control:													DDMMYYYY
-		Michael Still		File created							22062000
+  Change Control:                                                      DDMMYYYY
+    Michael Still    File created                                      22062000
 
-	Purpose:
-		Routines related to fonts.
+  Purpose:
+    Routines related to fonts.
 ******************************************************************************/
 
 #include "constants.h"
 #include "functions.h"
 
 char *createfont(pdf *output, char *fontname, int type, char *encoding){
-	// Create a font object in the PDF
-	object	*font;
-	char	tempBuffer[10], *fontident;
+  // Create a font object in the PDF
+  object  *font;
+  char  tempBuffer[10], *fontident;
 
-	// Make the new object
-	font = newobject(output, gNormal);
+  // Make the new object
+  font = newobject(output, gNormal);
 
-	// Add it to the tree of font objects
-	addchild(output->fonts, font);
+  // Add it to the tree of font objects
+  addchild(output->fonts, font);
 
-	// Setup some values within the font object
-	adddictitem(font->dict, "Type", gTextValue, "Font");
+  // Setup some values within the font object
+  adddictitem(font, "Type", gTextValue, "Font");
 
-	sprintf(tempBuffer, "Type%d", type);
-	adddictitem(font->dict, "Subtype", gTextValue, tempBuffer);
+  sprintf(tempBuffer, "Type%d", type);
+  adddictitem(font, "Subtype", gTextValue, tempBuffer);
 
-	// Make a font identifier string for this font
-	if((fontident = (char *) malloc(10 * sizeof(char))) == NULL)
-		error("Could not make space for a new font identifier.");
-	sprintf(fontident, "F%08d", output->nextFontNumber);
-	adddictitem(font->dict, "Name", gTextValue, fontident);
+  // Make a font identifier string for this font
+  if((fontident = (char *) malloc(10 * sizeof(char))) == NULL)
+    error("Could not make space for a new font identifier.");
+  sprintf(fontident, "F%08d", output->nextFontNumber);
+  adddictitem(font, "Name", gTextValue, fontident);
 
-	adddictitem(font->dict, "BaseFont", gTextValue, fontname);
-	adddictitem(font->dict, "Encoding", gTextValue, encoding);
+  adddictitem(font, "BaseFont", gTextValue, fontname);
+  adddictitem(font, "Encoding", gTextValue, encoding);
 
-	return fontident;
+  return fontident;
 }
 
 void setfont(pdf *output, char *fontident){
-	output->currentFont = fontident;
+  output->currentFont = fontident;
 }
 
 void setfontsize(pdf *output, int size){
-	output->currentFontSize = size;
+  output->currentFontSize = size;
 }
 
 object *getfontobj(pdf *output, char *fontident){
-	// Somewhere there should be a font object with a dictionary key called
-	// Name with the value fontident. Find it. We do not handle
-	// sub-dictionaries here at the moment...
-	child		*thisChild;
-	dictionary	*thisDict;
-	char		valueString[20];
+  // Somewhere there should be a font object with a dictionary key called
+  // Name with the value fontident. Find it. We do not handle
+  // sub-dictionaries here at the moment...
+  child       *thisChild;
+  dictionary  *thisDict;
+  char        valueString[20];
 
-	// The value string needs to have a / out the front
-	sprintf(valueString, "/%s", fontident);
+  // The value string needs to have a / out the front
+  sprintf(valueString, "/%s", fontident);
 
-	// Start
-	thisChild = output->fonts->children;
+  // Start
+  thisChild = output->fonts->children;
 
-	// Go through each of the children until we find something
-	while(thisChild->next != NULL){
-		// We are now going to go through this dictionary
-		thisDict = thisChild->me->dict;
+  // Go through each of the children until we find something
+  while(thisChild->next != NULL){
+    // We are now going to go through this dictionary
+    thisDict = thisChild->me->dict;
 
-		while(thisDict->next != NULL){
-			// Is this the one?
-			if((strcmp(thisDict->name, "Name") == 0) &&
-				(strcmp(thisDict->textValue, valueString) == 0))
-				return thisChild->me;
+    while(thisDict->next != NULL){
+      // Is this the one?
+      if((strcmp(thisDict->name, "Name") == 0) &&
+        (strcmp(thisDict->textValue, valueString) == 0))
+        return thisChild->me;
 
-			thisDict = thisDict->next;
-		}
+      thisDict = thisDict->next;
+    }
 
-		thisChild = thisChild->next;
-	}
+    thisChild = thisChild->next;
+  }
 
-	// If we got here, then we found nothing
-	return NULL;
+  // If we got here, then we found nothing
+  return NULL;
 }
+
+void setfontmode(pdf *output, int mode){
+  output->currentFontMode = mode;
+  }

@@ -3,7 +3,8 @@
 
   Change Control:                                                      DDMMYYYY
     Michael Still    File created                                      08062000
-    Michael Still    Added magic header string                         17062000
+                     Added magic header string                         17062000
+                     Added text modes                                  30062000
 
   Purpose:
     This file defines some constants that are used in various places
@@ -33,6 +34,10 @@
 #define  gObjValue           2
 #define  gObjArrayValue      3
 
+// True and false
+#define  gTrue               0
+#define  gFalse              1
+
 // Standard page sizes -- these are expressed in inches, with 72 dots per inch
 // with no fractional values shown. As many values as needed can be added here
 #define  gPageSizeA4        "[0 0 594 841]"
@@ -41,4 +46,16 @@
 // We have the concept of placeholder objects, that do not get written out to
 // the PDF
 #define  gPlaceholder    0
-#define gNormal          1
+#define  gNormal          1
+
+// The text drawing modes (p 343 v 1.3)
+enum{
+  gTextModeNormal = 0,
+  gTextModeOutline,
+  gTextModeFilledOutline,
+  gTextModeInvisible,
+  gTextModeFillClipped,
+  gTextModeStrokeClipped,
+  gTextModeFillStrokeClipped,
+  gTextModeClipped
+  };

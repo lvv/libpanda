@@ -1,11 +1,17 @@
 # Panda 0.1 Makefile
 
-COMPILER = gcc
-COMPILER_FLAGS = -g -c
+# Use the debug flag to help debug the program. I wont produce valid PDF files
+# though...
 
 # This is used to do the Windows specific I/O things we have to do.
 #PLATFORM = WINDOWS
 PLATFORM = LINUX
+
+# DODEBUG = NO
+DODEBUG = DEBUG
+
+COMPILER = gcc
+COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG)
 
 # Main is excluded from here for the benefit of the tests
 OBJFILES = error.o  font.o  objects.o  panda.o  text.o  trailer.o  utility.o  xref.o
@@ -50,7 +56,7 @@ trailer.o:	trailer.c constants.h functions.h objects.h
 		$(COMPILER) $(COMPILER_FLAGS) trailer.c -o trailer.o
 
 utility.o:	utility.c constants.h functions.h objects.h
-		$(COMPILER) $(COMPILER_FLAGS) -D$(PLATFORM) utility.c -o utility.o
+		$(COMPILER) $(COMPILER_FLAGS) utility.c -o utility.o
 
 xref.o:		xref.c constants.h functions.h objects.h
 		$(COMPILER) $(COMPILER_FLAGS) xref.c -o xref.o

@@ -3,9 +3,10 @@
 
   Change Control:                                                      DDMMYYYY
     Michael Still    File created                                      08062000
-    Michael Still    Added catalog and pages objects to open           17062000
+                     Added catalog and pages objects to open           17062000
                        and byte offset code
-    Michael Still    Added XREF and object traversal code              18062000
+                     Added XREF and object traversal code              18062000
+                     Stored page size in the pages object              30062000
 
   Purpose:
     Library level calls. These are the calls normally accessible to the
@@ -68,16 +69,16 @@ pdf *pdfopen(char *filename, char *mode){
 
     // We need a catalog object with some elements within it's dictionary
     openedpdf->catalog = newobject(openedpdf, gNormal);
-    adddictitem(openedpdf->catalog->dict, "Type", gTextValue, "Catalog");
+    adddictitem(openedpdf->catalog, "Type", gTextValue, "Catalog");
 
     // We need a reference to our pages object
     addchild(openedpdf->catalog, 
       openedpdf->pages = newobject(openedpdf, gNormal));
-    adddictitem(openedpdf->catalog->dict, "Pages", gObjValue, openedpdf->pages);
+    adddictitem(openedpdf->catalog, "Pages", gObjValue, openedpdf->pages);
 
     // We now need to setup some information in the pages object
-    adddictitem(openedpdf->pages->dict, "Type", gTextValue, "Pages");
-    adddictitem(openedpdf->pages->dict, "Count", gIntValue, 1);
+    adddictitem(openedpdf->pages, "Type", gTextValue, "Pages");
+    adddictitem(openedpdf->pages, "Count", gIntValue, 1);
 
     // Make sure we have not started an XREF table
     openedpdf->xrefTable = NULL;
@@ -90,6 +91,9 @@ pdf *pdfopen(char *filename, char *mode){
     // The fonts object in the pdf * is a dummy which makes fonts external
     // to each page. This makes the PDF more efficient
     openedpdf->fonts = newobject(openedpdf, gPlaceholder);
+
+    // Set the font mode to something basic
+    setfontmode(openedpdf, gTextModeNormal);
 
     // We did open the PDF file ok
     return openedpdf;
@@ -124,6 +128,7 @@ void pdfclose(pdf *openedpdf){
 page *pdfpage(pdf *output, char *pageSize){
   // Add a page to the PDF
   page  *newPage;
+  char  *pageSizeCopy;
 
   // Make some space for the object
   if((newPage = (page *) malloc(sizeof(page))) == NULL)
@@ -136,18 +141,30 @@ page *pdfpage(pdf *output, char *pageSize){
   addchild(output->pages, newPage->obj);
 
   // List it in the Kids field of the pages object
-  adddictitem(output->pages->dict, "Kids", gObjArrayValue, newPage->obj);
+  adddictitem(output->pages, "Kids", gObjArrayValue, newPage->obj);
 
   // Setup some basic things within the page object's dictionary
-  adddictitem(newPage->obj->dict, "Type", gTextValue, "Page");
-  adddictitem(newPage->obj->dict, "MediaBox", gLiteralTextValue, pageSize);
-  adddictitem(newPage->obj->dict, "Parent", gObjValue, output->pages);
+  adddictitem(newPage->obj, "Type", gTextValue, "Page");
+  adddictitem(newPage->obj, "MediaBox", gLiteralTextValue, pageSize);
+  adddictitem(newPage->obj, "Parent", gObjValue, output->pages);
 
   // We also need to do the same sort of thing for the contents object
   // that each page owns
   newPage->contents = newobject(output, gNormal);
   addchild(newPage->obj, newPage->contents);
-  adddictitem(newPage->obj->dict, "Contents", gObjValue, newPage->contents);
+  adddictitem(newPage->obj, "Contents", gObjValue, newPage->contents);
+
+  // Copy the pageSize string somewhere safe, and then clobber the copy.
+  // We can't clober the original because it is a constant anyway and it would
+  // be rude to screw with another person's data
+  if((pageSizeCopy = (char *) malloc(sizeof(char) * strlen(pageSize))) == NULL)
+    error("Could not copy the pageSize string.");
+  strcpy(pageSizeCopy, pageSize);
+
+  strtok(pageSizeCopy, " ");
+  strtok(NULL, " ");
+  newPage->width = atoi(strtok(NULL, " "));
+  newPage->height = atoi(strtok(NULL, " "));
 
   return newPage;
 }
