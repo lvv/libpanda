@@ -32,8 +32,11 @@ install:	lib
 		install -m 664 libpanda.a /usr/local/lib/libpanda.a
 		install -m 664 -d /usr/local/include/panda
 		install -m 664 -D *.h /usr/local/include/panda/
+		install -m 664 -d /usr/local/man/man3
+		install -m 664 -D man/*.3 /usr/local/man/man3
 
-# This is used in my testing of make install
+# This is used in my testing of make install. It does not uninstall the man
+# pages yet because I am not sure of the neatest way of doing this just yet...
 uninstall:	
 		rm -i /usr/local/lib/libpanda*
 		rm -ri /usr/local/include/panda
