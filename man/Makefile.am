@@ -1,1 +1,0 @@
-man_MANS = checkinfo.3 initpanda.3 makedate.3 nowdate.3 panda-textmodes.3 panda-xobjectmodes.3 pdfclose.3 pdfopen.3 pdfpage.3 setauthor.3 setcharacterspacing.3 setcreator.3 setfont.3 setfontmode.3 setfontsize.3 sethorizontalscaling.3 setkeywords.3 setleading.3 setsubject.3 settitle.3 setwordspacing.3

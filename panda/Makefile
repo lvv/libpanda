@@ -58,14 +58,13 @@ NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
 CC = gcc
-LEX = flex
+LEX = @LEX@
 MAINT = #
 MAKEINFO = makeinfo
 PACKAGE = panda
 PLATFORM = UNIX
 RANLIB = ranlib
 VERSION = 0.4
-YACC = bison -y
 
 pandaincludedir = $(includedir)/panda
 pandainclude_HEADERS = constants.h functions.h objects.h legacy.h
