@@ -118,3 +118,7 @@ Release 0.3 -> Release 0.4
 
   * PNG is now compressed inside the PDF document... I think this means PNG
 	is now fully implementented
+
+  * Documented all the function calls in panda.c using autodocbook
+
+  * Documented all the function calls in text.c using autodocbook

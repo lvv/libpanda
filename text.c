@@ -11,6 +11,39 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_textbox
+PURPOSE display some text on the PDF page specified
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int bottom, int right, char *text);
+SYNOPSIS END
+
+DESCRIPTION This function call creates a textbox on the specified page, and then displays the specified text within that page. The current font mode and style et cetera will be used. Sometime in the near future, line wrapping will be used...
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+panda_textbox (demo, currPage, 20 + (lineDepth * 20), 200, 40 + (lineDepth * 20), 400, "Demonstration of a text mode");
+EXAMPLE END
+SEEALSO panda_createfont, panda_setfont, panda_panda_setfontsize, panda_getfontobj, panda_setfontmode, panda_setcharacterspacing, panda_setwordspacing, panda_sethorizontalscaling, panda_setleading
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left,
 	       int bottom, int right, char *text)
