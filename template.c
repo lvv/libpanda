@@ -135,7 +135,7 @@ panda_applytemplate(panda_pdf *output, panda_page *target,
 
   // Now we need to clean up the temporary objects
 #if defined DEBUG
-  printf("Freeing two temporary objects\n");
+  printf("Freeing two temporary objects (templates)\n");
 #endif
 
   panda_freetempobject(output, xobjrefsubsubdict, panda_false);

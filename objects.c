@@ -151,7 +151,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
   panda_object *objValue;
   panda_objectarray *currentObjectArray;
   panda_dictionary *dictValue, *prevDictValue;
-  int overwriting = panda_false;
+  int overwriting = panda_false, tempInt;
 
 #if defined DEBUG
   printf ("Added dictionary item %s to object (type = %d)\n", name,
@@ -213,10 +213,12 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       case panda_brackettedtextvalue:
       case panda_integervalue:
       case panda_objectvalue:
+      case panda_booleanvalue:
 	break;
 
       default:
-	panda_error (panda_true, "Overwriting some dictionary types not yet supported.");
+	panda_error (panda_true, 
+		     "Overwriting some dictionary types not yet supported.");
       }
 
   switch (valueType)
@@ -260,6 +262,17 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       objValue = va_arg (argPtr, panda_object *);
       dictNow->textValue = panda_xsnprintf ("%d %d R", objValue->number,
 					    objValue->generation);
+      break;
+
+    case panda_booleanvalue:
+      // Are we overwriting?
+      if ((overwriting == panda_true) && (dictNow->textValue != NULL))
+	free (dictNow->textValue);
+
+      tempInt = va_arg (argPtr, int);
+      dictNow->textValue = panda_xsnprintf ("%s",
+					    tempInt == panda_true ? "true" :
+					    "false");
       break;
 
     case panda_objectarrayvalue:
@@ -741,6 +754,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj,
 	case panda_objectvalue:
 	case panda_literaltextvalue:
 	case panda_brackettedtextvalue:
+	case panda_booleanvalue:
 #if defined DEBUG
 	  printf ("Writing a text value named %s into the dictionary\n",
 		  dictNow->name);

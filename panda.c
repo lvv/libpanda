@@ -304,7 +304,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
       // We need some place to store the viewer prefs dictionary,
       // which belongs in the catalog object later on...
-      openedpdf->viewPrefs =
+      openedpdf->viewerPrefs =
 	(panda_object *) panda_newobject (openedpdf, panda_placeholder);
 
       // Remember the mode and create the linear object if needed
@@ -381,6 +381,15 @@ panda_close (panda_pdf * openedpdf)
 
   // The header was written when we created the file on disk
 
+  // We need to move the view preferences into the catalog from their
+  // temporary location
+#if defined DEBUG
+  printf("Viewer preferences being moved across\n");
+#endif
+
+  panda_adddictitem(openedpdf->catalog->dict, "ViewerPreferences",
+  		    panda_dictionaryvalue, openedpdf->viewerPrefs->dict);
+  
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
   if (openedpdf->pages != NULL)

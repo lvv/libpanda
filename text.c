@@ -160,7 +160,7 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
 
       // Now we need to clean up the temporary objects
 #if defined DEBUG
-      printf("Freeing two temporary objects\n");
+      printf("Freeing two temporary objects (text)\n");
 #endif
 
       panda_freetempobject(output, subsubdict, panda_false);

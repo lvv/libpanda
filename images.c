@@ -184,7 +184,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 
   // Now we need to clean up these temporary objects that we just created
 #if defined DEBUG
-  printf("Freeing two temporary objects\n");
+  printf("Freeing two temporary objects (images)\n");
 #endif
 
   panda_freetempobject(output, xobjrefsubsubdict, panda_false);
