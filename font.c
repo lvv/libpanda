@@ -67,30 +67,68 @@ panda_createfont (panda_pdf * output, char *fontname, int type,
 		  char *encoding)
 {
   // Create a font object in the PDF
+  panda_child *fonts;
   panda_object *font;
-  char *tempBuffer, *fontident;
-
-  // Make the new object
-  font = (panda_object *) panda_newobject (output, panda_normal);
-
-  // Add it to the tree of font objects
-  panda_addchild (output->fonts, font);
-
-  // Setup some values within the font object
-  panda_adddictitem (output, font, "Type", panda_textvalue, "Font");
+  char *tempBuffer, *fontident, *dictBf, *dictEnc, *dictType, *dictName, *valBf, *valEnc, *valType;
+  int found = 0;
 
   tempBuffer = panda_xsnprintf ("Type%d", type);
-  panda_adddictitem (output, font, "Subtype", panda_textvalue, tempBuffer);
+
+  // See if this font has been used before. If so, re-use the object.
+  fonts = output->fonts->children;
+  while ( (fonts->next != NULL) && (found == 0) ) {
+    // Ugly, but efficient and cleans up after itself.
+    if ( (dictBf = panda_finddictitem(output, fonts->me, "BaseFont")) != NULL ) {
+      valBf = panda_dbread(output, dictBf);
+      if ( strcmp(valBf+1, fontname) == 0 ) {
+	if ( (dictEnc = panda_finddictitem(output, fonts->me, "Encoding")) != NULL ) {
+	  valEnc = panda_dbread(output, dictEnc);
+	  if ( strcmp(valEnc+1, encoding) == 0 ) {
+	    if ( (dictType = panda_finddictitem(output, fonts->me, "Subtype")) != NULL ) {
+	      valType = panda_dbread(output, dictType);
+	      if ( strcmp(valType+1, tempBuffer) == 0 ) {
+		if ( (dictName = panda_finddictitem(output, fonts->me, "Name")) != NULL ) {
+		  fontident = panda_xsnprintf("%s", panda_dbread(output, dictName)+1);
+		  found = 1;
+		}
+		panda_xfree(dictName);
+	      }
+	      panda_xfree(valType);
+	    }
+	    panda_xfree(dictType);
+	  }
+	  panda_xfree(valEnc);
+	}
+	panda_xfree(dictEnc);
+      }
+      panda_xfree(valBf);
+    }
+    panda_xfree(dictBf);
+    fonts = fonts->next;
+  }
+
+  if ( found != 1 ) {
+    // Make the new object
+    font = (panda_object *) panda_newobject (output, panda_normal);
+
+    // Add it to the tree of font objects
+    panda_addchild (output->fonts, font);
+
+    // Setup some values within the font object
+    panda_adddictitem (output, font, "Type", panda_textvalue, "Font");
+    panda_adddictitem (output, font, "Subtype", panda_textvalue, tempBuffer);
+
+    // Make a font identifier string for this font
+    fontident = panda_xsnprintf ("F%08d", output->nextFontNumber);
+    output->nextFontNumber++;
+
+    panda_adddictitem (output, font, "Name", panda_textvalue, fontident);
+
+    panda_adddictitem (output, font, "BaseFont", panda_textvalue, fontname);
+    panda_adddictitem (output, font, "Encoding", panda_textvalue, encoding);
+  }
+
   panda_xfree (tempBuffer);
-
-  // Make a font identifier string for this font
-  fontident = panda_xsnprintf ("F%08d", output->nextFontNumber);
-  output->nextFontNumber++;
-
-  panda_adddictitem (output, font, "Name", panda_textvalue, fontident);
-
-  panda_adddictitem (output, font, "BaseFont", panda_textvalue, fontname);
-  panda_adddictitem (output, font, "Encoding", panda_textvalue, encoding);
 
 #if defined DEBUG
   printf ("Returning the font ident \"%s\"\n", fontident);
