@@ -39,5 +39,11 @@ manytextboxes-panda-02:
 
 ##############################################################################
 
+manypages-clibpdf-202r1:	
+		$(COMPILER) $(COMPOPTS) manypages-clibpdf-202r1.c -o manypages-clibpdf-202r1.o -lcpdf -lm
+
+manypages-pdflib-30:
+		$(COMPILER) $(COMPOPTS) manypages-pdflib-30.c -o manypages-pdflib-30.o -lpdf -lm -ltiff -lpng
+
 manypages-panda-02:
 		$(COMPILER) $(COMPOPTS) manypages-panda-02.c -o manypages-panda-02.o -lpanda	

@@ -11,8 +11,8 @@ DODEBUG = NO
 #DODEBUG = DEBUG
 
 # The first one of these will make a profiling library
-#PROFILING = -pg
-PROFILING = 
+PROFILING = -pg
+#PROFILING = 
 
 COMPILER = gcc
 COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG) -Wall $(PROFILING)
