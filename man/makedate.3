@@ -19,17 +19,17 @@
 .\" License along with this manual; if not, write to the Free
 .\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
 .\" USA.
-.TH SCS 3 "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
+.TH MAKEDATE 3  "03 September 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
 .SH NAME
-setcharacterspacing
+makedate
 .SH SYNOPSIS
 .B #include <panda.h>
 .sp
-.BI "void setcharacterspacing(pdf *, double spacing);"
+.BI "char *makedate(int year, int month, int day, int hour, int minutes, int seconds);"
 .SH DESCRIPTION
 The function
-.B setcharacterspacing
-sets the space to be used between characters in text boxes. The default value is 0, which is no extra space. The value that is set with this call is sticky and will therefore apply to all subsequently created text boxes until the value of the character spacing is changed to something else.
+.B makedate
+generates a date that is suitable to be embedded into a PDF. This date will include information about the timezone in which the PDF was created and the relationship that this timezone has with GMT (Zulu) time. Mostly this function is used internally within Panda, and should not concern the avaerage programmer too much.
 .SH EXAMPLE
 .br
 Simply use:
@@ -37,10 +37,8 @@ Simply use:
 .nf
 #include <panda.h>
 
-pdf *document;
-
-document = openpdf("filename", "w");
-setcharacterspacing(document, 42);
+char *returnedDate;
+returnedDate = makeDate(year, month, day, hour, minutes, seconds);
 .fi
 .RE
 .SH AUTHOR
@@ -48,6 +46,9 @@ setcharacterspacing(document, 42);
 Panda is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000, and is released under the GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
 .SH BUGS
 .br
-There are no known bugs in Panda. If you find one, please contact mikal@stillhq.com and let me know..SH VERSION
+There are no known bugs in Panda. If you find one, please contact mikal@stillhq.com and let me know.
+
+
+.SH VERSION
 .br
 This information relates to version 0.2 of Panda
