@@ -13,7 +13,7 @@
 #include <panda/functions.h>
 
 void
-textbox (pdf * output, page * thisPage, int top, int left, int bottom,
+panda_textbox (pdf * output, page * thisPage, int top, int left, int bottom,
 	 int right, char *text)
 {
   // Add a box with some text in it into the PDF page
@@ -31,7 +31,7 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
 
   // Is there a font setup? Does this work with changing the font?
   if (output->currentFont == NULL)
-    setfont (output, createfont (output, "Helvetica", 1, "MacRomanEncoding"));
+    panda_setfont (output, panda_createfont (output, "Helvetica", 1, "MacRomanEncoding"));
 
   // If the font is not defined on this page
   if (thisPage->obj->currentSetFont == NULL)
@@ -56,25 +56,25 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
       printf("Searching for the font object relating to \"%s\"\n",
              output->currentFont);
 #endif
-      if ((fontObj = getfontobj (output, output->currentFont)) == NULL)
-	error ("Could not find the font requested.");
+      if ((fontObj = panda_getfontobj (output, output->currentFont)) == NULL)
+	panda_error ("Could not find the font requested.");
 
       // We make an object not just a dictionary because this is what
-      // adddictitem needs
-      subsubdict = newobject (output, gPlaceholder);
-      adddictitem (subsubdict->dict, output->currentFont, gObjValue, fontObj);
+      // panda_adddictitem needs
+      subsubdict = panda_newobject (output, gPlaceholder);
+      panda_adddictitem (subsubdict->dict, output->currentFont, gObjValue, fontObj);
 
-      subdict = newobject (output, gPlaceholder);
-      adddictitem (subdict->dict, "Font", gDictionaryValue, subsubdict->dict);
+      subdict = panda_newobject (output, gPlaceholder);
+      panda_adddictitem (subdict->dict, "Font", gDictionaryValue, subsubdict->dict);
 
       // And put this into the PDF
-      adddictitem (thisPage->obj->dict, "Resources", gDictionaryValue,
+      panda_adddictitem (thisPage->obj->dict, "Resources", gDictionaryValue,
 		   subdict->dict);
     }
 
   // Is there a text size setup?
   if (output->currentFontSize == -1)
-    setfontsize (output, 16);
+    panda_setfontsize (output, 16);
 
   /***************************************************************************
     PDF deals in points, with the bottom left hand side of the page being at
@@ -99,7 +99,7 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
   if(textobj->textmode == gFalse)
     {
       textobj->layoutstream = 
-	streamprintf(textobj->layoutstream, "\nBT\n");
+	panda_streamprintf(textobj->layoutstream, "\nBT\n");
       textobj->textmode = gTrue;
 
 #if defined DEBUG
@@ -111,38 +111,38 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
   // PS matrix environment well enough to be writing this sort of code. I am
   // going to have to have a look into this a little more...
   textobj->layoutstream =
-    streamprintf (textobj->layoutstream, "1 0 0 1 %d %d Tm\n", internalLeft,
+    panda_streamprintf (textobj->layoutstream, "1 0 0 1 %d %d Tm\n", internalLeft,
 		  internalTop);
 
   // There are now a whole bunch of options that may or may not need to be set
   if (output->currentFontMode != 0)
     {
-      textobj->layoutstream = streamprintf (textobj->layoutstream, "%d Tr\n",
+      textobj->layoutstream = panda_streamprintf (textobj->layoutstream, "%d Tr\n",
 					  output->currentFontMode);
     }
 
   if (output->currentCharacterSpacing != 0)
     {
-      textobj->layoutstream = streamprintf (textobj->layoutstream, "%.2f Tc\n",
+      textobj->layoutstream = panda_streamprintf (textobj->layoutstream, "%.2f Tc\n",
 					  output->currentCharacterSpacing);
     }
 
   if (output->currentWordSpacing != 0)
     {
-      textobj->layoutstream = streamprintf (textobj->layoutstream, "%.2f Tw\n",
+      textobj->layoutstream = panda_streamprintf (textobj->layoutstream, "%.2f Tw\n",
 					  output->currentWordSpacing);
     }
 
   if (output->currentHorizontalScaling != 1)
     {
-      textobj->layoutstream = streamprintf (textobj->layoutstream, "%.0f Tz\n",
+      textobj->layoutstream = panda_streamprintf (textobj->layoutstream, "%.0f Tz\n",
 					  output->currentHorizontalScaling *
 					  100);
     }
 
   if (output->currentLeading != 0)
     {
-      textobj->layoutstream = streamprintf (textobj->layoutstream, "%.2f TL\n",
+      textobj->layoutstream = panda_streamprintf (textobj->layoutstream, "%.2f TL\n",
 					  output->currentLeading);
     }
 
@@ -153,13 +153,13 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
       (strcmp (output->currentFont, textobj->currentSetFont) != 0))
     {
       // Set the font that we want to use
-      textobj->layoutstream = streamprintf (textobj->layoutstream, "/%s %d Tf\n",
+      textobj->layoutstream = panda_streamprintf (textobj->layoutstream, "/%s %d Tf\n",
 					  output->currentFont,
 					  output->currentFontSize);
 
       // Make space for the new name
       textobj->currentSetFont = 
-	(char *) xmalloc(sizeof (char) * (strlen (output->currentFont) + 1));
+	(char *) panda_xmalloc(sizeof (char) * (strlen (output->currentFont) + 1));
 
       // Store the name so we know what is happening
       strcpy (textobj->currentSetFont, output->currentFont);
@@ -192,7 +192,7 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
   ***************************************************************************/
 
   // Get the first token
-  strtokVictim = (char *) xmalloc(sizeof (char) * (strlen (text) + 1));
+  strtokVictim = (char *) panda_xmalloc(sizeof (char) * (strlen (text) + 1));
   strcpy (strtokVictim, text);
 
   // Build the delimiter string
@@ -206,7 +206,7 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
       // do so now
       if (displayedFirstPart == gFalse)
 	{
-	  textobj->layoutstream = streamprintf (textobj->layoutstream, "(%s) '\n",
+	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream, "(%s) '\n",
 					      strtokVictim);
 	  displayedFirstPart = gTrue;
 	}
@@ -214,26 +214,26 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
       switch (text[currentToken - strtokVictim - 1])
 	{
 	case '\n':
-	  textobj->layoutstream = streamprintf (textobj->layoutstream, "(%s) '\n",
+	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream, "(%s) '\n",
 					      currentToken);
 	  break;
 
 	case 4:
-	  textobj->layoutstream = streamprintf (textobj->layoutstream,
+	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
 					      "%c Ts (%s) Tj\n",
 					      currentToken[0],
 					      currentToken + 1);
 	  break;
 
 	case 5:
-	  textobj->layoutstream = streamprintf (textobj->layoutstream,
+	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
 					      "-%c Ts (%s) Tj\n",
 					      currentToken[0],
 					      currentToken + 1);
 	  break;
 
 	case 6:
-	  textobj->layoutstream = streamprintf (textobj->layoutstream,
+	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
 					      "0 Ts (%s) Tj\n", currentToken);
 	  break;
 	}

@@ -19,7 +19,7 @@
 
 // Initialise the PDF library ready for operations
 void
-initpanda ()
+panda_init ()
 {
   int generalCounter;
 
@@ -36,33 +36,33 @@ initpanda ()
 // default objects are not created (used when opening for reading a pdf
 // document with the lexer).
 pdf *
-pdfopen (char *filename, char *mode)
+panda_open (char *filename, char *mode)
 {
-  return pdfopen_actual (filename, mode, gFalse);
+  return panda_open_actual (filename, mode, gFalse);
 }
 
 pdf *
-pdfopen_suppress (char *filename, char *mode)
+panda_open_suppress (char *filename, char *mode)
 {
-  return pdfopen_actual (filename, mode, gTrue);
+  return panda_open_actual (filename, mode, gTrue);
 }
 
 pdf *
-pdfopen_actual (char *filename, char *mode, int suppress)
+panda_open_actual (char *filename, char *mode, int suppress)
 {
   pdf *openedpdf;
   char *tempPtr;
 
   // We are going to open a PDF for file I/O. Currently, the only supported
-  // mode is 'w'. There are some more obscure modes not included in the error
+  // mode is 'w'. There are some more obscure modes not included in the panda_error
   // checking below (like a+b), deal with it.
 
   // Make some space for the PDF information
-  openedpdf = (pdf *) xmalloc(sizeof(pdf));
+  openedpdf = (pdf *) panda_xmalloc(sizeof(pdf));
   
   // Every PDF is going to have to have some xref information associated with
   // it at some stage.
-  openedpdf->xrefList = (xref *) xmalloc(sizeof(xref));
+  openedpdf->xrefList = (xref *) panda_xmalloc(sizeof(xref));
   openedpdf->xrefList->next = NULL;
   openedpdf->xrefTail = openedpdf->xrefList;
 
@@ -71,7 +71,7 @@ pdfopen_actual (char *filename, char *mode, int suppress)
     {
     case 'r':
     case 'a':
-      error ("Unsupported file I/O mode handed to panda.");
+      panda_error ("Unsupported file I/O mode handed to panda.");
       break;
 
     case 'w':
@@ -80,7 +80,7 @@ pdfopen_actual (char *filename, char *mode, int suppress)
 	switch (mode[1])
 	  {
 	  case '+':
-	    error ("Unsupported file I/O mode handed to panda.");
+	    panda_error ("Unsupported file I/O mode handed to panda.");
 	    break;
 	  }
 
@@ -98,25 +98,25 @@ pdfopen_actual (char *filename, char *mode, int suppress)
       if (suppress == gFalse)
 	{
 	  // The file will need to have a PDF header to it
-	  pdfprintf (openedpdf, "%s%s\n", gMagicHeaderString,
+	  panda_printf (openedpdf, "%s%s\n", gMagicHeaderString,
 		     gBinaryHeaderString);
 
 	  // We need a catalog object with some elements within it's dictionary
-	  openedpdf->catalog = newobject (openedpdf, gNormal);
-	  adddictitem (openedpdf->catalog->dict, "Type", gTextValue,
+	  openedpdf->catalog = panda_newobject (openedpdf, gNormal);
+	  panda_adddictitem (openedpdf->catalog->dict, "Type", gTextValue,
 		       "Catalog");
 
 	  // We need a reference to our pages object
-	  addchild (openedpdf->catalog,
-		    openedpdf->pages = newobject (openedpdf, gNormal));
-	  adddictitem (openedpdf->catalog->dict, "Pages", gObjValue,
+	  panda_addchild (openedpdf->catalog,
+		    openedpdf->pages = panda_newobject (openedpdf, gNormal));
+	  panda_adddictitem (openedpdf->catalog->dict, "Pages", gObjValue,
 		       openedpdf->pages);
 
 	  // We need to remember how many pages there are for later
 	  openedpdf->pageCount = 0;
 
 	  // We now need to setup some information in the pages object
-	  adddictitem (openedpdf->pages->dict, "Type", gTextValue, "Pages");
+	  panda_adddictitem (openedpdf->pages->dict, "Type", gTextValue, "Pages");
 	  openedpdf->pages->isPages = gTrue;
 
 	  // There is no font currently selected
@@ -126,27 +126,27 @@ pdfopen_actual (char *filename, char *mode, int suppress)
 
 	  // The fonts object in the pdf * is a dummy which makes fonts external
 	  // to each page. This makes the PDF more efficient
-	  openedpdf->fonts = newobject (openedpdf, gPlaceholder);
+	  openedpdf->fonts = panda_newobject (openedpdf, gPlaceholder);
 
 	  // Set the text mode to something basic
-	  setfontmode (openedpdf, gTextModeNormal);
-	  setcharacterspacing (openedpdf, 0.0);
-	  setwordspacing (openedpdf, 0.0);
-	  sethorizontalscaling (openedpdf, 1.0);
-	  setleading (openedpdf, 0.0);
+	  panda_setfontmode (openedpdf, gTextModeNormal);
+	  panda_setcharacterspacing (openedpdf, 0.0);
+	  panda_setwordspacing (openedpdf, 0.0);
+	  panda_sethorizontalscaling (openedpdf, 1.0);
+	  panda_setleading (openedpdf, 0.0);
 
 	  // Setup the info object with some stuff which makes me happy... :)
 	  openedpdf->info = NULL;
-	  checkInfo (openedpdf);
+	  panda_checkinfo (openedpdf);
 	  if (openedpdf->info == NULL)
-	    error
+	    panda_error
 	      ("Failed to make an info object for the PDF. Not sure why...");
 
 	  // Add some stuff
-	  adddictitem (openedpdf->info->dict, "Producer", gBracketedTextValue,
+	  panda_adddictitem (openedpdf->info->dict, "Producer", gBracketedTextValue,
 		       "Panda 0.3");
-	  adddictitem (openedpdf->info->dict, "CreationDate",
-		       gBracketedTextValue, tempPtr = nowdate ());
+	  panda_adddictitem (openedpdf->info->dict, "CreationDate",
+		       gBracketedTextValue, tempPtr = panda_nowdate ());
 	  free (tempPtr);
 	}
       else
@@ -159,14 +159,14 @@ pdfopen_actual (char *filename, char *mode, int suppress)
       // And this stuff is always done
 
       // Create a dummy object for when we print the pdf to a file
-      openedpdf->dummyObj = newobject (openedpdf, gPlaceholder);
+      openedpdf->dummyObj = panda_newobject (openedpdf, gPlaceholder);
 
       // Remember the mode and create the linear object if needed
       if ((mode[1] == 'l') || (mode[1] == 'L'))
 	{
 	  openedpdf->mode = gWriteLinear;
-	  openedpdf->linear = newobject (openedpdf, gNormal);
-	  adddictitem (openedpdf->linear->dict, "Linearised", gIntValue, 1);
+	  openedpdf->linear = panda_newobject (openedpdf, gNormal);
+	  panda_adddictitem (openedpdf->linear->dict, "Linearised", gIntValue, 1);
 	}
       else
 	{
@@ -179,7 +179,7 @@ pdfopen_actual (char *filename, char *mode, int suppress)
       break;
 
     default:
-      error ("Unknown file I/O mode handed to panda.");
+      panda_error ("Unknown file I/O mode handed to panda.");
       break;
     }
 
@@ -189,7 +189,7 @@ pdfopen_actual (char *filename, char *mode, int suppress)
 
 // Finish operations on a given PDF document and write the result to disc
 void
-pdfclose (pdf * openedpdf)
+panda_close (pdf * openedpdf)
 {
   xref *xnow, *xprev;
 
@@ -198,14 +198,14 @@ pdfclose (pdf * openedpdf)
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
   if (openedpdf->pages != NULL)
-    adddictitem (openedpdf->pages->dict, "Count", gIntValue,
+    panda_adddictitem (openedpdf->pages->dict, "Count", gIntValue,
 		 openedpdf->pageCount);
 
   // Before we do anything, we need to make sure that we have ended the
   // textmode if we have entered one on one of the pages. This is because
   // we need to modify the layout stream before we have the possibility of
   // having had it written out to disk
-  traverseObjects(openedpdf, openedpdf->pages, gDown, closeText);
+  panda_traverseobjects(openedpdf, openedpdf->pages, gDown, panda_closetext);
 
   // We do some different things to write out the PDF depending on the mode
   switch (openedpdf->mode)
@@ -213,46 +213,46 @@ pdfclose (pdf * openedpdf)
     case gWrite:
       // We need to write out the objects into the PDF file and then close the
       // file -- any object which heads an object tree, or lives outside the 
-      // tree structure will need a traverseObjects call here...
+      // tree structure will need a panda_traverseobjects call here...
       if (openedpdf->catalog != NULL)
-	traverseObjects (openedpdf, openedpdf->catalog, gDown, writeObject);
+	panda_traverseobjects (openedpdf, openedpdf->catalog, gDown, panda_writeobject);
 
       if (openedpdf->fonts != NULL)
-	traverseObjects (openedpdf, openedpdf->fonts, gDown, writeObject);
+	panda_traverseobjects (openedpdf, openedpdf->fonts, gDown, panda_writeobject);
 
       // We need to traverse the dummy object so we pick up the manually 
       // created objects from the lexer
-      traverseObjects (openedpdf, openedpdf->dummyObj, gDown, writeObject);
+      panda_traverseobjects (openedpdf, openedpdf->dummyObj, gDown, panda_writeobject);
 
       if (openedpdf->pages != NULL)
 	{
 	  // Write our the XREF object -- this MUST happen after all objects 
 	  // have been written, or the byte offsets will not be known
-	  writeXref (openedpdf);
+	  panda_writexref (openedpdf);
 
 	  // Write the trailer
-	  writeTrailer (openedpdf);
+	  panda_writetrailer (openedpdf);
 	}
       break;
 
     case gWriteLinear:
       // Are there any pages in the PDF? There needs to be at least one...
       if (((child *) openedpdf->pages->children)->me == NULL)
-	error ("Linearised PDFs need at least one page.");
+	panda_error ("Linearised PDFs need at least one page.");
 
-      writeObject (openedpdf, openedpdf->linear);
+      panda_writeobject (openedpdf, openedpdf->linear);
 
       // We need the xref entries for the first page now
 
       // And the catalog object
-      writeObject (openedpdf, openedpdf->catalog);
+      panda_writeobject (openedpdf, openedpdf->catalog);
 
       // The primary hint stream
 
       // We now need all of the objects for the first page
-      traverseObjects (openedpdf,
+      panda_traverseobjects (openedpdf,
 		       ((child *) openedpdf->pages->children)->me, gDown,
-		       writeObject);
+		       panda_writeobject);
 
 
       break;
@@ -262,9 +262,9 @@ pdfclose (pdf * openedpdf)
   // separately because sometimes we want to write out but not do this
   // in other words I a=inm leaving space for later movement...
   if (openedpdf->catalog != NULL)
-    traverseObjects (openedpdf, openedpdf->catalog, gUp, freeObject);
+    panda_traverseobjects (openedpdf, openedpdf->catalog, gUp, panda_freeobject);
   if (openedpdf->fonts != NULL)
-    traverseObjects (openedpdf, openedpdf->fonts, gUp, freeObject);
+    panda_traverseobjects (openedpdf, openedpdf->fonts, gUp, panda_freeobject);
 
   // Clean up some document level things
   fclose (openedpdf->file);
@@ -292,36 +292,36 @@ pdfclose (pdf * openedpdf)
 
 // Insert a page into the PDF
 page *
-pdfpage (pdf * output, char *pageSize)
+panda_page (pdf * output, char *pageSize)
 {
   // Add a page to the PDF
   page *newPage;
   char *pageSizeCopy;
 
   // Make some space for the object
-  newPage = (page *) xmalloc(sizeof(page));
+  newPage = (page *) panda_xmalloc(sizeof(page));
 
   // Make the new page object
-  newPage->obj = newobject (output, gNormal);
+  newPage->obj = panda_newobject (output, gNormal);
 
   // Add it to the object tree
-  addchild (output->pages, newPage->obj);
+  panda_addchild (output->pages, newPage->obj);
 
   // Setup some basic things within the page object's dictionary
-  adddictitem (newPage->obj->dict, "Type", gTextValue, "Page");
-  adddictitem (newPage->obj->dict, "MediaBox", gLiteralTextValue, pageSize);
-  adddictitem (newPage->obj->dict, "Parent", gObjValue, output->pages);
+  panda_adddictitem (newPage->obj->dict, "Type", gTextValue, "Page");
+  panda_adddictitem (newPage->obj->dict, "MediaBox", gLiteralTextValue, pageSize);
+  panda_adddictitem (newPage->obj->dict, "Parent", gObjValue, output->pages);
 
   // We also need to do the same sort of thing for the contents object
   // that each page owns
-  newPage->contents = newobject (output, gNormal);
-  addchild (newPage->obj, newPage->contents);
-  adddictitem (newPage->obj->dict, "Contents", gObjValue, newPage->contents);
+  newPage->contents = panda_newobject (output, gNormal);
+  panda_addchild (newPage->obj, newPage->contents);
+  panda_adddictitem (newPage->obj->dict, "Contents", gObjValue, newPage->contents);
 
   // Copy the pageSize string somewhere safe, and then clobber the copy.
   // We can't clober the original because it is a constant anyway and it would
   // be rude to screw with another person's data
-  pageSizeCopy = (char *) xmalloc(sizeof (char) * (strlen (pageSize) + 1));
+  pageSizeCopy = (char *) panda_xmalloc(sizeof (char) * (strlen (pageSize) + 1));
   strcpy (pageSizeCopy, pageSize);
 
   strtok (pageSizeCopy, " ");
@@ -338,15 +338,15 @@ pdfpage (pdf * output, char *pageSize)
 }
 
 void
-closeText(pdf *opened, object *obj){
+panda_closetext(pdf *opened, object *obj){
 #if defined DEBUG
-  printf("closeText() traversal struct object numbered %d\n", obj->number);
+  printf("panda_closetext() traversal struct object numbered %d\n", obj->number);
 #endif
 
   if(obj->textmode == gTrue)
     {
       obj->layoutstream =
-	streamprintf(obj->layoutstream, "\nET\n\n\n");
+	panda_streamprintf(obj->layoutstream, "\nET\n\n\n");
       obj->textmode = gFalse;
 
 #if defined DEBUG

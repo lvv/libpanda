@@ -8,8 +8,8 @@
                        you don't ask it to, and even if you
                        have added your own. I need to take
                        this into account in the byte offsets.
-		     Added textstreamprintf(...) call.                 17072000
-		     Added pdfputc call                                22072000
+		     Added textpanda_streamprintf(...) call.                 17072000
+		     Added panda_putc call                                22072000
 
   Purpose:
     Utility functions for the panda library.
@@ -21,7 +21,7 @@
 // Print a possibly complex string into the PDF file and make sure the offset
 // into the PDF file is stored correctly (dispite Windows)
 void
-pdfprintf (pdf * file, char *format, ...)
+panda_printf (pdf * file, char *format, ...)
 {
   char *buffer, *formatString, *token, *strtokVictim;
   int newlineCount = 0, counter = 0, actualLen;
@@ -32,7 +32,7 @@ pdfprintf (pdf * file, char *format, ...)
   // the format string, and then add them here if we were not compiled on 
   // windows
 #if defined WINDOWS
-  formatString = (char *) xmalloc((strlen (format) + 1) * sizeof (char));
+  formatString = (char *) panda_xmalloc((strlen (format) + 1) * sizeof (char));
   strcpy (formatString, format);
 #else
   // We need to go through the format string and replace \n with \r\n
@@ -44,7 +44,7 @@ pdfprintf (pdf * file, char *format, ...)
       newlineCount++;
 
   formatString =
-    (char *) xmalloc((strlen (format) + newlineCount + 1) * sizeof (char));
+    (char *) panda_xmalloc((strlen (format) + newlineCount + 1) * sizeof (char));
   formatString[0] = 0;
 
   // Make every \n a \r\n in the format string
@@ -58,7 +58,7 @@ pdfprintf (pdf * file, char *format, ...)
   //
   //  formatString[indent] = 0;
 
-  strtokVictim = (char *) xmalloc(sizeof (char) * (strlen (format) + 1));
+  strtokVictim = (char *) panda_xmalloc(sizeof (char) * (strlen (format) + 1));
   strcpy (strtokVictim, format);
   token = strtok (strtokVictim, "\n");
 
@@ -84,7 +84,7 @@ pdfprintf (pdf * file, char *format, ...)
 
   // Now we need to make a best guess at how long buffer needs to be -- it is 
   // hardly ever longer than 1k...
-  buffer = (char *) xmalloc(1024 * sizeof (char));
+  buffer = (char *) panda_xmalloc(1024 * sizeof (char));
 
   // Build the information
   va_start (argPtr, format);
@@ -94,14 +94,14 @@ pdfprintf (pdf * file, char *format, ...)
       free (buffer);
 
 #if defined DEBUG
-      printf ("Needed to make a bigger space for the buffer in pdfprintf\n");
+      printf ("Needed to make a bigger space for the buffer in panda_printf\n");
 #endif
 
-      buffer = (char *) xmalloc(actualLen * sizeof (char));
+      buffer = (char *) panda_xmalloc(actualLen * sizeof (char));
 
       if (vsnprintf (buffer, actualLen, formatString, argPtr) > actualLen)
 	{
-	  error ("Really bad file i/o error.");
+	  panda_error ("Really bad file i/o panda_error.");
 	}
     }
 
@@ -134,7 +134,7 @@ pdfprintf (pdf * file, char *format, ...)
 
 // Append some text to the stream that we are creating for a given page
 char *
-streamprintf (char *stream, char *format, ...)
+panda_streamprintf (char *stream, char *format, ...)
 {
   va_list argPtr;
   char buffer[2048];
@@ -160,14 +160,14 @@ streamprintf (char *stream, char *format, ...)
       if ((stream = (char *) realloc (stream,
 				      sizeof (char) * (len + currentlen))) ==
 	  NULL)
-	error ("Could not append to an object's stream (of some form).");
+	panda_error ("Could not append to an object's stream (of some form).");
 
       // Do the actual appending
       strncat (stream, buffer, len + currentlen);
     }
   else
     {
-      stream = (char *) xmalloc(sizeof (char) * (strlen (buffer) + 1));
+      stream = (char *) panda_xmalloc(sizeof (char) * (strlen (buffer) + 1));
       strncpy (stream, buffer, strlen (buffer) + 1);
     }
 
@@ -178,7 +178,7 @@ streamprintf (char *stream, char *format, ...)
 // Put just one character into the PDF file, while updating the offset so that
 // the xref table works later on
 void
-pdfputc (pdf * output, int c)
+panda_putc (pdf * output, int c)
 {
   fputc (c, output->file);
   output->byteOffset++;
@@ -187,13 +187,13 @@ pdfputc (pdf * output, int c)
 // Put some known text into the PDF file, also update the offset
 // Don't forget to do the \n to \r\n conversion as well
 void
-pdfprint (pdf * output, char *format)
+panda_print (pdf * output, char *format)
 {
   char *strtokVictim, *formatString, *token;
   int counter, newlineCount;
 
 #if defined WINDOWS
-  formatString = (char *) xmalloc((strlen (format) + 1) * sizeof (char));
+  formatString = (char *) panda_xmalloc((strlen (format) + 1) * sizeof (char));
   strcpy (formatString, format);
 #else
   // We need to go through the format string and replace \n with \r\n
@@ -206,10 +206,10 @@ pdfprint (pdf * output, char *format)
       newlineCount++;
 
   formatString = 
-    (char *) xmalloc((strlen (format) + newlineCount + 1) * sizeof (char));
+    (char *) panda_xmalloc((strlen (format) + newlineCount + 1) * sizeof (char));
   formatString[0] = 0;
 
-  strtokVictim = (char *) xmalloc(sizeof (char) * (strlen (format) + 1));
+  strtokVictim = (char *) panda_xmalloc(sizeof (char) * (strlen (format) + 1));
   strcpy (strtokVictim, format);
   token = strtok (strtokVictim, "\n");
 

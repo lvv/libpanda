@@ -1,3 +1,7 @@
+NOTE THAT THERE HAVE BEEN SOME MAJOR CHANGES IN THE NAMING CONVENTION OF THE 
+	FUNCTION CALLS WITHIN THIS RELEASE. THIS WILL AFFECT ALL PROGRAMS
+	CURRENTLY USING PANDA... READ ON FOR DETAILS...
+
 Release 0.3 -> Release 0.4
   * Imagebox file not found error messages for TIFFs improved (filename that 
 	was bad is now included)
@@ -33,3 +37,13 @@ Release 0.3 -> Release 0.4
   * Implemented xmalloc in memory.c so that I could simplify the malloc calls
 	in the rest of the code in the library... Also changed all of the 
 	malloc calls in the library to use it...
+
+  * Resolved the namespace problems by renaming all function calls to use
+	the naming scheme "panda_<<>>". There are #defines to the old names in
+	panda/legacy.h
+
+  * Note that the namespace changes were partially made by a script, so if 
+	 there are any typos, could you please let me know...
+	
+  * Implemented template pages for PDF documents. These are used via the
+	panda_createtemplate and panda_pagefromtemplate calls.

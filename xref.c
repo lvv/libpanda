@@ -13,7 +13,7 @@
 #include <panda/functions.h>
 
 void
-writeXref (pdf * output)
+panda_writexref (pdf * output)
 {
   xref *currentXREF;
 
@@ -23,7 +23,7 @@ writeXref (pdf * output)
   // We need to write out the XREF table, the object number of the catalog
   // object is the lowest and %d is the object count. The first line is a 
   // magic incantation
-  pdfprintf (output, "xref\n%d %d\n%010d 65535 f\n",
+  panda_printf (output, "xref\n%d %d\n%010d 65535 f\n",
 	     0, output->nextObjectNumber, 0);
 
   // All of the object entries are inuse, because I see no point in creating
@@ -34,7 +34,7 @@ writeXref (pdf * output)
 
   while (currentXREF->next != NULL)
     {
-      pdfprintf (output, "%010d %05d n\n", currentXREF->this->byteOffset, 0);
+      panda_printf (output, "%010d %05d n\n", currentXREF->this->byteOffset, 0);
       currentXREF = currentXREF->next;
     }
 }

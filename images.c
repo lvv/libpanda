@@ -28,19 +28,19 @@ char *globalTiffBuffer;
 unsigned long globalTiffBufferOffset;
 pthread_mutex_t tiffConvMutex = PTHREAD_MUTEX_INITIALIZER;
 
-// Imagebox now just calls imageboxrot with a default rotational value
+// Imagebox now just calls panda_imageboxrot with a default rotational value
 // Based on patches submitted by Ceasar Miquel (miquel@df.uba.ar)
 void
-imagebox (pdf * output, page * target, int top, int left,
+panda_imagebox (pdf * output, page * target, int top, int left,
 	  int bottom, int right, char *filename, int type)
 {
-  return imageboxrot(output, target, top, left, bottom, right, 0.0, 
+  return panda_imageboxrot(output, target, top, left, bottom, right, 0.0, 
 		     filename, type);
 }
 
 // A redistribution point for image insertions based on type of image
 void
-imageboxrot (pdf * output, page * target, int top, int left,
+panda_imageboxrot (pdf * output, page * target, int top, int left,
 	  int bottom, int right, double angle, char *filename, int type)
 {
   object *imageObj, *xobjrefsubdict, *xobjrefsubsubdict;
@@ -52,12 +52,12 @@ imageboxrot (pdf * output, page * target, int top, int left,
 #endif
 
   // Now we need an object to contain the tiff
-  imageObj = newobject (output, gNormal);
-  addchild (target->obj, imageObj);
+  imageObj = panda_newobject (output, gNormal);
+  panda_addchild (target->obj, imageObj);
 
   // We cannot have some characters in the filename that we embed into the PDF,
   // so we fix them here
-  pdfFilename = (char *) xmalloc((strlen(filename) + 1) * sizeof(char));
+  pdfFilename = (char *) panda_xmalloc((strlen(filename) + 1) * sizeof(char));
   strcpy(pdfFilename, filename);
 
   for(i = 0; i < strlen(pdfFilename) + 1; i++)
@@ -69,16 +69,16 @@ imageboxrot (pdf * output, page * target, int top, int left,
 #endif
 
   // We make an object not just a dictionary because this is what
-  // adddictitem needs
-  xobjrefsubsubdict = newobject (output, gPlaceholder);
-  adddictitem (xobjrefsubsubdict->dict, pdfFilename, gObjValue, imageObj);
+  // panda_adddictitem needs
+  xobjrefsubsubdict = panda_newobject (output, gPlaceholder);
+  panda_adddictitem (xobjrefsubsubdict->dict, pdfFilename, gObjValue, imageObj);
 
-  xobjrefsubdict = newobject (output, gPlaceholder);
-  adddictitem (xobjrefsubdict->dict, "XObject", gDictionaryValue,
+  xobjrefsubdict = panda_newobject (output, gPlaceholder);
+  panda_adddictitem (xobjrefsubdict->dict, "XObject", gDictionaryValue,
 	       xobjrefsubsubdict->dict);
 
   // And put this into the PDF
-  adddictitem (target->obj->dict, "Resources", gDictionaryValue,
+  panda_adddictitem (target->obj->dict, "Resources", gDictionaryValue,
 	       xobjrefsubdict->dict);
 
   // We put some information based on a stat of the image file into the object
@@ -91,12 +91,12 @@ imageboxrot (pdf * output, page * target, int top, int left,
 
   // We now add some dictionary elements to the image object to say that it is
   // a TIFF image
-  adddictitem (imageObj->dict, "Type", gTextValue, "XObject");
-  adddictitem (imageObj->dict, "Subtype", gTextValue, "Image");
+  panda_adddictitem (imageObj->dict, "Type", gTextValue, "XObject");
+  panda_adddictitem (imageObj->dict, "Subtype", gTextValue, "Image");
 
   // This line will need to be changed to gaurantee that the internal name is
   // unique unless the actual image is the same
-  adddictitem (imageObj->dict, "Name", gTextValue, pdfFilename);
+  panda_adddictitem (imageObj->dict, "Name", gTextValue, pdfFilename);
 
   // Now we do the things that are image format specific... This is also
   // where we check if support has been compiled in for the libraries we need.
@@ -104,37 +104,37 @@ imageboxrot (pdf * output, page * target, int top, int left,
     {
     case gImageTiff:
       if(HAVE_LIBTIFF)
-	insertTiff (output, target, imageObj, filename);
+	panda_insertTIFF (output, target, imageObj, filename);
       else
 	{
 	  fprintf(stderr, "%s %s\n",
 		  "TIFF support not compiled into Panda because libtiff was",
 		  "not found at compile time.");
-	  adddictitem(imageObj->dict, "TIFF_Support_Missing", gIntValue, 1);
+	  panda_adddictitem(imageObj->dict, "TIFF_Support_Missing", gIntValue, 1);
 	}
       break;
 
     case gImageJpeg:
       if(HAVE_LIBJPEG)
-	insertJpeg (output, target, imageObj, filename);
+	panda_insertJPEG (output, target, imageObj, filename);
       else
 	{
 	  fprintf(stderr, "%s %s\n",
 		  "JPEG support not compiled into Panda because libjpeg was",
 		  "not found at compile time.");
-	  adddictitem(imageObj->dict, "JPEG_Support_Missing", gIntValue, 1);
+	  panda_adddictitem(imageObj->dict, "JPEG_Support_Missing", gIntValue, 1);
 	}
       break;
 
     case gImagePNG:
       if(HAVE_LIBPNG)
-	insertPNG (output, target, imageObj, filename);
+	panda_insertPNG (output, target, imageObj, filename);
       else
 	{
 	  fprintf(stderr, "%s %s\n",
 		  "PNG support not compiled into Panda because libpng was not",
 		  "found at compile time.");
-	  adddictitem(imageObj->dict, "PNG_Support_Missing", gIntValue, 1);
+	  panda_adddictitem(imageObj->dict, "PNG_Support_Missing", gIntValue, 1);
 	}
       break;
     }
@@ -154,7 +154,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
   if(target->contents->textmode == gTrue)
     {
       target->contents->layoutstream = 
-	streamprintf(target->contents->layoutstream, "ET\n");
+	panda_streamprintf(target->contents->layoutstream, "ET\n");
       target->contents->textmode = gFalse;
 
 #if defined DEBUG
@@ -163,7 +163,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
     }
 
   target->contents->layoutstream =
-    streamprintf (target->contents->layoutstream,
+    panda_streamprintf (target->contents->layoutstream,
 		  "\nq\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
 		  // The first matrix -- this has been modified because of
 		  // patches submitted by Ceasar Miquel (miquel@df.uba.ar)
@@ -175,7 +175,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
 		  (double) target->height - bottom);	// y start
 
   target->contents->layoutstream =
-    streamprintf (target->contents->layoutstream,
+    panda_streamprintf (target->contents->layoutstream,
 		  "%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
 		  // The second matrix
 		  (double) (right - left),	// x size
@@ -186,7 +186,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
 		  0.0);		// ???
 
   target->contents->layoutstream =
-    streamprintf (target->contents->layoutstream, "/%s Do\nQ\n\n", 
+    panda_streamprintf (target->contents->layoutstream, "/%s Do\nQ\n\n", 
 		  pdfFilename);
 
 #if defined DEBUG
@@ -196,7 +196,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
 
 // This function will insert a TIFF image into a PDF
 void
-insertTiff (pdf * output, page * target, object * imageObj, char *filename)
+panda_insertTIFF (pdf * output, page * target, object * imageObj, char *filename)
 {
   /**************************************************************************
     Some notes about TIFF support inside PDF files.
@@ -219,7 +219,7 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
   if ((image = TIFFOpen (filename, "r")) == NULL){
     snprintf(errMessage, 1024, 
 	     "Could not open the specified TIFF image \"%s\".", filename);
-    error(errMessage);
+    panda_error(errMessage);
   }
 
 #if defined DEBUG
@@ -228,25 +228,25 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
 #endif
 
   // This dictionary item is TIFF specific
-  adddictitem (imageObj->dict, "Filter", gTextValue, "CCITTFaxDecode");
+  panda_adddictitem (imageObj->dict, "Filter", gTextValue, "CCITTFaxDecode");
 
   // Bits per component is per colour component, not per sample. Does this
   // matter?
   if (TIFFGetField (image, TIFFTAG_BITSPERSAMPLE, &tiffResponse16) != 0)
-    adddictitem (imageObj->dict, "BitsPerComponent", gIntValue,
+    panda_adddictitem (imageObj->dict, "BitsPerComponent", gIntValue,
 		 tiffResponse16);
   else
-    error ("Could not get the colour depth for the tiff image.");
+    panda_error ("Could not get the colour depth for the tiff image.");
 
   // The colour device will change based on this number as well
   switch (tiffResponse16)
     {
     case 1:
-      adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceGray");
+      panda_adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceGray");
       break;
 
     default:
-      adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceRGB");
+      panda_adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceRGB");
       break;
     }
 
@@ -256,50 +256,50 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
   ****************************************************************************/
 
   // We make an object not just a dictionary because this is what
-  // adddictitem needs
-  subdict = newobject (output, gPlaceholder);
+  // panda_adddictitem needs
+  subdict = panda_newobject (output, gPlaceholder);
 
   // K will be minus one for g4 fax, and zero for g3 fax
   TIFFGetField (image, TIFFTAG_COMPRESSION, &compression);
   switch (compression)
     {
     case COMPRESSION_CCITTFAX3:
-      adddictitem (subdict->dict, "K", gIntValue, 0);
+      panda_adddictitem (subdict->dict, "K", gIntValue, 0);
       break;
 
     case COMPRESSION_CCITTFAX4:
-      adddictitem (subdict->dict, "K", gIntValue, -1);
+      panda_adddictitem (subdict->dict, "K", gIntValue, -1);
       break;
 
     case COMPRESSION_LZW:
-      error ("LZW is encumbered with patents and therefore not supported.");
+      panda_error ("LZW is encumbered with patents and therefore not supported.");
       break;
 
     default:
-      error ("Unsupported TIFF compression algorithm.");
+      panda_error ("Unsupported TIFF compression algorithm.");
       break;
     }
 
   // Width of the image
   if (TIFFGetField (image, TIFFTAG_IMAGEWIDTH, &width) != 0)
     {
-      adddictitem (subdict->dict, "Columns", gIntValue, width);
-      adddictitem (imageObj->dict, "Width", gIntValue, width);
+      panda_adddictitem (subdict->dict, "Columns", gIntValue, width);
+      panda_adddictitem (imageObj->dict, "Width", gIntValue, width);
     }
   else
-    error ("Could not get the width of the TIFF image.");
+    panda_error ("Could not get the width of the TIFF image.");
 
   // Height of the image
   if (TIFFGetField (image, TIFFTAG_IMAGELENGTH, &height) != 0)
     {
-      adddictitem (subdict->dict, "Rows", gIntValue, height);
-      adddictitem (imageObj->dict, "Height", gIntValue, height);
+      panda_adddictitem (subdict->dict, "Rows", gIntValue, height);
+      panda_adddictitem (imageObj->dict, "Height", gIntValue, height);
     }
   else
-    error ("Could not get the height of the TIFF image.");
+    panda_error ("Could not get the height of the TIFF image.");
 
   // And put this into the PDF
-  adddictitem (imageObj->dict, "DecodeParms", gDictionaryValue,
+  panda_adddictitem (imageObj->dict, "DecodeParms", gDictionaryValue,
 	       subdict->dict);
 
   // Fillorder determines whether we convert on the fly or not, although
@@ -338,7 +338,7 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
       stripMax = TIFFNumberOfStrips (image);
       imageOffset = 0;
 
-      stripBuffer = xmalloc(TIFFNumberOfStrips (image) * stripSize);
+      stripBuffer = panda_xmalloc(TIFFNumberOfStrips (image) * stripSize);
 
       for (stripCount = 0; stripCount < stripMax; stripCount++)
 	{
@@ -408,7 +408,7 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
       stripSize = TIFFStripSize (image);
       imageOffset = 0;
 
-      imageObj->binarystream = xmalloc(TIFFNumberOfStrips (image) * stripSize);
+      imageObj->binarystream = panda_xmalloc(TIFFNumberOfStrips (image) * stripSize);
 
       for (stripCount = 0; stripCount < TIFFNumberOfStrips (image);
 	   stripCount++)
@@ -431,7 +431,7 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
 
 // This function will insert a JPEG image into a PDF
 void
-insertJpeg (pdf * output, page * target, object * imageObj, char *filename)
+panda_insertJPEG (pdf * output, page * target, object * imageObj, char *filename)
 {
   struct jpeg_decompress_struct cinfo;
   struct jpeg_error_mgr jerr;
@@ -446,7 +446,7 @@ insertJpeg (pdf * output, page * target, object * imageObj, char *filename)
 
   // Open the file
   if ((image = fopen (filename, "rb")) == NULL)
-    error ("Could not open the specified JPEG file.");
+    panda_error ("Could not open the specified JPEG file.");
 
   // Setup the decompression options
   cinfo.err = jpeg_std_error (&jerr);
@@ -457,24 +457,24 @@ insertJpeg (pdf * output, page * target, object * imageObj, char *filename)
   jpeg_read_header (&cinfo, TRUE);
 
   // This dictionary item is JPEG specific
-  adddictitem (imageObj->dict, "Filter", gTextValue, "DCTDecode");
+  panda_adddictitem (imageObj->dict, "Filter", gTextValue, "DCTDecode");
 
   // Bits per component -- I'm not sure exactly how this works with libjpeg.
   // Is it possible to have a black and white jpeg? Ceasar Miquel
   // (miquel@df.uba.ar) has submitted patches suggesting that this should
   // always be 8, but this seems to work so I will leave it like this for now
-  adddictitem (imageObj->dict, "BitsPerComponent", gIntValue,
+  panda_adddictitem (imageObj->dict, "BitsPerComponent", gIntValue,
 	       cinfo.data_precision);
 
   // The colour device will change based on this number as well
   switch (cinfo.jpeg_color_space)
     {
     case JCS_GRAYSCALE:
-      adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceGray");
+      panda_adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceGray");
       break;
 
     default:
-      adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceRGB");
+      panda_adddictitem (imageObj->dict, "ColorSpace", gTextValue, "DeviceRGB");
       break;
     }
 
@@ -482,8 +482,8 @@ insertJpeg (pdf * output, page * target, object * imageObj, char *filename)
      Some details of the image
   ****************************************************************************/
 
-  adddictitem (imageObj->dict, "Width", gIntValue, cinfo.image_width);
-  adddictitem (imageObj->dict, "Height", gIntValue, cinfo.image_height);
+  panda_adddictitem (imageObj->dict, "Width", gIntValue, cinfo.image_width);
+  panda_adddictitem (imageObj->dict, "Height", gIntValue, cinfo.image_height);
 
   /****************************************************************************
     Read the image into it's memory buffer
@@ -493,7 +493,7 @@ insertJpeg (pdf * output, page * target, object * imageObj, char *filename)
   imageObj->binarystreamLength = 0;
 
   if ((image = fopen (filename, "r")) == NULL)
-    error ("Could not open the JPEG file.");
+    panda_error ("Could not open the JPEG file.");
 
   while ((c = fgetc (image)) != EOF)
     {
@@ -504,7 +504,7 @@ insertJpeg (pdf * output, page * target, object * imageObj, char *filename)
 
 	  if ((imageObj->binarystream = realloc (imageObj->binarystream,
 						 imageBufSize)) == NULL)
-	    error ("Could not make enough space for the JPEG image.");
+	    panda_error ("Could not make enough space for the JPEG image.");
 	}
 
       // Store the info
@@ -519,7 +519,7 @@ insertJpeg (pdf * output, page * target, object * imageObj, char *filename)
 }
 
 void
-insertPNG (pdf * output, page * target, object * imageObj, char *filename)
+panda_insertPNG (pdf * output, page * target, object * imageObj, char *filename)
 {
 
 #if defined DEBUG
@@ -571,7 +571,7 @@ libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size)
     {
       // Have we done anything yet?
       if (globalTiffBuffer == NULL)
-	globalTiffBuffer = (char *) xmalloc(size * sizeof (char));
+	globalTiffBuffer = (char *) panda_xmalloc(size * sizeof (char));
 
       // Otherwise, we need to grow the memory buffer
       else
@@ -580,7 +580,7 @@ libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size)
 						    (size * sizeof (char)) +
 						    globalTiffBufferOffset))
 	      == NULL)
-	    error ("Could not grow the tiff conversion memory buffer.");
+	    panda_error ("Could not grow the tiff conversion memory buffer.");
 	}
 
       // Now move the image data into the buffer

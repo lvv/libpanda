@@ -27,118 +27,118 @@ extern "C" {
 #include <dmalloc.h>
 #endif
 
-// A type needed for traverseObjects
+// A type needed for panda_traverseobjects
 typedef void (*traverseFunct) (pdf *, object *);
 
 /******************************************************************************
   Date.c
 ******************************************************************************/
 
-char *makedate (int, int, int, int, int, int);
-char *nowdate ();
+char *panda_makedate (int, int, int, int, int, int);
+char *panda_nowdate ();
 
 /******************************************************************************
   Error.c
 ******************************************************************************/
 
-void error (char *);
+void panda_error (char *);
 
 /******************************************************************************
   Images.c
 
-  - imageboxrot concept by Ceasar Miquel (miquel@df.uba.ar), modified by Mikal
+  - panda_panda_imageboxrot concept by Ceasar Miquel (miquel@df.uba.ar), modified by Mikal
 ******************************************************************************/
 
-void imagebox (pdf *, page *, int, int, int, int, char *, int);
-void imageboxrot (pdf *, page *, int, int, int, int, double, char *, int);
-void insertTiff (pdf *, page *, object *, char *);
-void insertJpeg (pdf *, page *, object *, char *);
-void insertPNG (pdf *, page *, object *, char *);
+void panda_imagebox (pdf *, page *, int, int, int, int, char *, int);
+void panda_imageboxrot (pdf *, page *, int, int, int, int, double, char *, int);
+void panda_insertTIFF (pdf *, page *, object *, char *);
+void panda_insertJPEG (pdf *, page *, object *, char *);
+void panda_insertPNG (pdf *, page *, object *, char *);
 
 /******************************************************************************
   Info.c
 ******************************************************************************/
 
-void checkInfo (pdf *);
-void setauthor (pdf *, char *);
-void setcreator (pdf *, char *);
-void settitle (pdf *, char *);
-void setsubject (pdf *, char *);
-void setkeywords (pdf *, char *);
+void panda_checkinfo (pdf *);
+void panda_setauthor (pdf *, char *);
+void panda_setcreator (pdf *, char *);
+void panda_settitle (pdf *, char *);
+void panda_setsubject (pdf *, char *);
+void panda_setkeywords (pdf *, char *);
 
 /******************************************************************************
   Font.c
 ******************************************************************************/
 
-char *createfont (pdf *, char *, int, char *);
-void setfont (pdf *, char *);
-void setfontsize (pdf *, int);
-object *getfontobj (pdf *, char *);
-void setfontmode (pdf *, int);
-void setcharacterspacing (pdf *, double);
-void setwordspacing (pdf *, double);
-void sethorizontalscaling (pdf *, double);
-void setleading (pdf *, double);
+char *panda_createfont (pdf *, char *, int, char *);
+void panda_setfont (pdf *, char *);
+void panda_panda_setfontsize (pdf *, int);
+object *panda_getfontobj (pdf *, char *);
+void panda_panda_setfontmode (pdf *, int);
+void panda_setcharacterspacing (pdf *, double);
+void panda_setwordspacing (pdf *, double);
+void panda_sethorizontalscaling (pdf *, double);
+void panda_setleading (pdf *, double);
 
 /******************************************************************************
   Memory.c
 ******************************************************************************/
 
-  void *xmalloc(size_t);
+  void *panda_xmalloc(size_t);
 
 /******************************************************************************
   Panda.c
 ******************************************************************************/
 
-void initpanda ();
-pdf *pdfopen (char *, char *);
-pdf *pdfopen_suppress (char *, char *);
-pdf *pdfopen_actual (char *, char *, int);
-void pdfclose (pdf *);
-page *pdfpage (pdf *, char *);
-void closeText (pdf *, object *);
+void panda_init ();
+pdf *panda_open (char *, char *);
+pdf *panda_open_suppress (char *, char *);
+pdf *panda_open_actual (char *, char *, int);
+void panda_close (pdf *);
+page *panda_page (pdf *, char *);
+void panda_closetext (pdf *, object *);
 
 /******************************************************************************
   Objects.c
 ******************************************************************************/
 
-object *newobject (pdf *, int);
-dictionary *adddictitem (dictionary *, char *, int, ...);
-void *getdictvalue (dictionary *);
-dictionary *getdict (dictionary *, char *);
-void freeObject (pdf *, object *);
-void freeDictionary (dictionary *);
-void writeObject (pdf *, object *);
-void writeDictionary (pdf *, object *, dictionary *);
-void addchild (object *, object *);
-void traverseObjects (pdf *, object *, int, traverseFunct);
+object *panda_newobject (pdf *, int);
+dictionary *panda_adddictitem (dictionary *, char *, int, ...);
+void *panda_panda_getdictvalue (dictionary *);
+dictionary *panda_getdict (dictionary *, char *);
+void panda_freeobject (pdf *, object *);
+void panda_freedictionary (dictionary *);
+void panda_writeobject (pdf *, object *);
+void panda_writedictionary (pdf *, object *, dictionary *);
+void panda_addchild (object *, object *);
+void panda_traverseobjects (pdf *, object *, int, traverseFunct);
 
 /******************************************************************************
   Text.c
 ******************************************************************************/
 
-void textbox (pdf *, page *, int, int, int, int, char *);
+void panda_textbox (pdf *, page *, int, int, int, int, char *);
 
 /******************************************************************************
   Trailer.c
 ******************************************************************************/
 
-void writeTrailer (pdf *);
+void panda_writetrailer (pdf *);
 
 /******************************************************************************
   Utility.c
 ******************************************************************************/
 
-void pdfprintf (pdf *, char *, ...);
-char *streamprintf (char *, char *, ...);
-void pdfputc (pdf *, int c);
-void pdfprint (pdf *, char *);
+void panda_printf (pdf *, char *, ...);
+char *panda_streamprintf (char *, char *, ...);
+void panda_putc (pdf *, int c);
+void panda_print (pdf *, char *);
 
 /******************************************************************************
   XREF.c
 ******************************************************************************/
 
-void writeXref (pdf *);
+void panda_writexref (pdf *);
 
 #ifdef __cplusplus
 }

@@ -9,7 +9,7 @@
     the Panda library. It simply exports the names of the functions that
     I think should be accessible to the calling application. This file,
     therefore, does not include any exports for the internal functions
-    of the library such as pdfputc(...)
+    of the library such as panda_putc(...)
 
     If this is a major problem, then feel free to add these function calls
     to this file, but I cannot think of a good reason to do so.
@@ -19,69 +19,69 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
-// We should have a callback for errors setup -- this is not currently
+// We should have a callback for panda_errors setup -- this is not currently
 // implemented in the library, but we will put just enough here to make it
 // work later...
-typedef void (__stdcall * pandaErrorCallback) (BSTR errorString);
-pandaErrorCallback errorCB = NULL;
+typedef void (__stdcall * pandaErrorCallback) (BSTR panda_errorString);
+pandaErrorCallback panda_errorCB = NULL;
 
 // Function exports
 _declspec (dllexport)
-     void __stdcall wininitpanda (void)
+     void __stdcall winpanda_init (void)
 {
-  initpanda ();
+  panda_init ();
 }
 
 _declspec (dllexport)
-     pdf *__stdcall winpdfopen (char *filename, char *mode)
+     pdf *__stdcall winpanda_open (char *filename, char *mode)
 {
-  return pdfopen (filename, mode);
+  return panda_open (filename, mode);
 }
 
 _declspec (dllexport)
-     void __stdcall winpdfclose (pdf * document)
+     void __stdcall winpanda_close (pdf * document)
 {
-  pdfclose (document);
+  panda_close (document);
 }
 
 _declspec (dllexport)
-     page *__stdcall winpdfpage (pdf * document, char *size)
+     page *__stdcall winpanda_page (pdf * document, char *size)
 {
-  return pdfpage (document, size);
+  return panda_page (document, size);
 }
 
 _declspec (dllexport)
-     void __stdcall winsetfontsize (pdf * document, int size)
+     void __stdcall winpanda_setfontsize (pdf * document, int size)
 {
-  setfontsize (document, size);
+  panda_setfontsize (document, size);
 }
 
 _declspec (dllexport)
-     void __stdcall winsetfontmode (pdf * document, int size)
+     void __stdcall winpanda_setfontmode (pdf * document, int size)
 {
-  setfontmode (document, size);
+  panda_setfontmode (document, size);
 }
 
 _declspec (dllexport)
-     void __stdcall winsetcharacterspacing (pdf * document, double amount)
+     void __stdcall winpanda_setcharacterspacing (pdf * document, double amount)
 {
-  setcharacterspacing (document, amount);
+  panda_setcharacterspacing (document, amount);
 }
 
 _declspec (dllexport)
-     void __stdcall winsetwordspacing (pdf * document, double amount)
+     void __stdcall winpanda_setwordspacing (pdf * document, double amount)
 {
-  setwordspacing (document, amount);
+  panda_setwordspacing (document, amount);
 }
 
 _declspec (dllexport)
-     void __stdcall winsethorizontalscaling (pdf * document, double scaling)
+     void __stdcall winpanda_sethorizontalscaling (pdf * document, double scaling)
 {
-  sethorizontalscaling (document, scaling);
+  panda_sethorizontalscaling (document, scaling);
 }
 
 _declspec (dllexport)
-     void __stdcall winsetleading (pdf * document, double amount)
+     void __stdcall winpanda_setleading (pdf * document, double amount)
 {
-  setleading (document, amount);
+  panda_setleading (document, amount);
 }
