@@ -1,6 +1,7 @@
 noinst_PROGRAMS = pandademo pandademolegacy circles morecircles empty template
 
-LDADD = -lpanda -ldmalloc -L..
+LDADD = -lpanda -L../.libs
+INCLUDES = -I..
 
 pandademo_SOURCES = main.c
 pandademolegacy_SOURCES = legacymain.c

@@ -100,7 +100,7 @@ mkdir `echo $relname | sed 's/-/-windows-//'`
 # Windows is simply everything
 cp -R panda/* `echo $relname | sed 's/-/-windows-//'`/
 
-# No we do the full unix release
+# Now we do the full unix release
 cp -R panda/* $relname
 cd $relname
 rm -rf activex
@@ -115,7 +115,7 @@ cd `echo $relname | sed 's/-/-noexamples-//'`/
 rm -rf examples
 cd ..
 
-# Compress the all
+# Compress them all
 tar czf `echo $relname | sed 's/-/_'`.tgz $relname
 tar czf `echo $relname | sed 's/-/-noexamples-//' | sed 's/-/_'`.tgz $relname
 tar czf `echo $relname | sed 's/-/-windows-//' | sed 's/-/_'`.tgz $relname
