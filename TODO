@@ -24,10 +24,6 @@ N * Further improve font handling so that font changes are minimised (change
 
 L * Add see also sections in the man pages
 
-K * Check that all of the malloc calls involving a strlen have 1 added to the
-	the result of the strlen in a manner that allows the size of char to
-	change.
-
 K * Start using automake
 
 K * Handling of vsnprintf return number based on the differnt ways that
