@@ -38,8 +38,12 @@ This function is modelled on the fopen() call.
 Simply use:
 .RS
 .nf
-#include <panda.h>
-initpanda();
+#include <panda/constants.h>
+#include <panda/functions.h>
+
+pdf *demo;
+
+demo = pdfopen("output.pdf", "w");
 .fi
 .RE
 .SH AUTHOR
