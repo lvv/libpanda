@@ -20,6 +20,10 @@ OBJFILES = error.o  font.o  objects.o  panda.o  text.o  trailer.o  utility.o  xr
 all:		$(OBJFILES) main.o
 		gcc $(OBJFILES) main.o -o panda
 
+lib:		$(OBJFILES)
+		ar r arout $(OBJFILES)
+		ranlib arout
+
 # Clean up
 clean:	
 		rm *.o; rm panda; rm *core*

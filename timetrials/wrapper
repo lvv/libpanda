@@ -1,0 +1,65 @@
+#!/bin/bash
+
+starttime=`date`
+
+# This file runs through all the known timetrials and tests to see if our 
+# performance has improved or degraded.
+
+# This variable is a list of libaries to test
+libs="clibpdf-202r1"
+# pdflib-30 panda-01"
+
+# This variable is a list of tests
+tests="hello"
+
+for test in $tests
+do
+  for lib in $libs
+  do
+    # Every test for every library
+    make $test-$lib
+    rm timings
+
+    # Run the tests
+    count=0
+    while [ $count -lt 1000 ]
+    do
+      echo $count
+      time ./$test-$lib.o 2>> timings
+      count=$(( $count + 1 ))
+      sleep 5
+    done
+
+    # Do something with the results
+    echo "Analysing results"
+    runningmajor=0
+    runningminor=0    
+
+    for item in `grep system timings | tr " " "_"`
+    do
+      time=`echo $item | sed 's/.*user_//' | sed 's/system.*//'`
+      major=`echo $time | sed 's/\..*//'`
+      minor=`echo $time | sed 's/.*\.//'`
+
+      runningmajor=$(( $runningmajor + $major ))
+      runningminor=$(( $runningminor + $minor ))
+    done
+
+    runningmajorpf=0
+    runningminorpf=0    
+
+    for item in `grep pagefaults timings | tr " " "_"`
+    do
+      time=`echo $item | sed 's/.*(//' | sed 's/minor).*//' | sed 's/major//'`
+      majorpf=`echo $time | sed 's/+.*//'`
+      minorpf=`echo $time | sed 's/.*+//'`
+
+      runningmajorpf=$(( $runningmajorpf + $majorpf ))
+      runningminorpf=$(( $runningminorpf + $minorpf ))
+    done
+
+    # Output the results to the database
+    echo $starttime "---" $(( $runningmajor / 1000 )) "." $(( $runningminor / 1000 )) $(( $runningmajorpf / 1000 )) "." $(( $runningminorpf / 1000 )) >> $test-$lib.db
+
+  done
+done
