@@ -115,6 +115,9 @@ pdf *pdfopen(char *filename, char *mode){
     // Create a dummy object for when we print the pdf to a file
     openedpdf->dummyObj = newobject(openedpdf, gPlaceholder);
 
+    // Now we just need to make sure we know there is no info object
+    openedpdf->info = NULL;
+
     // We did open the PDF file ok
     return openedpdf;
     break;

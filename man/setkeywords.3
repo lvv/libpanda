@@ -1,0 +1,51 @@
+.\" Copyright (c) 2000 Michael Still (mikal@stillhq.com)
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.TH SETKEYWORDS 3  "03 September 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
+.SH NAME
+setkeyords
+.SH SYNOPSIS
+.B #include <panda.h>
+.sp
+.BI "void setkeywords(pdf *document, char *keywords);"
+.SH DESCRIPTION
+The function
+.B setkeywords
+sets the keywords string in the PDF document being created. This should be set to a space separated string of all the keywords relating to the content of the document.
+.SH EXAMPLE
+.br
+Simply use:
+.RS
+.nf
+#include <panda.h>
+
+void setkeywords(document, "Mikal doover test document wibble frog Panda");
+.fi
+.RE
+.SH AUTHOR
+.br
+Panda is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000, and is released under the GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+.SH BUGS
+.br
+There are no known bugs in Panda. If you find one, please contact mikal@stillhq.com and let me know.
+.SH VERSION
+.br
+This information relates to version 0.2 of Panda

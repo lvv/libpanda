@@ -67,7 +67,7 @@ typedef struct __xref{
 
 typedef struct __pdf{
   FILE             *file;  
-  object           *catalog, *pages, *fonts;
+  object           *catalog, *pages, *fonts, *info;
   unsigned long    byteOffset, xrefOffset;
   int              nextObjectNumber, pageCount;
   xref             *xrefList, *xrefTail;
@@ -84,14 +84,5 @@ typedef struct __pdf{
 
   // This is a dummy object for dumping objects
   object           *dummyObj;
-
-  // Info dictionary information
-  char             *author;
-  char             *creationDate;
-  char             *modDate;
-  char             *creator;
-  char             *title;
-  char             *subject;
-  char             *keywords;
 } pdf;
 
