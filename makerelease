@@ -124,13 +124,13 @@ rm -rf examples
 cd ..
 
 # Compress them all
-tar czf `echo $relname | sed 's/-/_/'`.tgz $relname
-tar czf `echo $relnamenoexamples | sed 's/-/_/'`.tgz $relnamenoexamples
-tar czf `echo $relnamewindows | sed 's/-/_/'`.tgz $relnamewindows
+tar czf `echo $relname | sed 's/-/_/g' | sed 's/\./_/g'`.tgz $relname
+tar czf `echo $relnamenoexamples | sed 's/-/g_/' | sed 's/\./_/g'`.tgz $relnamenoexamples
+tar czf `echo $relnamewindows | sed 's/-/_/g' | sed 's/\./_/g'`.tgz $relnamewindows
 
 # Sign them all
-gpg --detach-sign --armour --output `echo $relname | sed 's/-/_/'`.sig `echo $relname | sed 's/-/_/'`.tgz
-gpg --detach-sign --armour --output `echo $relnamenoexamples | sed 's/-/_/'`.sig `echo $relnamenoexamples | sed 's/-/_/'`.tgz
-gpg --detach-sign --armour --output `echo $relnamewindows | sed 's/-/_/'`.sig `echo $relnamewindows | sed 's/-/_/'`.tgz
+gpg --detach-sign --armour --output `echo $relname | sed 's/-/_/g' | sed 's/\./_/g'`.sig `echo $relname | sed 's/-/_/g' | sed 's/\./_/g'`.tgz
+gpg --detach-sign --armour --output `echo $relnamenoexamples | sed 's/-/_/g' | sed 's/\./_/g'`.sig `echo $relnamenoexamples | sed 's/-/_/g' | sed 's/\./_/g'`.tgz
+gpg --detach-sign --armour --output `echo $relnamewindows | sed 's/-/_/g' | sed 's/\./_/g'`.sig `echo $relnamewindows | sed 's/-/_/g' | sed 's/\./_/g'`.tgz
 
 # Now deal with the RPMS
