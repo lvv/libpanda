@@ -27,43 +27,49 @@ do
   do
     # Every test for every library
     make $test-$lib
-    rm timings
 
-    # Run the tests
-    count=0
-    while [ $count -lt $number ]
-    do
-      echo $count
-      time ./$test-$lib.o 2>> timings
-      count=$(( $count + 1 ))
-      sleep $delay
-    done
+    # Make sure that make made!
+    if [ $? -gt 0 ]
+    then
+      echo $starttime - Did not make >> $test-$lib.db
+    else
+      rm timings
 
-    # Do something with the results
-    echo "Analysing results"
-    runningtime=0 
+      # Run the tests
+      count=0
+      while [ $count -lt $number ]
+      do
+        echo $count
+        time ./$test-$lib.o 2>> timings
+        count=$(( $count + 1 ))
+        sleep $delay
+      done
 
-    for item in `grep system timings | tr " " "_"`
-    do
-      time=`echo $item | sed 's/.*user_//' | sed 's/system.*//'`
-      runningtime=`./math $runningtime + $time`
-    done
+      # Do something with the results
+      echo "Analysing results"
+      runningtime=0 
 
-    runningmajorpf=0
-    runningminorpf=0    
+      for item in `grep system timings | tr " " "_"`
+      do
+        time=`echo $item | sed 's/.*user_//' | sed 's/system.*//'`
+        runningtime=`./math $runningtime + $time`
+      done
 
-    for item in `grep pagefaults timings | tr " " "_"`
-    do
-      time=`echo $item | sed 's/.*(//' | sed 's/minor).*//' | sed 's/major//'`
-      majorpf=`echo $time | sed 's/+.*//'`
-      minorpf=`echo $time | sed 's/.*+//'`
+      runningmajorpf=0
+      runningminorpf=0    
 
-      runningmajorpf=$(( $runningmajorpf + $majorpf ))
-      runningminorpf=$(( $runningminorpf + $minorpf ))
-    done
+      for item in `grep pagefaults timings | tr " " "_"`
+      do
+        time=`echo $item | sed 's/.*(//' | sed 's/minor).*//' | sed 's/major//'`
+        majorpf=`echo $time | sed 's/+.*//'`
+        minorpf=`echo $time | sed 's/.*+//'`
 
-    # Output the results to the database
-    echo $starttime "-" `./math $runningtime / $number` "," `./math $runningmajorpf / $number` "," `./math $runningminorpf / $number` >> $test-$lib.db
+        runningmajorpf=$(( $runningmajorpf + $majorpf ))
+        runningminorpf=$(( $runningminorpf + $minorpf ))
+      done
 
+      # Output the results to the database
+      echo $starttime "-" `./math $runningtime / $number` "," `./math $runningmajorpf / $number` "," `./math $runningminorpf / $number` >> $test-$lib.db
+    fi
   done
 done
