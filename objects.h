@@ -73,6 +73,9 @@ typedef struct __pdf{
   xref             *xrefList, *xrefTail;
   int              mode;
 
+  // This is needed for the tiff conversion
+  char             *convertedTiff;
+
   // These store the state of the drawing environment
   char             *currentFont;
   int              currentFontSize;

@@ -16,6 +16,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+char  *globalTiffBuffer;
+
 // A redistribution point for image insertions based on type of image
 void imagebox(pdf *output, page *target, int top, int left,
   int bottom, int right, char *filename, int type){
@@ -306,3 +308,30 @@ void insertPNG(pdf *output, page *target, object *imageObj, char *filename){
 #endif
 
 }
+
+/*****************************************************************************
+  The following are dummy functions for libtiff that will allow us to do on-
+  the-fly conversion of tiff images to the small subset of tiff that the
+  PDF specification allows for...
+*****************************************************************************/
+
+static size_t libtiffDummyReadProc(thandle_t fd, tdata_t buf, tsize_t size){
+  // Return the amount of data read, which we will always set as 0 because
+  // we only need to be able to write to these in-memory tiffs
+  return 0;
+}
+
+/* Yes, I know global variables are bad, and this will be changed in the near
+   future. If you are reading this code and are disgusted, then feel free to
+   send me a patch at mikal@stillhq.com */
+
+static size_t libtiffDummyWriteProc(thandle_t fd, tdata_t buf, tsize_t size){
+  // libtiff will try to write an 8 byte header into the tiff file. We need
+  // to ignore this because PDF does not use it...
+  if((size == 8) && (buf[0] == 'I') && (buf[1] == 'I') && (buf[2] == 42)){
+    // Skip the header
+  }
+  else{
+  }
+}
+    
