@@ -59,6 +59,7 @@ extern "C"
     int insidegraphicsblock;
     unsigned long byteOffset;
     panda_dictionary *dict;
+    panda_dictionary *trans;
     char *currentSetFont;
 
     char *layoutstream, *binarystream;

@@ -139,6 +139,7 @@ extern "C"
   void panda_close (panda_pdf *);
   panda_page *panda_newpage (panda_pdf *, char *);
   void panda_closetext (panda_pdf *, panda_object *);
+  void panda_processtrans (panda_pdf *, panda_object *);
 
 /******************************************************************************
   Objects.c
@@ -204,6 +205,7 @@ extern "C"
   void panda_fullscreen (panda_pdf *, int);
   void panda_textdirection (panda_pdf *, int);
   void panda_pageduration (panda_page *, double);
+  void panda_transduration (panda_page *, double);
 
 /******************************************************************************
   Windows.c -- Windows specific function calls

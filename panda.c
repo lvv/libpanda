@@ -390,6 +390,13 @@ panda_close (panda_pdf * openedpdf)
   panda_adddictitem(openedpdf->catalog->dict, "ViewerPreferences",
   		    panda_dictionaryvalue, openedpdf->viewerPrefs->dict);
   
+#if defined DEBUG
+  printf("Determining if there are any transitions on any of the pages and moving them if needed\n");
+#endif
+
+  panda_traverseobjects (openedpdf, openedpdf->pages, panda_down,
+			 panda_processtrans);
+
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
   if (openedpdf->pages != NULL)
@@ -606,7 +613,7 @@ PURPOSE a traversal callback used for closing text streams within the PDF
 SYNOPSIS START
 #include&lt;panda/constants.h&gt;
 #include&lt;panda/functions.h&gt;
-void panda_closetext(panda_pdf *document, panda_object *victiim);
+void panda_closetext(panda_pdf *document, panda_object *victim);
 SYNOPSIS END
 
 DESCRIPTION <command>PANDA INTERNAL</command>. This function is called by the <command>panda_traverseobjects</command>() function to write out streams attached to objects when <command>panda_close</command>() call. You shouldn't need to ever call this function.
@@ -635,5 +642,42 @@ panda_closetext (panda_pdf * opened, panda_object * obj)
 #if defined DEBUG
       printf ("Finalised textmode in an object numbered %d\n", obj->number);
 #endif
+    }
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_processtrans
+PURPOSE a traversal callback used for processing transition objects within the PDF
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_processtrans(panda_pdf *document, panda_object *victim);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function is called by the <command>panda_traverseobjects</command>() function to deal with transition effects attached to objects when <command>panda_close</command>() call. You shouldn't need to ever call this function.
+
+RETURNS Nothing
+
+EXAMPLE START
+You shouldn't need to use this function.
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void
+panda_processtrans (panda_pdf * opened, panda_object * obj)
+{
+#if defined DEBUG
+  printf ("processtrans() traversal struct object numbered %d\n", obj->number);
+#endif
+
+  // If the transitions dictionary has anything in it, and this is a page
+  // content object, then add the dictionary to the normal dictionary
+  if((obj->isContents == panda_true) && (obj->trans->next != NULL))
+    {
+      printf("***** There was a trans dict\n");
     }
 }

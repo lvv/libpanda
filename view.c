@@ -384,3 +384,41 @@ void panda_pageduration(panda_page *target, double duration)
 {
   panda_adddictitem(target->obj->dict, "Dur", panda_doublevalue, duration);
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_transduration
+PURPOSE specify the number of seconds that a page transition effect should take to occur
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_transduration (panda_page *target, double seconds);
+SYNOPSIS END
+
+DESCRIPTION This function records information within the PDF indicating the maximum number of seconds that the given page transition effect should be displayed within the viewer. This is useful for presentations and the like when you realise that you are addicted to Microsoft Powerpoint...
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_transduration (page, 30.5);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void panda_transduration(panda_page *target, double duration)
+{
+  panda_adddictitem(target->obj->trans, "D", panda_doublevalue, duration);
+}

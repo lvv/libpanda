@@ -14,3 +14,6 @@ Release 0.4 -> Release 0.5
 
 2002-01-09 Michael Still mikal@stillhq.com
 	Implemented the rest of the page layout commands.
+
+2002-01-10 Michael Still mikal@stillhq.com
+	Implemented page durations.
