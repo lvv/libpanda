@@ -73,12 +73,12 @@ panda_error (int fatal, char *message)
     MessageBox (NULL, message, 
 		(fatal ==
 		 panda_true) ? "Fatal Panda Windows DLL error" :
-		"Non-fatal Panda Windows DLL error", MB_OK);
+		"Non-fatal Panda Windows DLL error", MB_OK);
   
 #else
     fprintf (stderr, "%sError: %s\n", (fatal == panda_true) ? "Fatal " : "",
 	     message);
-#endif /*  */
-  if (fatal == panda_true)
+#endif /*  */
+  if (fatal == panda_true)
     exit (42);
 }

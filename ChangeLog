@@ -59,3 +59,6 @@ Release 0.4 -> Release 0.5
 
 2003-05-28 Michael Still mikal@stillhq.com
 	Fixed failure to check if libtiff, libjpeg and libpng were found at configure time in images.c
+
+2003-05-28 Evan Nemerson evan@coeus-group.com
+	Fix a segmentation fault in the panda_imagesize() function.

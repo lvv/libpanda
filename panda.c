@@ -33,7 +33,7 @@
 #else
 #include <panda/constants.h>
 #include <panda/functions.h>
-#endif /*  */
+#endif
 
 /******************************************************************************
 DOCBOOK START
