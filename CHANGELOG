@@ -15,3 +15,8 @@ Release 0.1 -> Release 0.2
 
   * Improved the commenting in some of the code (added function descriptions
   	to the source files).
+
+  * Decided that we can assume that there are never any \0's in text streams
+	and therefore improved the textstream writing code.
+
+  * Improved the speed of the library with the manytextboxes time trial.
