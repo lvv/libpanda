@@ -1,4 +1,4 @@
-pandaincludedir = $($includedir/panda)
+pandaincludedir = ($includedir)/panda
 
 noinst_PROGRAMS = panda
 lib_LIBRARIES = libpanda.a
