@@ -44,6 +44,7 @@ void setfont(pdf *output, char *fontident){
   output->currentFont = fontident;
 }
 
+// Set the current font size
 void setfontsize(pdf *output, int size){
   output->currentFontSize = size;
 }
@@ -83,22 +84,27 @@ object *getfontobj(pdf *output, char *fontident){
   return NULL;
 }
 
+// Set the font mode to something
 void setfontmode(pdf *output, int mode){
   output->currentFontMode = mode;
 }
 
+// Set the spacing between characters
 void setcharacterspacing(pdf *output, double amount){
   output->currentCharacterSpacing = amount;
 }
 
+// Set the spacing between words
 void setwordspacing(pdf *output, double amount){
   output->currentWordSpacing = amount;
 }
 
+// Set the horizontal scaling factor for characters
 void sethorizontalscaling(pdf *output, double scaling){
   output->currentHorizontalScaling = scaling;
 }
 
+// Set the spacing between lines
 void setleading(pdf *output, double leading){
   output->currentLeading = leading;
 }

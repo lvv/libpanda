@@ -41,3 +41,27 @@ _declspec(dllexport) void __stdcall winpdfclose(pdf *document){
 _declspec(dllexport) page * __stdcall winpdfpage(pdf *document, char *size){
   return pdfpage(document, size);
 }
+
+_declspec(dllexport) void __stdcall winsetfontsize(pdf *document, int size){
+  setfontsize(document, size);
+}
+
+_declspec(dllexport) void __stdcall winsetfontmode(pdf *document, int size){
+  setfontmode(document, mode);
+}
+
+_declspec(dllexport) void __stdcall winsetcharacterspacing(pdf *document, double amount){
+  setcharacterspacing(document, amount);
+}
+
+_declspec(dllexport) void __stdcall winsetwordspacing(pdf *document, double amount){
+  setwordspacing(document, amount);
+}
+
+_declspec(dllexport) void __stdcall winsethorizontalscaling(pdf *document, double scaling){
+  sethorizontalscaling(document, scaling);
+}
+
+_declspec(dllexport) void __stdcall winsetleading(pdf *document, double amount){
+  setleading(document, amount);
+}
