@@ -1,0 +1,12 @@
+#!/bin/bash
+
+cat docbook/manual-start.sgml > manual.sgml
+
+for item in `ls *.sgml | grep -v manual.sgml`
+do
+  echo "<chapter><title>$item</title>" >> manual.sgml
+  grep -v DOCTYPE $item >> manual.sgml
+  echo "</chapter>" >> manual.sgml
+done
+
+cat docbook/manual-end.sgml >> manual.sgml
