@@ -60,6 +60,7 @@ extern "C"
 
     int isPages;
     int isContents;
+    int isTemplate;
 
     char cascadeproperties[panda_object_property_max];
     char localproperties[panda_object_property_max];
@@ -72,6 +73,7 @@ extern "C"
     panda_object *contents;
     int height;
     int width;
+    char *templatename;
   }
   panda_page;
 

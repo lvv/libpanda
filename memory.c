@@ -85,12 +85,10 @@ panda_xrealloc (void *memory, size_t size)
 {
   void *buffer;
 
-  printf ("Realloc called\n");
   if ((buffer = realloc (memory, size)) == NULL)
     {
       panda_error ("panda_xrealloc failed to allocate memory");
     }
 
-  printf ("Realloc returns\n");
   return buffer;
 }

@@ -67,6 +67,7 @@ panda_newobject (panda_pdf * doc, int type)
 
   // By default this object is not a pages object
   created->isPages = panda_false;
+  created->isTemplate = panda_false;
 
   if (type == panda_placeholder)
     {
@@ -716,8 +717,8 @@ panda_writedictionary (panda_pdf * output, panda_object * obj,
 	  panda_printf (output, "\t/%s %s\n", dictNow->name,
 			dictNow->textValue);
 
-	  // If the type is type, then possibly output the Kids line for the pages
-	  // object
+	  // If the type is type, then possibly output the Kids line for the 
+	  // pages object
 	  if ((strcmp (dictNow->name, "Type") == 0)
 	      && (obj->isPages == panda_true))
 	    {
@@ -733,10 +734,12 @@ panda_writedictionary (panda_pdf * output, panda_object * obj,
 		  else
 		    atBegining = panda_false;
 
-		  panda_printf (output, "%d %d R",
-				currentKid->me->number,
-				currentKid->me->generation);
-
+		  if(currentKid->me->isTemplate == panda_false)
+		    panda_printf (output, "%d %d R",
+				  currentKid->me->number,
+				  currentKid->me->generation);
+		  else atBegining = panda_true;
+		  
 		  // Next
 		  currentKid = currentKid->next;
 		}

@@ -156,6 +156,7 @@ extern "C"
 ******************************************************************************/
 
   panda_page *panda_newtemplate (panda_pdf *, char *);
+  void panda_applytemplate (panda_pdf *, panda_page *, panda_page *);
 
 /******************************************************************************
   Text.c

@@ -57,8 +57,6 @@ extern "C"
 // with no fractional values shown. As many values as needed can be added here
 #define  panda_pagesize_a4                "[0 0 594 841]"
 #define  panda_pagesize_usletter          "[0 0 612 792]"
-#define  panda_pagesize_template_a4       "TEMPLATE [0 0 594 841]"
-#define  panda_pagesize_template_usletter "TEMPLATE [0 0 612 792]"
 
 // We have the concept of placeholder objects, that do not get written out to
 // the PDF

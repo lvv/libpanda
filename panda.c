@@ -495,22 +495,6 @@ panda_newpage (panda_pdf * output, char *pageSize)
   panda_page *newPage;
   char *pageSizeCopy;
 
-  // A template page is treated as a special case of a page, because they are
-  // similar in many respects
-  pageSizeCopy =
-    (char *) panda_xmalloc (sizeof (char) * (strlen (pageSize) + 1));
-  strcpy (pageSizeCopy, pageSize);
-
-  if (strcmp (strtok (pageSizeCopy, " "), "TEMPLATE") == 0)
-    {
-      // Here we make the somewhat dangerous assumption that the only thing left
-      // in the pagesize string is numerical...
-      newPage = panda_newtemplate (output, strtok (NULL, "a"));
-      free (pageSizeCopy);
-      return newPage;
-    }
-  free (pageSizeCopy);
-
   // The code to setup the page has been moved to make things easier elsewhere
   newPage = panda_createandinsertpage (output);
 
@@ -522,7 +506,7 @@ panda_newpage (panda_pdf * output, char *pageSize)
 		     output->pages);
 
   // Copy the pageSize string somewhere safe, and then clobber the copy.
-  // We can't clober the original because it is a constant anyway and it would
+  // We can't clobber the original because it is a constant anyway and it would
   // be rude to screw with another person's data
   pageSizeCopy =
     (char *) panda_xmalloc (sizeof (char) * (strlen (pageSize) + 1));
