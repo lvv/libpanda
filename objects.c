@@ -163,7 +163,8 @@ panda_adddict (panda_pdf * document)
 
   // Determine how many dictionaries we currently have
 #if defined DEBUG
-  printf ("Determining how many dictionaries are currently defined\n");
+  printf ("Determining how many dictionaries are currently defined in 0x%08x\n",
+	  document);
 #endif
 
   if ((dbdata = panda_dbread (document, "dict-count")) == NULL)

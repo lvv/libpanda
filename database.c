@@ -10,7 +10,7 @@
     interaction, saving us from having to do it elsewhere. It also makes it
     easier to change the database later if I need to...
 
-  Copyright (C) Michael Still 2000 - 2002
+  Copyright (C) Michael Still 2000 - 2004
   Copyright (C) Evan Nemerson 2003 - 2004
 
   This program is free software; you can redistribute it and/or modify
@@ -69,37 +69,49 @@ DOCBOOK END
 void
 panda_dbopen (panda_pdf * document)
 {
-  void *dbptr = document->db;
-  char filename[] = "/tmp/panda-XXXXXX.db";
   int ec;
+  char filename[] = "/tmp/panda-XXXXXX";
+
+  if (NULL == document)
+    panda_error(panda_true, "Attempt to open a database for a NULL document");
 
   /* The name of the database must be unique, or we wont be able to create
      more than one document at a time */
   if((ec = mkstemp(filename)) < 0){
     panda_error(panda_true, 
-		"Could not generate a temporary filename for database");
+  		"Could not generate a temporary filename for database");
   }
   close(ec);
+  unlink(filename);
 
 #ifdef DEBUG
   printf ("Opening the database: %s\n", filename);
 #endif // DEBUG
 
 #ifdef _WINDOWS
-    panda_windbopen (document);
+  panda_windbopen (document);
 #else
 #ifdef USE_EDB
-    if ( !((E_DB_File *)dbptr = e_db_open(filename)) )
-      panda_error(panda_true, "Could not open database.");
+  if ( !((E_DB_File *)dbptr = e_db_open(filename)) )
+    panda_error(panda_true, "Could not open database.");
 #else
-    if ((ec = db_create(((DB **)&(dbptr)), NULL, 0)) != 0)
-      panda_error(panda_true, panda_xsnprintf("Could not open database: %s", 
-					      db_strerror(ec)));
+ {
+   DB *dbptr = (DB *) document->db;
+   
+   if((ec = db_create(&dbptr, NULL, 0)) != 0)
+     panda_error(panda_true, panda_xsnprintf("Could not open database: %s", 
+					     db_strerror(ec)));
+   
+   if(NULL == dbptr)
+     panda_error(panda_true, "Couldn't create the database\n");
 
-    if ((ec = ((DB *)dbptr)->open(NULL, filename, "panda", DB_BTREE, 
-				  DB_CREATE, 0664)) != 0)
-      panda_error(panda_true, panda_xsnprintf("Could not open database: %s", 
-					      db_strerror(ec)));
+   if((ec = dbptr->open(dbptr, filename, "panda", DB_BTREE, 
+			 DB_CREATE, 0600)) != 0)
+     panda_error(panda_true, panda_xsnprintf("Could not open database: %s", 
+					     db_strerror(ec)));
+
+   document->db = (void *) dbptr;
+ }
 #endif // USE_EDB
 #endif // _WINDOWS
 }
@@ -175,6 +187,15 @@ panda_dbwrite (panda_pdf * document, char *key, char *value)
 {
   void *dbptr = document->db;
 
+  if(NULL == document)
+    panda_error(panda_true, "Cannot write for NULL document\n");
+  if(NULL == document->db)
+    panda_error(panda_true, "Cannot write to NULL database\n");
+
+#if defined DEBUG
+  printf("Writing database key %s\n", key);
+#endif
+
 #if defined _WINDOWS
     panda_windbwrite (document, key, value);
 #else
@@ -193,9 +214,6 @@ panda_dbwrite (panda_pdf * document, char *key, char *value)
   e_db_data_set((E_DB_File *)dbptr, key, value, strlen(value)+1);
 #else
   {
-    // This new scope is needed here so that we can allocate these variables
-    // and still have the code compile with DEBUG turned on when using a 
-    // strict C compiler...
     DBT db_key, db_data;
     int ec;
     
@@ -241,30 +259,39 @@ DOCBOOK END
 char *
 panda_dbread (panda_pdf * document, char *key)
 {
-  void *dbptr = document->db;
+  if(NULL == document)
+    panda_error(panda_true, "Cannot write for NULL document\n");
+  if(NULL == document->db)
+    panda_error(panda_true, "Cannot write to NULL database\n");
+
+#if defined DEBUG
+  printf("Reading database key %s\n", key);
+#endif
 
 #if defined _WINDOWS
   return panda_windbread (document, key);
 #else
 #ifdef USE_EDB
-  int size;
-
-  if (key == NULL)
-    panda_error (panda_true, "Cannot read a NULL key\n");
-
-  return e_db_data_get((E_DB_File *)dbptr, key, &size);
+ {
+   int size;
+   
+   if (key == NULL)
+     panda_error (panda_true, "Cannot read a NULL key\n");
+   
+   return e_db_data_get((E_DB_File *) document->db, key, &size);
+ }
 #else
  {
+   DB *dbptr = document->db;
    DBT db_key, db_data;
    int ec;
    
    memset(&db_key, 0, sizeof(db_key));
    memset(&db_data, 0, sizeof(db_data));
    db_key.data = key;
-   db_key.size = strlen(key)+1;
+   db_key.size = strlen(key) + 1;
    
-   if ( (ec = ((DB *)dbptr)->get(((DB *)dbptr), NULL, 
-				 &db_key, &db_data, 0)) == 0 )
+   if ((ec = dbptr->get(dbptr, NULL, &db_key, &db_data, 0)) == 0)
      return panda_xsnprintf("%s", db_data.data);
    else
      return NULL;
