@@ -167,6 +167,7 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
       panda_freetempobject(output, subdict, panda_false);
     }
 
+  return;
   // Is there a text size setup?
   if (output->currentFontSize == -1)
     panda_setfontsize (output, 16);
@@ -185,7 +186,7 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
   // We know the width and height from the page object
   internalTop = thisPage->height - top - output->currentFontSize;
   internalLeft = left;
-
+  
   /***************************************************************************
     Back to inserting the text
   ***************************************************************************/

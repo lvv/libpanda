@@ -135,6 +135,9 @@ extern "C"
 
     // This is a dummy object for dumping objects
     panda_object *dummyObj;
+
+    // This is a dummy object for the viewer preferences dictionary
+    panda_object *viewerPrefs;
   }
   panda_pdf;
 

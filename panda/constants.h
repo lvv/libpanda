@@ -45,6 +45,7 @@ extern "C"
       panda_literaltextvalue,
       panda_objectvalue,
       panda_objectarrayvalue,
+      panda_booleanvalue,
 
     // Up and down movement for the traversal functions
       panda_up,

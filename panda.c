@@ -302,6 +302,11 @@ panda_open_actual (char *filename, char *mode, int suppress)
       openedpdf->dummyObj =
 	(panda_object *) panda_newobject (openedpdf, panda_placeholder);
 
+      // We need some place to store the viewer prefs dictionary,
+      // which belongs in the catalog object later on...
+      openedpdf->viewPrefs =
+	(panda_object *) panda_newobject (openedpdf, panda_placeholder);
+
       // Remember the mode and create the linear object if needed
       if ((mode[1] == 'l') || (mode[1] == 'L'))
 	{

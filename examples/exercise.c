@@ -216,7 +216,7 @@ main (int argc, char *argv[])
       panda_setcharacterspacing (demo, (double) lineDepth);
       panda_setwordspacing (demo, (double) lineDepth * 10);
       panda_sethorizontalscaling (demo, (double) 1 - (lineDepth * 0.1));
-
+      
       panda_setfontmode (demo, lineDepth);
       panda_textbox (demo, currPage, 20 + (lineDepth * 20), 200,
 		     40 + (lineDepth * 20), 400,
