@@ -16,8 +16,15 @@ IPAustralia     http://www.ipaustralia.gov.au
                 The Australian federal body responsible for the issue and
                 administration of Patents, Trade Marks and Designs. They funded
                 the MS Windows port of Panda, including the development of the
-                C DLL, the Visual Basic examples, the ActiveX DLL and the
+                C DLL, the Visual Basic examples, the ActiveX DLL (0.4) and the
                 installer.
+
+TOWER Software	http://www.towersoft.com.au
+
+		This Australian EDMS and Records Management vendor funded
+		the continued development of the Microsoft Windows port of
+		Panda. This includes the COM wrapper which was released with
+		Panda 0.5...
 
 -------------------------------------------------------------------------------
 

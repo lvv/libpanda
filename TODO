@@ -56,8 +56,6 @@ L * New font ids are handed out too often -- what about font reuse?
 	being used. PDF does "poor man's alpha channelling", which we should 
 	try to support...
 
-  * Template pages don't work yet
-
   * Forced cascading properties
 
   * Document wide properties (convenience)
@@ -71,6 +69,13 @@ L * New font ids are handed out too often -- what about font reuse?
   * Testing of the user interface toggles -- e.g. panda_hidemenubar
 
   * Page duration doesn't seem to work
+
+  * Full annotation implementation
+
+  * Line annotations don't appear to work
+
+  * Allow callers to specify the date that annotations are created on if they
+	want.
 
 *****************************
 * CONVERSION TASKS          *

@@ -39,10 +39,19 @@ extern "C"
   Annotate.c
 ******************************************************************************/
 
-  void panda_textannotation(panda_pdf *, panda_page *, int, char *, 
-			    int, int, int, int, int, int);
-  panda_object *panda_insertannotation(panda_pdf *, panda_page *, 
-				       int, int, int, int, int);
+  void panda_textannotation(panda_pdf *, panda_page *, int, char *, char *, 
+			    int, int, int, int, double, double, double,
+			    int, int);
+  void panda_freetextannotation(panda_pdf *, panda_page *, char *, char *,
+				int, int, int, int, double, double, double,
+				int);
+  void panda_lineannotation(panda_pdf *, panda_page *, char *, char *,
+			    int, int, int, int, int, int, int, int, 
+			    double, double, double, int);
+
+  panda_object *panda_insertannotation(panda_pdf *, panda_page *, char *,
+				       int, int, int, int, 
+				       double, double, double, int);
 
 /******************************************************************************
   Curves.c

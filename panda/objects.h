@@ -84,7 +84,7 @@ extern "C"
 
   typedef struct panda_internal_xref
   {
-    panda_object *this;
+    panda_object *me;
     struct panda_internal_xref *next;
   }
   panda_xref;

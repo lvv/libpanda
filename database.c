@@ -9,11 +9,26 @@
     we need to interact with the backend database. This file does all of that
     interaction, saving us from having to do it elsewhere. It also makes it
     easier to change the database later if I need to...
+
+  Copyright (C) Michael Still 2000 - 2002
+
+  This program is free software; you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as published by
+  the Free Software Foundation; either version 2 of the License, or
+  (at your option) any later version.
+
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+
+  You should have received a copy of the GNU General Public License
+  along with this program; if not, write to the Free Software
+  Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 ******************************************************************************/
 
 #if defined _WINDOWS
-#include "panda/constants.h"
-#include "panda/functions.h"
+#include "stdafx.h"
 #else
 #include <panda/constants.h>
 #include <panda/functions.h>
@@ -49,9 +64,13 @@ panda_dbopen (panda_pdf * document)
   printf ("Opening the database\n");
 #endif
 
+#if defined _WINDOWS
+  panda_windbopen(document);
+#else
   document->db = tdb_open ("panda.tdb", 0,
 			   TDB_CLEAR_IF_FIRST, O_RDWR | O_CREAT | O_TRUNC,
 			   0600);
+#endif
 }
 
 /******************************************************************************
@@ -84,7 +103,11 @@ panda_dbclose (panda_pdf * document)
   printf ("Closing the database\n");
 #endif
 
+#if defined _WINDOWS
+  panda_windbclose(document);
+#else
   tdb_close (document->db);
+#endif
 }
 
 /******************************************************************************
@@ -113,6 +136,9 @@ DOCBOOK END
 void
 panda_dbwrite (panda_pdf * document, char *key, char *value)
 {
+#if defined _WINDOWS
+	panda_windbwrite(document, key, value);
+#else
   TDB_DATA dbkey, dbdata;
 
 #if defined DEBUG
@@ -134,6 +160,7 @@ panda_dbwrite (panda_pdf * document, char *key, char *value)
     {
       panda_error (panda_true, "Database error");
     }
+#endif
 }
 
 /******************************************************************************
@@ -161,6 +188,9 @@ DOCBOOK END
 char *
 panda_dbread (panda_pdf * document, char *key)
 {
+#if defined _WINDOWS
+	return panda_windbread(document, key);
+#else
   TDB_DATA dbkey, dbdata;
 
   if (key == NULL)
@@ -177,4 +207,5 @@ panda_dbread (panda_pdf * document, char *key)
 #endif
 
   return dbdata.dptr;
+#endif
 }
