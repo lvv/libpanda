@@ -1,4 +1,10 @@
 %{
+  /***************************************************************************
+    WARNING. AT THE MOMENT THIS CODE DOES NOT FREE ANY OF THE LVALUES THAT IT
+    GETS FROM THE FLEX LEXER. THIS IS A BAD THING AND NEEDS TO BE FIXED...
+  ***************************************************************************/
+
+
   #include "constants.h"
   #include "functions.h"
 
@@ -63,8 +69,8 @@ dict      : NAME STRING dict {
                                                                              }
           | NAME NAME dict {
 	              // Add the dictionary item
-	              adddictitem(yycurobj->dict, $1, gLiteralTextValue, $2);
-		      printf("Adddictitem %s --> %s\n", $1, $2);
+	    //adddictitem(yycurobj->dict, $1, gLiteralTextValue, $2);
+	    printf("Adddictitem %s --> %s\n", $1, $2);
                                                                              }
           | NAME ARRAY arrayvals ENDARRAY dict {
                                                                              }

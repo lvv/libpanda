@@ -4,28 +4,29 @@
 extern int binaryMode;
 
 void debuglex(char *, char *, int);
+char *returnStr(char *);
 
 %}
 
 %%
 
 \%PDF-[0-9]+\.[0-9]+    { debuglex(yytext, "version", binaryMode);
-                          yylval.textVal = yytext;
+                          yylval.textVal = (char *) returnStr(yytext);
                           return((binaryMode == 0) ? VERSION : ANYTHING);    }
 
 [ \t\r\n]+              { debuglex(yytext, "whitespace", binaryMode);
                           if(binaryMode == 1){
-                            yylval.textVal = yytext;
+                            yylval.textVal = (char *) returnStr(yytext);
                             return ANYTHING;
                           }                                                  }
 
 \/[a-zA-Z\-0-9\.]+      { debuglex(yytext, "name", binaryMode);
-                          yylval.textVal = yytext;
+                          yylval.textVal = (char *) returnStr(yytext);
                           return((binaryMode == 0) ? NAME : ANYTHING);       }
 
                         /* --- stuff required for objects ---               */
 [0-9]+\ [0-9]+\ R       { debuglex(yytext, "object reference", binaryMode);
-                          yylval.textVal = yytext;
+                          yylval.textVal = (char *) returnStr(yytext);
                           return((binaryMode == 0) ? OBJREF : ANYTHING);     }
 
 obj                     { debuglex(yytext, "obj", binaryMode);
@@ -45,7 +46,7 @@ endstream               { debuglex(yytext, "endstream", binaryMode);
                           return((binaryMode == 0) ? INT : ANYTHING);        }
 
 [+-]?[0-9]+\.[0-9]+     { debuglex(yytext, "floating point", binaryMode);
-                          yylval.textVal = yytext;
+                          yylval.textVal = (char *) returnStr(yytext);
                           return((binaryMode == 0) ? FP : ANYTHING);        }
 
 \<\<                    { debuglex(yytext, "<<", binaryMode);
@@ -55,12 +56,12 @@ endstream               { debuglex(yytext, "endstream", binaryMode);
                           return DBLGT;                                      }
 
 [a-zA-Z0-9\.:'+\-!]+    { debuglex(yytext, "string", binaryMode);
-                          yylval.textVal = yytext;
+                          yylval.textVal = (char *) returnStr(yytext);
                           return((binaryMode == 0) ? STRING : ANYTHING);     }
 
 \([a-zA-Z0-9\.\ :'+-]+\) {
                           debuglex(yytext, "bracketted string", binaryMode);
-                          yylval.textVal = yytext;
+                          yylval.textVal = (char *) returnStr(yytext);
                           return((binaryMode == 0) ? STRING : ANYTHING);     }
 
                         /* --- Array handling ---                           */
@@ -75,12 +76,12 @@ endstream               { debuglex(yytext, "endstream", binaryMode);
 [^a-zA-Z0-9+-\/\t\ \r\n()\[\]]+     { 
                           debuglex(yytext, "run of wierd characters",
                             binaryMode);
-                          yylval.textVal = yytext;
+                          yylval.textVal = (char *) returnStr(yytext);
                           return ANYTHING;
                                                                              }
 
 .                       { debuglex(yytext, "the catch all", binaryMode);
-                          yylval.textVal = yytext;
+                          yylval.textVal = (char *) returnStr(yytext);
                           return ANYTHING;                                   }
 
                         /* --- Stuff needed for the xref and trailer ---    */
@@ -99,4 +100,14 @@ void debuglex(char *text, char *desc, int binMode){
       printf("Suppressed debugging output for %s because we are in binary mode\n",
 	     desc);
   #endif
+}
+
+char *returnStr(char *yytext){
+  char *lval;
+
+  if((lval = malloc(sizeof(char) * strlen(yytext))) == NULL)
+    error("Could not make space for lexer return.");
+  strcpy(lval, yytext);
+
+  return lval;
 }
