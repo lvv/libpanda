@@ -1,4 +1,4 @@
-...\" $Header: /sources/panda/panda/man/Attic/panda_fillline.man,v 1.1 2001/07/19 04:03:39 mikal Exp $
+...\" $Header: /sources/panda/panda/man/Attic/panda_fillline.man,v 1.2 2001/07/20 05:08:46 mikal Exp $
 ...\"
 ...\"	transcript compatibility for postscript use.
 ...\"
@@ -98,4 +98,4 @@ This documentation was generated for \fBPanda\fP 0\&.4 by \fBautodocbook\fP (htt
 .SH "BUGS"
 .PP
 There  are no known bugs in \fBPanda\fP\&. If you find one, please contact mikal@stillhq\&.com and let me know\&.
-...\" created by instant / docbook-to-man, Tue 17 Jul 2001, 13:06
+...\" created by instant / docbook-to-man, Thu 19 Jul 2001, 14:06
