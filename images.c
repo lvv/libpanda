@@ -41,7 +41,7 @@ void insertTiff(pdf *output, page *target, int top, int left,
   int           stripCount;
   tsize_t       stripSize;
   unsigned long imageOffset;
-  char          *tempstream, xobjstr[255];
+  char          *tempstream;
   uint16        tiffResponse16;
   uint32        tiffResponse32;
 
