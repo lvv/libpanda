@@ -12,19 +12,19 @@
 #include <panda/functions.h>
 
 char *
-panda_createfont (pdf * output, char *fontname, int type, char *encoding)
+panda_createfont (panda_pdf * output, char *fontname, int type, char *encoding)
 {
-  // Create a font object in the PDF
-  object *font;
+  // Create a font panda_object in the PDF
+  panda_object *font;
   char tempBuffer[10], *fontident;
 
-  // Make the new object
-  font = panda_newobject (output, gNormal);
+  // Make the new panda_object
+  font = panda_newpanda_object (output, gNormal);
 
-  // Add it to the tree of font objects
-  panda_addchild (output->fonts, font);
+  // Add it to the tree of font panda_objects
+  panda_addpanda_child (output->fonts, font);
 
-  // Setup some values within the font object
+  // Setup some values within the font panda_object
   panda_adddictitem (font->dict, "Type", gTextValue, "Font");
 
   sprintf (tempBuffer, "Type%d", type);
@@ -48,7 +48,7 @@ panda_createfont (pdf * output, char *fontname, int type, char *encoding)
 }
 
 void
-panda_setfont (pdf * output, char *fontident)
+panda_setfont (panda_pdf * output, char *fontident)
 {
   // Free on a NULL should do nothing (check for other platforms)
   free(output->currentFont);
@@ -59,35 +59,35 @@ panda_setfont (pdf * output, char *fontident)
 
 // Set the current font size
 void
-panda_setfontsize (pdf * output, int size)
+panda_setfontsize (panda_pdf * output, int size)
 {
   output->currentFontSize = size;
 }
 
-object *
-panda_getfontobj (pdf * output, char *fontident)
+panda_object *
+panda_getfontobj (panda_pdf * output, char *fontident)
 {
-  // Somewhere there should be a font object with a dictionary key called
+  // Somewhere there should be a font panda_object with a panda_dictionary key called
   // Name with the value fontident. Find it. We do not handle
   // sub-dictionaries here at the moment...
-  child *thisChild;
-  dictionary *thisDict;
+  panda_child *thisChild;
+  panda_dictionary *thisDict;
   char valueString[20];
 
 #if defined DEBUG
-  printf("Looking in pdf for font object \"%s\"\n", fontident);
+  printf("Looking in panda_pdf for font panda_object \"%s\"\n", fontident);
 #endif
 
   // The value string needs to have a / out the front
   sprintf (valueString, "/%s", fontident);
 
   // Start
-  thisChild = output->fonts->children;
+  thisChild = output->fonts->panda_children;
 
-  // Go through each of the children until we find something
+  // Go through each of the panda_children until we find something
   while (thisChild->next != NULL)
     {
-      // We are now going to go through this dictionary
+      // We are now going to go through this panda_dictionary
       thisDict = thisChild->me->dict;
 
       while (thisDict->next != NULL)
@@ -109,35 +109,35 @@ panda_getfontobj (pdf * output, char *fontident)
 
 // Set the font mode to something
 void
-panda_setfontmode (pdf * output, int mode)
+panda_setfontmode (panda_pdf * output, int mode)
 {
   output->currentFontMode = mode;
 }
 
 // Set the spacing between characters
 void
-panda_setcharacterspacing (pdf * output, double amount)
+panda_setcharacterspacing (panda_pdf * output, double amount)
 {
   output->currentCharacterSpacing = amount;
 }
 
 // Set the spacing between words
 void
-panda_setwordspacing (pdf * output, double amount)
+panda_setwordspacing (panda_pdf * output, double amount)
 {
   output->currentWordSpacing = amount;
 }
 
 // Set the horizontal scaling factor for characters
 void
-panda_sethorizontalscaling (pdf * output, double scaling)
+panda_sethorizontalscaling (panda_pdf * output, double scaling)
 {
   output->currentHorizontalScaling = scaling;
 }
 
 // Set the spacing between lines
 void
-panda_setleading (pdf * output, double leading)
+panda_setleading (panda_pdf * output, double leading)
 {
   output->currentLeading = leading;
 }

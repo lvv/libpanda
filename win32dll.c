@@ -33,55 +33,55 @@ _declspec (dllexport)
 }
 
 _declspec (dllexport)
-     pdf *__stdcall winpanda_open (char *filename, char *mode)
+     panda_pdf *__stdcall winpanda_open (char *filename, char *mode)
 {
   return panda_open (filename, mode);
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_close (pdf * document)
+     void __stdcall winpanda_close (panda_pdf * document)
 {
   panda_close (document);
 }
 
 _declspec (dllexport)
-     page *__stdcall winpanda_page (pdf * document, char *size)
+     panda_page *__stdcall winpanda_page (panda_pdf * document, char *size)
 {
   return panda_page (document, size);
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_setfontsize (pdf * document, int size)
+     void __stdcall winpanda_setfontsize (panda_pdf * document, int size)
 {
   panda_setfontsize (document, size);
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_setfontmode (pdf * document, int size)
+     void __stdcall winpanda_setfontmode (panda_pdf * document, int size)
 {
   panda_setfontmode (document, size);
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_setcharacterspacing (pdf * document, double amount)
+     void __stdcall winpanda_setcharacterspacing (panda_pdf * document, double amount)
 {
   panda_setcharacterspacing (document, amount);
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_setwordspacing (pdf * document, double amount)
+     void __stdcall winpanda_setwordspacing (panda_pdf * document, double amount)
 {
   panda_setwordspacing (document, amount);
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_sethorizontalscaling (pdf * document, double scaling)
+     void __stdcall winpanda_sethorizontalscaling (panda_pdf * document, double scaling)
 {
   panda_sethorizontalscaling (document, scaling);
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_setleading (pdf * document, double amount)
+     void __stdcall winpanda_setleading (panda_pdf * document, double amount)
 {
   panda_setleading (document, amount);
 }

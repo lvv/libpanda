@@ -16,29 +16,29 @@
 int
 main (int argc, char *argv[])
 {
-  pdf *demo;
-  page *currPage;
+  panda_pdf *demo;
+  panda_page *currPage;
   int lineDepth;
   char tempString[1024], *tempPtr;
 
-  printf ("Welcome to the Panda 0.3 sample application...\n");
+  printf ("Welcome to the Panda 0.4 sample application...\n");
 
   // Initialise the library
   panda_init ();
 
   // Open our demo PDF
-  if ((demo = panda_open ("output.pdf", "w")) == NULL)
-    panda_error ("demo: could not open output.pdf to write to.");
+  if ((demo = panda_open ("output.panda_pdf", "w")) == NULL)
+    panda_error ("demo: could not open output.panda_pdf to write to.");
 
   // For every text mode in v 1.3
   for (lineDepth = 0; lineDepth < 8; lineDepth++)
     {
 #if defined DEBUG
-      printf ("Created page\n");
+      printf ("Created panda_page\n");
 #endif
 
-      // Create a page
-      currPage = panda_page (demo, gPageSizeA4);
+      // Create a panda_page
+      currPage = panda_newpage (demo, gPageSizeA4);
 
       // Put in the background images
       panda_imagebox (demo, currPage, 0, 0, currPage->height / 2, currPage->width,
@@ -107,7 +107,7 @@ main (int argc, char *argv[])
 #endif
 
       panda_textbox (demo, currPage, 300, 10, 400, 50,
-	       "A second panda_textbox on the page");
+	       "A second panda_textbox on the panda_page");
 
 #if defined DEBUG
       printf ("Created second panda_textbox\n");
@@ -116,7 +116,7 @@ main (int argc, char *argv[])
       panda_setfont (demo, tempPtr = panda_createfont (demo, "Times-Roman", 1, 
 					   "MacRomanEncoding"));
       panda_textbox (demo, currPage, 600, 10, 700, 300,
-	       "The background image on this page is Copyright 2000 Andrew Cagney");
+	       "The background image on this panda_page is Copyright 2000 Andrew Cagney");
       panda_textbox (demo, currPage, 620, 10, 720, 300,
 	       "and is distributed under the terms of the GPL...");
       free(tempPtr);

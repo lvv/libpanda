@@ -3,9 +3,6 @@
 
   Change Control:                                                      DDMMYYYY
     Michael Still    File created                                      03062000
-                     Added pages object and byte offset to             17062000
-                       pdf structure
-		     Added width and height to the page structure      30062000
 
   Purpose:
     This file lays out the object model that we use to describe the inside
@@ -22,76 +19,76 @@ extern "C" {
 
 #include <stdio.h>
 
-typedef struct __objectArray
+typedef struct panda_internal_objectarray
 {
   int number;
   int generation;
-  struct __objectArray *next;
+  struct panda_internal_objectarray *next;
 }
-objectArray;
+panda_objectarray;
 
-typedef struct __dictionary
+typedef struct panda_internal_dictionary
 {
   char *name;
   int valueType;
   int intValue;
   char *textValue;
-  objectArray *objectArrayValue;
-  struct __dictionary *dictValue;
+  panda_objectarray *panda_objectarrayValue;
+  struct panda_internal_dictionary *dictValue;
 
-  struct __dictionary *next;
+  struct panda_internal_dictionary *next;
 }
-dictionary;
+panda_dictionary;
 
-typedef struct __object
+typedef struct panda_internal_object
 {
   int type;
   int number;
   int generation;
   int textmode;
   unsigned long byteOffset;
-  dictionary *dict;
+  panda_dictionary *dict;
   char *layoutstream, *binarystream;
   unsigned long binarystreamLength;
   char *currentSetFont;
 
-  void *children;
+  void *panda_children;
   void *cachedLastChild;
 
   int isPages;
 }
-object;
+panda_object;
 
-typedef struct __page
+typedef struct panda_internal_page
 {
-  object *obj;
-  object *contents;
+  panda_object *obj;
+  panda_object *contents;
   int height;
   int width;
 }
-page;
+panda_page;
 
-typedef struct __child
+typedef struct panda_internal_child
 {
-  object *me;
-  struct __child *next;
+  panda_object *me;
+  struct panda_internal_child *next;
 }
-child;
+panda_child;
 
-typedef struct __xref
+typedef struct panda_internal_xref
 {
-  object *this;
-  struct __xref *next;
+  panda_object *this;
+  struct panda_internal_xref *next;
 }
-xref;
+panda_xref;
 
-typedef struct __pdf
+typedef struct panda_internal_pdf
 {
   FILE *file;
-  object *catalog, *pages, *fonts, *info, *linear;
-  unsigned long byteOffset, xrefOffset;
-  int nextObjectNumber, pageCount;
-  xref *xrefList, *xrefTail;
+  panda_object *catalog, *panda_pages, *fonts, *info, *linear;
+  unsigned long byteOffset, panda_xrefOffset;
+  int nextObjectNumber, panda_pageCount;
+  panda_xref *panda_xrefList, *panda_xrefTail;
   int mode;
 
   // This is needed for the tiff conversion
@@ -107,10 +104,10 @@ typedef struct __pdf
   double currentLeading;
   int nextFontNumber;
 
-  // This is a dummy object for dumping objects
-  object *dummyObj;
+  // This is a dummy panda_object for dumping panda_objects
+  panda_object *dummyObj;
 }
-pdf;
+panda_pdf;
 
 #ifdef __cplusplus
 }

@@ -21,7 +21,7 @@
 // Print a possibly complex string into the PDF file and make sure the offset
 // into the PDF file is stored correctly (dispite Windows)
 void
-panda_printf (pdf * file, char *format, ...)
+panda_printf (panda_pdf * file, char *format, ...)
 {
   char *buffer, *formatString, *token, *strtokVictim;
   int newlineCount = 0, counter = 0, actualLen;
@@ -132,7 +132,7 @@ panda_printf (pdf * file, char *format, ...)
   va_end (argPtr);
 }
 
-// Append some text to the stream that we are creating for a given page
+// Append some text to the stream that we are creating for a given panda_page
 char *
 panda_streamprintf (char *stream, char *format, ...)
 {
@@ -160,7 +160,7 @@ panda_streamprintf (char *stream, char *format, ...)
       if ((stream = (char *) realloc (stream,
 				      sizeof (char) * (len + currentlen))) ==
 	  NULL)
-	panda_error ("Could not append to an object's stream (of some form).");
+	panda_error ("Could not append to an panda_object's stream (of some form).");
 
       // Do the actual appending
       strncat (stream, buffer, len + currentlen);
@@ -176,9 +176,9 @@ panda_streamprintf (char *stream, char *format, ...)
 }
 
 // Put just one character into the PDF file, while updating the offset so that
-// the xref table works later on
+// the panda_xref table works later on
 void
-panda_putc (pdf * output, int c)
+panda_putc (panda_pdf * output, int c)
 {
   fputc (c, output->file);
   output->byteOffset++;
@@ -187,7 +187,7 @@ panda_putc (pdf * output, int c)
 // Put some known text into the PDF file, also update the offset
 // Don't forget to do the \n to \r\n conversion as well
 void
-panda_print (pdf * output, char *format)
+panda_print (panda_pdf * output, char *format)
 {
   char *strtokVictim, *formatString, *token;
   int counter, newlineCount;

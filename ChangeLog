@@ -43,7 +43,14 @@ Release 0.3 -> Release 0.4
 	panda/legacy.h
 
   * Note that the namespace changes were partially made by a script, so if 
-	 there are any typos, could you please let me know...
+	 there are any typos, could you please let me know... Things still
+	 compile, so at least the typos are consistent.
 	
   * Implemented template pages for PDF documents. These are used via the
 	panda_createtemplate and panda_pagefromtemplate calls.
+
+  * Fixed the namespace on variable names as well... This included moving some
+	stuff out of the gcc reserved namespace (__*) in objects.h.
+
+  * The namespace changes were lots of fun (not). I suggest that no-one ever
+	do them again...
