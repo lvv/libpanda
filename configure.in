@@ -36,6 +36,9 @@ AC_CHECK_LIB(tiff, TIFFOpen, CFLAGS="$CFLAGS -DHAVE_LIBTIFF"  LDFLAGS="$LDFLAGS 
 dnl -ljpeg:
 AC_CHECK_LIB(jpeg, jpeg_std_error, CFLAGS="$CFLAGS -DHAVE_LIBJPEG"  LDFLAGS="$LDFLAGS -ljpeg")
 
+dnl -ledb
+AC_CHECK_LIB(edb, e_db_open, CFLAGS="$CFLAGS -DHAVE_LIBEDB"  LDFLAGS="$LDFLAGS -ledb")
+
 dnl Checks for header files.
 dnl STDC checks for stdlib.h stdarg.h string.h and float.h
 AC_HEADER_STDC
@@ -62,7 +65,3 @@ AC_CHECK_LIB(libc,snprintf)
 
 
 AC_OUTPUT(examples/Makefile panda/Makefile Makefile)
-
-
-
-

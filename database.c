@@ -32,6 +32,7 @@
 #else
 #include <panda/constants.h>
 #include <panda/functions.h>
+#include "contrib/Edb.h"
 #endif
 
 /******************************************************************************
@@ -68,9 +69,8 @@ panda_dbopen (panda_pdf * document)
     panda_windbopen (document);
   
 #else
-    document->db = tdb_open ("panda.tdb", 0,
-			     TDB_CLEAR_IF_FIRST, O_RDWR | O_CREAT | O_TRUNC,
-			     0600);
+    if ( !((E_DB_File *)document->db = e_db_open("panda.db")) )
+      panda_error(panda_true, "Could not open database.");
   
 #endif
 }
@@ -109,7 +109,7 @@ panda_dbclose (panda_pdf * document)
     panda_windbclose (document);
   
 #else
-    tdb_close (document->db);
+    e_db_close((E_DB_File *)document->db);
   
 #endif
 }
@@ -145,7 +145,6 @@ panda_dbwrite (panda_pdf * document, char *key, char *value)
     panda_windbwrite (document, key, value);
   
 #else
-    TDB_DATA dbkey, dbdata;
 
 #if defined DEBUG
   printf ("Storing (%s, %s) in 0x%08x\n", key, value, document->db);
@@ -156,16 +155,7 @@ panda_dbwrite (panda_pdf * document, char *key, char *value)
   if (value == NULL)
     panda_error (panda_true, "Cannot store null value\n");
 
-  // We need to build the structures for the TDB call
-  dbkey.dptr = key;
-  dbkey.dsize = strlen (key) + 1;
-  dbdata.dptr = value;
-  dbdata.dsize = strlen (value) + 1;
-
-  if (tdb_store (document->db, dbkey, dbdata, TDB_REPLACE) != 0)
-    {
-      panda_error (panda_true, "Database error");
-    }
+  e_db_data_set((E_DB_File *)document->db, key, value, strlen(value)+1);
   
 #endif
 }
@@ -200,22 +190,12 @@ panda_dbread (panda_pdf * document, char *key)
     return panda_windbread (document, key);
   
 #else
-    TDB_DATA dbkey, dbdata;
+    int size;
 
   if (key == NULL)
     panda_error (panda_true, "Cannot read a NULL key\n");
 
-  // We need to build the structures for the TDB call
-  dbkey.dptr = key;
-  dbkey.dsize = strlen (key) + 1;
-
-  dbdata = tdb_fetch (document->db, dbkey);
-
-#if defined DEBUG
-  printf ("Getting %s returned %s\n", key, dbdata.dptr);
-#endif
-
-  return dbdata.dptr;
+  return e_db_data_get((E_DB_File *)document->db, key, &size);
   
 #endif
 }
