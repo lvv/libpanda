@@ -41,3 +41,6 @@ Release 0.4 -> Release 0.5
 	
 2002-03-10 Michael Still mikal@stillhq.com
 	Rolled in the new windows patches
+
+2002-05-01 Michael Still mikal@stillhq.com
+	Fixed tdb.h install bug
