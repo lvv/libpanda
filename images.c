@@ -37,7 +37,7 @@ void imagebox(pdf *output, page *target, int top, int left, int bottom,
 void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   int right, char *filename){
   TIFF          *image;
-  object        *imageObj, *subdict, *xobjrefsubdict;
+  object        *imageObj, *subdict, *xobjrefsubdict, *xobjrefsubsubdict;
   int           stripCount;
   tsize_t       stripSize;
   unsigned long imageOffset;
@@ -64,8 +64,13 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   // We make an object not just a dictionary because this is what
   // adddictitem needs
   xobjrefsubdict = newobject(output, gPlaceholder);
-  adddictitem(xobjrefsubdict->dict, filename, gObjValue, imageObj);
-  adddictitem(target->obj->dict, "XObject", gDictionaryValue, xobjrefsubdict->dict);
+  xobjrefsubsubdict = newobject(output, gPlaceholder);
+
+  adddictitem(xobjrefsubsubdict->dict, filename, gObjValue, imageObj);
+  adddictitem(xobjrefsubdict->dict, "XObject", gDictionaryValue,
+    xobjrefsubsubdict->dict);
+  adddictitem(target->obj->dict, "Resources", gDictionaryValue,
+    xobjrefsubdict->dict);
 
   // We put some information based on a stat of the image file into the object
   // This will allow us to determine if this file's image is included in the
@@ -130,7 +135,7 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   else error("Could not get the height of the TIFF image.");
 
   // And put this into the PDF
-  adddictitem(imageObj->dict, "Resources", gDictionaryValue, subdict->dict);
+  adddictitem(imageObj->dict, "DecodeParms", gDictionaryValue, subdict->dict);
 
   /****************************************************************************
      Insert the image
