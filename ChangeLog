@@ -1,5 +1,5 @@
 Release 0.4 -> Release 0.5
-
+	
 2001-07-22 Michael Still mikal@stillhq.com
 	Chased memory leaks until blue in the face.
 
@@ -38,3 +38,6 @@ Release 0.4 -> Release 0.5
 
 2002-02-17 Michael Still mikal@stillhq.com
 	Got templates working
+	
+2002-03-10 Michael Still mikal@stillhq.com
+	Rolled in the new windows patches

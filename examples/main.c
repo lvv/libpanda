@@ -375,8 +375,13 @@ main (int argc, char *argv[])
   // Why not have some annotations as well?
   ///////////////////////////////////////////////////////////////////////////
 
-  panda_textannotation(demo, currPage, panda_true, "Hello", 10, 10, 50, 50,
+  panda_textannotation(demo, currPage, panda_true, "Hello", "Text annotation",
+		       10, 10, 50, 50, 1.0, 0.0, 0.0,
 		       panda_icon_comment, 0);
+  panda_lineannotation(demo, currPage, "Line annotation", "Line annotation",
+		       50, 50, 150, 150, 
+		       150, 150, 200, 200, 
+		       0.0, 1.0, 0.0, 0);
 
   ///////////////////////////////////////////////////////////////////////////
   // We can also setup template pages to make life a little easier (and the
