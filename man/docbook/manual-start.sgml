@@ -1,0 +1,10 @@
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook V3.1//EN">
+<book><bookinfo><title>A guide to using Panda</title><author><firstname>Michael</firstname><surname>Still</surname></author><copyright><year>2002</year><holder>Michael Still</holder></copyright></bookinfo>
+<chapter><title>Introduction</title>
+<para>Panda is a PDF generation API developed by Michael Still. It is released under the terms of the GNU GPL, which might affect your commerical use of this product. Please check the file labelled COPYING in the source distribution before relying on this product for your commercial activities.
+</para>
+
+<para>
+...more content here...
+</para>
+</chapter>

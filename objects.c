@@ -151,7 +151,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
   panda_object *objValue;
   panda_objectarray *currentObjectArray;
   panda_dictionary *dictValue, *prevDictValue;
-  int overwriting = panda_false, tempInt;
+  int overwriting = panda_false;
 
 #if defined DEBUG
   printf ("Added dictionary item %s to object (type = %d)\n", name,
@@ -214,6 +214,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       case panda_integervalue:
       case panda_objectvalue:
       case panda_booleanvalue:
+      case panda_doublevalue:
 	break;
 
       default:
@@ -268,11 +269,17 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       // Are we overwriting?
       if ((overwriting == panda_true) && (dictNow->textValue != NULL))
 	free (dictNow->textValue);
-
-      tempInt = va_arg (argPtr, int);
       dictNow->textValue = panda_xsnprintf ("%s",
-					    tempInt == panda_true ? "true" :
-					    "false");
+					    va_arg (argPtr, int) == panda_true ? 
+					    "true" : "false");
+      break;
+
+    case panda_doublevalue:
+      // Are we overwriting?
+      if ((overwriting == panda_true) && (dictNow->textValue != NULL))
+	free (dictNow->textValue);
+      dictNow->textValue = panda_xsnprintf ("%f",
+					    va_arg(argPtr, double));
       break;
 
     case panda_objectarrayvalue:
@@ -755,6 +762,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj,
 	case panda_literaltextvalue:
 	case panda_brackettedtextvalue:
 	case panda_booleanvalue:
+	case panda_doublevalue:
 #if defined DEBUG
 	  printf ("Writing a text value named %s into the dictionary\n",
 		  dictNow->name);

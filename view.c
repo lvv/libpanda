@@ -41,7 +41,6 @@ EXAMPLE START
 #include&lt;panda/functions.h&gt;
 
 panda_pdf *document;
-panda_page *page;
 
 panda_init();
 
@@ -78,7 +77,6 @@ EXAMPLE START
 #include&lt;panda/functions.h&gt;
 
 panda_pdf *document;
-panda_page *page;
 
 panda_init();
 
@@ -115,7 +113,6 @@ EXAMPLE START
 #include&lt;panda/functions.h&gt;
 
 panda_pdf *document;
-panda_page *page;
 
 panda_init();
 
@@ -152,7 +149,6 @@ EXAMPLE START
 #include&lt;panda/functions.h&gt;
 
 panda_pdf *document;
-panda_page *page;
 
 panda_init();
 
@@ -189,7 +185,6 @@ EXAMPLE START
 #include&lt;panda/functions.h&gt;
 
 panda_pdf *document;
-panda_page *page;
 
 panda_init();
 
@@ -226,7 +221,6 @@ EXAMPLE START
 #include&lt;panda/functions.h&gt;
 
 panda_pdf *document;
-panda_page *page;
 
 panda_init();
 
@@ -328,7 +322,7 @@ panda_pdf *document;
 panda_init();
 
 document = panda_open("filename.pdf", "w");
-panda_textdirection(document, panda_tesxtdirection_r2l);
+panda_textdirection(document, panda_textdirection_r2l);
 EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
@@ -351,4 +345,42 @@ void panda_textdirection(panda_pdf *document, int dir)
       panda_error(panda_false, "Invalid text direction specified");
       break;
     }
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_pageduration
+PURPOSE specify the maximum number of seconds that a page should be displayed by the viewer before moving on
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_pageduration (panda_page *target, double seconds);
+SYNOPSIS END
+
+DESCRIPTION This function records information within the PDF indicating the maximum number of seconds that the given page should be displayed within the viewer. This is useful for presentations and the like where you might like to automatically move onto the next page in the document at some point. The default value for this is to never move onto the next page automatically. If this value is changed from the default, there is currently no way to revert back to the default later. The feature may not be implemented by all viewers.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_pageduration (page, 30.5);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void panda_pageduration(panda_page *target, double duration)
+{
+  panda_adddictitem(target->obj->dict, "Dur", panda_doublevalue, duration);
 }
