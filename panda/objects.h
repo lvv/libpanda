@@ -21,7 +21,6 @@
 #endif
 #else
 #include <panda/constants.h>
-#include <panda/panda_tdb.h>
 #endif
 
 #ifdef __cplusplus
@@ -117,11 +116,7 @@ extern "C"
     panda_object *dummyObj;
 
     // Database for the internal representation of the PDF
-#if defined _WINDOWS
     void *db;
-#else
-    TDB_CONTEXT *db;
-#endif
   }
   panda_pdf;
 
