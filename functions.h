@@ -67,6 +67,7 @@ void    writeDictionary(pdf *, object *, dictionary *);
 void    addchild(object *, object *);
 void    traverseObjects(pdf *, object *, traverseFunct);
 void    appendtextstream(object *, char *, unsigned long);
+void    appendxobjectstream(object *, char *, unsigned long);
 
 /******************************************************************************
   Text.c
