@@ -21,10 +21,10 @@ panda_init ()
 
   // We first need to create the binary string to include in our header
   for (generalCounter = 0; generalCounter <
-       (sizeof (gBinaryHeaderString) / sizeof (char)); generalCounter++)
+       (sizeof (panda_binaryheaderstring) / sizeof (char)); generalCounter++)
     {
-      gBinaryHeaderString[generalCounter] =
-	gBinaryChar (gHeaderString[generalCounter]);
+      panda_binaryheaderstring[generalCounter] =
+	panda_binarychar (panda_headerstring[generalCounter]);
     }
 }
 
@@ -94,8 +94,8 @@ panda_open_actual (char *filename, char *mode, int suppress)
       if (suppress == gFalse)
 	{
 	  // The file will need to have a PDF header to it
-	  panda_printf (openedpdf, "%s%s\n", gMagicHeaderString,
-		     gBinaryHeaderString);
+	  panda_printf (openedpdf, "%s%s\n", panda_magicheaderstring,
+		     panda_binaryheaderstring);
 
 	  // We need a catalog object with some elements within it's dictionary
 	  openedpdf->catalog = panda_newobject (openedpdf, gNormal);
