@@ -105,3 +105,11 @@ Release 0.3 -> Release 0.4
   * Documented all of the function calls in internal.c using autodocbook
 
   * Documented all of the function calls in memory.c using autodocbook
+
+  * Started working on implementing PNG support in the images.c code. At first
+	the code is just going to use uncompressed PNG bitmaps, but after that
+	we can look into how to use the compressed bitmaps as well. I guess a
+	little is better than nothing.
+
+  * PNG now works for images without alpha channels (uncompressed inside the
+	PDF for now).

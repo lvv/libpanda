@@ -68,6 +68,8 @@ VERSION = 0.4
 
 noinst_PROGRAMS = pandademo pandademolegacy circles morecircles
 
+LDADD = -lpanda -ldmalloc -L..
+
 pandademo_SOURCES = main.c
 pandademolegacy_SOURCES = legacymain.c
 circles_SOURCES = circles.c
@@ -77,10 +79,10 @@ CONFIG_CLEAN_FILES =
 PROGRAMS =  $(noinst_PROGRAMS)
 
 
-DEFS =  -DPACKAGE=\"panda\" -DVERSION=\"0.4\" -DHAVE_LIBDMALLOC=1 -DHAVE_LIBM=1 -DHAVE_LIBPNG=1 -DHAVE_LIBTIFF=1 -DHAVE_LIBJPEG=1 -DSTDC_HEADERS=1 -DHAVE_STDIO_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_PTHREAD_H=1 -DHAVE_JPEGLIB_H=1 -DHAVE_TIFFIO_H=1 -DHAVE_VPRINTF=1 -DHAVE_SNPRINTF=1  -I. -I$(srcdir) 
+DEFS =  -DPACKAGE=\"panda\" -DVERSION=\"0.4\" -DHAVE_LIBM=1 -DHAVE_LIBPNG=1 -DHAVE_LIBTIFF=1 -DHAVE_LIBJPEG=1 -DSTDC_HEADERS=1 -DHAVE_STDIO_H=1 -DHAVE_UNISTD_H=1 -DHAVE_SYS_STAT_H=1 -DHAVE_PTHREAD_H=1 -DHAVE_JPEGLIB_H=1 -DHAVE_TIFFIO_H=1 -DHAVE_VPRINTF=1 -DHAVE_SNPRINTF=1  -I. -I$(srcdir) 
 CPPFLAGS = 
 LDFLAGS = 
-LIBS = -ljpeg -ltiff -lpng -lm -ldmalloc 
+LIBS = -ljpeg -ltiff -lpng -lm 
 pandademo_OBJECTS =  main.o
 pandademo_LDADD = $(LDADD)
 pandademo_DEPENDENCIES = 

@@ -67,6 +67,10 @@ main (int argc, char *argv[])
   panda_imageboxrot (demo, currPage, 700, 200, 817, 317, 132.0,
 		     "gnu_box.jpg", panda_image_jpeg);
 
+  // Insert a PNG to show that I can
+  panda_imageboxrot (demo, currPage, 100, 200, 200, 300, 0.0,
+		     "libpng.png", panda_image_png);
+
   // (c) statement
   panda_setfont (demo, tempPtr = panda_createfont (demo, "Times-Roman", 1,
 						   "MacRomanEncoding"));

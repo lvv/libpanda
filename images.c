@@ -17,6 +17,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <png.h>
 
 static tsize_t libtiffDummyReadProc (thandle_t fd, tdata_t buf, tsize_t size);
 static tsize_t libtiffDummyWriteProc (thandle_t fd, tdata_t buf,
@@ -208,7 +209,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 
     case panda_image_png:
       if (HAVE_LIBPNG)
-	panda_insertPNG (output, target, imageObj, filename);
+	panda_insertPNG(output, target, imageObj, filename);
       else
 	{
 	  fprintf (stderr, "%s %s\n",
@@ -676,12 +677,111 @@ void
 panda_insertPNG (panda_pdf * output, panda_page * target,
 		 panda_object * imageObj, char *filename)
 {
+  FILE *image;
+  unsigned long imageBufSize, width, height;
+  unsigned char signature;
+  int bitdepth, colourtype;
+  png_uint_32 i, rowbytes;
+  png_structp png;
+  png_infop info;
+  unsigned char sig[8];
+  png_bytepp row_pointers = NULL;
 
 #if defined DEBUG
-  printf ("Inserting a PNG / Flate image on page with object number %d.\n",
+  printf ("Inserting a PNG image on page with object number %d.\n",
 	  target->obj->number);
 #endif
 
+  // Open the file
+  if ((image = fopen (filename, "rb")) == NULL)
+    panda_error ("Could not open the specified PNG file.");
+
+  // Check that it really is a PNG file
+  fread(sig, 1, 8, image);
+  if(!png_check_sig(sig, 8))
+    panda_error("PNG file was invalid");
+
+  // Start decompressing
+  if((png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, 
+				   NULL, NULL)) == NULL)
+    panda_error("Could not create a PNG read structure (out of memory?)");
+
+  if((info = png_create_info_struct(png)) == NULL)
+    panda_error("Could not create PNG info structure (out of memory?)");
+  
+  // If panda_error did not exit, we would have to call png_destroy_read_struct
+
+  if(setjmp(png_jmpbuf(png)))
+    panda_error("Could not set PNG jump value");
+
+  // Get ready for IO and tell the API we have already read the image signature
+  png_init_io(png, image);
+  png_set_sig_bytes(png, 8);
+  png_read_info(png, info);
+  png_get_IHDR(png, info, &width, &height, &bitdepth, &colourtype, NULL, 
+	       NULL, NULL);
+
+  // This dictionary item is PNG specific, but until we put uncompressed 
+  // data into the PDF
+  //panda_adddictitem (imageObj->dict, "Filter", panda_textvalue, "DCTDecode");
+
+  // Get the pixel depth for the image from the PNG
+  panda_adddictitem (imageObj->dict, "BitsPerComponent", panda_integervalue,
+		     bitdepth);
+
+  // The colour device will change based on this number as well -- THIS 
+  // NEEDS WORK
+  switch (colourtype)
+    {
+    case PNG_COLOR_TYPE_GRAY:
+	panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue,
+			   "DeviceGray");
+      break;
+
+    default:
+      panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue,
+			 "DeviceRGB");
+      break;
+    }
+
+  /****************************************************************************
+     Some details of the image
+  ****************************************************************************/
+
+  panda_adddictitem (imageObj->dict, "Width", panda_integervalue,
+		     width);
+  panda_adddictitem (imageObj->dict, "Height", panda_integervalue,
+		     height);
+  
+  /****************************************************************************
+     Now actually insert the image. libpng lets us do some cool stuff with
+     the data before it is handed to us like expanding it to our expectations.
+     I don't use this at the moment, but reserve the right to one day...
+  ****************************************************************************/
+
+  if(colourtype == PNG_COLOR_TYPE_PALETTE)
+    png_set_expand(png);
+  if(colourtype & PNG_COLOR_MASK_ALPHA)
+    png_set_strip_alpha(png);
+  png_read_update_info(png, info);
+
+  rowbytes = png_get_rowbytes(png, info);
+  imageObj->binarystream = (unsigned char *) panda_xmalloc(rowbytes * height);
+  imageObj->binarystreamLength = rowbytes * height;
+  row_pointers = panda_xmalloc(height * sizeof(png_bytep));
+
+  // Get the image bitmap
+  for (i = 0;  i < height;  ++i) row_pointers[i] = 
+				   imageObj->binarystream + (i * rowbytes);
+  png_read_image(png, row_pointers);
+  free(row_pointers);
+  png_read_end(png, NULL);
+
+  imageObj->binarystream[imageObj->binarystreamLength++] = 0;
+  fclose (image);
+
+  // This cleans things up for us in the PNG library
+  png_destroy_read_struct(&png, &info, NULL);
 }
 
 /*****************************************************************************
