@@ -19,17 +19,17 @@
 .\" License along with this manual; if not, write to the Free
 .\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
 .\" USA.
-.TH SWS 3 "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
+.TH SHS 3 "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
 .SH NAME
-setwordspacing
+sethorizontalscaling
 .SH SYNOPSIS
 .B #include <panda.h>
 .sp
-.BI "void setwordspacing(pdf *, double spacing);"
+.BI "void sethorizontalscaling(pdf *, double scaling);"
 .SH DESCRIPTION
 The function
-.B setwordspacing
-sets the space to be used between words in text boxes. The default value is 0, which is no extra space. The value that is set with this call is sticky and will therefore apply to all subsequently created text boxes until the value of the word spacing is changed to something else.
+.B sethorizontalscaling
+sets the space to be used by each character as a fraction of the space it would normally use. For instance, 0.5 scaling would mean use 50% of the space for each character that would normally be used. The value that is set with this call is sticky and will therefore apply to all subsequently created text boxes until the value of the word spacing is changed to something else. The default value for scaling is 1.
 .SH EXAMPLE
 .br
 Simply use:
@@ -40,7 +40,7 @@ Simply use:
 pdf *document;
 
 document = openpdf("filename", "w");
-setwordspacing(document, 42);
+sethorizontalscaling(document, 0.5);
 .fi
 .RE
 .SH AUTHOR

@@ -94,3 +94,7 @@ void setcharacterspacing(pdf *output, double amount){
 void setwordspacing(pdf *output, double amount){
   output->currentWordSpacing = amount;
 }
+
+void sethorizontalscaling(pdf *output, double scaling){
+  output->currentHorizontalScaling = scaling;
+}

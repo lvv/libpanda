@@ -37,6 +37,33 @@ function call in Panda. Note that this attribute is 'sticky' and therefore will 
 The default value is 0.
 .RE
 
+Word spacing (Tw operator)
+.RS
+The definition of this operator may be found on page 340 of the PDF specification.
+
+The mode is fully implemented in Panda, and is accessible through the
+.B setwordspacing (3)
+function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
+
+The default value is 0.
+.RE
+
+Horizontal Scaling (Tz operator)
+.RS
+The definition of this operator may be found on page 340 of the PDF specification.
+
+The mode is fully implemented in Panda, and is accessible through the
+.B sethorizontalscaling (3)
+function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
+
+The default value is 1, meaning 100% of the normal width of the text.
+.RE
+
+
+
+
+
+
 Text rendering (Tr operator)
 .RS
 The definition of this operator may be found on page 343 of the PDF specification.

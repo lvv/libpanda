@@ -76,5 +76,6 @@ typedef struct __pdf      // BOOK: Chapter 1
   int              currentFontMode;
   double           currentCharacterSpacing;
   double           currentWordSpacing;
+  double           currentHorizontalScaling;
   int              nextFontNumber;
 } pdf;

@@ -114,6 +114,12 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     appendstream(textobj, commandBuffer, strlen(commandBuffer));
   }
 
+  if(output->currentHorizontalScaling != 1){
+    sprintf(commandBuffer, "%.0f Tz\n",
+      output->currentHorizontalScaling * 100);
+    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+  }
+
   // Finish off the text stream
   sprintf(commandBuffer, "/%s %d Tf\n (%s) '\nET",
     output->currentFont, output->currentFontSize,

@@ -98,6 +98,7 @@ pdf *pdfopen(char *filename, char *mode){
     setfontmode(openedpdf, gTextModeNormal);
     setcharacterspacing(openedpdf, 0.0);
     setwordspacing(openedpdf, 0.0);
+    sethorizontalscaling(openedpdf, 1.0);
 
     // We did open the PDF file ok
     return openedpdf;
