@@ -47,7 +47,6 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  char *p;
  p = panda_xmalloc(42);
  panda_xrealloc(p);

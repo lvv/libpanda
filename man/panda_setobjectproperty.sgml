@@ -47,16 +47,12 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *document;
  panda_object *obj;
- 
  panda_init();
- 
  document = panda_open("filename.pdf", "w");
  obj = panda_newobject(document, panda_object_normal);
  panda_setproperty(obj, panda_scope_cascade, panda_object_property_compress, panda_true);
- 
 </programlisting>
 </refsect1>
 

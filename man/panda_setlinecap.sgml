@@ -47,15 +47,11 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *document;
  panda_page *page;
- 
  panda_init();
- 
  document = panda_open("filename.pdf", "w");
  page = panda_newpage (document, panda_pagesize_a4);
- 
  panda_setlinestart (page, 100, 200);
  panda_setlinecap (page, panda_linecap_round);
  panda_addlinesegment (page, 200, 200);

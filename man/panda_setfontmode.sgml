@@ -47,9 +47,7 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *output;
- 
  panda_init();
  output = panda_open("output.pdf", "w");
  panda_setfontmode(output, panda_textmode_outline);

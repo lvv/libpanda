@@ -47,10 +47,8 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  printf("Panda would encode 19 July 1977 3:14:23 AM as: %s\n",
  panda_makedate(1977, 7, 19, 3, 14, 23));
- 
 </programlisting>
 </refsect1>
 

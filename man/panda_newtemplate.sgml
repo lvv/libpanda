@@ -47,12 +47,9 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *document;
  panda_page *templatepage;
- 
  panda_init();
- 
  document = panda_open("filename.pdf", "w");
  templatepage = panda_newtemplate (document, panda_pagesize_a4);
 </programlisting>

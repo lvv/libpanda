@@ -27,7 +27,6 @@
 <synopsis>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_object *panda_insertannotation(panda_pdf *document, panda_page *page,
  int top, int left, int bottom, int right,
  int flags)

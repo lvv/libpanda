@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "PANDA_SETWORDSPACING" "3" "16 May 2003" "" ""
+.TH "PANDA_SETWORDSPACING" "3" "18 May 2003" "" ""
 
 .SH NAME
 panda_setwordspacing \- set the space between words
@@ -25,9 +25,7 @@ Nothing
 .nf
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- 
  panda_pdf *output;
- 
  panda_init();
  output = panda_open("output.pdf", "w");
  panda_setwordspacing(output, 42.3);

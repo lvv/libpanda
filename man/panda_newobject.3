@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "PANDA_NEWOBJECT" "3" "16 May 2003" "" ""
+.TH "PANDA_NEWOBJECT" "3" "18 May 2003" "" ""
 
 .SH NAME
 panda_newobject \- create a new object
@@ -25,12 +25,9 @@ A pointer to the new object (a panda_object *)
 .nf
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- 
  panda_pdf *document;
  panda_object *obj;
- 
  panda_init();
- 
  document = panda_open("filename.pdf", "w");
  obj = panda_newobject(document, panda_object_normal);
 .fi

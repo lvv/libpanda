@@ -47,7 +47,6 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  printf("The time now is %s\n", panda_nowdate());
 </programlisting>
 </refsect1>

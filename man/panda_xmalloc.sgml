@@ -47,9 +47,7 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  char *memory;
- 
  memory = (char *) panda_xmalloc(42);
 </programlisting>
 </refsect1>

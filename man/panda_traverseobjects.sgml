@@ -47,13 +47,9 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *document;
- 
  panda_init();
- 
  document = panda_open("filename.pdf", "w");
- 
  ... create a whole bunch of objects and add them to the tree ...
  panda_traverseobjects(document, document-&gt;catalog, panda_down, panda_writeobject);
 </programlisting>

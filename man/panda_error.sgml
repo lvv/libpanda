@@ -47,7 +47,6 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_error ("All is rotten in the state of Denmark");
 </programlisting>
 </refsect1>

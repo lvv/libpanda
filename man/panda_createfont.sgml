@@ -47,10 +47,8 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *output;
  char *fonthandle;
- 
  panda_init();
  output = panda_open("output.pdf", "w");
  fonthandle = (output, "Helventica", 3, "MacRomanEncoding");

@@ -47,12 +47,9 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *document;
  panda_page *page;
- 
  panda_init();
- 
  document = panda_open("filename.pdf", "w");
  page = panda_newpage (document, panda_pagesize_a4);
  panda_textboxrot (demo, currPage, 20 + (lineDepth * 20), 200, 40 + (lineDepth * 20), 400, 33.0, "Demonstration of a text mode");

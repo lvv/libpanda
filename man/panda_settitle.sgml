@@ -47,11 +47,8 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *document;
- 
  panda_init();
- 
  document = panda_open("filename.pdf", "w");
  panda_settitle(document, "Mikal's excellent PDF document");
 </programlisting>

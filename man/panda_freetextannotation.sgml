@@ -49,15 +49,12 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *demo;
  panda_page *currPage;
- 
  panda_init();
  if ((demo = panda_open ("output.pdf", "w")) == NULL)
  panda_error (panda_true, "demo: could not open output.pdf to write to.");
  currPage = panda_newpage (demo, panda_pagesize_a4);
- 
  panda_freetextannotation(demo, currPage, "Hello", 10, 10, 50, 50, 0);
 </programlisting>
 </refsect1>

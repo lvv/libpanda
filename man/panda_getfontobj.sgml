@@ -47,12 +47,9 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *output;
- 
  panda_init();
  output = panda_open("output.pdf", "w");
- 
  fonthandle = panda_createfont (output, "Helventica", 3, "MacRomanEncoding");
  printf("The font was stored in object number %d\n",
  (panda_getfont (output, fonthandle))-&gt;number);

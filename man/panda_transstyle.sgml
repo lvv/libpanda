@@ -54,7 +54,6 @@
  &lt;listitem&gt;panda_pagetrans_glitter_315 -- a glitter effect that moves from the top left to the bottom right of the page&lt;/listitem&gt;
  &lt;listitem&gt;panda_pagetrans_none -- no transition effect&lt;/listitem&gt;
  &lt;/orderedlist&gt;
- 
  &lt;/para&gt;
  &lt;para&gt;
  The default transition is to have no transition at all. It should be noted that not all viewers support these transition effects.
@@ -71,15 +70,11 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- 
  panda_pdf *document;
  panda_page *page;
- 
  panda_init();
- 
  document = panda_open("filename.pdf", "w");
  page = panda_newpage (document, panda_pagesize_a4);
- 
  panda_transduration (page, 30.5);
 </programlisting>
 </refsect1>
