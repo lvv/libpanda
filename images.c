@@ -12,6 +12,7 @@
 #include "constants.h"
 #include "functions.h"
 #include <tiffio.h>
+#include <math.h>
 #include <jpeglib.h>
 #include <sys/stat.h>
 #include <unistd.h>
