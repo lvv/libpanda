@@ -9,5 +9,3 @@
   * Speed improvements for the manypages timetrial
 
   * Make the \n -> \r\n conversion into a function call and make it faster...
-
-  * TIFF handling

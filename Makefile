@@ -18,15 +18,21 @@ PROFILING = -pg
 OPTO = 
 #OPTO = -O3
 
+# The libraries that are required
+LIBS = -lm -ltiff
+
+# The locations of libraries
+LIBLOCS = -L/usr/lib -L/usr/local/lib
+
 COMPILER = gcc
 COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG) -Wall $(PROFILING) $(OPTO)
 
 # Main is excluded from here for the benefit of the tests and the library
-OBJFILES = error.o  font.o  objects.o  panda.o  text.o  trailer.o  utility.o  xref.o
+OBJFILES = error.o  font.o  images.o objects.o  panda.o  text.o  trailer.o  utility.o  xref.o
 
 # Build panda (including the sample application)
 all:		$(OBJFILES) main.o
-		gcc $(OBJFILES) main.o -o panda
+		gcc $(OBJFILES) $(LIBS) $(LIBLOCS) main.o -o panda
 
 # This makes the archive that is the panda library. It is not installed by this
 # set of commands though, that needs a make install... The ar command is
@@ -64,6 +70,9 @@ error.o:	error.c constants.h functions.h objects.h Makefile
 
 font.o:		font.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) font.c -o font.o
+
+images.o:       images.c constants.h functions.h objects.h Makefile
+		$(COMPILER) $(COMPILER_FLAGS) images.c -o images.o
 
 main.o:		main.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) main.c -o main.o

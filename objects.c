@@ -61,6 +61,10 @@ object *newobject(pdf *doc, int type){
   created->textstream = NULL;
   created->textstreamLength = 0;
 
+  // And we don't have a binary stream either
+  created->binarystream = NULL;
+  created->binarystreamLength = 0;
+
   // There is no font defined
   created->currentSetFont = NULL;
 
@@ -246,11 +250,15 @@ void writeObject(pdf *output, object *dumpTarget){
 
     *************************************************************************/
 
-    // Textstream
-
     if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
       adddictitem(dumpTarget, "Length", gIntValue, 
         dumpTarget->textstreamLength + 6);
+    }
+
+    if((dumpTarget->binarystreamLength > 0) && 
+      (dumpTarget->binarystream != NULL)){
+      adddictitem(dumpTarget, "Length", gIntValue,
+	dumpTarget->binarystreamLength);
     }
     
     // We are going to dump the named object (and only the named object) to 
@@ -264,11 +272,20 @@ void writeObject(pdf *output, object *dumpTarget){
     // Do we have a textstream?
     if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
       pdfprint(output, "stream\nBT\n");
-      
-      for(count = 0; count < dumpTarget->textstreamLength; count ++)
-	pdfputc(output, dumpTarget->textstream[count]);
-
+      pdfprintf(output, "%s", dumpTarget->textstream);
       pdfprint(output, "ET\nendstream\n");
+    }
+
+    // Do we have a binary stream? We cannot have both cause how would be 
+    // differentiate?
+    else if((dumpTarget->binarystreamLength > 0) &&
+      (dumpTarget->binarystream != NULL)){
+      pdfprintf(output, "stream\n");
+
+      for(count = 0; count < dumpTarget->binarystreamLength; count ++)
+	pdfputc(output, dumpTarget->binarystream[count]);
+
+      pdfprint(output, "\nendstream\n");
     }
     
     pdfprint(output, "endobj\n");

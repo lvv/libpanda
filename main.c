@@ -49,6 +49,7 @@ int main(int argc, char *argv[]){
     sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.", 4, 6, 5);
     textbox(demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30, 
       tempString);
+    imagebox(demo, currPage, 10, 10, 20, 20, "input.tif", gImageTiff);
 
 #if defined DEBUG
     printf("Created textbox\n");
