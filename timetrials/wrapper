@@ -12,8 +12,7 @@ starttime=`date`
 # performance has improved or degraded.
 
 # This variable is a list of libaries to test
-#libs="clibpdf-202r1 pdflib-30 panda-02"
-libs="panda-01"
+libs="clibpdf-202r1 pdflib-30 panda-02"
 
 # This variable is a list of tests
 tests="hello manytextboxes"
@@ -27,7 +26,7 @@ do
   for lib in $libs
   do
     # Every test for every library
-#    make $test-$lib
+    make $test-$lib
 
     # Make sure that make made!
     if [ $? -gt 0 ]
@@ -76,3 +75,6 @@ do
     fi
   done
 done
+
+# And now run the archival tests
+./wrapper-archive
