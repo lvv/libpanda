@@ -11,6 +11,7 @@ AC_PROG_CC
 AM_PROG_LEX
 AC_PROG_YACC
 AC_PROG_INSTALL
+AC_PROG_RANLIB
 
 dnl Checks for libraries.
 dnl The syntax is library name, function, action if found, action if not found
