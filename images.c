@@ -39,11 +39,20 @@ HANDLE winmutex;
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+#if defined HAVE_LIBTIFF
 #include <tiffio.h>
+#endif
+
+#if defined HAVE_LIBJPEG
 #include <jpeglib.h>
+#endif
+
+#if defined HAVE_LIBPNG
+#include <png.h>
+#endif
+
 #include <unistd.h>
 #include <pthread.h>
-#include <png.h>
 
 pthread_mutex_t convMutex = PTHREAD_MUTEX_INITIALIZER;
 #endif

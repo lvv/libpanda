@@ -56,3 +56,6 @@ Release 0.4 -> Release 0.5
 
 2003-05-28 Michael Still mikal@stillhq.com
 	Changed the default leading to something which should at least work a little for multiline textboxes. If you have problems with overlapping text, call panda_setleading() to fix them...
+
+2003-05-28 Michael Still mikal@stillhq.com
+	Fixed failure to check if libtiff, libjpeg and libpng were found at configure time in images.c
