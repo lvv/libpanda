@@ -51,7 +51,7 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   // adddictitem needs
   xobjrefsubdict = newobject(output, gPlaceholder);
   adddictitem(xobjrefsubdict, filename, gObjValue, imageObj);
-  //  adddictitem(target->obj, "XObject", gDictionaryValue, xobjrefsubdict->dict);
+  adddictitem(target->obj, "XObject", gDictionaryValue, xobjrefsubdict->dict);
 
   // We put some information based on a stat of the image file into the object
   // This will allow us to determine if this file's image is included in the

@@ -9,3 +9,7 @@
   * Make the \n -> \r\n conversion into a function call and make it faster...
 
   * Add see also sections in the man pages
+
+  * Check that all of the malloc calls involving a strlen have 1 added to the
+	the result of the strlen in a manner that allows the size of char to
+	change.
