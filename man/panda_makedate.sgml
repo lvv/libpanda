@@ -62,7 +62,7 @@
 <refsect1>
     <title>VERSION</title>
     <para>
-This documentation was generated for <command>Panda</command> 0.4 by <command>autodocbook</command> (http://www.stillhq.com).
+This documentation was generated for <command>Panda</command> 0.4.1 by <command>autodocbook</command> (http://www.stillhq.com).
     </para>
 </refsect1>
 
@@ -79,3 +79,4 @@ This documentation was generated for <command>Panda</command> 0.4 by <command>au
 There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
 </para>
 </refsect1>
+</refentry>

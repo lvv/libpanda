@@ -12,7 +12,7 @@
 
 <!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 
-<refentry id="panda-init">
+<refentry id="panda_init">
 <refmeta>
 <refentrytitle>panda_init</refentrytitle>
 <manvolnum>3</manvolnum>
@@ -55,7 +55,7 @@
 <refsect1>
     <title>VERSION</title>
     <para>
-This documentation was generated for <command>Panda</command> 0.4 by <command>autodocbook</command> (http://www.stillhq.com).
+This documentation was generated for <command>Panda</command> 0.4.1 by <command>autodocbook</command> (http://www.stillhq.com).
     </para>
 </refsect1>
 
