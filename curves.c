@@ -14,6 +14,18 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+ /*****************************************************************************
+ ** DOCBOOK COMMON: #include <panda/functions.h>
+ ** DOCBOOK COMMON: #include <panda/constants.h>
+ *****************************************************************************/
+
+ /*****************************************************************************
+ ** DOCBOOK setlinestart: The function setlinestart set the starting position
+ ** DOCBOOK setlinestart: of the line that is about to be drawn. It is required
+ ** DOCBOOK setlinestart: in order for a line to be drawn. This, however, does
+ ** DOCBOOK setlinestart: not mean this call is required for the drawing of
+ ** DOCBOOK setlinestart: shapes such as rectangles.
+ *****************************************************************************/
 // Set the start point of a line on the page
 void
 panda_setlinestart (panda_page * target, int x, int y)
@@ -183,7 +195,7 @@ panda_setfillcolor(panda_page *target, int red, int green, int blue)
   panda_entergraphicsmode(target);
   target->contents->layoutstream = 
     panda_streamprintf (target->contents->layoutstream,
-			"%d %d %d rg\n", red, green, blue);
+  			"%d %d %d rg\n", red, green, blue);
 }
 
 // And the line colour
@@ -193,5 +205,5 @@ panda_setlinecolor(panda_page *target, int red, int green, int blue)
   panda_entergraphicsmode(target);
   target->contents->layoutstream = 
     panda_streamprintf (target->contents->layoutstream,
-			"%d %d %d RG\n", red, green, blue);
+    			"%d %d %d RG\n", red, green, blue);
 }

@@ -33,10 +33,11 @@ panda_entergraphicsmode (panda_page * target)
       printf ("Ended textmode for object %d\n", target->contents->number);
 #endif
     }
-  else
+  else if(target->contents->insidegraphicsblock == panda_false)
     {
       target->contents->layoutstream =
 	panda_streamprintf (target->contents->layoutstream, "q\n");
+      target->contents->insidegraphicsblock = panda_true;
     }
 }
 
@@ -45,4 +46,5 @@ panda_exitgraphicsmode (panda_page * target)
 {
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream, "Q\n\n");
+  target->contents->insidegraphicsblock = panda_false;
 }

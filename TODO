@@ -87,3 +87,6 @@ K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
 	negative number, then we should complain in some way...
 
   * Fix the implicit type casts
+
+  * Save the state that someone is built for lines and curves and stuff, and
+	allow them to restore that state later on if they would like to...

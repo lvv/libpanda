@@ -46,6 +46,7 @@ extern "C"
     int number;
     int generation;
     int textmode;
+    int insidegraphicsblock;
     unsigned long byteOffset;
     panda_dictionary *dict;
     char *layoutstream, *binarystream;

@@ -1,9 +1,6 @@
 This file documents work that is currently being undertaken on the Panda codebase.
 
-  * Lexer development (opening PDF documents for modification)
-
-  * Lines and curves and stuff
-
-  * Namespace changes
+  * Lines and curves and stuff (fills are having some problems)
 
   * Template pages
+

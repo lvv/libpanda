@@ -187,7 +187,9 @@ main (int argc, char *argv[])
   }
 
   ///////////////////////////////////////////////////////////////////////////
-  // Demonstrate the supported text modes
+  // Demonstrate the supported lines and curve thingies -- note that no
+  // graphics state is held from the previous set of lines, so you'll need
+  // to rebuild it each time.
   ///////////////////////////////////////////////////////////////////////////
 
   currPage = panda_newpage(demo, panda_pagesize_a4);
