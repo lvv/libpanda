@@ -142,7 +142,7 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
 
   TIFF          *image, *conv;
   object        *subdict;
-  int           stripCount;
+  int           stripCount, stripMax;
   tsize_t       stripSize;
   unsigned long imageOffset;
   char          *tempstream, *stripBuffer;
@@ -254,18 +254,19 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
 
     // Copy the image information ready for conversion
     stripSize = TIFFStripSize(image);
+    stripMax = TIFFNumberOfStrips(image);
     imageOffset = 0;
     
     if((stripBuffer = 
 	malloc(TIFFNumberOfStrips(image) * stripSize)) == NULL)
       error("Insufficient memory for TIFF image insertion.");
 
-    for(stripCount = 0; stripCount < TIFFNumberOfStrips(image); stripCount++){
+    for(stripCount = 0; stripCount < stripMax; stripCount++){
 #if defined DEBUG
       printf("Read a strip of the input image with offset %d\n", imageOffset);
 #endif
 
-      imageOffset += TIFFReadRawStrip(image, stripCount, 
+      imageOffset += TIFFReadEncodedStrip(image, stripCount, 
 	stripBuffer + imageOffset, stripSize);
     }
 

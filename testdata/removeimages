@@ -1,0 +1,6 @@
+#!/bin/bash
+
+for item in `ls  *tif | grep -v input.tif`
+do
+  rm $item
+done
