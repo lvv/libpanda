@@ -28,6 +28,43 @@ char *globalTiffBuffer;
 unsigned long globalTiffBufferOffset;
 pthread_mutex_t tiffConvMutex = PTHREAD_MUTEX_INITIALIZER;
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_imagebox
+PURPOSE insert an image into the PDF document at the specified location
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_panda_imagebox (panda_pdf * output, panda_page * target, int top, int left, int bottom, int right, char *filename, int type);
+SYNOPSIS END
+
+DESCRIPTION This function call inserts an image into the PDF document at the specified location using a reasonable default for rotation (none). This call is included for backward compatability withprevious releases of the API and it is recommened that new code call <command>panda_imageboxrot</command>(). It is unlikely that this call will be retired however. The image types accepted by this call are: panda_image_tiff, panda_image_jpeg and panda_image_png.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *demo;
+panda_page *currPage;
+
+panda_init ();
+
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+  panda_error ("demo: could not open output.pdf to write to.");
+
+currPage = panda_newpage (demo, panda_pagesize_a4);
+  
+panda_imagebox (demo, currPage, 0, 0, currPage->height / 2,
+  currPage->width, "input.tif", panda_image_tiff);
+EXAMPLE END
+SEEALSO panda_imageboxrot
+DOCBOOK END
+******************************************************************************/
+
 // Imagebox now just calls panda_imageboxrot with a default rotational value
 // Based on patches submitted by Ceasar Miquel (miquel@df.uba.ar)
 void
@@ -37,6 +74,43 @@ panda_imagebox (panda_pdf * output, panda_page * target, int top, int left,
   return panda_imageboxrot (output, target, top, left, bottom, right, 0.0,
 			    filename, type);
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_imageboxrot
+PURPOSE insert an image into the PDF document at the specified location
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left, int bottom, int right, double angle, char *filename, int type);
+SYNOPSIS END
+
+DESCRIPTION This function call inserts an image into the PDF document at the specified location, including the ability to rotate the image on the page. It should be noted that xpdf will sometimes make the rotated image look quite sickly. This is in fact a bug in xpdf (which has beenr eported), and not a bug in <command>Panda</command>. The image types accepted by this call are: panda_image_tiff, panda_image_jpeg and panda_image_png.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *demo;
+panda_page *currPage;
+
+panda_init ();
+
+if ((demo = panda_open ("output.pdf", "w")) == NULL)
+  panda_error ("demo: could not open output.pdf to write to.");
+
+currPage = panda_newpage (demo, panda_pagesize_a4);
+  
+panda_imagebox (demo, currPage, 0, 0, currPage->height / 2,
+  currPage->width, 45.0, "input.tif", panda_image_tiff);
+EXAMPLE END
+SEEALSO panda_imagebox
+DOCBOOK END
+******************************************************************************/
 
 // A redistribution point for image insertions based on type of image
 void
@@ -185,6 +259,29 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   printf ("Finished inserting an image.\n");
 #endif
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_insertTIFF
+PURPOSE insert a TIFF image into the PDF
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageObj, char *filename);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Do the actual insertion of the TIFF image into the PDF document. This routine handles the conversion of the TIFF image into the form supported by the PDF specification, and similar operations. It is an internal <command>Panda</command> call and should not be needed by users of the API.
+
+RETURNS Nothing
+
+EXAMPLE START
+See panda_imageboxrot for an example usage
+EXAMPLE END
+SEEALSO panda_imagebox, panda_imageboxrot, panda_insertJPEG, panda_insertPNG
+DOCBOOK END
+******************************************************************************/
 
 // This function will insert a TIFF image into a PDF
 void
@@ -435,6 +532,29 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
     }
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_insertJPEG
+PURPOSE insert a JPEG image into the PDF
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_insertJPEG (panda_pdf * output, panda_page * target, panda_object * imageObj, char *filename);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Do the actual insertion of the JPEG image into the PDF document. This routine handles the conversion of the JPEG image into the form supported by the PDF specification, and similar operations. It is an internal <command>Panda</command> call and should not be needed by users of the API.
+
+RETURNS Nothing
+
+EXAMPLE START
+See panda_imageboxrot for an example usage
+EXAMPLE END
+SEEALSO panda_imagebox, panda_imageboxrot, panda_insertTIFF, panda_insertPNG
+DOCBOOK END
+******************************************************************************/
+
 // This function will insert a JPEG image into a PDF
 void
 panda_insertJPEG (panda_pdf * output, panda_page * target,
@@ -529,6 +649,29 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
   jpeg_destroy_decompress (&cinfo);
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_insertPNG
+PURPOSE insert a PNG image into the PDF
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_insertPNG (panda_pdf * output, panda_page * target, panda_object * imageObj, char *filename);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Do the actual insertion of the PNG image into the PDF document. This routine handles the conversion of the PNG image into the form supported by the PDF specification, and similar operations. It is an internal <command>Panda</command> call and should not be needed by users of the API. NOT YET IMPLEMENTED.
+
+RETURNS Nothing
+
+EXAMPLE START
+See panda_imageboxrot for an example usage
+EXAMPLE END
+SEEALSO panda_imagebox, panda_imageboxrot, panda_insertJPEG, panda_insertTIFF
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_insertPNG (panda_pdf * output, panda_page * target,
 		 panda_object * imageObj, char *filename)
@@ -547,6 +690,27 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   PDF specification allows for...
 *****************************************************************************/
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION libtiffDummyReadProc
+PURPOSE mangle libtiff to doc image conversion in memory without temportary files
+
+SYNOPSIS START
+static tsize_t libtiffDummyReadProc (thandle_t fd, tdata_t buf, tsize_t size);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This call implements a dummy read procedure for libtiff to allow for the conversion of TIFF images on the fly in memory without the use of temporary files. It is an internal call and should NEVER be called by users of the API.
+
+RETURNS The amount of data read
+
+EXAMPLE START
+See panda_insertTIFF for an example usage
+EXAMPLE END
+SEEALSO panda_insertTIFF, libtiffDummWriteProc
+DOCBOOK END
+******************************************************************************/
+
 static tsize_t
 libtiffDummyReadProc (thandle_t fd, tdata_t buf, tsize_t size)
 {
@@ -554,6 +718,27 @@ libtiffDummyReadProc (thandle_t fd, tdata_t buf, tsize_t size)
   // we only need to be able to write to these in-memory tiffs
   return 0;
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION libtiffDummyWriteProc
+PURPOSE mangle libtiff to doc image conversion in memory without temportary files
+
+SYNOPSIS START
+static tsize_t libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This call implements a dummy write procedure for libtiff to allow for the conversion of TIFF images on the fly in memory without the use of temporary files. It is an internal call and should NEVER be called by users of the API.
+
+RETURNS The amount of daat written
+
+EXAMPLE START
+See panda_insertTIFF for an example usage
+EXAMPLE END
+SEEALSO panda_insertTIFF, libtiffDummWriteProc
+DOCBOOK END
+******************************************************************************/
 
 /* Yes, I know global variables are bad, and this will be changed in the near
    future. If you are reading this code and are disgusted, then feel free to
@@ -603,12 +788,54 @@ libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size)
   return (size);
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION libtiffDummySeekProc
+PURPOSE mangle libtiff to doc image conversion in memory without temportary files
+
+SYNOPSIS START
+static toff_t libtiffDummySeekProc (thandle_t, toff_t off, int i);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This call implements a dummy seek procedure for libtiff to allow for the conversion of TIFF images on the fly in memory without the use of temporary files. It is an internal call and should NEVER be called by users of the API.
+
+RETURNS Where the seek took us to
+
+EXAMPLE START
+See panda_insertTIFF for an example usage
+EXAMPLE END
+SEEALSO panda_insertTIFF, libtiffDummWriteProc
+DOCBOOK END
+******************************************************************************/
+
 static toff_t
 libtiffDummySeekProc (thandle_t fd, toff_t off, int i)
 {
   // This appears to return the location that it went to
   return off;
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION libtiffDummyCloseProc
+PURPOSE mangle libtiff to doc image conversion in memory without temportary files
+
+SYNOPSIS START
+static int libtiffDummyCloseProc (thandle_t);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This call implements a dummy close procedure for libtiff to allow for the conversion of TIFF images on the fly in memory without the use of temporary files. It is an internal call and should NEVER be called by users of the API.
+
+RETURNS Zero
+
+EXAMPLE START
+See panda_insertTIFF for an example usage
+EXAMPLE END
+SEEALSO panda_insertTIFF, libtiffDummWriteProc
+DOCBOOK END
+******************************************************************************/
 
 static int
 libtiffDummyCloseProc (thandle_t fd)
