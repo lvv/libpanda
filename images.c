@@ -14,7 +14,10 @@
 #include <tiffio.h>
 #include <jpeglib.h>
 #include <sys/stat.h>
+//#include <sys/mman.h>
+//#include <sys/types.h>
 #include <unistd.h>
+//#include <fcntl.h>
 
 // A redistribution point for image insertions based on type of image
 void imagebox(pdf *output, page *target, int top, int left,
@@ -216,8 +219,9 @@ void inserttiff(pdf *output, page *target, object *imageObj, char *filename){
 void insertjpeg(pdf *output, page *target, object *imageObj, char *filename){
   struct jpeg_decompress_struct   cinfo;
   struct jpeg_error_mgr           jerr;
-  struct stat                     buf;
   FILE                            *image;
+  int                             c;
+  unsigned long                   imageBufSize;
 
 #if defined DEBUG
   printf("Inserting a JPEG image on page with object number %d.\n",
@@ -240,13 +244,14 @@ void insertjpeg(pdf *output, page *target, object *imageObj, char *filename){
   // This dictionary item is JPEG specific
   adddictitem(imageObj->dict, "Filter", gTextValue, "DCTDecode");
   
-  // Bits per component is per colour component, not per sample. Does this
-  // matter?
-  adddictitem(imageObj->dict, "BitsPerComponent", gIntValue, tiffResponse16);
+  // Bits per component -- I'm not sure exactly how this works with libjpeg.
+  // Is it possible to have a black and white jpeg?
+  adddictitem(imageObj->dict, "BitsPerComponent", gIntValue, 
+    cinfo.num_components * 8);
 
   // The colour device will change based on this number as well
-  switch(tiffResponse16){
-  case 1:
+  switch(cinfo.jpeg_color_space){
+  case JCS_GRAYSCALE:
     adddictitem(imageObj->dict, "ColorSpace", gTextValue, "DeviceGray");
     break;
 
@@ -259,30 +264,37 @@ void insertjpeg(pdf *output, page *target, object *imageObj, char *filename){
      Some details of the image
   ****************************************************************************/
 
-  adddictitem(imageObj->dict, "Width", gIntValue, tiffResponse32);
-  adddictitem(imageObj->dict, "Height", gIntValue, tiffResponse32);
+  adddictitem(imageObj->dict, "Width", gIntValue, cinfo.image_width);
+  adddictitem(imageObj->dict, "Height", gIntValue, cinfo.image_height);
 
   /****************************************************************************
-     Determine the filesize
+    Read the image into it's memory buffer
   ****************************************************************************/
 
-  if(stat(filename, &buf) != 0)
-    error("Could not stat the JPEG file.");
+  imageBufSize = 0;
+  imageObj->binarystreamLength = 0;
   
-  /****************************************************************************
-     Insert the image
-  ****************************************************************************/
+  if((image = fopen(filename , "r")) == NULL)
+    error("Could not open the JPEG file.");
 
-  if((imageObj->binarystream = (char *)
-      malloc(buf.st_blocks * buf.st_blksize)) == NULL)
-    error("Insufficient memory for JPEG image insertion.");
+  while((c = fgetc(image)) != EOF){
+    // We need to grow the buffer
+    if(imageBufSize == imageObj->binarystreamLength){
+      imageBufSize += 1024;
+      
+      if((imageObj->binarystream = realloc(imageObj->binarystream,
+	imageBufSize)) == NULL)
+	error("Could not make enough space for the JPEG image.");
+    }
 
-  imageObj->binarystreamLength = imageOffset;
+    // Store the info
+    imageObj->binarystream[imageObj->binarystreamLength++] = c;
+  }
+
+  imageObj->binarystream[imageObj->binarystreamLength++] = 0;
+  fclose(image);
 
   // This cleans things up for us in the JPEG library
   jpeg_destroy_decompress(&cinfo);
 }
-
-
-
 

@@ -31,4 +31,6 @@
   * Be a bit more sensible in some of our error handling, for instance, if we
   	can't find a file to include in the PDF we shouldn't exit -- we should
 	report it to the calling function and let them deal with it...
+
   * Documentation!
+

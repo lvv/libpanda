@@ -1,3 +1,5 @@
 Release 0.2 -> Release 0.3
   * Changed Makefile.in so that includes are looked for in /usr/include and
   	/usr/local/include
+
+  * Added JPEG support to imagebox
