@@ -206,6 +206,7 @@ extern "C"
   void panda_textdirection (panda_pdf *, int);
   void panda_pageduration (panda_page *, double);
   void panda_transduration (panda_page *, double);
+  void panda_transstyle (panda_page *, int);
 
 /******************************************************************************
   Windows.c -- Windows specific function calls

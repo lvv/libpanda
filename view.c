@@ -422,3 +422,180 @@ void panda_transduration(panda_page *target, double duration)
 {
   panda_adddictitem(target->obj->trans, "D", panda_doublevalue, duration);
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_transstyle
+PURPOSE specify the type of page change transition that should occur
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_transstyle (panda_page *target, int style);
+SYNOPSIS END
+
+DESCRIPTION START
+This function records information within the PDF indicating the preferred page transition style to use. The following are valid styles to use:
+<orderedlist>
+<listitem>panda_pagetrans_split_yi -- vertical split from the inside of the page</listitem>
+<listitem>panda_pagetrans_split_yo -- vertical split from the outside of the page</listitem>
+<listitem>panda_pagetrans_split_xi -- horizontal split from the inside of the page</listitem>
+<listitem>panda_pagetrans_split_xo -- horizontal split from the outside of the page</listitem>
+<listitem>panda_pagetrans_blinds_y -- vertical blinds effect</listitem>
+<listitem>panda_pagetrans_blinds_x -- horizontal blinds effect</listitem>
+<listitem>panda_pagetrans_box_i -- box expanding from the inside of the page</listitem>
+<listitem>panda_pagetrans_box_o -- box contracting from the outside of the page</listitem>
+<listitem>panda_pagetrans_wipe_0 -- a single line wipes the page away from the left to the right</listitem>
+<listitem>panda_pagetrans_wipe_90 -- a single line wipes the page away from the bottom to the top</listitem>
+<listitem>panda_pagetrans_wipe_180 -- a single line wipes the page away from the right to the left</listitem>
+<listitem>panda_pagetrans_wipe_270 -- a single line wipes the page away from the top to the bottom</listitem>
+<listitem>panda_pagetrans_dissolve -- the old page dissolves slowly into the new page</listitem>
+<listitem>panda_pagetrans_glitter_0 -- a glitter effect that moves from the left to the right of the page</listitem>
+<listitem>panda_pagetrans_glitter_270 -- a glitter effect that moves from the top to the bottom of the page</listitem>
+<listitem>panda_pagetrans_glitter_315 -- a glitter effect that moves from the top left to the bottom right of the page</listitem>
+<listitem>panda_pagetrans_none -- no transition effect</listitem>
+</orderedlist>
+
+</para>
+<para>
+The default transition is to have no transition at all. It should be noted that not all viewers support these transition effects.
+DESCRIPTION END
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_transduration (page, 30.5);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void panda_transstyle(panda_page *target, int style)
+{
+  switch(style)
+    {
+    case panda_pagetrans_split_yi:
+    case panda_pagetrans_split_yo:
+    case panda_pagetrans_split_xi:
+    case panda_pagetrans_split_xo:
+      panda_adddictitem(target->obj->trans, "S", panda_textvalue,
+			"Split");
+      panda_adddictitem(target->obj->trans, "Dm", panda_textvalue,
+			style < panda_pagetrans_split_xi ? "V" : "H");
+      
+      if((style == panda_pagetrans_split_yi) ||
+	 (style == panda_pagetrans_split_xi))
+	{
+	  panda_adddictitem(target->obj->trans, "M", panda_textvalue, "I");
+	}
+      else
+	{
+	  panda_adddictitem(target->obj->trans, "M", panda_textvalue, "O");
+	}
+      break;
+
+    case panda_pagetrans_blinds_y:
+    case panda_pagetrans_blinds_x:
+      panda_adddictitem(target->obj->trans, "S", panda_textvalue,
+			"Blinds");
+      panda_adddictitem(target->obj->trans, "Dm", panda_textvalue,
+			style == panda_pagetrans_blinds_y ? "V" : "H");
+      break;
+
+    case panda_pagetrans_box_i:
+    case panda_pagetrans_box_o:
+      panda_adddictitem(target->obj->trans, "S", panda_textvalue,
+			"Box");
+
+      if(style == panda_pagetrans_box_i)
+	{
+	  panda_adddictitem(target->obj->trans, "M", panda_textvalue, "I");
+	}
+      else
+	{
+	  panda_adddictitem(target->obj->trans, "M", panda_textvalue, "O");
+	}
+
+      break;
+
+    case panda_pagetrans_wipe_0:
+    case panda_pagetrans_wipe_90:
+    case panda_pagetrans_wipe_180:
+    case panda_pagetrans_wipe_270:
+      panda_adddictitem(target->obj->trans, "S", panda_textvalue,
+			"Wipe");
+
+      switch(style)
+	{
+	case panda_pagetrans_wipe_0:
+	  panda_adddictitem(target->obj->trans, "Di", panda_integervalue,
+			    0);
+	  break;
+
+	case panda_pagetrans_wipe_90:
+	  panda_adddictitem(target->obj->trans, "Di", panda_integervalue,
+			    90);
+	  break;
+
+	case panda_pagetrans_wipe_180:
+	  panda_adddictitem(target->obj->trans, "Di", panda_integervalue,
+			    180);
+	  break;
+
+	case panda_pagetrans_wipe_270:
+	  panda_adddictitem(target->obj->trans, "Di", panda_integervalue,
+			    270);
+	  break;
+	}
+      break;
+
+    case panda_pagetrans_dissolve:
+      panda_adddictitem(target->obj->trans, "S", panda_textvalue,
+			"Dissolve");
+      break;
+
+    case panda_pagetrans_glitter_0:
+    case panda_pagetrans_glitter_270:
+    case panda_pagetrans_glitter_315:
+      panda_adddictitem(target->obj->trans, "S", panda_textvalue,
+			"Glitter");
+
+      switch(style)
+	{
+	case panda_pagetrans_glitter_0:
+	  panda_adddictitem(target->obj->trans, "Di", panda_integervalue,
+			    0);
+	  break;
+
+	case panda_pagetrans_glitter_270:
+	  panda_adddictitem(target->obj->trans, "Di", panda_integervalue,
+			    270);
+	  break;
+
+	case panda_pagetrans_glitter_315:
+	  panda_adddictitem(target->obj->trans, "Di", panda_integervalue,
+			    315);
+	  break;
+	}
+      break;
+
+    case panda_pagetrans_none:
+      panda_adddictitem(target->obj->trans, "S", panda_textvalue,
+			"R");
+      break;
+     
+    default:
+      panda_error(panda_false, "Unknown page transition requested");
+    }
+}

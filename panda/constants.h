@@ -122,6 +122,28 @@ extern "C"
     panda_textdirection_r2l
   };
 
+// Possible page transition effects
+  enum
+  {
+    panda_pagetrans_split_yi = 0,
+    panda_pagetrans_split_yo,
+    panda_pagetrans_split_xi,
+    panda_pagetrans_split_xo,
+    panda_pagetrans_blinds_y,
+    panda_pagetrans_blinds_x,
+    panda_pagetrans_box_i,
+    panda_pagetrans_box_o,
+    panda_pagetrans_wipe_0,
+    panda_pagetrans_wipe_90,
+    panda_pagetrans_wipe_180,
+    panda_pagetrans_wipe_270,
+    panda_pagetrans_dissolve,
+    panda_pagetrans_glitter_0,
+    panda_pagetrans_glitter_270,
+    panda_pagetrans_glitter_315,
+    panda_pagetrans_none
+  };
+
 // Properties that might be held by objects -- panda_const_properties
   enum
   {
