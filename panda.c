@@ -178,7 +178,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
     {
     case 'r':
     case 'a':
-      panda_error ("Unsupported file I/O mode handed to panda.");
+      panda_error (panda_true, "Unsupported file I/O mode handed to panda.");
       break;
 
     case 'w':
@@ -187,7 +187,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	switch (mode[1])
 	  {
 	  case '+':
-	    panda_error ("Unsupported file I/O mode handed to panda.");
+	    panda_error (panda_true, "Unsupported file I/O mode handed to panda.");
 	    break;
 	  }
 
@@ -258,7 +258,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  panda_checkinfo (openedpdf);
 	  if (openedpdf->info == NULL)
 	    panda_error
-	      ("Failed to make an info object for the PDF. Not sure why...");
+	      (panda_true, "Failed to make an info object for the PDF. Not sure why...");
 
 	  // Add some stuff
 	  panda_adddictitem (openedpdf->info->dict, "Producer",
@@ -317,7 +317,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
       break;
 
     default:
-      panda_error ("Unknown file I/O mode handed to panda.");
+      panda_error (panda_true, "Unknown file I/O mode handed to panda.");
       break;
     }
 
@@ -413,7 +413,7 @@ panda_close (panda_pdf * openedpdf)
     case panda_writelinear:
       // Are there any pages in the PDF? There needs to be at least one...
       if (((panda_child *) openedpdf->pages->children)->me == NULL)
-	panda_error ("Linearised PDFs need at least one page.");
+	panda_error (panda_true, "Linearised PDFs need at least one page.");
 
       panda_writeobject (openedpdf, openedpdf->linear);
 

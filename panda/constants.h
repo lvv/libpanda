@@ -118,6 +118,17 @@ extern "C"
     panda_scope_local
   };
 
+#if defined _WINDOWS
+// The abstraction types that we use
+  enum
+  {
+    windows_panda_abs_pdf = 0,
+	windows_panda_abs_page,
+	windows_panda_abs_font,
+	windows_panda_abs_max
+  };
+#endif
+
 // Sometimes we need PI
 #define panda_pi 3.1415926535
 

@@ -75,7 +75,7 @@ panda_page *currPage;
 panda_init ();
 
 if ((demo = panda_open ("output.pdf", "w")) == NULL)
-  panda_error ("demo: could not open output.pdf to write to.");
+  panda_error (panda_true, "demo: could not open output.pdf to write to.");
 
 currPage = panda_newpage (demo, panda_pagesize_a4);
   
@@ -122,7 +122,7 @@ panda_page *currPage;
 panda_init ();
 
 if ((demo = panda_open ("output.pdf", "w")) == NULL)
-  panda_error ("demo: could not open output.pdf to write to.");
+  panda_error (panda_true, "demo: could not open output.pdf to write to.");
 
 currPage = panda_newpage (demo, panda_pagesize_a4);
   
@@ -331,7 +331,7 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       errMessage =
 	panda_xsnprintf ("Could not open the specified TIFF image \"%s\".",
 			 filename);
-      panda_error (errMessage);
+      panda_error (panda_true, errMessage);
     }
 
 #if defined DEBUG
@@ -345,12 +345,12 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
     panda_adddictitem (imageObj->dict, "BitsPerComponent", panda_integervalue,
 		       tiffResponse16);
   else
-    panda_error ("Could not get the colour depth for the tiff image.");
+    panda_error (panda_true, "Could not get the colour depth for the tiff image.");
 
   // The colour device will change based on the number of samples per pixel
   if (TIFFGetField (image, TIFFTAG_SAMPLESPERPIXEL, &tiffResponse16) == 0)
     panda_error
-      ("Could not get number of samples per pixel for a tiff image.");
+      (panda_true, "Could not get number of samples per pixel for a tiff image.");
 
   switch (tiffResponse16)
     {
@@ -396,11 +396,11 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
 
     case COMPRESSION_LZW:
       panda_error
-	("LZW is encumbered with patents and therefore not supported.");
+	(panda_true, "LZW is encumbered with patents and therefore not supported.");
       break;
 
     default:
-      panda_error ("Unsupported TIFF compression algorithm.");
+      panda_error (panda_true, "Unsupported TIFF compression algorithm.");
       break;
     }
 
@@ -411,7 +411,7 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       panda_adddictitem (imageObj->dict, "Width", panda_integervalue, width);
     }
   else
-    panda_error ("Could not get the width of the TIFF image.");
+    panda_error (panda_true, "Could not get the width of the TIFF image.");
 
   // Height of the image
   if (TIFFGetField (image, TIFFTAG_IMAGELENGTH, &height) != 0)
@@ -421,7 +421,7 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
 			 height);
     }
   else
-    panda_error ("Could not get the height of the TIFF image.");
+    panda_error (panda_true, "Could not get the height of the TIFF image.");
 
   // And put this into the PDF
   panda_adddictitem (imageObj->dict, "DecodeParms", panda_dictionaryvalue,
@@ -607,7 +607,7 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
 
   // Open the file
   if ((image = fopen (filename, "rb")) == NULL)
-    panda_error ("Could not open the specified JPEG file.");
+    panda_error (panda_true, "Could not open the specified JPEG file.");
 
   // Setup the decompression options
   cinfo.err = jpeg_std_error (&jerr);
@@ -657,8 +657,8 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
   imageBufSize = 0;
   imageObj->binarystreamLength = 0;
 
-  if ((image = fopen (filename, "r")) == NULL)
-    panda_error ("Could not open the JPEG file.");
+  if ((image = fopen (filename, "rb")) == NULL)
+    panda_error (panda_true, "Could not open the JPEG file.");
 
   while ((c = fgetc (image)) != EOF)
     {
@@ -669,7 +669,7 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
 
 	  if ((imageObj->binarystream = realloc (imageObj->binarystream,
 						 imageBufSize)) == NULL)
-	    panda_error ("Could not make enough space for the JPEG image.");
+	    panda_error (panda_true, "Could not make enough space for the JPEG image.");
 	}
 
       // Store the info
@@ -740,25 +740,25 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 
   // Open the file
   if ((image = fopen (filename, "rb")) == NULL)
-    panda_error ("Could not open the specified PNG file.");
+    panda_error (panda_true, "Could not open the specified PNG file.");
 
   // Check that it really is a PNG file
   fread (sig, 1, 8, image);
   if (!png_check_sig (sig, 8))
-    panda_error ("PNG file was invalid");
+    panda_error (panda_true, "PNG file was invalid");
 
   // Start decompressing
   if ((png = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL,
 				     NULL, NULL)) == NULL)
-    panda_error ("Could not create a PNG read structure (out of memory?)");
+    panda_error (panda_true, "Could not create a PNG read structure (out of memory?)");
 
   if ((info = png_create_info_struct (png)) == NULL)
-    panda_error ("Could not create PNG info structure (out of memory?)");
+    panda_error (panda_true, "Could not create PNG info structure (out of memory?)");
 
   // If panda_error did not exit, we would have to call png_destroy_read_struct
 
   if (setjmp (png_jmpbuf (png)))
-    panda_error ("Could not set PNG jump value");
+    panda_error (panda_true, "Could not set PNG jump value");
 
   // Get ready for IO and tell the API we have already read the image signature
   // The IHDR chunk inside the PNG defines some info we need about the picture
@@ -861,14 +861,14 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
       (png =
        png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL,
 				NULL)) == NULL)
-    panda_error ("Could not create write structure for PNG (out of memory?)");
+    panda_error (panda_true, "Could not create write structure for PNG (out of memory?)");
 
   if ((info = png_create_info_struct (png)) == NULL)
     panda_error
-      ("Could not create PNG info structure for writing (out of memory?)");
+      (panda_true, "Could not create PNG info structure for writing (out of memory?)");
 
   if (setjmp (png_jmpbuf (png)))
-    panda_error ("Could not set the PNG jump value for writing");
+    panda_error (panda_true, "Could not set the PNG jump value for writing");
 
   // If this call is done before png_create_write_struct, then everything seg faults...
 #if defined _WINDOWS
@@ -1000,7 +1000,7 @@ libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size)
 						     (size * sizeof (char)) +
 						     globalImageBufferOffset))
 	      == NULL)
-	    panda_error ("Could not grow the tiff conversion memory buffer.");
+	    panda_error (panda_true, "Could not grow the tiff conversion memory buffer.");
 	}
 
       // Now move the image data into the buffer
@@ -1118,7 +1118,7 @@ libpngDummyWriteProc (png_structp png, png_bytep data, png_uint_32 len)
 						     (len * sizeof (char)) +
 						     globalImageBufferOffset))
 	      == NULL)
-	    panda_error ("Could not grow the png conversion memory buffer.");
+	    panda_error (panda_true, "Could not grow the png conversion memory buffer.");
 	}
 
       // Now move the image data into the buffer

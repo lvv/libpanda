@@ -206,7 +206,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 	break;
 
       default:
-	panda_error ("Overwriting some dictionary types not yet supported.");
+	panda_error (panda_true, "Overwriting some dictionary types not yet supported.");
       }
 
   switch (valueType)
@@ -802,7 +802,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj,
 	case panda_dictionaryvalue:
 	  // These are handled recursively
 	  if (dictNow->dictValue == NULL)
-	    panda_error ("Subdictionary value erroneously NULL.");
+	    panda_error (panda_true, "Subdictionary value erroneously NULL.");
 
 #if defined DEBUG
 	  printf ("Output the subdictionary starting with the name %s\n",
@@ -816,7 +816,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj,
 	  break;
 
 	default:
-	  panda_error ("Unknown dictionary type");
+	  panda_error (panda_true, "Unknown dictionary type");
 	}
 
       dictNow = dictNow->next;

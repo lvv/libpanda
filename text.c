@@ -96,7 +96,7 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left,
 	      output->currentFont);
 #endif
       if ((fontObj = panda_getfontobj (output, output->currentFont)) == NULL)
-	panda_error ("Could not find the font requested.");
+	panda_error (panda_true, "Could not find the font requested.");
 
       // We make an object not just a dictionary because this is what
       // adddictitem needs

@@ -135,7 +135,7 @@ panda_printf (panda_pdf * file, char *format, ...)
 
       if (vsnprintf (buffer, actualLen, formatString, argPtr) > actualLen)
 	{
-	  panda_error ("Really bad file i/o error.");
+	  panda_error (panda_true, "Really bad file i/o error.");
 	}
     }
 
@@ -218,7 +218,7 @@ panda_streamprintf (char *stream, char *format, ...)
 				      sizeof (char) * (len + currentlen))) ==
 	  NULL)
 	panda_error
-	  ("Could not append to an object's stream (of some form).");
+	  (panda_true, "Could not append to an object's stream (of some form).");
 
       // Do the actual appending
       strncat (stream, buffer, len + currentlen);
@@ -383,21 +383,21 @@ panda_xsnprintf (char *format, ...)
       output = panda_xrealloc (output, size);
       result = vsnprintf (output, size, format, ap);
 
-      /* Check if we are done */
-      if (result < size)
-	break;
-
       if (result == -1)
 	{
-	  /* Up to glibc 2.0.6 */
+	  /* Up to glibc 2.0.6 and Microsoft's implementation*/
 	  size += 100;
 	}
       else
 	{
+	  /* Check if we are done */
+      if (result < size)
+	    break;
+
 	  /* Glibc from now on */
 	  size = result + 1;
 	}
-    }
+  }
 
   va_end (ap);
   return output;

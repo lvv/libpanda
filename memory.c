@@ -53,7 +53,7 @@ panda_xmalloc (size_t size)
 
   if ((buffer = malloc (size)) == NULL)
     {
-      panda_error ("panda_xmalloc failed to allocate memory");
+      panda_error (panda_true, "panda_xmalloc failed to allocate memory");
     }
 
   return buffer;
@@ -93,7 +93,7 @@ panda_xrealloc (void *memory, size_t size)
 
   if ((buffer = realloc (memory, size)) == NULL)
     {
-      panda_error ("panda_xrealloc failed to allocate memory");
+      panda_error (panda_true, "panda_xrealloc failed to allocate memory");
     }
 
   return buffer;

@@ -13,7 +13,15 @@
 #ifndef PANDA_OBJECTS_H
 #define PANDA_OBJECTS_H 1
 
-#include <panda/constants.h>
+#if defined _WINDOWS
+  #if defined _DEMO
+    #include "../panda/constants.h"
+  #else
+    #include "panda/constants.h"
+  #endif
+#else
+  #include <panda/constants.h>
+#endif
 
 #ifdef __cplusplus
 extern "C"
@@ -117,6 +125,23 @@ extern "C"
     panda_object *dummyObj;
   }
   panda_pdf;
+
+#if defined _WINDOWS
+  typedef struct windows_panda_internal_ptrlist
+  {
+    void *me;
+	int number;
+    struct windows_panda_internal_ptrlist *next;
+  }
+  windows_panda_ptrlist;
+
+  typedef struct windows_panda_internal_abs
+  {
+    int highest;
+	windows_panda_ptrlist *list;
+  }
+  windows_panda_abs;
+#endif
 
 #ifdef __cplusplus
 }
