@@ -42,7 +42,7 @@ autoconf
 ./configure
 make clean
 make
-
+exit
 # Make sure that the release passes some simple dmalloc tests
 echo "------------------------------------------------------------------------"
 echo "Checking for memory leaks"
