@@ -76,7 +76,6 @@ panda_applytemplate(panda_pdf *output, panda_page *target,
 		    panda_page *template)
 {
   panda_object *xobjrefsubdict, *xobjrefsubsubdict;
-  double angle = 0;
   int left = 0, right = 200, top = 0, bottom = 200;
 
   // We also need to add some information to the layout stream for the contents
@@ -84,26 +83,20 @@ panda_applytemplate(panda_pdf *output, panda_page *target,
   // consists of the following [moved to internal.c]
   panda_entergraphicsmode (target);
   
-/*    target->contents->layoutstream = */
-/*      panda_streamprintf (target->contents->layoutstream, */
-/*                          "\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n", */
-/*  			cos (angle * panda_pi / 180.0), // x scale */
-/*                          sin (angle * panda_pi / 180.0), // rotate and scale */
-/*                          -sin (angle * panda_pi / 180.0),        // ??? */
-/*                          cos (angle * panda_pi / 180.0), // y scale */
-/*                          (double) left,  // x start */
-/*                          (double) target->height - bottom);      // y start */
-
-/*    target->contents->layoutstream = */
-/*      panda_streamprintf (target->contents->layoutstream, */
-/*                          "%.2f %.2f %.2f %.2f %.2f %.2f cm\n", */
-/*                          // The second matrix */
-/*                          (double) (right - left),        // x size */
-/*                          0.0,    // ??? */
-/*                          0.0,    // ??? */
-/*                          (double) (bottom - top),        // y size */
-/*                          0.0,    // ??? */
-/*                          0.0);   // ??? */
+  target->contents->layoutstream =
+    panda_streamprintf (target->contents->layoutstream,
+                        "\n1.0 0.0 0.0 1.0 0.0 0.0 cm\n");
+                        
+  target->contents->layoutstream =
+    panda_streamprintf (target->contents->layoutstream,
+                        "%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
+                        // The second matrix
+                        (double) 100.0,        // x size
+                        0.0,    // ???
+                        0.0,    // ???
+                        (double) 100.0,        // y size
+                        0.0,    // ???
+                        0.0);   // ???
 
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream, "/%s Do\n",

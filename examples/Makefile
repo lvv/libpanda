@@ -75,7 +75,7 @@ PLATFORM = UNIX
 RANLIB = ranlib
 VERSION = 0.4
 
-noinst_PROGRAMS = pandademo pandademolegacy circles morecircles empty
+noinst_PROGRAMS = pandademo pandademolegacy circles morecircles empty template
 
 LDADD = -lpanda -ldmalloc -L..
 
@@ -84,6 +84,7 @@ pandademolegacy_SOURCES = legacymain.c
 circles_SOURCES = circles.c
 morecircles_SOURCES = morecircles.c
 empty_SOURCES = empty.c
+template_SOURCES = template.c
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_CLEAN_FILES = 
 PROGRAMS =  $(noinst_PROGRAMS)
@@ -113,6 +114,10 @@ empty_OBJECTS =  empty.o
 empty_LDADD = $(LDADD)
 empty_DEPENDENCIES = 
 empty_LDFLAGS = 
+template_OBJECTS =  template.o
+template_LDADD = $(LDADD)
+template_DEPENDENCIES = 
+template_LDFLAGS = 
 CFLAGS = -g -O2 -DHAVE_LIBPNG -DHAVE_LIBTIFF -DHAVE_LIBJPEG
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 LTCOMPILE = $(LIBTOOL) --mode=compile $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -126,9 +131,9 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = gtar
 GZIP_ENV = --best
 DEP_FILES =  .deps/circles.P .deps/empty.P .deps/legacymain.P \
-.deps/main.P .deps/morecircles.P
-SOURCES = $(pandademo_SOURCES) $(pandademolegacy_SOURCES) $(circles_SOURCES) $(morecircles_SOURCES) $(empty_SOURCES)
-OBJECTS = $(pandademo_OBJECTS) $(pandademolegacy_OBJECTS) $(circles_OBJECTS) $(morecircles_OBJECTS) $(empty_OBJECTS)
+.deps/main.P .deps/morecircles.P .deps/template.P
+SOURCES = $(pandademo_SOURCES) $(pandademolegacy_SOURCES) $(circles_SOURCES) $(morecircles_SOURCES) $(empty_SOURCES) $(template_SOURCES)
+OBJECTS = $(pandademo_OBJECTS) $(pandademolegacy_OBJECTS) $(circles_OBJECTS) $(morecircles_OBJECTS) $(empty_OBJECTS) $(template_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -201,6 +206,10 @@ morecircles: $(morecircles_OBJECTS) $(morecircles_DEPENDENCIES)
 empty: $(empty_OBJECTS) $(empty_DEPENDENCIES)
 	@rm -f empty
 	$(LINK) $(empty_LDFLAGS) $(empty_OBJECTS) $(empty_LDADD) $(LIBS)
+
+template: $(template_OBJECTS) $(template_DEPENDENCIES)
+	@rm -f template
+	$(LINK) $(template_LDFLAGS) $(template_OBJECTS) $(template_LDADD) $(LIBS)
 
 tags: TAGS
 

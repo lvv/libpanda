@@ -86,3 +86,5 @@ L * New font ids are handed out too often -- what about font reuse?
 	unneeded #if defined WINDOWS's]
 
   * snprintf() usage in printing functions in utility.c
+
+  * I think I have the conversion matrix wrong for the line drawing stuff...
