@@ -69,10 +69,12 @@ YACC = @YACC@
 
 SUBDIRS = panda man
 
-noinst_PROGRAMS = pandademo
+noinst_PROGRAMS = pandademo pandademolegacy
 lib_LIBRARIES = libpanda.a
 
 pandademo_SOURCES = date.c font.c info.c main.c memory.c panda.c trailer.c error.c images.c objects.c text.c utility.c xref.c
+
+pandademolegacy_SOURCES = date.c font.c info.c legacymain.c memory.c panda.c trailer.c error.c images.c objects.c text.c utility.c xref.c
 
 libpanda_a_SOURCES = date.c font.c info.c memory.c panda.c trailer.c error.c images.c objects.c text.c utility.c xref.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -96,6 +98,11 @@ trailer.o error.o images.o objects.o text.o utility.o xref.o
 pandademo_LDADD = $(LDADD)
 pandademo_DEPENDENCIES = 
 pandademo_LDFLAGS = 
+pandademolegacy_OBJECTS =  date.o font.o info.o legacymain.o memory.o \
+panda.o trailer.o error.o images.o objects.o text.o utility.o xref.o
+pandademolegacy_LDADD = $(LDADD)
+pandademolegacy_DEPENDENCIES = 
+pandademolegacy_LDFLAGS = 
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -109,10 +116,11 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = gtar
 GZIP_ENV = --best
 DEP_FILES =  .deps/date.P .deps/error.P .deps/font.P .deps/images.P \
-.deps/info.P .deps/main.P .deps/memory.P .deps/objects.P .deps/panda.P \
-.deps/text.P .deps/trailer.P .deps/utility.P .deps/xref.P
-SOURCES = $(libpanda_a_SOURCES) $(pandademo_SOURCES)
-OBJECTS = $(libpanda_a_OBJECTS) $(pandademo_OBJECTS)
+.deps/info.P .deps/legacymain.P .deps/main.P .deps/memory.P \
+.deps/objects.P .deps/panda.P .deps/text.P .deps/trailer.P \
+.deps/utility.P .deps/xref.P
+SOURCES = $(libpanda_a_SOURCES) $(pandademo_SOURCES) $(pandademolegacy_SOURCES)
+OBJECTS = $(libpanda_a_OBJECTS) $(pandademo_OBJECTS) $(pandademolegacy_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -197,6 +205,10 @@ maintainer-clean-noinstPROGRAMS:
 pandademo: $(pandademo_OBJECTS) $(pandademo_DEPENDENCIES)
 	@rm -f pandademo
 	$(LINK) $(pandademo_LDFLAGS) $(pandademo_OBJECTS) $(pandademo_LDADD) $(LIBS)
+
+pandademolegacy: $(pandademolegacy_OBJECTS) $(pandademolegacy_DEPENDENCIES)
+	@rm -f pandademolegacy
+	$(LINK) $(pandademolegacy_LDFLAGS) $(pandademolegacy_OBJECTS) $(pandademolegacy_LDADD) $(LIBS)
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.

@@ -46,7 +46,7 @@ void panda_error (char *);
 /******************************************************************************
   Images.c
 
-  - panda_panda_imageboxrot concept by Ceasar Miquel (miquel@df.uba.ar), modified by Mikal
+  - panda_imageboxrot concept by Ceasar Miquel (miquel@df.uba.ar), modified by Mikal
 ******************************************************************************/
 
 void panda_imagebox (panda_pdf *, panda_page *, int, int, int, int, char *, int);
@@ -74,7 +74,7 @@ char *panda_createfont (panda_pdf *, char *, int, char *);
 void panda_setfont (panda_pdf *, char *);
 void panda_panda_setfontsize (panda_pdf *, int);
 panda_object *panda_getfontobj (panda_pdf *, char *);
-void panda_panda_setfontmode (panda_pdf *, int);
+void panda_setfontmode (panda_pdf *, int);
 void panda_setcharacterspacing (panda_pdf *, double);
 void panda_setwordspacing (panda_pdf *, double);
 void panda_sethorizontalscaling (panda_pdf *, double);
@@ -102,16 +102,16 @@ void panda_closetext (panda_pdf *, panda_object *);
   Objects.c
 ******************************************************************************/
 
-panda_object *panda_newpanda_object (panda_pdf *, int);
+panda_object *panda_new_object (panda_pdf *, int);
 panda_dictionary *panda_adddictitem (panda_dictionary *, char *, int, ...);
 void *panda_panda_getdictvalue (panda_dictionary *);
 panda_dictionary *panda_getdict (panda_dictionary *, char *);
-void panda_freepanda_object (panda_pdf *, panda_object *);
-void panda_freepanda_dictionary (panda_dictionary *);
-void panda_writepanda_object (panda_pdf *, panda_object *);
-void panda_writepanda_dictionary (panda_pdf *, panda_object *, panda_dictionary *);
-void panda_addpanda_child (panda_object *, panda_object *);
-void panda_traversepanda_objects (panda_pdf *, panda_object *, int, traverseFunct);
+void panda_freeobject (panda_pdf *, panda_object *);
+void panda_freedictionary (panda_dictionary *);
+void panda_writeobject (panda_pdf *, panda_object *);
+void panda_writedictionary (panda_pdf *, panda_object *, panda_dictionary *);
+void panda_addchild (panda_object *, panda_object *);
+void panda_traverseobjects (panda_pdf *, panda_object *, int, traverseFunct);
 
 /******************************************************************************
   Text.c
@@ -138,10 +138,15 @@ void panda_print (panda_pdf *, char *);
   XREF.c
 ******************************************************************************/
 
-void panda_writepanda_xref (panda_pdf *);
+void panda_writexref (panda_pdf *);
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* PANDA_FUNCTIONS_H */
+
+
+
+
+

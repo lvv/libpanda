@@ -22,7 +22,7 @@
 // We should have a callback for panda_errors setup -- this is not currently
 // implemented in the library, but we will put just enough here to make it
 // work later...
-typedef void (__stdcall * pandaErrorCallback) (BSTR panda_errorString);
+typedef void (__stdcall * pandaErrorCallback) (BSTR errorString);
 pandaErrorCallback panda_errorCB = NULL;
 
 // Function exports

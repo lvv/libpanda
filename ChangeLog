@@ -54,3 +54,6 @@ Release 0.3 -> Release 0.4
 
   * The namespace changes were lots of fun (not). I suggest that no-one ever
 	do them again...
+
+  * Added legacymain.c to check that the legacy function mappings and stuff
+	actually work

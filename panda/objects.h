@@ -16,7 +16,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
 #include <stdio.h>
 
 typedef struct panda_internal_objectarray
@@ -33,7 +32,7 @@ typedef struct panda_internal_dictionary
   int valueType;
   int intValue;
   char *textValue;
-  panda_objectarray *panda_objectarrayValue;
+  panda_objectarray *objectarrayValue;
   struct panda_internal_dictionary *dictValue;
 
   struct panda_internal_dictionary *next;
@@ -52,7 +51,7 @@ typedef struct panda_internal_object
   unsigned long binarystreamLength;
   char *currentSetFont;
 
-  void *panda_children;
+  void *children;
   void *cachedLastChild;
 
   int isPages;
@@ -85,10 +84,10 @@ panda_xref;
 typedef struct panda_internal_pdf
 {
   FILE *file;
-  panda_object *catalog, *panda_pages, *fonts, *info, *linear;
-  unsigned long byteOffset, panda_xrefOffset;
-  int nextObjectNumber, panda_pageCount;
-  panda_xref *panda_xrefList, *panda_xrefTail;
+  panda_object *catalog, *pages, *fonts, *info, *linear;
+  unsigned long byteOffset, xrefOffset;
+  int nextObjectNumber, pageCount;
+  panda_xref *xrefList, *xrefTail;
   int mode;
 
   // This is needed for the tiff conversion
@@ -104,7 +103,7 @@ typedef struct panda_internal_pdf
   double currentLeading;
   int nextFontNumber;
 
-  // This is a dummy panda_object for dumping panda_objects
+  // This is a dummy object for dumping objects
   panda_object *dummyObj;
 }
 panda_pdf;

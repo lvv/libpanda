@@ -44,36 +44,36 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 	  int bottom, int right, double angle, char *filename, int type)
 {
   panda_object *imageObj, *xobjrefsubdict, *xobjrefsubsubdict;
-  char   *panda_pdfFilename;
+  char   *pdfFilename;
   int    i;
 
 #if defined DEBUG
   printf ("Started inserting an image.\n");
 #endif
 
-  // Now we need an panda_object to contain the tiff
-  imageObj = panda_newpanda_object (output, gNormal);
-  panda_addpanda_child (target->obj, imageObj);
+  // Now we need an object to contain the tiff
+  imageObj = panda_newobject (output, gNormal);
+  panda_addchild (target->obj, imageObj);
 
   // We cannot have some characters in the filename that we embed into the PDF,
   // so we fix them here
-  panda_pdfFilename = (char *) panda_xmalloc((strlen(filename) + 1) * sizeof(char));
-  strcpy(panda_pdfFilename, filename);
+  pdfFilename = (char *) panda_xmalloc((strlen(filename) + 1) * sizeof(char));
+  strcpy(pdfFilename, filename);
 
-  for(i = 0; i < strlen(panda_pdfFilename) + 1; i++)
-    if(panda_pdfFilename[i] == '/') panda_pdfFilename[i] = '-';
+  for(i = 0; i < strlen(pdfFilename) + 1; i++)
+    if(pdfFilename[i] == '/') pdfFilename[i] = '-';
 
 #if defined DEBUG
   printf("Filename for PDF was \"%s\" and is now \"%s\"\n",
-	 filename, panda_pdfFilename);
+	 filename, pdfFilename);
 #endif
 
-  // We make an panda_object not just a panda_dictionary because this is what
-  // panda_adddictitem needs
-  xobjrefsubsubdict = panda_newpanda_object (output, gPlaceholder);
-  panda_adddictitem (xobjrefsubsubdict->dict, panda_pdfFilename, gObjValue, imageObj);
+  // We make an object not just a dictionary because this is what
+  // adddictitem needs
+  xobjrefsubsubdict = panda_newobject (output, gPlaceholder);
+  panda_adddictitem (xobjrefsubsubdict->dict, pdfFilename, gObjValue, imageObj);
 
-  xobjrefsubdict = panda_newpanda_object (output, gPlaceholder);
+  xobjrefsubdict = panda_newobject (output, gPlaceholder);
   panda_adddictitem (xobjrefsubdict->dict, "XObject", gDictionaryValue,
 	       xobjrefsubsubdict->dict);
 
@@ -81,22 +81,22 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   panda_adddictitem (target->obj->dict, "Resources", gDictionaryValue,
 	       xobjrefsubdict->dict);
 
-  // We put some information based on a stat of the image file into the panda_object
+  // We put some information based on a stat of the image file into the object
   // This will allow us to determine if this file's image is included in the
   // document again later, which will allow us avoid repetition of the same
   // image data for no apparent reason -- note that this is not complete yet
-  // and we still need to add the existance check before the panda_object is created
-  // and some form of panda_object searching by a rational and efficient manner (a
+  // and we still need to add the existance check before the object is created
+  // and some form of object searching by a rational and efficient manner (a
   // binary search tree?)
 
-  // We now add some panda_dictionary elements to the image panda_object to say that it is
+  // We now add some dictionary elements to the image object to say that it is
   // a TIFF image
   panda_adddictitem (imageObj->dict, "Type", gTextValue, "XObject");
   panda_adddictitem (imageObj->dict, "Subtype", gTextValue, "Image");
 
   // This line will need to be changed to gaurantee that the internal name is
   // unique unless the actual image is the same
-  panda_adddictitem (imageObj->dict, "Name", gTextValue, panda_pdfFilename);
+  panda_adddictitem (imageObj->dict, "Name", gTextValue, pdfFilename);
 
   // Now we do the things that are image format specific... This is also
   // where we check if support has been compiled in for the libraries we need.
@@ -141,14 +141,14 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   // --------------------------------------------------------------------------
 
   // We also need to add some information to the layout stream for the contents
-  // panda_object for the panda_page that the image is being displayed on. This information
+  // object for the page that the image is being displayed on. This information
   // consists of the following:
   //  - save the current graphics state (q operator, p 386 of spec)
   //  - setup the current transformation matrix (ctm, s 3.2 and p 323 of spec)
   //    such that the image is scaled correctly (cm operator)
   //  - modify the ctm to shift the image to where it is meant to be on the
-  //    the panda_page
-  //  - use the image xpanda_object we have created (Do operator, p 348 of spec)
+  //    the page
+  //  - use the image xobject we have created (Do operator, p 348 of spec)
   //  - restore the graphics state to the way it was previously (Q operator,
   //    p 386 of spec)
   if(target->contents->textmode == gTrue)
@@ -158,7 +158,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
       target->contents->textmode = gFalse;
 
 #if defined DEBUG
-      printf("Imageboxrot: Ended textmode for panda_object %d\n", target->contents->number);
+      printf("Imageboxrot: Ended textmode for object %d\n", target->contents->number);
 #endif
     }
 
@@ -187,7 +187,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream, "/%s Do\nQ\n\n", 
-		  panda_pdfFilename);
+		  pdfFilename);
 
 #if defined DEBUG
   printf ("Finished inserting an image.\n");
@@ -223,11 +223,11 @@ panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageO
   }
 
 #if defined DEBUG
-  printf ("Inserting a TIFF image on panda_page with panda_object number %d.\n",
+  printf ("Inserting a TIFF image on page with object number %d.\n",
 	  target->obj->number);
 #endif
 
-  // This panda_dictionary item is TIFF specific
+  // This dictionary item is TIFF specific
   panda_adddictitem (imageObj->dict, "Filter", gTextValue, "CCITTFaxDecode");
 
   // Bits per component is per colour component, not per sample. Does this
@@ -251,13 +251,13 @@ panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageO
     }
 
   /****************************************************************************
-     We need to add a sub-panda_dictionary with the parameters for the compression
+     We need to add a sub-dictionary with the parameters for the compression
      filter in it.
   ****************************************************************************/
 
-  // We make an panda_object not just a panda_dictionary because this is what
-  // panda_adddictitem needs
-  subdict = panda_newpanda_object (output, gPlaceholder);
+  // We make an object not just a dictionary because this is what
+  // adddictitem needs
+  subdict = panda_newobject (output, gPlaceholder);
 
   // K will be minus one for g4 fax, and zero for g3 fax
   TIFFGetField (image, TIFFTAG_COMPRESSION, &compression);
@@ -403,7 +403,7 @@ panda_insertTIFF (panda_pdf * output, panda_page * target, panda_object * imageO
       printf ("Image is not being converted internally.\n");
 #endif
 
-      // We also need to add a binary stream to the panda_object and put the image
+      // We also need to add a binary stream to the object and put the image
       // data into this stream
       stripSize = TIFFStripSize (image);
       imageOffset = 0;
@@ -440,7 +440,7 @@ panda_insertJPEG (panda_pdf * output, panda_page * target, panda_object * imageO
   unsigned long imageBufSize;
 
 #if defined DEBUG
-  printf ("Inserting a JPEG image on panda_page with panda_object number %d.\n",
+  printf ("Inserting a JPEG image on page with object number %d.\n",
 	  target->obj->number);
 #endif
 
@@ -456,7 +456,7 @@ panda_insertJPEG (panda_pdf * output, panda_page * target, panda_object * imageO
   jpeg_stdio_src (&cinfo, image);
   jpeg_read_header (&cinfo, TRUE);
 
-  // This panda_dictionary item is JPEG specific
+  // This dictionary item is JPEG specific
   panda_adddictitem (imageObj->dict, "Filter", gTextValue, "DCTDecode");
 
   // Bits per component -- I'm not sure exactly how this works with libjpeg.
@@ -523,7 +523,7 @@ panda_insertPNG (panda_pdf * output, panda_page * target, panda_object * imageOb
 {
 
 #if defined DEBUG
-  printf ("Inserting a PNG / Flate image on panda_page with panda_object number %d.\n",
+  printf ("Inserting a PNG / Flate image on page with object number %d.\n",
 	  target->obj->number);
 #endif
 

@@ -9,7 +9,7 @@
                        have added your own. I need to take
                        this into account in the byte offsets.
 		     Added textpanda_streamprintf(...) call.                 17072000
-		     Added panda_putc call                                22072000
+		     Added putc call                                22072000
 
   Purpose:
     Utility functions for the panda library.
@@ -101,7 +101,7 @@ panda_printf (panda_pdf * file, char *format, ...)
 
       if (vsnprintf (buffer, actualLen, formatString, argPtr) > actualLen)
 	{
-	  panda_error ("Really bad file i/o panda_error.");
+	  panda_error ("Really bad file i/o error.");
 	}
     }
 
@@ -132,7 +132,7 @@ panda_printf (panda_pdf * file, char *format, ...)
   va_end (argPtr);
 }
 
-// Append some text to the stream that we are creating for a given panda_page
+// Append some text to the stream that we are creating for a given page
 char *
 panda_streamprintf (char *stream, char *format, ...)
 {
@@ -160,7 +160,7 @@ panda_streamprintf (char *stream, char *format, ...)
       if ((stream = (char *) realloc (stream,
 				      sizeof (char) * (len + currentlen))) ==
 	  NULL)
-	panda_error ("Could not append to an panda_object's stream (of some form).");
+	panda_error ("Could not append to an object's stream (of some form).");
 
       // Do the actual appending
       strncat (stream, buffer, len + currentlen);
@@ -176,7 +176,7 @@ panda_streamprintf (char *stream, char *format, ...)
 }
 
 // Put just one character into the PDF file, while updating the offset so that
-// the panda_xref table works later on
+// the xref table works later on
 void
 panda_putc (panda_pdf * output, int c)
 {

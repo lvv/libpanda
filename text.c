@@ -6,7 +6,7 @@
                      Improvements to text handling                     30062000
 
   Purpose:
-    Functions related to displaying text on a PDF panda_page.
+    Functions related to displaying text on a PDF page.
 ******************************************************************************/
 
 #include <panda/constants.h>
@@ -16,7 +16,7 @@ void
 panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int bottom,
 	 int right, char *text)
 {
-  // Add a box with some text in it into the PDF panda_page
+  // Add a box with some text in it into the PDF page
   panda_object *textobj;
   char *currentToken, *strtokVictim = NULL, delim[10];
   int internalTop, internalLeft, displayedFirstPart = gFalse;
@@ -26,20 +26,20 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int
      Some text handling
   ***************************************************************************/
 
-  // Make an panda_object to store the text
+  // Make an object to store the text
   textobj = thisPage->contents;
 
   // Is there a font setup? Does this work with changing the font?
   if (output->currentFont == NULL)
     panda_setfont (output, panda_createfont (output, "Helvetica", 1, "MacRomanEncoding"));
 
-  // If the font is not defined on this panda_page
+  // If the font is not defined on this page
   if (thisPage->obj->currentSetFont == NULL)
     {
     /************************************************************************
-    This font has to be referred to in the resources entry in the panda_dictionary.
+    This font has to be referred to in the resources entry in the dictionary.
 
-    The resources panda_dictionary looks a lot like:
+    The resources dictionary looks a lot like:
       /Resources <<
         /Font <<
           /...Name... ...Obj Reference...
@@ -48,23 +48,23 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int
 
     An example line is /MikalsFont 54 0 R
 
-    This does not currently allow more than one font per panda_page... Doh!
+    This does not currently allow more than one font per page... Doh!
     *************************************************************************/
 
-      // Find the font panda_object needed
+      // Find the font object needed
 #if defined DEBUG
-      printf("Searching for the font panda_object relating to \"%s\"\n",
+      printf("Searching for the font object relating to \"%s\"\n",
              output->currentFont);
 #endif
       if ((fontObj = panda_getfontobj (output, output->currentFont)) == NULL)
 	panda_error ("Could not find the font requested.");
 
-      // We make an panda_object not just a panda_dictionary because this is what
-      // panda_adddictitem needs
-      subsubdict = panda_newpanda_object (output, gPlaceholder);
+      // We make an object not just a dictionary because this is what
+      // adddictitem needs
+      subsubdict = panda_newobject (output, gPlaceholder);
       panda_adddictitem (subsubdict->dict, output->currentFont, gObjValue, fontObj);
 
-      subdict = panda_newpanda_object (output, gPlaceholder);
+      subdict = panda_newobject (output, gPlaceholder);
       panda_adddictitem (subdict->dict, "Font", gDictionaryValue, subsubdict->dict);
 
       // And put this into the PDF
@@ -77,17 +77,17 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int
     panda_setfontsize (output, 16);
 
   /***************************************************************************
-    PDF deals in points, with the bottom left hand side of the panda_page being at
+    PDF deals in points, with the bottom left hand side of the page being at
     0,0. I think this is anti-intuitive for most users, so I convert to that
     coordinate system from a normal one here. I define the point 0,0 as being
-    the top left of the panda_page. Spacing is still done in points though...
+    the top left of the page. Spacing is still done in points though...
 
     Further more, the specification for PDF requires that you give the
     location of the bottom of the line of text, not the top. We change this
     my playing games with the known height of the line.
   ***************************************************************************/
 
-  // We know the width and height from the panda_page panda_object
+  // We know the width and height from the page object
   internalTop = thisPage->height - top - output->currentFontSize;
   internalLeft = left;
 
@@ -103,7 +103,7 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int
       textobj->textmode = gTrue;
 
 #if defined DEBUG
-      printf("Textbox: Entered textmode for panda_object %d\n", textobj->number);
+      printf("Textbox: Entered textmode for object %d\n", textobj->number);
 #endif
     }
 
@@ -146,7 +146,7 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int
 					  output->currentLeading);
     }
 
-  // If the font that we are using on the panda_page is not the font that is
+  // If the font that we are using on the page is not the font that is
   // currently set, then the font has changed and we will need to define the
   // font here
   if ((textobj->currentSetFont == NULL) ||

@@ -5,8 +5,8 @@
 		Michael Still		File created							03062000
 
 	Purpose:
-		Panda can experience panda_errors for many reasons. This file contains
-		centralised panda_error handling code to make the programming easier and more
+		Panda can experience errors for many reasons. This file contains
+		centralised error handling code to make the programming easier and more
 		consistent elsewhere. The code should also handle all the platforms
 		the code is expected to run on correctly.
 ******************************************************************************/
@@ -17,7 +17,7 @@
 #include <panda/functions.h>
 
 /******************************************************************************
-	Handle an panda_error.
+	Handle an error.
 ******************************************************************************/
 
 void

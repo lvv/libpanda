@@ -5,52 +5,52 @@
     Michael Still    File created                                      03062000
 
   Purpose:
-    Panda is based on the concept of panda_objects. This file contains all of
-    methods needed to maintain the panda_objects that we have.
+    Panda is based on the concept of objects. This file contains all of
+    methods needed to maintain the objects that we have.
 ******************************************************************************/
 
 #include <panda/functions.h>
 #include <panda/constants.h>
 
 /******************************************************************************
-  Create an panda_object with panda_error checking.
+  Create an object with error checking.
 ******************************************************************************/
 
 panda_object *
-panda_newpanda_object (panda_pdf * doc, int type)
+panda_newobject (panda_pdf * doc, int type)
 {
-  // Do all the magic needed to create an panda_object
+  // Do all the magic needed to create an object
   panda_object *created;
 
   // Get some memory
   created = (panda_object *) panda_xmalloc(sizeof (panda_object));
 
-  // We have no panda_children at the moment
-  created->panda_children = (panda_child *) panda_xmalloc(sizeof (panda_child));
+  // We have no children at the moment
+  created->children = (panda_child *) panda_xmalloc(sizeof (panda_child));
 
-  ((panda_child *) created->panda_children)->next = NULL;
+  ((panda_child *) created->children)->next = NULL;
   (panda_child *) created->cachedLastChild = NULL;
 
-  // Initialise the panda_dictionary
+  // Initialise the dictionary
   created->dict = (panda_dictionary *) panda_xmalloc(sizeof (panda_dictionary));
   created->dict->next = NULL;
 
-  // By default this panda_object is not a panda_pages panda_object
+  // By default this object is not a pages object
   created->isPages = gFalse;
 
   if (type == gPlaceholder)
     {
-      // This is a placeholder panda_object, therefore it's number is -1
+      // This is a placeholder object, therefore it's number is -1
       created->number = -1;
 
       return created;
     }
 
-  // Initialise the panda_object number
+  // Initialise the object number
   created->number = doc->nextObjectNumber++;
 
 #if defined DEBUG
-  printf ("Created panda_object %d\n", created->number);
+  printf ("Created object %d\n", created->number);
 #endif
 
   // We don't have any streams at the moment
@@ -63,17 +63,17 @@ panda_newpanda_object (panda_pdf * doc, int type)
   // We are not in text mode within the layout stream at the start
   created->textmode = gFalse;
 
-  // New panda_objects have a generation number of 0 by definition
+  // New objects have a generation number of 0 by definition
   created->generation = 0;
 
-  // Add this new panda_object to the end of the linked list that we use to append
-  // the panda_xref table onto the end of the PDF
-  doc->panda_xrefTail->this = created;
+  // Add this new object to the end of the linked list that we use to append
+  // the xref table onto the end of the PDF
+  doc->xrefTail->this = created;
 
   // Make space for the next one
-  doc->panda_xrefTail->next = panda_xmalloc(sizeof (panda_xref));
-  doc->panda_xrefTail->next->next = NULL;
-  doc->panda_xrefTail = doc->panda_xrefTail->next;
+  doc->xrefTail->next = panda_xmalloc(sizeof (panda_xref));
+  doc->xrefTail->next->next = NULL;
+  doc->xrefTail = doc->xrefTail->next;
 
   // Return
   return created;
@@ -82,7 +82,7 @@ panda_newpanda_object (panda_pdf * doc, int type)
 panda_dictionary *
 panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 {
-  // Add an item to the panda_dictionary in the panda_object
+  // Add an item to the dictionary in the object
   panda_dictionary *dictNow;
   va_list argPtr;
   char *value;
@@ -92,37 +92,37 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
   int overwriting = gFalse;
 
 #if defined DEBUG
-  printf ("Added panda_dictionary item %s to panda_object (type = %d)\n", name,
+  printf ("Added dictionary item %s to object (type = %d)\n", name,
 	  valueType);
   fflush (stdout);
 #endif
 
-  // Find the end of the panda_dictionary or something with this name already
+  // Find the end of the dictionary or something with this name already
   dictNow = input;
   while ((dictNow->next != NULL) && (strcmp (dictNow->name, name) != 0))
     {
       dictNow = dictNow->next;
     }
 
-  // Make a new end to the panda_dictionary if needed
+  // Make a new end to the dictionary if needed
   if (dictNow->next == NULL)
     {
       dictNow->next = (panda_dictionary *) panda_xmalloc(sizeof(panda_dictionary));
 
       // Setup
       dictNow->next->next = NULL;
-      dictNow->panda_objectarrayValue = NULL;
+      dictNow->objectarrayValue = NULL;
       dictNow->dictValue = NULL;
       dictNow->textValue = NULL;
 
 #if defined DEBUG
-      printf (" (This is a new panda_dictionary element)\n");
+      printf (" (This is a new dictionary element)\n");
 #endif
     }
   else
     {
 #if defined DEBUG
-      printf (" (Overwriting a panda_dictionary element)\n");
+      printf (" (Overwriting a dictionary element)\n");
 #endif
       overwriting = gTrue;
     }
@@ -152,7 +152,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 	break;
 
       default:
-	panda_error ("Overwriting some panda_dictionary types not yet supported.");
+	panda_error ("Overwriting some dictionary types not yet supported.");
       }
 
   switch (valueType)
@@ -206,15 +206,15 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
     case gObjArrayValue:
       objValue = va_arg (argPtr, panda_object *);
 
-      if (dictNow->panda_objectarrayValue == NULL)
+      if (dictNow->objectarrayValue == NULL)
 	{
-	  dictNow->panda_objectarrayValue = 
+	  dictNow->objectarrayValue = 
 	    (panda_objectarray *) panda_xmalloc(sizeof (panda_objectarray));
-	  dictNow->panda_objectarrayValue->next = NULL;
+	  dictNow->objectarrayValue->next = NULL;
 	}
 
-      // Find the end of the panda_object array list
-      currentObjectArray = dictNow->panda_objectarrayValue;
+      // Find the end of the object array list
+      currentObjectArray = dictNow->objectarrayValue;
       while (currentObjectArray->next != NULL)
 	currentObjectArray = currentObjectArray->next;
 
@@ -229,27 +229,27 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       break;
 
     case gDictionaryValue:
-      // This is a sub-panda_dictionary
+      // This is a sub-dictionary
       dictValue = va_arg (argPtr, panda_dictionary *);
 
       if (overwriting == gFalse)
 	{
-	  // This is a new panda_dictionary item, just copy the info across
+	  // This is a new dictionary item, just copy the info across
 	  dictNow->dictValue = dictValue;
 
 #if defined DEBUG
-	  printf ("Added a subpanda_dictionary in its full glory\n");
+	  printf ("Added a subdictionary in its full glory\n");
 #endif
 	}
       else
 	{
-	  // We are appending to a subpanda_dictionary item -- we need to go through all
-	  // of the subpanda_dictionary items we just got handed and add them to the
-	  // subpanda_dictionary that is already here
+	  // We are appending to a subdictionary item -- we need to go through all
+	  // of the subdictionary items we just got handed and add them to the
+	  // subdictionary that is already here
 	  while (dictValue->next != NULL)
 	    {
 #if defined DEBUG
-	      printf ("Adding a subpanda_dictionary element named %s to existing\n",
+	      printf ("Adding a subdictionary element named %s to existing\n",
 		      dictValue->name);
 #endif
 
@@ -280,7 +280,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 		case gObjArrayValue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
 			       dictValue->valueType,
-			       dictValue->panda_objectarrayValue);
+			       dictValue->objectarrayValue);
 		  break;
 		}
 
@@ -294,7 +294,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
   // Stop dealing with arguments
   va_end (argPtr);
 
-  // Return the panda_dictionary item we changed (used in the lexer)
+  // Return the dictionary item we changed (used in the lexer)
   return dictNow;
 }
 
@@ -321,7 +321,7 @@ panda_getdictvalue (panda_dictionary * dictValue)
       break;
 
     case gObjArrayValue:
-      return dictValue->panda_objectarrayValue;
+      return dictValue->objectarrayValue;
       break;
     }
 
@@ -340,17 +340,17 @@ panda_getdict (panda_dictionary * head, char *name)
 }
 
 void
-panda_freepanda_object (panda_pdf * output, panda_object * freeVictim)
+panda_freeobject (panda_pdf * output, panda_object * freeVictim)
 {
 
 #if defined DEBUG
-  printf ("Cleaning up panda_object number %d\n", freeVictim->number);
+  printf ("Cleaning up object number %d\n", freeVictim->number);
 #endif
 
-  // We should skip placeholder panda_objects (I think)
+  // We should skip placeholder objects (I think)
   if (freeVictim->number != -1)
     {
-      // Free the panda_object and all it's bits -- free of a NULL does nothing! But
+      // Free the object and all it's bits -- free of a NULL does nothing! But
       // not in dmalloc!!!
       if (freeVictim->layoutstream != NULL)
 	free (freeVictim->layoutstream);
@@ -359,19 +359,19 @@ panda_freepanda_object (panda_pdf * output, panda_object * freeVictim)
       if (freeVictim->currentSetFont != NULL)
 	free (freeVictim->currentSetFont);
 
-      panda_freepanda_dictionary (freeVictim->dict);
+      panda_freedictionary (freeVictim->dict);
     }
 
   // free(freeVictim);
 }
 
 void
-panda_freepanda_dictionary (panda_dictionary * freeDict)
+panda_freedictionary (panda_dictionary * freeDict)
 {
   panda_dictionary *now, *prev;
   int endoftheline = gTrue;
 
-  // Still need to free the panda_dictionary... This can be made more efficient
+  // Still need to free the dictionary... This can be made more efficient
   while (freeDict->next != NULL)
     {
       now = freeDict;
@@ -389,7 +389,7 @@ panda_freepanda_dictionary (panda_dictionary * freeDict)
 	  if (now->textValue != NULL)
 	    free (now->textValue);
 	  if (now->dictValue != NULL)
-	    panda_freepanda_dictionary (now->dictValue);
+	    panda_freedictionary (now->dictValue);
 	}
       else
 	endoftheline = gFalse;
@@ -400,14 +400,14 @@ panda_freepanda_dictionary (panda_dictionary * freeDict)
 	prev->next = NULL;
     }
 
-  // And free that initial panda_dictionary element
+  // And free that initial dictionary element
   if (freeDict != NULL)
     {
       free (freeDict->name);
       if (freeDict->textValue != NULL)
 	free (freeDict->textValue);
       if (freeDict->dictValue != NULL)
-	panda_freepanda_dictionary (freeDict->dictValue);
+	panda_freedictionary (freeDict->dictValue);
 
       free (freeDict);
     }
@@ -415,25 +415,25 @@ panda_freepanda_dictionary (panda_dictionary * freeDict)
 
 
 void
-panda_writepanda_object (panda_pdf * output, panda_object * dumpTarget)
+panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 {
-  // Do all that is needed to dump a PDF panda_object to disk
+  // Do all that is needed to dump a PDF object to disk
   unsigned long count;
 
 #if defined DEBUG
-  printf ("Writing panda_object number %d\n", dumpTarget->number);
+  printf ("Writing object number %d\n", dumpTarget->number);
 #endif
 
-  // We don't dump place holder panda_objects (number = -1)
+  // We don't dump place holder objects (number = -1)
   if (dumpTarget->number != -1)
     {
-      // Remember the byte offset that was the start of this panda_object -- this is
+      // Remember the byte offset that was the start of this object -- this is
       // needed for the XREF later
       dumpTarget->byteOffset = output->byteOffset;
 
     /*************************************************************************
       Do we have a layoutstream? If we do, work out the length of the stream 
-      and save that as a panda_dictionary element.
+      and save that as a dictionary element.
 
       We also handle binarystreams here.
 
@@ -452,19 +452,19 @@ panda_writepanda_object (panda_pdf * output, panda_object * dumpTarget)
 		       strlen (dumpTarget->layoutstream) - 1);
 	}
 
-      // We cannot have a layoutstream and a binary stream in the same panda_object
+      // We cannot have a layoutstream and a binary stream in the same object
       else if (dumpTarget->binarystream != NULL)
 	{
 	  panda_adddictitem (dumpTarget->dict, "Length", gIntValue,
 		       dumpTarget->binarystreamLength);
 	}
 
-      // We are going to dump the named panda_object (and only the named panda_object) to 
+      // We are going to dump the named object (and only the named object) to 
       // disk
       panda_printf (output, "%d %d obj\n",
 		 dumpTarget->number, dumpTarget->generation);
 
-      panda_writepanda_dictionary (output, dumpTarget, dumpTarget->dict);
+      panda_writedictionary (output, dumpTarget, dumpTarget->dict);
 
       // Do we have a layoutstream?
       if (dumpTarget->layoutstream != NULL)
@@ -491,22 +491,22 @@ panda_writepanda_object (panda_pdf * output, panda_object * dumpTarget)
 }
 
 void
-panda_writepanda_dictionary (panda_pdf * output, panda_object * obj, panda_dictionary * incoming)
+panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary * incoming)
 {
-  // Recursively write the panda_dictionary out (including sub-dictionaries)
+  // Recursively write the dictionary out (including sub-dictionaries)
   panda_objectarray *currentObjectArray;
   panda_dictionary *dictNow;
   int atBegining = gTrue;
   panda_child *currentKid;
 
 #if defined DEBUG
-  printf ("Starting to write a panda_dictionary\n");
+  printf ("Starting to write a dictionary\n");
 #endif
 
-  // The start of the panda_dictionary
+  // The start of the dictionary
   panda_print (output, "<<\n");
 
-  // Enumerate the panda_dictionary elements
+  // Enumerate the dictionary elements
   dictNow = incoming;
 
   while (dictNow->next != NULL)
@@ -518,21 +518,21 @@ panda_writepanda_dictionary (panda_pdf * output, panda_object * obj, panda_dicti
 	case gLiteralTextValue:
 	case gBracketedTextValue:
 #if defined DEBUG
-	  printf ("Writing a text value named %s into the panda_dictionary\n",
+	  printf ("Writing a text value named %s into the dictionary\n",
 		  dictNow->name);
 #endif
 
 	  panda_printf (output, "\t/%s %s\n", dictNow->name, dictNow->textValue);
 
-	  // If the type is type, then possibly output the Kids line for the panda_pages
-	  // panda_object
+	  // If the type is type, then possibly output the Kids line for the pages
+	  // object
 	  if ((strcmp (dictNow->name, "Type") == 0)
 	      && (obj->isPages == gTrue))
 	    {
 	      panda_print (output, "\t/Kids [");
 
 	      // Do the dumping
-	      currentKid = obj->panda_children;
+	      currentKid = obj->children;
 
 	      while (currentKid->next != NULL)
 		{
@@ -556,7 +556,7 @@ panda_writepanda_dictionary (panda_pdf * output, panda_object * obj, panda_dicti
 
 	case gIntValue:
 #if defined DEBUG
-	  printf ("Writing a int value with name %s into the panda_dictionary\n",
+	  printf ("Writing a int value with name %s into the dictionary\n",
 		  dictNow->name);
 #endif
 
@@ -566,7 +566,7 @@ panda_writepanda_dictionary (panda_pdf * output, panda_object * obj, panda_dicti
 	case gObjArrayValue:
 #if defined DEBUG
 	  printf
-	    ("Writing an panda_object array value with name %s into panda_dictionary\n",
+	    ("Writing an object array value with name %s into dictionary\n",
 	     dictNow->name);
 #endif
 
@@ -576,7 +576,7 @@ panda_writepanda_dictionary (panda_pdf * output, panda_object * obj, panda_dicti
 	  panda_printf (output, "\t/%s [", dictNow->name);
 
 	  // Go through the array list until the end
-	  currentObjectArray = dictNow->panda_objectarrayValue;
+	  currentObjectArray = dictNow->objectarrayValue;
 	  while (currentObjectArray->next != NULL)
 	    {
 	      if (atBegining == gTrue)
@@ -598,20 +598,20 @@ panda_writepanda_dictionary (panda_pdf * output, panda_object * obj, panda_dicti
 	case gDictionaryValue:
 	  // These are handled recursively
 	  if (dictNow->dictValue == NULL)
-	    panda_error ("Subpanda_dictionary value erroneously NULL.");
+	    panda_error ("Subdictionary value erroneously NULL.");
 
 #if defined DEBUG
-	  printf ("Output the subpanda_dictionary starting with the name %s\n",
+	  printf ("Output the subdictionary starting with the name %s\n",
 		  dictNow->dictValue->name);
 #endif
 
 	  panda_printf (output, "\t/%s ", dictNow->name);
 
-	  panda_writepanda_dictionary (output, output->dummyObj, dictNow->dictValue);
+	  panda_writedictionary (output, output->dummyObj, dictNow->dictValue);
 	  break;
 
 	default:
-	  panda_error ("Unknown panda_dictionary type");
+	  panda_error ("Unknown dictionary type");
 	}
 
       dictNow = dictNow->next;
@@ -621,11 +621,11 @@ panda_writepanda_dictionary (panda_pdf * output, panda_object * obj, panda_dicti
 }
 
 void
-panda_addpanda_child (panda_object * parentObj, panda_object * panda_childObj)
+panda_addchild (panda_object * parentObj, panda_object * panda_childObj)
 {
-  panda_child *currentChild = parentObj->panda_children;
+  panda_child *currentChild = parentObj->children;
 
-  // Find the end of the list of panda_children
+  // Find the end of the list of children
   if (parentObj->cachedLastChild != NULL)
     currentChild = parentObj->cachedLastChild;
 
@@ -636,7 +636,7 @@ panda_addpanda_child (panda_object * parentObj, panda_object * panda_childObj)
   currentChild->next = (panda_child *) panda_xmalloc(sizeof (panda_child));
   currentChild->next->next = NULL;
 
-  // Make me be the panda_child panda_object
+  // Make me be the child object
   currentChild->me = panda_childObj;
 
   // Cache it
@@ -644,28 +644,28 @@ panda_addpanda_child (panda_object * parentObj, panda_object * panda_childObj)
 }
 
 void
-panda_traversepanda_objects (panda_pdf * output, panda_object * dumpTarget, int direction,
+panda_traverseobjects (panda_pdf * output, panda_object * dumpTarget, int direction,
 		 traverseFunct function)
 {
-  // Write out an panda_object and all of it's panda_children. This may be done with
-  // recursive calls and panda_writepanda_object()
+  // Write out an object and all of it's children. This may be done with
+  // recursive calls and writeobject()
   panda_child *currentChild;
 
-  // No panda_children
-  if (((panda_child *) dumpTarget->panda_children)->next == NULL)
+  // No children
+  if (((panda_child *) dumpTarget->children)->next == NULL)
     {
       function (output, dumpTarget);
       return;
     }
 
-  // Otherwise, for me and then for all panda_children
+  // Otherwise, for me and then for all children
   if (direction == gDown)
     function (output, dumpTarget);
 
-  currentChild = dumpTarget->panda_children;
+  currentChild = dumpTarget->children;
   while (currentChild->next != NULL)
     {
-      panda_traversepanda_objects (output, currentChild->me, direction, function);
+      panda_traverseobjects (output, currentChild->me, direction, function);
       currentChild = currentChild->next;
     }
 

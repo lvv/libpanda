@@ -1,5 +1,5 @@
 /******************************************************************************
-  panda_xref.c
+  xref.c
 
   Change Control:                                                      DDMMYYYY
     Michael Still    File created                                      17062000
@@ -13,24 +13,24 @@
 #include <panda/functions.h>
 
 void
-panda_writepanda_xref (panda_pdf * output)
+panda_writexref (panda_pdf * output)
 {
   panda_xref *currentXREF;
 
-  // Save the offset of the panda_xref section for the trailer
-  output->panda_xrefOffset = output->byteOffset;
+  // Save the offset of the xref section for the trailer
+  output->xrefOffset = output->byteOffset;
 
-  // We need to write out the XREF table, the panda_object number of the catalog
-  // panda_object is the lowest and %d is the panda_object count. The first line is a 
+  // We need to write out the XREF table, the object number of the catalog
+  // object is the lowest and %d is the object count. The first line is a 
   // magic incantation
-  panda_printf (output, "panda_xref\n%d %d\n%010d 65535 f\n",
+  panda_printf (output, "xref\n%d %d\n%010d 65535 f\n",
 	     0, output->nextObjectNumber, 0);
 
-  // All of the panda_object entries are inuse, because I see no point in creating
-  // free panda_objects at this point.
+  // All of the object entries are inuse, because I see no point in creating
+  // free objects at this point.
 
   // Output the XREF table -- this is now a simple linked list traversal
-  currentXREF = output->panda_xrefList;
+  currentXREF = output->xrefList;
 
   while (currentXREF->next != NULL)
     {
