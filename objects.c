@@ -33,6 +33,12 @@ object *newobject(pdf *doc, int type){
 
   ((child *) created->children)->next = NULL;
 
+  // Initialise the dictionary
+  if((created->dict = (dictionary *) malloc(sizeof(dictionary))) == NULL)
+    error("Could not create the dictionary root for the new object.");
+
+  created->dict->next = NULL;
+
   if(type == gPlaceholder){
     // This is a placeholder object, therefore it's number is -1
     created->number = -1;
@@ -40,11 +46,7 @@ object *newobject(pdf *doc, int type){
     return created;
   }
 
-  // Initialise the dictionary
-  if((created->dict = (dictionary *) malloc(sizeof(dictionary))) == NULL)
-    error("Could not create the dictionary root for the new object.");
-
-  created->dict->next = NULL;
+  // Initialise the object number
   created->number = doc->nextObjectNumber++;
 
 #if defined DEBUG

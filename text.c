@@ -17,8 +17,8 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   // Add a box with some text in it into the PDF page
   object      *textobj, *tempObj;
   char        commandBuffer[1024];
-  object      *temp, *temp2;
   int         internalTop, internalLeft;
+  object      *subdict, *subsubdict, *fontObj;
 
   /***************************************************************************
      Some text handling
@@ -41,39 +41,33 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     setfontsize(output, 16);
 
   /***************************************************************************
-    This font has to be referred to in the resources entry in the dictionary
+    This font has to be referred to in the resources entry in the dictionary.
+
+    The resources dictionary looks a lot like:
+      /Resources <<
+        /Font <<
+          /...Name... ...Obj Reference...
+          >>
+        >>
+
+    An example line is /MikalsFont 54 0 R
   ***************************************************************************/
 
-  // Build temp item and temp2 item
-  if((temp = (object *) malloc(sizeof(object))) == NULL)
-    error("Could not make a temp dictionary item.");
-
-  // Make the dictionary for temp
-  if((temp->dict = (dictionary *) malloc(sizeof(dictionary))) == NULL)
-    error("Could not make a temp dictionary item data structure.");
-
-  temp->dict->next = NULL;
-
-  // Do some magic for temp2 as well
-  if((temp2 = (object *) malloc(sizeof(object))) == NULL)
-    error("Could not make a second temp dictionary item.");
-
-  if((temp2->dict = (dictionary *) malloc(sizeof(dictionary))) == NULL)
-    error("Could not make a temp2 dictionary item data structure.");
-
-  temp2->dict->next = NULL;
-  
-  // Temp2 is the name of the font and it's object
-  if((tempObj = getfontobj(output, output->currentFont)) == NULL)
+  // Find the font object needed
+  if((fontObj = getfontobj(output, output->currentFont)) == NULL)
     error("Could not find the font requested.");
-  adddictitem(temp2, output->currentFont, gObjValue, tempObj);
 
-  // Temp is the word font and temp2
-  adddictitem(temp, "Font", gDictionaryValue, temp2->dict);
+  // We make an object not just a dictionary because this is what
+  // adddictitem needs
+  subsubdict = newobject(output, gPlaceholder);
+  adddictitem(subsubdict, output->currentFont, gObjValue, fontObj);
+  
+  subdict = newobject(output, gPlaceholder);
+  adddictitem(subdict, "Font", gDictionaryValue, subsubdict->dict);
 
-  // We need to add some entries into the resources dictionary for the object
-  adddictitem(thisPage->obj, "Resources", gDictionaryValue, temp->dict);
-
+  // And put this into the PDF
+  adddictitem(thisPage->obj, "Resources", gDictionaryValue, subdict->dict);
+  
   /***************************************************************************
     PDF deals in points, with the bottom left hand side of the page being at
     0,0. I think this is anti-intuitive for most users, so I convert to that

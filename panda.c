@@ -76,9 +76,11 @@ pdf *pdfopen(char *filename, char *mode){
       openedpdf->pages = newobject(openedpdf, gNormal));
     adddictitem(openedpdf->catalog, "Pages", gObjValue, openedpdf->pages);
 
+    // We need to remember how many pages there are for later
+    openedpdf->pageCount = 0;
+
     // We now need to setup some information in the pages object
     adddictitem(openedpdf->pages, "Type", gTextValue, "Pages");
-    adddictitem(openedpdf->pages, "Count", gIntValue, 1);
 
     // Make sure we have not started an XREF table
     openedpdf->xrefTable = NULL;
@@ -109,13 +111,17 @@ pdf *pdfopen(char *filename, char *mode){
 }
 
 void pdfclose(pdf *openedpdf){
+  // It is now worth our time to count the number of pages and make the count
+  // entry in the pages object
+  adddictitem(openedpdf->pages, "Count", gIntValue, openedpdf->pageCount);
+
   // We need to write out the objects into the PDF file and then close the
   // file -- any object which heads an object tree, or lives outside the tree
   // structure will need a traverseObjects call here...
   traverseObjects(openedpdf, openedpdf->catalog, writeObject);
   traverseObjects(openedpdf, openedpdf->fonts, writeObject);
 
-  // Write our the XREF object -- this MUST happen after all object have been
+  // Write our the XREF object -- this MUST happen after all objects have been
   // written, or the byte offsets will not be known
   writeXref(openedpdf);
 
@@ -165,6 +171,9 @@ page *pdfpage(pdf *output, char *pageSize){
   strtok(NULL, " ");
   newPage->width = atoi(strtok(NULL, " "));
   newPage->height = atoi(strtok(NULL, " "));
+
+  // Increment the page count for the PDF
+  output->pageCount++;  
 
   return newPage;
 }
