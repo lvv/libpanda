@@ -19,7 +19,7 @@ void debuglex(char *, char *, int);
                             return ANYTHING;
                           }                                                  }
 
-\/[a-zA-Z\-0-9.]+       { debuglex(yytext, "name", binaryMode);
+\/[a-zA-Z\-0-9\.]+      { debuglex(yytext, "name", binaryMode);
                           yylval.textVal = yytext;
                           return((binaryMode == 0) ? NAME : ANYTHING);       }
 

@@ -59,15 +59,21 @@ object    : INT INT OBJ {
                         DBLLT dict DBLGT stream ENDOBJ
           ;
 
-dict      : NAME STRING dict {}
+dict      : NAME STRING dict {
+                                                                             }
           | NAME NAME dict {
 	              // Add the dictionary item
-	    //adddictitem(yycurobj->dict, $1, gLiteralTextValue, $2);
+	              adddictitem(yycurobj->dict, $1, gLiteralTextValue, $2);
+		      printf("Adddictitem %s --> %s\n", $1, $2);
                                                                              }
-          | NAME ARRAY arrayvals ENDARRAY dict {}
-          | NAME OBJREF dict {}
-          | NAME DBLLT dict DBLGT dict {}
-          | NAME INT dict {}
+          | NAME ARRAY arrayvals ENDARRAY dict {
+                                                                             }
+          | NAME OBJREF dict {
+                                                                             }
+          | NAME DBLLT dict DBLGT dict {
+                                                                             }
+          | NAME INT dict {
+                                                                             }
           |
           ;
 
