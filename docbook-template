@@ -1,0 +1,33 @@
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_setlinestart
+PURPOSE sets the starting point of a curve
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_setlinestart (panda_page * target, int x, int y);
+SYNOPSIS END
+
+DESCRIPTION Set the starting point for the sequence of curves and lines that it to be drawn on the current page. This call is compulsory for almost all of the line drawing functions. It is not required for the <command>panda_rectangle</command> call.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+
+panda_setlinestart (page, 100, 200);
+EXAMPLE END
+SEEALSO panda_addlinesegment, panda_addcubiccurvesegment, panda_addquadraticsegmentone, panda_addquadraticcurvesegmenttwo, panda_closeline, panda_rectangle, panda_endline, panda_strokeline, panda_fillline, panda_setlinewidth, panda_setlinecap, panda_setlinejoin, panda_setlinedash, panda_setfillcolor, panda_setlinecolor
+DOCBOOK END
+******************************************************************************/

@@ -57,10 +57,19 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
+host_alias = i686-pc-linux-gnu
+host_triplet = i686-pc-linux-gnu
+AS = 
 CC = gcc
+DLLTOOL = 
+LD = /usr/bin/ld
 LEX = @LEX@
+LIBTOOL = $(SHELL) $(top_builddir)/libtool
+LN_S = ln -s
 MAINT = #
 MAKEINFO = makeinfo
+NM = /usr/bin/nm -B
+OBJDUMP = 
 PACKAGE = panda
 PLATFORM = UNIX
 RANLIB = ranlib
@@ -146,7 +155,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$d/$$file $(distdir)/$$file; \
+	    cp -pr $$/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -198,6 +207,7 @@ clean-am:  clean-tags clean-generic mostlyclean-am
 clean: clean-am
 
 distclean-am:  distclean-tags distclean-generic clean-am
+	-rm -f libtool
 
 distclean: distclean-am
 
