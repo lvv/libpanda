@@ -44,8 +44,6 @@ N * TIFF support does not currently include the following compression options:
 
 N * More work on the lexer
 
-N * PNG support
-
 L * New font ids are handed out too often -- what about font reuse?
 
   * Handle image reuse better
@@ -102,4 +100,9 @@ K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
   * Need to handle the absense of headers when libraries are not installed.
 
   * PNG images have their alpha channel ignored, with the background colour not
-	being used.
+	being used. PDF does "poor man's alpha channelling", which we should 
+	try to support...
+
+  * Fills don't work properly, nor do colours in lines
+
+  * Template pages don't work yet

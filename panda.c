@@ -13,35 +13,140 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_init
+PURPOSE setup Panda ready for use
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_init (void);
+SYNOPSIS END
+
+DESCRIPTION Performs some simple setup of Panda before it is used for the first time in your application.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_init();
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
 // Initialise the PDF library ready for operations
 void
 panda_init ()
 {
   int generalCounter;
-
+  
   // We first need to create the binary string to include in our header
   for (generalCounter = 0; generalCounter <
-       (sizeof (panda_binaryheaderstring) / sizeof (char)); generalCounter++)
+	 (sizeof (panda_binaryheaderstring) / sizeof (char)); generalCounter++)
     {
       panda_binaryheaderstring[generalCounter] =
 	panda_binarychar (panda_headerstring[generalCounter]);
     }
 }
 
-// Open the named PDF document in the given mode -- suppress means that the
-// default objects are not created (used when opening for reading a pdf
-// document with the lexer).
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_open
+PURPOSE open a PDF document
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+panda_pdf * panda_open (char *filename, char *mode);
+SYNOPSIS END
+
+DESCRIPTION Open the named PDF document with the mode specified. The only mode currently supported is "w", but others will be integrated later. The interface to this function is identical in it's behaviour to the <command>fopen</command>() function call offered by the ANSI C standard IO library.
+
+RETURNS A pointer to a panda_pdf structure
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+EXAMPLE END
+SEEALSO panda_init, panda_open_actual, panda_open_suppress, panda_close
+DOCBOOK END
+******************************************************************************/
+
 panda_pdf *
 panda_open (char *filename, char *mode)
 {
   return panda_open_actual (filename, mode, panda_false);
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_open_suppress
+PURPOSE open a PDF document with some special options
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+panda_pdf * panda_open_suppress (char *filename, char *mode);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Open the named PDF document with the mode specified. The only mode currently supported is "w", but others will be integrated later. The interface to this function is identical in it's behaviour to the <command>fopen</command>() function call offered by the ANSI C standard IO library. This function call additionally doesn't create any of the default objects that a panda_open would create, which is useful when you want to parse an existing PDF into a new document.
+
+RETURNS A pointer to a panda_pdf structure
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open_suppress("filename.pdf", "w");
+EXAMPLE END
+SEEALSO panda_init, panda_open_actual, panda_open, panda_close
+DOCBOOK END
+******************************************************************************/
+
 panda_pdf *
 panda_open_suppress (char *filename, char *mode)
 {
   return panda_open_actual (filename, mode, panda_true);
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_open_actual
+PURPOSE actually open a PDF document
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+panda_pdf * panda_open_actual (char *filename, char *mode);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Open the named PDF document with the mode specified. The only mode currently supported is "w", but others will be integrated later. The interface to this function is identical in it's behaviour to the <command>fopen</command>() function call offered by the ANSI C standard IO library. This call actually does the opening for <command/>panda_open</command>() and <command>panda_open_suppress</command>().
+
+RETURNS A pointer to a panda_pdf structure
+
+EXAMPLE START
+Use panda_open!
+EXAMPLE END
+SEEALSO panda_init, panda_open, panda_open_suppress, panda_close
+DOCBOOK END
+*****************************************************************************/
 
 panda_pdf *
 panda_open_actual (char *filename, char *mode, int suppress)
@@ -188,6 +293,39 @@ panda_open_actual (char *filename, char *mode, int suppress)
   return NULL;
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_close
+PURPOSE write a PDF document out to disk
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_close (panda_pdf *document);
+SYNOPSIS END
+
+DESCRIPTION Write out the PDF document we have created to disk, clean up and free memory.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+panda_close(document);
+EXAMPLE END
+SEEALSO panda_open
+DOCBOOK END
+******************************************************************************/
+
 // Finish operations on a given PDF document and write the result to disc
 void
 panda_close (panda_pdf * openedpdf)
@@ -297,6 +435,38 @@ panda_close (panda_pdf * openedpdf)
   free (openedpdf);
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_newpage
+PURPOSE create a new page in the PDF
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+panda_page *panda_newpage(panda_pdf *document, char *pagesize);
+SYNOPSIS END
+
+DESCRIPTION Create a new blank page at the end of the PDF with the specified size. Use the standard pagesize strings that are defined by Panda for most things. These are <command>panda_pagesize_a4</command>, and <command>panda_pagesize_usletter</command>. If you need to create your own page sizes, then have a look at these for hints.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+EXAMPLE END
+SEEALSO panda_open, panda_close
+DOCBOOK END
+******************************************************************************/
+
 // Insert a page into the PDF
 panda_page *
 panda_newpage (panda_pdf * output, char *pageSize)
@@ -346,6 +516,28 @@ panda_newpage (panda_pdf * output, char *pageSize)
 
   return newPage;
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_closetext
+PURPOSE a traversal callback used for closing text streams within the PDF
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_closetext(panda_pdf *document, panda_object *victiim);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function is called by the <command>panda_traverseobjects</command>() function to write out streams attached to objects when <command>panda_close</command>() call. You shouldn't need to ever call this function.
+
+RETURNS Nothing
+
+EXAMPLE START
+You shouldn't need to use this function.
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
 
 void
 panda_closetext (panda_pdf * opened, panda_object * obj)
