@@ -118,17 +118,17 @@ void pdfclose(pdf *openedpdf){
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
   adddictitem(openedpdf->pages, "Count", gIntValue, openedpdf->pageCount);
-
+  
   // We need to write out the objects into the PDF file and then close the
   // file -- any object which heads an object tree, or lives outside the tree
   // structure will need a traverseObjects call here...
   traverseObjects(openedpdf, openedpdf->catalog, writeObject);
   traverseObjects(openedpdf, openedpdf->fonts, writeObject);
-
+  
   // Write our the XREF object -- this MUST happen after all objects have been
   // written, or the byte offsets will not be known
   writeXref(openedpdf);
-
+  
   // Write the trailer
   writeTrailer(openedpdf);
 

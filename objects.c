@@ -240,7 +240,7 @@ void writeObject(pdf *output, object *dumpTarget){
     if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
       pdfprintf(output, "stream\nBT\n");
 
-      // This is done because a valid textstream count contain a \0, which
+      // This is done because a valid textstream could contain a \0, which
       // would confuse pdfprintf with a %s
       for(count = 0; count < dumpTarget->textstreamLength; count ++)
         pdfprintf(output, "%c", dumpTarget->textstream[count]);

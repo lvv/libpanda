@@ -8,7 +8,8 @@
                        you don't ask it to, and even if you
                        have added your own. I need to take
                        this into account in the byte offsets.
-		     Added textstreamprintf(...) call.                     17072000
+		     Added textstreamprintf(...) call.                 17072000
+		     Added pdfputc call                                22072000
 
   Purpose:
     Utility functions for the panda library.
@@ -17,6 +18,8 @@
 #include "constants.h"
 #include "functions.h"
 
+// Print a possibly complex string into the PDF file and make sure the offset
+// into the PDF file is stored correctly (dispite Windows)
 void pdfprintf(pdf *file, char *format, ...){
   // Print some information into the pdf file, but also record how many
   // bytes we have gone into the file. POSSIBLE BUG: Cannot print more than
@@ -88,6 +91,7 @@ void pdfprintf(pdf *file, char *format, ...){
   va_end(argPtr);
 }
 
+// Append some text to the textstream that we are creating for a given page
 void textstreamprintf(object *textobj, char *format, ...){
   va_list   argPtr;
   char      buffer[2048];
@@ -99,4 +103,11 @@ void textstreamprintf(object *textobj, char *format, ...){
   appendtextstream(textobj, buffer, strlen(buffer));
 
   va_end(argPtr);
+}
+
+// Put just one character into the PDf file, while updating the offset so that
+// the xref table works later on
+void pdfputc(pdf *output, int c){
+  fputc(c, output->file);
+  output->byteOffset++;
 }
