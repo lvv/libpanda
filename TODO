@@ -83,3 +83,5 @@ L * New font ids are handed out too often -- what about font reuse?
   * Man pages!
 
   * Panic handler (based on Tridge's talk)
+
+  * Documentation
