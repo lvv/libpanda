@@ -6,11 +6,14 @@ starttime=`date`
 # performance has improved or degraded.
 
 # This variable is a list of libaries to test
-libs="clibpdf-202r1"
-# pdflib-30 panda-01"
+libs="clibpdf-202r1 pdflib-30 panda-01"
 
 # This variable is a list of tests
 tests="hello"
+
+# How many times per test
+number=1000
+delay=5
 
 for test in $tests
 do
@@ -22,27 +25,22 @@ do
 
     # Run the tests
     count=0
-    while [ $count -lt 1000 ]
+    while [ $count -lt $number ]
     do
       echo $count
       time ./$test-$lib.o 2>> timings
       count=$(( $count + 1 ))
-      sleep 5
+      sleep $delay
     done
 
     # Do something with the results
     echo "Analysing results"
-    runningmajor=0
-    runningminor=0    
+    runningtime=0 
 
     for item in `grep system timings | tr " " "_"`
     do
       time=`echo $item | sed 's/.*user_//' | sed 's/system.*//'`
-      major=`echo $time | sed 's/\..*//'`
-      minor=`echo $time | sed 's/.*\.//'`
-
-      runningmajor=$(( $runningmajor + $major ))
-      runningminor=$(( $runningminor + $minor ))
+      runningtime=`./math $runningtime + $time`
     done
 
     runningmajorpf=0
@@ -59,7 +57,7 @@ do
     done
 
     # Output the results to the database
-    echo $starttime "---" $(( $runningmajor / 1000 )) "." $(( $runningminor / 1000 )) $(( $runningmajorpf / 1000 )) "." $(( $runningminorpf / 1000 )) >> $test-$lib.db
+    echo $starttime "-" `./math $runningtime / $number` "," `./math $runningmajorpf / $number` "," `./math $runningminorpf / $number` >> $test-$lib.db
 
   done
 done
