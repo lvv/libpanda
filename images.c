@@ -28,9 +28,19 @@ char *globalTiffBuffer;
 unsigned long globalTiffBufferOffset;
 pthread_mutex_t tiffConvMutex = PTHREAD_MUTEX_INITIALIZER;
 
-// A redistribution point for image insertions based on type of image
+// Imagebox now just calls imageboxrot with a default rotational value
+// Based on patches submitted by Ceasar Miquel (miquel@df.uba.ar)
 void
 imagebox (pdf * output, page * target, int top, int left,
+	  int bottom, int right, char *filename, int type)
+{
+  return imageboxrot(output, target, top, left, bottom, right, 0.0, 
+		     filename, type);
+}
+
+// A redistribution point for image insertions based on type of image
+void
+imageboxrot (pdf * output, page * target, int top, int left,
 	  int bottom, int right, char *filename, int type)
 {
   object *imageObj, *xobjrefsubdict, *xobjrefsubsubdict;
@@ -105,11 +115,12 @@ imagebox (pdf * output, page * target, int top, int left,
   target->contents->xobjectstream =
     streamprintf (target->contents->xobjectstream,
 		  "\nq\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
-		  // The first matrix
-		  1.0,		// xscale
-		  0.0,		// rot and scale?
-		  0.0,		// ???
-		  1.0,		// yscale
+		  // The first matrix -- this has been modified because of
+		  // patches submitted by Ceasar Miquel (miquel@df.uba.ar)
+		  cos(angle * M_PI / 180.0), // x scale
+		  sin(angle * M_PI / 180.0), // rotate and scale
+		  -sin(angle * M_PI / 180.0), // ???
+		  cos(angle * M_PI / 180.0), // y scale
 		  (double) left,	// x start
 		  (double) target->height - bottom);	// y start
 
@@ -399,7 +410,9 @@ insertJpeg (pdf * output, page * target, object * imageObj, char *filename)
   adddictitem (imageObj->dict, "Filter", gTextValue, "DCTDecode");
 
   // Bits per component -- I'm not sure exactly how this works with libjpeg.
-  // Is it possible to have a black and white jpeg?
+  // Is it possible to have a black and white jpeg? Ceasar Miquel
+  // (miquel@df.uba.ar) has submitted patches suggesting that this should
+  // always be 8, but this seems to work so I will leave it like this for now
   adddictitem (imageObj->dict, "BitsPerComponent", gIntValue,
 	       cinfo.data_precision);
 

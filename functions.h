@@ -39,9 +39,12 @@ void error (char *);
 
 /******************************************************************************
   Images.c
+
+  - imageboxrot concept by Ceasar Miquel (miquel@df.uba.ar), modified by Mikal
 ******************************************************************************/
 
 void imagebox (pdf *, page *, int, int, int, int, char *, int);
+void imageboxrot (pdf *, page *, int, int, int, int, double, char *, int);
 void insertTiff (pdf *, page *, object *, char *);
 void insertJpeg (pdf *, page *, object *, char *);
 void insertPNG (pdf *, page *, object *, char *);
