@@ -13,29 +13,43 @@ DODEBUG = NO
 COMPILER = gcc
 COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG)
 
-# Main is excluded from here for the benefit of the tests
+# Main is excluded from here for the benefit of the tests and the library
 OBJFILES = error.o  font.o  objects.o  panda.o  text.o  trailer.o  utility.o  xref.o
 
-# Build panda
+# Build panda (including the sample application)
 all:		$(OBJFILES) main.o
 		gcc $(OBJFILES) main.o -o panda
 
+# This makes the archive that is the panda library. It is not installed by this
+# set of commands though, that needs a make install... The ar command is
+# quite interesting, read the man page for more information...
 lib:		$(OBJFILES)
-		ar r arout $(OBJFILES)
-		ranlib arout
+		ar rs libpanda.a $(OBJFILES)
+
+# This installs the library and header files in the right places
+install:	lib
+		install -m 664 -b libpanda.a /usr/local/lib/libpanda.a
+		install -m 664 -d /usr/local/include/panda
+		install -m 664 -D *.h /usr/local/include/panda/
+
+# This is used in my testing of make install
+uninstall:	
+		rm -i /usr/local/lib/libpanda*
+		rm -ri /usr/local/include/panda
 
 # Clean up
 clean:	
-		rm *.o; rm panda; rm *core*
-
-# Make sure we build a realistic release for the world
-release:
-		make clean; make all; rm *.o; strip panda
+		rm -i *.o
+		rm -i panda
+		rm -i libpanda.a
+		rm -i *core*
+		rm -i *~
 
 # This is used to test the functionality of routines to make sure they are not
 # broken
 test:		test.c constants.h functions.h objects.h $(OBJFILES)
-		$(COMPILER) $(COMPILER_FLAGS) test.c -o test.o; gcc $(OBJFILES) test.o -o test; ./test
+		$(COMPILER) $(COMPILER_FLAGS) test.c -o test.o
+		$(COMPILER) $(OBJFILES) test.o -o test; ./test
 
 ################################################################################
 error.o:	error.c constants.h functions.h objects.h
