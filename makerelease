@@ -8,15 +8,8 @@ cd ..
 
 for item in `ls *.c`
 do
-  ~mikal/autodocbook/autodocbook $item
+  ~mikal/opensource/autodocbook/0.3/autodocbook $item man
 done
-
-cd man
-for item in `ls *sgml`
-do
-  /usr/local/bin/docbook-to-man < $item > `echo $item | sed 's/sgml/3/'`
-done
-cd ..
 
 automake
 autoconf
@@ -28,6 +21,9 @@ for item in `find . | grep core`
 do
   rm -i $item
 done
+
+# Get rid of compiled files that make clean wont remove
+find . -name "*obj" -type f -exec rm -i {} \; -print
 
 # Get rid of the timetrials -- they are too big
 rm -rf timetrials
