@@ -27,7 +27,7 @@
 <synopsis>
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- void panda_closetext(panda_pdf *document, panda_object *victiim);
+ void panda_closetext(panda_pdf *document, panda_object *victim);
 
 </synopsis>
 </refsynopsisdiv>
@@ -52,7 +52,7 @@
 <refsect1>
     <title>VERSION</title>
     <para>
-This documentation was generated for <command>Panda</command> 0.4.1 by <command>autodocbook</command> (http://www.stillhq.com).
+This documentation was generated for <command>Panda</command> 0.4.2 by <command>autodocbook</command> (http://www.stillhq.com).
     </para>
 </refsect1>
 

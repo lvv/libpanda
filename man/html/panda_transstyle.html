@@ -1,0 +1,299 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<HTML
+><HEAD
+><TITLE
+>panda_transstyle</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="A guide to using Panda"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="panda_transstyle.sgml"
+HREF="c3048.html"><LINK
+REL="PREVIOUS"
+TITLE="panda_transstyle.sgml"
+HREF="c3048.html"><LINK
+REL="NEXT"
+TITLE="panda_traverseobjects.sgml"
+HREF="c3100.html"></HEAD
+><BODY
+CLASS="REFENTRY"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>A guide to using Panda</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c3048.html"
+ACCESSKEY="P"
+>&#60;&#60;&#60; Previous</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c3100.html"
+ACCESSKEY="N"
+>Next &#62;&#62;&#62;</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PANDA_TRANSSTYLE"
+>panda_transstyle</A
+></H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN3054"
+></A
+><H2
+>Name</H2
+>panda_transstyle&nbsp;--&nbsp;specify the type of page change transition that should occur</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN3057"
+></A
+><H2
+>Synopsis</H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="SYNOPSIS"
+> #include&#60;panda/constants.h&#62;
+ #include&#60;panda/functions.h&#62;
+ void panda_transstyle (panda_page *target, int style);&#13;</PRE
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN3059"
+></A
+><H2
+>DESCRIPTION</H2
+><P
+> his function records information within the PDF indicating the preferred page transition style to use. The following are valid styles to use:
+ <P
+></P
+><OL
+TYPE="1"
+><LI
+>panda_pagetrans_split_yi -- vertical split from the inside of the page</LI
+><LI
+>panda_pagetrans_split_yo -- vertical split from the outside of the page</LI
+><LI
+>panda_pagetrans_split_xi -- horizontal split from the inside of the page</LI
+><LI
+>panda_pagetrans_split_xo -- horizontal split from the outside of the page</LI
+><LI
+>panda_pagetrans_blinds_y -- vertical blinds effect</LI
+><LI
+>panda_pagetrans_blinds_x -- horizontal blinds effect</LI
+><LI
+>panda_pagetrans_box_i -- box expanding from the inside of the page</LI
+><LI
+>panda_pagetrans_box_o -- box contracting from the outside of the page</LI
+><LI
+>panda_pagetrans_wipe_0 -- a single line wipes the page away from the left to the right</LI
+><LI
+>panda_pagetrans_wipe_90 -- a single line wipes the page away from the bottom to the top</LI
+><LI
+>panda_pagetrans_wipe_180 -- a single line wipes the page away from the right to the left</LI
+><LI
+>panda_pagetrans_wipe_270 -- a single line wipes the page away from the top to the bottom</LI
+><LI
+>panda_pagetrans_dissolve -- the old page dissolves slowly into the new page</LI
+><LI
+>panda_pagetrans_glitter_0 -- a glitter effect that moves from the left to the right of the page</LI
+><LI
+>panda_pagetrans_glitter_270 -- a glitter effect that moves from the top to the bottom of the page</LI
+><LI
+>panda_pagetrans_glitter_315 -- a glitter effect that moves from the top left to the bottom right of the page</LI
+><LI
+>panda_pagetrans_none -- no transition effect</LI
+></OL
+>
+ 
+ </P
+><P
+> he default transition is to have no transition at all. It should be noted that not all viewers support these transition effects.</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN3081"
+></A
+><H2
+>RETURNS</H2
+><P
+>Nothing</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN3084"
+></A
+><H2
+>EXAMPLE</H2
+><P
+> #include&#60;panda/constants.h&#62;
+ #include&#60;panda/functions.h&#62;
+ 
+ panda_pdf *document;
+ panda_page *page;
+ 
+ panda_init();
+ 
+ document = panda_open("filename.pdf", "w");
+ page = panda_newpage (document, panda_pagesize_a4);
+ 
+ panda_transduration (page, 30.5);</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN3087"
+></A
+><H2
+>VERSION</H2
+><P
+>This documentation was generated for <B
+CLASS="COMMAND"
+>Panda</B
+> 0.4.2 by <B
+CLASS="COMMAND"
+>autodocbook</B
+> (http://www.stillhq.com).
+    </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN3092"
+></A
+><H2
+>AUTHOR</H2
+><P
+><B
+CLASS="COMMAND"
+>Panda</B
+> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN3096"
+></A
+><H2
+>BUGS</H2
+><P
+>There  are no known bugs in <B
+CLASS="COMMAND"
+>Panda</B
+>. If you find one, please contact mikal@stillhq.com and let me know.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c3048.html"
+ACCESSKEY="P"
+>&#60;&#60;&#60; Previous</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c3100.html"
+ACCESSKEY="N"
+>Next &#62;&#62;&#62;</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>panda_transstyle.sgml</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c3048.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>panda_traverseobjects.sgml</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,267 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<HTML
+><HEAD
+><TITLE
+>panda_freetextannotation</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="A guide to using Panda"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="panda_freetextannotation.sgml"
+HREF="c1077.html"><LINK
+REL="PREVIOUS"
+TITLE="panda_freetextannotation.sgml"
+HREF="c1077.html"><LINK
+REL="NEXT"
+TITLE="panda_fullscreen.sgml"
+HREF="c1113.html"></HEAD
+><BODY
+CLASS="REFENTRY"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>A guide to using Panda</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c1077.html"
+ACCESSKEY="P"
+>&#60;&#60;&#60; Previous</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c1113.html"
+ACCESSKEY="N"
+>Next &#62;&#62;&#62;</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PANDA_FREETEXTANNOTATION"
+>panda_freetextannotation</A
+></H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN1083"
+></A
+><H2
+>Name</H2
+>panda_freetextannotation&nbsp;--&nbsp;draw a text annotation which doesn't look like a sticky note onto a page</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN1086"
+></A
+><H2
+>Synopsis</H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="SYNOPSIS"
+> #include&#60;panda/constants.h&#62;
+ #include&#60;panda/functions.h&#62;
+ void panda_freetextannotation(panda_pdf *document, panda_page *page,
+ char *text, int top, int left, int bottom, int right,
+ int flags);&#13;</PRE
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1088"
+></A
+><H2
+>DESCRIPTION</H2
+><P
+>This function inserts a text annotation onto one of the pages in your PDF document. The possible values for the flags arguement are: panda_annotationflag_invisible; panda_annotationflag_hidden; panda_annotationflag_print; panda_annotationflag_nozoom; panda_annotationflag_norotate; panda_annotationflag_noview; panda_annotationflag_readonly -- the values for this arguement may by OR'ed together if needed.</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1091"
+></A
+><H2
+>RETURNS</H2
+><P
+>Nothing</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1094"
+></A
+><H2
+>EXAMPLE</H2
+><P
+> #include&#60;panda/constants.h&#62;
+ #include&#60;panda/functions.h&#62;
+ 
+ panda_pdf *demo;
+ panda_page *currPage;
+ 
+ panda_init();
+ if ((demo = panda_open ("output.pdf", "w")) == NULL)
+ panda_error (panda_true, "demo: could not open output.pdf to write to.");
+ currPage = panda_newpage (demo, panda_pagesize_a4);
+ 
+ panda_freetextannotation(demo, currPage, "Hello", 10, 10, 50, 50, 0);</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1097"
+></A
+><H2
+>SEE ALSO</H2
+><P
+>panda_textannotation, panda_insertannotation</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1100"
+></A
+><H2
+>VERSION</H2
+><P
+>This documentation was generated for <B
+CLASS="COMMAND"
+>Panda</B
+> 0.4.2 by <B
+CLASS="COMMAND"
+>autodocbook</B
+> (http://www.stillhq.com).
+    </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1105"
+></A
+><H2
+>AUTHOR</H2
+><P
+><B
+CLASS="COMMAND"
+>Panda</B
+> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1109"
+></A
+><H2
+>BUGS</H2
+><P
+>There  are no known bugs in <B
+CLASS="COMMAND"
+>Panda</B
+>. If you find one, please contact mikal@stillhq.com and let me know.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c1077.html"
+ACCESSKEY="P"
+>&#60;&#60;&#60; Previous</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c1113.html"
+ACCESSKEY="N"
+>Next &#62;&#62;&#62;</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>panda_freetextannotation.sgml</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1077.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>panda_fullscreen.sgml</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<HTML
+><HEAD
+><TITLE
+>panda_open</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="A guide to using Panda"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="panda_open.sgml"
+HREF="c1772.html"><LINK
+REL="PREVIOUS"
+TITLE="panda_open.sgml"
+HREF="c1772.html"><LINK
+REL="NEXT"
+TITLE="panda_open_suppress.sgml"
+HREF="c1809.html"></HEAD
+><BODY
+CLASS="REFENTRY"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>A guide to using Panda</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c1772.html"
+ACCESSKEY="P"
+>&#60;&#60;&#60; Previous</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c1809.html"
+ACCESSKEY="N"
+>Next &#62;&#62;&#62;</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PANDA_OPEN"
+>panda_open</A
+></H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN1778"
+></A
+><H2
+>Name</H2
+>panda_open&nbsp;--&nbsp;open a PDF document</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN1781"
+></A
+><H2
+>Synopsis</H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="SYNOPSIS"
+> #include&#60;panda/constants.h&#62;
+ #include&#60;panda/functions.h&#62;
+ panda_pdf * panda_open (char *filename, char *mode);&#13;</PRE
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1783"
+></A
+><H2
+>DESCRIPTION</H2
+><P
+>Open the named PDF document with the mode specified. The only mode currently supported is "w", but others will be integrated later. The interface to this function is identical in it's behaviour to the <B
+CLASS="COMMAND"
+>fopen</B
+>() function call offered by the ANSI C standard IO library.</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1787"
+></A
+><H2
+>RETURNS</H2
+><P
+>A pointer to a panda_pdf structure</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1790"
+></A
+><H2
+>EXAMPLE</H2
+><P
+> #include&#60;panda/constants.h&#62;
+ #include&#60;panda/functions.h&#62;
+ 
+ panda_pdf *document;
+ 
+ panda_init();
+ 
+ document = panda_open("filename.pdf", "w");</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1793"
+></A
+><H2
+>SEE ALSO</H2
+><P
+>panda_init, panda_open_actual, panda_open_suppress, panda_close</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1796"
+></A
+><H2
+>VERSION</H2
+><P
+>This documentation was generated for <B
+CLASS="COMMAND"
+>Panda</B
+> 0.4.2 by <B
+CLASS="COMMAND"
+>autodocbook</B
+> (http://www.stillhq.com).
+    </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1801"
+></A
+><H2
+>AUTHOR</H2
+><P
+><B
+CLASS="COMMAND"
+>Panda</B
+> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1805"
+></A
+><H2
+>BUGS</H2
+><P
+>There  are no known bugs in <B
+CLASS="COMMAND"
+>Panda</B
+>. If you find one, please contact mikal@stillhq.com and let me know.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c1772.html"
+ACCESSKEY="P"
+>&#60;&#60;&#60; Previous</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c1809.html"
+ACCESSKEY="N"
+>Next &#62;&#62;&#62;</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>panda_open.sgml</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1772.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>panda_open_suppress.sgml</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

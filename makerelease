@@ -134,3 +134,6 @@ gpg --detach-sign --armour --output `echo $relnamenoexamples | sed 's/-/_/g' | s
 gpg --detach-sign --armour --output `echo $relnamewindows | sed 's/-/_/g' | sed 's/\./_/g'`.sig `echo $relnamewindows | sed 's/-/_/g' | sed 's/\./_/g'`.tgz
 
 # Now deal with the RPMS
+
+
+echo "Remember to email editor@planetpdf.com"

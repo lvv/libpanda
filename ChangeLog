@@ -32,3 +32,9 @@ Release 0.4 -> Release 0.5
 
 2002-01-26 Michael Still mikal@stillhq.com
 	Fixed the viewer preference stuff, which had been broken since the way in which dictionaries worked changed...
+
+2002-02-16 Michael Still mikal@stillhq.com
+	Documentation fixes
+
+2002-02-17 Michael Still mikal@stillhq.com
+	Got templates working

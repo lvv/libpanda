@@ -1,0 +1,260 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<HTML
+><HEAD
+><TITLE
+>panda_insertJPEG</TITLE
+><META
+NAME="GENERATOR"
+CONTENT="Modular DocBook HTML Stylesheet Version 1.73
+"><LINK
+REL="HOME"
+TITLE="A guide to using Panda"
+HREF="book1.html"><LINK
+REL="UP"
+TITLE="panda_insertJPEG.sgml"
+HREF="c1427.html"><LINK
+REL="PREVIOUS"
+TITLE="panda_insertJPEG.sgml"
+HREF="c1427.html"><LINK
+REL="NEXT"
+TITLE="panda_insertPNG.sgml"
+HREF="c1465.html"></HEAD
+><BODY
+CLASS="REFENTRY"
+BGCOLOR="#FFFFFF"
+TEXT="#000000"
+LINK="#0000FF"
+VLINK="#840084"
+ALINK="#0000FF"
+><DIV
+CLASS="NAVHEADER"
+><TABLE
+SUMMARY="Header navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TH
+COLSPAN="3"
+ALIGN="center"
+>A guide to using Panda</TH
+></TR
+><TR
+><TD
+WIDTH="10%"
+ALIGN="left"
+VALIGN="bottom"
+><A
+HREF="c1427.html"
+ACCESSKEY="P"
+>&#60;&#60;&#60; Previous</A
+></TD
+><TD
+WIDTH="80%"
+ALIGN="center"
+VALIGN="bottom"
+></TD
+><TD
+WIDTH="10%"
+ALIGN="right"
+VALIGN="bottom"
+><A
+HREF="c1465.html"
+ACCESSKEY="N"
+>Next &#62;&#62;&#62;</A
+></TD
+></TR
+></TABLE
+><HR
+ALIGN="LEFT"
+WIDTH="100%"></DIV
+><H1
+><A
+NAME="PANDA_INSERTJPEG"
+>panda_insertJPEG</A
+></H1
+><DIV
+CLASS="REFNAMEDIV"
+><A
+NAME="AEN1433"
+></A
+><H2
+>Name</H2
+>panda_insertJPEG&nbsp;--&nbsp;insert a JPEG image into the PDF</DIV
+><DIV
+CLASS="REFSYNOPSISDIV"
+><A
+NAME="AEN1436"
+></A
+><H2
+>Synopsis</H2
+><TABLE
+BORDER="0"
+BGCOLOR="#E0E0E0"
+WIDTH="100%"
+><TR
+><TD
+><PRE
+CLASS="SYNOPSIS"
+> #include&#60;panda/constants.h&#62;
+ #include&#60;panda/functions.h&#62;
+ void panda_insertJPEG (panda_pdf * output, panda_page * target, panda_object * imageObj, char *filename);&#13;</PRE
+></TD
+></TR
+></TABLE
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1438"
+></A
+><H2
+>DESCRIPTION</H2
+><P
+><B
+CLASS="COMMAND"
+>PANDA INTERNAL</B
+>. Do the actual insertion of the JPEG image into the PDF document. This routine handles the conversion of the JPEG image into the form supported by the PDF specification, and similar operations. It is an internal <B
+CLASS="COMMAND"
+>Panda</B
+> call and should not be needed by users of the API.</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1443"
+></A
+><H2
+>RETURNS</H2
+><P
+>Nothing</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1446"
+></A
+><H2
+>EXAMPLE</H2
+><P
+> ee panda_imageboxrot for an example usage</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1449"
+></A
+><H2
+>SEE ALSO</H2
+><P
+>panda_imagebox, panda_imageboxrot, panda_insertTIFF, panda_insertPNG</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1452"
+></A
+><H2
+>VERSION</H2
+><P
+>This documentation was generated for <B
+CLASS="COMMAND"
+>Panda</B
+> 0.4.2 by <B
+CLASS="COMMAND"
+>autodocbook</B
+> (http://www.stillhq.com).
+    </P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1457"
+></A
+><H2
+>AUTHOR</H2
+><P
+><B
+CLASS="COMMAND"
+>Panda</B
+> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.</P
+></DIV
+><DIV
+CLASS="REFSECT1"
+><A
+NAME="AEN1461"
+></A
+><H2
+>BUGS</H2
+><P
+>There  are no known bugs in <B
+CLASS="COMMAND"
+>Panda</B
+>. If you find one, please contact mikal@stillhq.com and let me know.</P
+></DIV
+><DIV
+CLASS="NAVFOOTER"
+><HR
+ALIGN="LEFT"
+WIDTH="100%"><TABLE
+SUMMARY="Footer navigation table"
+WIDTH="100%"
+BORDER="0"
+CELLPADDING="0"
+CELLSPACING="0"
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+><A
+HREF="c1427.html"
+ACCESSKEY="P"
+>&#60;&#60;&#60; Previous</A
+></TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="book1.html"
+ACCESSKEY="H"
+>Home</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+><A
+HREF="c1465.html"
+ACCESSKEY="N"
+>Next &#62;&#62;&#62;</A
+></TD
+></TR
+><TR
+><TD
+WIDTH="33%"
+ALIGN="left"
+VALIGN="top"
+>panda_insertJPEG.sgml</TD
+><TD
+WIDTH="34%"
+ALIGN="center"
+VALIGN="top"
+><A
+HREF="c1427.html"
+ACCESSKEY="U"
+>Up</A
+></TD
+><TD
+WIDTH="33%"
+ALIGN="right"
+VALIGN="top"
+>panda_insertPNG.sgml</TD
+></TR
+></TABLE
+></DIV
+></BODY
+></HTML
+>

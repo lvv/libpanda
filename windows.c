@@ -16,7 +16,7 @@
  windows_panda_abs abstractions[windows_panda_abs_max];
 
 // Setup the windows stuff ready for use
-  void __stdcall
+void __stdcall
 windows_panda_init ()
 {
   int count;
@@ -49,7 +49,7 @@ windows_panda_test (char *filename, char *mode)
 
 
 // -------------- curves.c
-  void __stdcall
+void __stdcall
 windows_panda_setlinestart (int page, int x, int y)
 {
   panda_setlinestart (windows_panda_deabs (windows_panda_abs_page, page), x,
@@ -149,7 +149,7 @@ windows_panda_setlinecolor (int page, int red, int green, int blue)
 
 
 // -------------- images.c
-  void __stdcall
+void __stdcall
 windows_panda_imagebox (int pdf, int page, int top, int left, int bottom,
 			int right, char *filename, int imgtype)
 {
@@ -169,7 +169,7 @@ windows_panda_imageboxrot (int pdf, int page, int top, int left, int bottom,
 
 
 // -------------- info.c
-  void __stdcall
+void __stdcall
 windows_panda_setauthor (int pdf, char *string)
 {
   panda_setauthor (windows_panda_deabs (windows_panda_abs_pdf, pdf), string);
@@ -200,7 +200,7 @@ windows_panda_setkeywords (int pdf, char *string)
 
 
 // -------------- font.c
-  int __stdcall
+int __stdcall
 windows_panda_createfont (int pdf, char *name, int fonttype, char *encoding)
 {
   return windows_panda_reabs (windows_panda_abs_font,
@@ -252,7 +252,7 @@ windows_panda_setleading (int pdf, double leading)
 
 
 // -------------- panda.c
-  int __stdcall
+int __stdcall
 windows_panda_open (char *filename, char *mode)
 {
   return windows_panda_reabs (windows_panda_abs_pdf,
@@ -274,7 +274,7 @@ windows_panda_close (int pdf)
 
 
 // -------------- template.c
-  int __stdcall
+int __stdcall
 windows_panda_newtemplate (int pdf, char *size)
 {
   return windows_panda_reabs (windows_panda_abs_page,
@@ -292,7 +292,7 @@ windows_panda_applytemplate (int pdf, int page1, int page2)
 
 
 // -------------- text.c
-  void __stdcall
+void __stdcall
 windows_panda_textbox (int pdf, int page, int top, int left, int bottom,
 		       int right, char *text)
 {
@@ -371,4 +371,4 @@ windows_panda_reabs (int absarea, void *ptr)
     // We found it!
     return current->number;
 }
-#endif	/*  */
+#endif /*  */

@@ -33,9 +33,9 @@ main (int argc, char *argv[])
     panda_error (panda_true, "demo: could not open output.pdf to write to.");
 
   // These are normally commented out because they are annoying
-  panda_hidetoolbar (demo, panda_true);
-  panda_hidemenubar (demo, panda_true);
-  panda_hidewindowui (demo, panda_true);
+  //panda_hidetoolbar (demo, panda_true);
+  //panda_hidemenubar (demo, panda_true);
+  //panda_hidewindowui (demo, panda_true);
 
   if ((argc > 1) && (strcmp (argv[1], "compressed") == 0))
     {
@@ -384,16 +384,20 @@ main (int argc, char *argv[])
   ///////////////////////////////////////////////////////////////////////////
 
   templatePage = panda_newtemplate(demo, panda_pagesize_a4);
-  panda_setfillcolor (templatePage, 112, 138, 37);
-  panda_setlinestart (templatePage, 210, 410);
-  panda_setlinewidth (templatePage, 5);
-  panda_addcubiccurvesegment (templatePage, 310, 410, 225, 500, 275, 600);
-  panda_addquadraticcurvesegmentone (templatePage, 160, 360, 200, 425);
-  panda_addquadraticcurvesegmenttwo (templatePage, 210, 410, 250, 575);
+  panda_setlinestart (templatePage, 100, 800);
+  panda_addlinesegment (templatePage, 100, 750);
+  panda_addlinesegment (templatePage, 140, 800);
   panda_closeline (templatePage);
-  //panda_strokeline (templatePage);
-  panda_fillline (templatePage);
-  panda_endline (templatePage);  
+  panda_strokeline (templatePage);
+  panda_endline (templatePage);
+
+  panda_setlinedash (templatePage, 3, 3, 0);
+  panda_setlinestart (templatePage, 150, 800);
+  panda_addlinesegment (templatePage, 150, 750);
+  panda_addlinesegment (templatePage, 190, 800);
+  panda_closeline (templatePage);
+  panda_strokeline (templatePage);
+  panda_endline (templatePage);
 
   currPage = panda_newpage(demo, panda_pagesize_a4);
   panda_applytemplate(demo, currPage, templatePage);

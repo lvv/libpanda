@@ -88,7 +88,6 @@ panda_newobject (panda_pdf * doc, int type)
 
   // By default this object is not a pages object
   created->isPages = panda_false;
-  created->isTemplate = panda_false;
   created->isPlaceholder =
     type == panda_placeholder ? panda_true : panda_false;
 

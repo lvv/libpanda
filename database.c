@@ -19,7 +19,29 @@
 #include <panda/functions.h>
 #endif
 
-// Open the database
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_dbopen
+PURPOSE prepare the Panda internal database for use
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_dbopen(panda_pdf *document);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This command opens the TDB database which is used to store information about things like dictionary items which have been created in the document. The use of this database makes Panda much more reliable than it has previously been.
+
+RETURNS Nothing
+
+EXAMPLE START
+There is no examples for this internal call
+EXAMPLE END
+SEEALSO panda_dbclose, panda_dbwrite, panda_dbread
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_dbopen (panda_pdf * document)
 {
@@ -32,7 +54,29 @@ panda_dbopen (panda_pdf * document)
 			   0600);
 }
 
-// Close the database
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_dbclose
+PURPOSE finalize the use of the Panda internal database
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_dbclose(panda_pdf *document);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This command closes the TDB database which is used to store information about things like dictionary items which have been created in the document. The use of this database makes Panda much more reliable than it has previously been.
+
+RETURNS Nothing
+
+EXAMPLE START
+There is no examples for this internal call
+EXAMPLE END
+SEEALSO panda_dbopen, panda_dbwrite, panda_dbread
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_dbclose (panda_pdf * document)
 {
@@ -43,7 +87,29 @@ panda_dbclose (panda_pdf * document)
   tdb_close (document->db);
 }
 
-// Write a value to the database
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_dbwrite
+PURPOSE write a value into the Panda internal database
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_dbwrite(panda_pdf *document, char *key, char *value);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function write a value into the Panda internal database.
+
+RETURNS Nothing
+
+EXAMPLE START
+There is no examples for this internal call
+EXAMPLE END
+SEEALSO panda_dbopen, panda_dbclose, panda_dbread
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_dbwrite (panda_pdf * document, char *key, char *value)
 {
@@ -70,7 +136,28 @@ panda_dbwrite (panda_pdf * document, char *key, char *value)
     }
 }
 
-// Get a value from the database
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_dbread
+PURPOSE read a value from the Panda internal database
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+char *panda_dbread(panda_pdf *document, char *key);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function reads a value from the Panda internal database.
+
+RETURNS The value, or NULL if there is no value.
+
+EXAMPLE START
+There is no examples for this internal call
+EXAMPLE END
+SEEALSO panda_dbopen, panda_dbclose, panda_dbread
+DOCBOOK END
+******************************************************************************/
 char *
 panda_dbread (panda_pdf * document, char *key)
 {

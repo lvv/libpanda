@@ -98,7 +98,6 @@ SEEALSO panda_setlinestart, panda_addcubiccurvesegment, panda_addquadraticsegmen
 DOCBOOK END
 ******************************************************************************/
 
-// Add a point to the line that we are drawing (a straight line segment)
 void
 panda_addlinesegment (panda_page * target, int x, int y)
 {
@@ -234,7 +233,6 @@ SEEALSO panda_setlinestart, panda_addlinesegment, panda_addcubiccurvesegment, pa
 DOCBOOK END
 ******************************************************************************/
 
-// Add a different type of curved segment
 void
 panda_addquadraticcurvesegmenttwo (panda_page * target, int x, int y, int cx1,
 				   int cy1)
@@ -282,7 +280,6 @@ SEEALSO panda_setlinestart, panda_addlinesegment, panda_addcubiccurvesegment, pa
 DOCBOOK END
 ******************************************************************************/
 
-// Return to the start point of the line to make some
 void
 panda_closeline (panda_page * target)
 {
@@ -324,7 +321,6 @@ SEEALSO panda_setlinestart,  panda_addlinesegment, panda_addcubiccurvesegment, p
 DOCBOOK END
 ******************************************************************************/
 
-// Add a rectangle from the current cursor point
 void
 panda_rectangle (panda_page * target, int top, int left, int bottom,
 		 int right)
@@ -373,7 +369,6 @@ SEEALSO panda_setlinestart,  panda_addlinesegment, panda_addcubiccurvesegment, p
 DOCBOOK END
 ******************************************************************************/
 
-// Make the line be drawn by the viewer
 void
 panda_endline (panda_page * target)
 {
@@ -417,7 +412,6 @@ SEEALSO panda_setlinestart,  panda_addlinesegment, panda_addcubiccurvesegment, p
 DOCBOOK END
 ******************************************************************************/
 
-// Stroke the path that we have just described
 void
 panda_strokeline (panda_page * target)
 {
@@ -465,9 +459,6 @@ SEEALSO panda_setlinestart, panda_addlinesegment, panda_addcubiccurvesegment, pa
 DOCBOOK END
 ******************************************************************************/
 
-// Fill the region we just drew
-// You say "you've never had a mum and nobody needs you"; So cry; So cry
-//                                                    -- Vanessa Amarosi, Shine
 void
 panda_fillline (panda_page * target)
 {
@@ -513,7 +504,6 @@ SEEALSO panda_setlinestart, panda_addlinesegment, panda_addcubiccurvesegment, pa
 DOCBOOK END
 ******************************************************************************/
 
-// Set the line width
 void
 panda_setlinewidth (panda_page * target, int width)
 {
@@ -565,7 +555,6 @@ SEEALSO panda_setlinestart, panda_addlinesegment, panda_addcubiccurvesegment, pa
 DOCBOOK END
 ******************************************************************************/
 
-// Set the line cap
 void
 panda_setlinecap (panda_page * target, int cap)
 {
@@ -617,7 +606,6 @@ SEEALSO panda_setlinestart, panda_addlinesegment, panda_addcubiccurvesegment, pa
 DOCBOOK END
 ******************************************************************************/
 
-// Set the line join
 void
 panda_setlinejoin (panda_page * target, int join)
 {
@@ -649,7 +637,9 @@ DESCRIPTION This function allows the user to define a line dashing style, which 
 </para>
 
 <para>
+<programlisting>
 --    --    --    --    --    --    --
+</programlisting>
 </para>
 
 <para>
@@ -657,7 +647,9 @@ Whilst values of on = 2, off = 4, phase = 1 would give:
 </para>
 
 <para>
+<programlisting>
     --    --    --    --    --    --    --
+</programlisting>
 </para>
 
 <para>
@@ -685,7 +677,6 @@ SEEALSO panda_setlinestart, panda_addlinesegment, panda_addcubiccurvesegment, pa
 DOCBOOK END
 ******************************************************************************/
 
-// Set the line dashing pattern (my, isn't this line dashing?)
 void
 panda_setlinedash (panda_page * target, int on, int off, int phase)
 {
@@ -734,7 +725,6 @@ SEEALSO panda_setlinestart, panda_addlinesegment, panda_addcubiccurvesegment, pa
 DOCBOOK END
 ******************************************************************************/
 
-// We also need to be able to set the fill colour
 void
 panda_setfillcolor (panda_page * target, int red, int green, int blue)
 {
@@ -788,7 +778,6 @@ SEEALSO panda_setlinestart, panda_addlinesegment, panda_addcubiccurvesegment, pa
 DOCBOOK END
 ******************************************************************************/
 
-// And the line colour
 void
 panda_setlinecolor (panda_page * target, int red, int green, int blue)
 {
