@@ -12,29 +12,29 @@
 
 <!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 
-<refentry id="panda_setkeywords">
+<refentry id="panda_transduration">
 <refmeta>
-<refentrytitle>panda_setkeywords</refentrytitle>
+<refentrytitle>panda_transduration</refentrytitle>
 <manvolnum>3</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname>panda_setkeywords</refname>
-<refpurpose>set the keywords string for the PDF document</refpurpose>
+<refname>panda_transduration</refname>
+<refpurpose>specify the number of seconds that a page transition effect should take to occur</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <synopsis>
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- void panda_setkeywords (panda_pdf *output, char *value);
+ void panda_transduration (panda_page *target, double seconds);
 
 </synopsis>
 </refsynopsisdiv>
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function sets the value of the keywords string within the PDF document. The string is merely a list of keywords in the form "cats dogs hamsters chickens"</para>
+<para>This function records information within the PDF indicating the maximum number of seconds that the given page transition effect should be displayed within the viewer. This is useful for presentations and the like when you realise that you are addicted to Microsoft Powerpoint...</para>
 </refsect1>
 
 <refsect1>
@@ -48,17 +48,15 @@
  #include&lt;panda/functions.h&gt;
  
  panda_pdf *document;
+ panda_page *page;
  
  panda_init();
  
  document = panda_open("filename.pdf", "w");
- panda_setkeywords(document, "panda documentation pdf api generate");
+ page = panda_newpage (document, panda_pagesize_a4);
+ 
+ panda_transduration (page, 30.5);
 </para>
-</refsect1>
-
-<refsect1>
-<title>SEE ALSO</title>
-<para>panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setid</para>
 </refsect1>
 
 

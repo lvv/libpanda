@@ -1,0 +1,107 @@
+<!-- 
+
+     This document is part of the panda distribution, and is covered
+     by the GNU GPL, a copy of which is in the file named COPYING inside the
+     distribution.
+
+     This program and it's documentation are distributed in the hope that 
+     they will be useful,but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+-->
+
+<!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
+
+<refentry id="panda_transstyle">
+<refmeta>
+<refentrytitle>panda_transstyle</refentrytitle>
+<manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>panda_transstyle</refname>
+<refpurpose>specify the type of page change transition that should occur</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<synopsis>
+ #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ void panda_transstyle (panda_page *target, int style);
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>DESCRIPTION</title>
+<para> his function records information within the PDF indicating the preferred page transition style to use. The following are valid styles to use:
+ <orderedlist>
+ <listitem>panda_pagetrans_split_yi -- vertical split from the inside of the page</listitem>
+ <listitem>panda_pagetrans_split_yo -- vertical split from the outside of the page</listitem>
+ <listitem>panda_pagetrans_split_xi -- horizontal split from the inside of the page</listitem>
+ <listitem>panda_pagetrans_split_xo -- horizontal split from the outside of the page</listitem>
+ <listitem>panda_pagetrans_blinds_y -- vertical blinds effect</listitem>
+ <listitem>panda_pagetrans_blinds_x -- horizontal blinds effect</listitem>
+ <listitem>panda_pagetrans_box_i -- box expanding from the inside of the page</listitem>
+ <listitem>panda_pagetrans_box_o -- box contracting from the outside of the page</listitem>
+ <listitem>panda_pagetrans_wipe_0 -- a single line wipes the page away from the left to the right</listitem>
+ <listitem>panda_pagetrans_wipe_90 -- a single line wipes the page away from the bottom to the top</listitem>
+ <listitem>panda_pagetrans_wipe_180 -- a single line wipes the page away from the right to the left</listitem>
+ <listitem>panda_pagetrans_wipe_270 -- a single line wipes the page away from the top to the bottom</listitem>
+ <listitem>panda_pagetrans_dissolve -- the old page dissolves slowly into the new page</listitem>
+ <listitem>panda_pagetrans_glitter_0 -- a glitter effect that moves from the left to the right of the page</listitem>
+ <listitem>panda_pagetrans_glitter_270 -- a glitter effect that moves from the top to the bottom of the page</listitem>
+ <listitem>panda_pagetrans_glitter_315 -- a glitter effect that moves from the top left to the bottom right of the page</listitem>
+ <listitem>panda_pagetrans_none -- no transition effect</listitem>
+ </orderedlist>
+ 
+ </para>
+ <para>
+ he default transition is to have no transition at all. It should be noted that not all viewers support these transition effects.
+</para>
+</refsect1>
+
+<refsect1>
+<title>RETURNS</title>
+<para>Nothing</para>
+</refsect1>
+
+<refsect1>
+<title>EXAMPLE</title>
+<para> #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ 
+ panda_pdf *document;
+ panda_page *page;
+ 
+ panda_init();
+ 
+ document = panda_open("filename.pdf", "w");
+ page = panda_newpage (document, panda_pagesize_a4);
+ 
+ panda_transduration (page, 30.5);
+</para>
+</refsect1>
+
+
+<refsect1>
+    <title>VERSION</title>
+    <para>
+This documentation was generated for <command>Panda</command> 0.4.2 by <command>autodocbook</command> (http://www.stillhq.com).
+    </para>
+</refsect1>
+
+<refsect1>
+    <title>AUTHOR</title>
+    <para>
+<command>Panda</command> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+</para>
+</refsect1>
+
+<refsect1>
+    <title>BUGS</title>
+    <para>
+There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
+</para>
+</refsect1>
+</refentry>

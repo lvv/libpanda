@@ -12,53 +12,40 @@
 
 <!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 
-<refentry id="panda_setkeywords">
+<refentry id="panda_hexstring">
 <refmeta>
-<refentrytitle>panda_setkeywords</refentrytitle>
+<refentrytitle>panda_hexstring</refentrytitle>
 <manvolnum>3</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname>panda_setkeywords</refname>
-<refpurpose>set the keywords string for the PDF document</refpurpose>
+<refname>panda_hexstring</refname>
+<refpurpose>take a string of possibly binary bytes, and represent them in hex</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <synopsis>
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- void panda_setkeywords (panda_pdf *output, char *value);
+ char *panda_hexstring(char *input);
 
 </synopsis>
 </refsynopsisdiv>
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function sets the value of the keywords string within the PDF document. The string is merely a list of keywords in the form "cats dogs hamsters chickens"</para>
+<para><command>PANDA INTERNAL</command>. This function converts a binary array of chars into an array of hex characters. An assumption is made that there are no zero bytes in the middle of the string.</para>
 </refsect1>
 
 <refsect1>
 <title>RETURNS</title>
-<para>Nothing</para>
+<para>A string of hex</para>
 </refsect1>
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
- 
- panda_pdf *document;
- 
- panda_init();
- 
- document = panda_open("filename.pdf", "w");
- panda_setkeywords(document, "panda documentation pdf api generate");
+<para> his is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
 </para>
-</refsect1>
-
-<refsect1>
-<title>SEE ALSO</title>
-<para>panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setid</para>
 </refsect1>
 
 

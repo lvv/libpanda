@@ -58,7 +58,7 @@
 
 <refsect1>
 <title>SEE ALSO</title>
-<para>panda_checkinfo, panda_setcreator, panda_settitle, panda_setsubject, panda_setkeywords</para>
+<para>panda_checkinfo, panda_setcreator, panda_settitle, panda_setsubject, panda_setkeywords, panda_setid</para>
 </refsect1>
 
 

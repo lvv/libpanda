@@ -12,34 +12,34 @@
 
 <!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 
-<refentry id="panda_setkeywords">
+<refentry id="panda_newtemplate">
 <refmeta>
-<refentrytitle>panda_setkeywords</refentrytitle>
+<refentrytitle>panda_newtemplate</refentrytitle>
 <manvolnum>3</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname>panda_setkeywords</refname>
-<refpurpose>set the keywords string for the PDF document</refpurpose>
+<refname>panda_newtemplate</refname>
+<refpurpose>create a template page in the PDF</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <synopsis>
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- void panda_setkeywords (panda_pdf *output, char *value);
+ void panda_newtemplate(panda_pdf *document, char *pageSize);
 
 </synopsis>
 </refsynopsisdiv>
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function sets the value of the keywords string within the PDF document. The string is merely a list of keywords in the form "cats dogs hamsters chickens"</para>
+<para>This function is used to create 'template' pages which can then be refered to on other pages. For instance, if you were creating a document that used a standard letter head, then it would make sense to construct the letterhead as a template, and then use this on all the pages. The created template looks and feels just like any other page in the document for the purposes of creating content. Refer to the <command>panda_newpage</command> man page for details on how to use pages.</para>
 </refsect1>
 
 <refsect1>
 <title>RETURNS</title>
-<para>Nothing</para>
+<para>A pointer to the template page</para>
 </refsect1>
 
 <refsect1>
@@ -48,17 +48,18 @@
  #include&lt;panda/functions.h&gt;
  
  panda_pdf *document;
+ panda_page *templatepage;
  
  panda_init();
  
  document = panda_open("filename.pdf", "w");
- panda_setkeywords(document, "panda documentation pdf api generate");
+ templatepage = panda_newtemplate (document, panda_pagesize_a4);
 </para>
 </refsect1>
 
 <refsect1>
 <title>SEE ALSO</title>
-<para>panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setid</para>
+<para>panda_newpage, panda_applytemplate</para>
 </refsect1>
 
 

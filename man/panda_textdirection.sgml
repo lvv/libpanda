@@ -12,29 +12,29 @@
 
 <!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 
-<refentry id="panda_setkeywords">
+<refentry id="panda_textdirection">
 <refmeta>
-<refentrytitle>panda_setkeywords</refentrytitle>
+<refentrytitle>panda_textdirection</refentrytitle>
 <manvolnum>3</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname>panda_setkeywords</refname>
-<refpurpose>set the keywords string for the PDF document</refpurpose>
+<refname>panda_textdirection</refname>
+<refpurpose>specify the direction that the text flows within the document</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <synopsis>
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- void panda_setkeywords (panda_pdf *output, char *value);
+ void panda_textdirection (panda_pdf *document, int dir);
 
 </synopsis>
 </refsynopsisdiv>
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function sets the value of the keywords string within the PDF document. The string is merely a list of keywords in the form "cats dogs hamsters chickens"</para>
+<para>This function records information within the PDF indicating the direction that the text in the document flows in. The possible values for the dir arguement are: <command>panda_textdirection_l2r</command>, text is read left to right; <command>panda_textdirection_r2l</command>, text is read right to left. The default for this value is <command>panda_textdirection_l2r</command>.</para>
 </refsect1>
 
 <refsect1>
@@ -52,13 +52,8 @@
  panda_init();
  
  document = panda_open("filename.pdf", "w");
- panda_setkeywords(document, "panda documentation pdf api generate");
+ panda_textdirection(document, panda_textdirection_r2l);
 </para>
-</refsect1>
-
-<refsect1>
-<title>SEE ALSO</title>
-<para>panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setid</para>
 </refsect1>
 
 

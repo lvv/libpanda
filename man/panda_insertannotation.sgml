@@ -12,53 +12,48 @@
 
 <!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 
-<refentry id="panda_setkeywords">
+<refentry id="panda_insertannotation">
 <refmeta>
-<refentrytitle>panda_setkeywords</refentrytitle>
+<refentrytitle>panda_insertannotation</refentrytitle>
 <manvolnum>3</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname>panda_setkeywords</refname>
-<refpurpose>set the keywords string for the PDF document</refpurpose>
+<refname>panda_insertannotation</refname>
+<refpurpose>actually insert an annotation</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <synopsis>
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- void panda_setkeywords (panda_pdf *output, char *value);
+ 
+ panda_object *panda_insertannotation(panda_pdf *document, panda_page *page,
+ int top, int left, int bottom, int right,
+ int flags)
 
 </synopsis>
 </refsynopsisdiv>
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function sets the value of the keywords string within the PDF document. The string is merely a list of keywords in the form "cats dogs hamsters chickens"</para>
+<para><command>PANDA INTERNAL</command>. This function call creates the object to store the annotation and the common elements which are required.</para>
 </refsect1>
 
 <refsect1>
 <title>RETURNS</title>
-<para>Nothing</para>
+<para>The annotation object which was created.</para>
 </refsect1>
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
- 
- panda_pdf *document;
- 
- panda_init();
- 
- document = panda_open("filename.pdf", "w");
- panda_setkeywords(document, "panda documentation pdf api generate");
+<para> ou shouldn't need an example because this is an internal call
 </para>
 </refsect1>
 
 <refsect1>
 <title>SEE ALSO</title>
-<para>panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setid</para>
+<para>panda_textannotation, panda_freetextannotation</para>
 </refsect1>
 
 

@@ -27,7 +27,7 @@
 <synopsis>
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- char panda_xsnprintf(const char* format, va_list ap);
+ char *panda_xsnprintf(const char* format, va_list ap);
 
 </synopsis>
 </refsynopsisdiv>

@@ -12,29 +12,29 @@
 
 <!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 
-<refentry id="panda_setkeywords">
+<refentry id="panda_nfspagemodde">
 <refmeta>
-<refentrytitle>panda_setkeywords</refentrytitle>
+<refentrytitle>panda_nfspagemodde</refentrytitle>
 <manvolnum>3</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname>panda_setkeywords</refname>
-<refpurpose>set the keywords string for the PDF document</refpurpose>
+<refname>panda_nfspagemodde</refname>
+<refpurpose>defines display characteristics for the PDF document if it is using non fullscreen mode after defaulting to fullscreen mode</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <synopsis>
  #include&lt;panda/constants.h&gt;
  #include&lt;panda/functions.h&gt;
- void panda_setkeywords (panda_pdf *output, char *value);
+ void panda_nfspagemode (panda_pdf *document, int pagemode);
 
 </synopsis>
 </refsynopsisdiv>
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function sets the value of the keywords string within the PDF document. The string is merely a list of keywords in the form "cats dogs hamsters chickens"</para>
+<para>If the document in question is using fullscreen mode and then exits from fullscreen mode, then this function configures the behaviour of several of the 'eye candy' options available in some viewers. The possible values for pagemode are: <command>panda_window_usenone</command>, which displays neither the outline or thumbnails (if present); <command>panda_window_useoutlines</command>, which displays only the outline for the document; <command>panda_window_usethumbs</command>, which only displays thumbnails. <command>Please note that this function will only have an effect on the viewer if the page mode has been set to fullscreen with the panda_fullscreen() function call</command></para>
 </refsect1>
 
 <refsect1>
@@ -52,13 +52,13 @@
  panda_init();
  
  document = panda_open("filename.pdf", "w");
- panda_setkeywords(document, "panda documentation pdf api generate");
+ panda_nfspagemode(document, panda_window_usenone);
 </para>
 </refsect1>
 
 <refsect1>
 <title>SEE ALSO</title>
-<para>panda_checkinfo, panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, panda_setid</para>
+<para>panda_fullscreen</para>
 </refsect1>
 
 
