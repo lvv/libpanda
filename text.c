@@ -55,6 +55,10 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
     *************************************************************************/
 
       // Find the font object needed
+#if defined DEBUG
+      printf("Searching for the font object relating to \"%s\"\n",
+             output->currentFont);
+#endif
       if ((fontObj = getfontobj (output, output->currentFont)) == NULL)
 	error ("Could not find the font requested.");
 

@@ -18,6 +18,11 @@
 #include <unistd.h>
 #include <pthread.h>
 
+#if defined HAVE_CONFIG_H
+  #warning "Included config.h which is made by autoconf"
+  #include "config.h"
+#endif
+
 static tsize_t libtiffDummyReadProc (thandle_t fd, tdata_t buf, tsize_t size);
 static tsize_t libtiffDummyWriteProc (thandle_t fd, tdata_t buf,
 				      tsize_t size);

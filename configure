@@ -2212,7 +2212,7 @@ done
 ac_given_srcdir=$srcdir
 ac_given_INSTALL="$INSTALL"
 
-trap 'rm -fr `echo "timetrials/Makefile regression/Makefile Makefile " | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
+trap 'rm -fr `echo "timetrials/Makefile regression/Makefile Makefile config.h:config.h.in" | sed "s/:[^ ]*//g"` conftest*; exit 1' 1 2 15
 EOF
 cat >> $CONFIG_STATUS <<EOF
 
@@ -2387,7 +2387,7 @@ ac_eD='%g'
 if test "${CONFIG_HEADERS+set}" != set; then
 EOF
 cat >> $CONFIG_STATUS <<EOF
-  CONFIG_HEADERS=""
+  CONFIG_HEADERS="config.h:config.h.in"
 EOF
 cat >> $CONFIG_STATUS <<\EOF
 fi

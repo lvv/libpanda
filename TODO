@@ -54,3 +54,6 @@
   * New font ids are handed out too often -- what about font reuse?
 
   * Handle image reuse better
+
+  * Are the font man pages right? Perhaps I changed them to something that was
+	wrong in a fit of confusion.
