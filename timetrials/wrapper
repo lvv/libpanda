@@ -1,5 +1,11 @@
 #!/bin/bash
 
+if [ `echo $1 | wc -c | tr -d " "` -gt 1 ]
+then
+  echo "Set working dir to $1"
+  cd $1
+fi
+
 starttime=`date`
 
 # This file runs through all the known timetrials and tests to see if our 
