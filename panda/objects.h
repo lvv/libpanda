@@ -13,6 +13,8 @@
 #ifndef PANDA_OBJECTS_H
 #define PANDA_OBJECTS_H 1
 
+#include <panda/constants.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -50,13 +52,16 @@ extern "C"
     unsigned long byteOffset;
     panda_dictionary *dict;
     char *layoutstream, *binarystream;
-    unsigned long binarystreamLength;
+    unsigned long layoutstreamLength, binarystreamLength;
     char *currentSetFont;
 
     void *children;
     void *cachedLastChild;
 
     int isPages;
+
+    char cascadeproperties[panda_object_property_max];
+    char localproperties[panda_object_property_max];
   }
   panda_object;
 

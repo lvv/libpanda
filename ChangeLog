@@ -130,4 +130,15 @@ Release 0.3 -> Release 0.4
   * Documented all the function calls in xref.c using autodocbook
 
   * Fixed all the compile warnings that we have had since the namespace change
-	
+
+========================== 0.4 RC 2 Released ==================================
+
+  * You can now open a PDF to stdout ("-" as the filename). This will result
+	in the PDF document being dumped out to standard out, which could then
+	be piped elsewhere. This is useful for things like web servers.
+
+  * You can now use panda_setproperty to set whether streams should be
+	compressed with Flate compression where possible. This reduces the size
+	of the PDF document that is produced. If you ask for stream compression
+	and the stream ends up being longer compressed, the stream will be 
+	written out UNCOMPRESSED.

@@ -186,7 +186,8 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  }
 
       // We _are_ going to create the file
-      if ((openedpdf->file = fopen (filename, mode)) == NULL)
+      if(strcmp(filename, "-") == 0) openedpdf->file = stdout;
+      else if ((openedpdf->file = fopen (filename, mode)) == NULL)
 	return NULL;
 
       // We have no objects yet

@@ -148,6 +148,7 @@ extern "C"
   void panda_addchild (panda_object *, panda_object *);
   void panda_traverseobjects (panda_pdf *, panda_object *, int,
 			      traverseFunct);
+  void panda_setproperties (panda_object *, int, int, int);
 
 /******************************************************************************
   Template.c

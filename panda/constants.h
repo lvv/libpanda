@@ -104,6 +104,21 @@ extern "C"
     panda_image_png
   };
 
+// Properties that might be held by objects -- panda_const_properties
+  enum
+  {
+    panda_object_property_compress = 0,
+    panda_object_property_ignorepageerrors,
+    panda_object_property_max
+  };
+
+// Scopes of properties
+  enum
+  {
+    panda_scope_cascade = 0,
+    panda_scope_local
+  };
+
 #ifdef __cplusplus
 }
 #endif

@@ -118,9 +118,10 @@ panda_nowdate ()
   curtime = time (NULL);
   timenow = (struct tm *) localtime(&curtime);
 
-  printf("%d %d %d %d %d %d\n", timenow->tm_year, timenow->tm_mon, timenow->tm_mday, 
-	 timenow->tm_hour, timenow->tm_min, timenow->tm_sec);
-
-  return panda_makedate (1900 + timenow->tm_year, timenow->tm_mon + 1, timenow->tm_mday, 
-			 timenow->tm_hour, timenow->tm_min, timenow->tm_sec);
+  return panda_makedate (1900 + timenow->tm_year, 
+			 timenow->tm_mon + 1, 
+			 timenow->tm_mday, 
+			 timenow->tm_hour, 
+			 timenow->tm_min, 
+			 timenow->tm_sec);
 }

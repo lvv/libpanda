@@ -11,6 +11,7 @@
 
 #include <panda/functions.h>
 #include <panda/constants.h>
+#include <zlib.h>
 
 /******************************************************************************
 DOCBOOK START
@@ -103,6 +104,11 @@ panda_newobject (panda_pdf * doc, int type)
   doc->xrefTail->next = panda_xmalloc (sizeof (panda_xref));
   doc->xrefTail->next->next = NULL;
   doc->xrefTail = doc->xrefTail->next;
+
+  // Set the value of the local and cascaded proprties for this object to 
+  // defaults (all off)
+  memset(created->localproperties, panda_false, panda_object_property_max);
+  memset(created->cascadeproperties, panda_false, panda_object_property_max);
 
   // Return
   return created;
@@ -438,7 +444,7 @@ panda_freedictionary (panda_dictionary * freeDict)
 {
   panda_dictionary *now, *prev;
   int endoftheline = panda_true;
-
+  
   // Still need to free the dictionary... This can be made more efficient
   while (freeDict->next != NULL)
     {
@@ -453,6 +459,10 @@ panda_freedictionary (panda_dictionary * freeDict)
 
       if (endoftheline == panda_false)
 	{
+#if defined DEBUG
+	  printf("Free dictionary item named %s\n", now->name);
+#endif
+
 	  free (now->name);
 	  if (now->textValue != NULL)
 	    free (now->textValue);
@@ -476,7 +486,7 @@ panda_freedictionary (panda_dictionary * freeDict)
 	free (freeDict->textValue);
       if (freeDict->dictValue != NULL)
 	panda_freedictionary (freeDict->dictValue);
-
+      
       free (freeDict);
     }
 }
@@ -518,7 +528,9 @@ void
 panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 {
   // Do all that is needed to dump a PDF object to disk
-  unsigned long count;
+  unsigned long count, compressedLen;
+  char *compressed;
+  int compressResult;
 
 #if defined DEBUG
   printf ("Writing object number %d\n", dumpTarget->number);
@@ -548,10 +560,48 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 
       if (dumpTarget->layoutstream != NULL)
 	{
-	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
-			     strlen (dumpTarget->layoutstream) - 1);
-	}
+	  dumpTarget->layoutstreamLength = strlen(dumpTarget->layoutstream);
 
+	  // We determine if the stream is to be compressed, and then
+	  // overwrite the old stream with the compressed one (and save
+	  // the length).
+
+	  if((dumpTarget->cascadeproperties
+	      [panda_object_property_compress] == panda_true) || 
+	     (dumpTarget->localproperties
+	      [panda_object_property_compress] == panda_true)){ 
+	    
+#if defined DEBUG
+	    printf("Compression enabled for this object\n");
+#endif
+
+	    // See zlib.h
+	    compressedLen = dumpTarget->layoutstreamLength * 1.2 + 12;
+	    compressed = panda_xmalloc(compressedLen);
+	    
+	    if(((compressResult = compress(compressed, &compressedLen,
+					  dumpTarget->layoutstream, 
+					  dumpTarget->layoutstreamLength)) 
+	       == Z_OK) && (compressedLen < dumpTarget->layoutstreamLength)){
+	      printf("Compressed is %d [obj %d]\n", compressedLen,
+		     dumpTarget->number);
+	      
+	      // The compression worked (no error returned)
+	      panda_adddictitem (dumpTarget->dict, "Filter", panda_textvalue,
+				 "FlateDecode");
+	  
+	      // Now we need to make the stream use the compressed one,
+	      // and record the length
+	      free(dumpTarget->layoutstream);
+	      dumpTarget->layoutstream = compressed;
+	      dumpTarget->layoutstreamLength = compressedLen;
+	    }
+	  }
+
+	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
+			     dumpTarget->layoutstreamLength);
+	}
+	  
       // We cannot have a layoutstream and a binary stream in the same object
       else if (dumpTarget->binarystream != NULL)
 	{
@@ -570,8 +620,11 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
       if (dumpTarget->layoutstream != NULL)
 	{
 	  panda_print (output, "stream\n");
-	  panda_printf (output, "%s", dumpTarget->layoutstream);
-	  panda_print (output, "endstream\n");
+
+	  for (count = 0; count < dumpTarget->layoutstreamLength; count++)
+	    panda_putc (output, dumpTarget->layoutstream[count]);
+
+	  panda_print (output, "\nendstream\n");
 	}
 
       // Do we have a binary stream? We cannot have both cause how would be 
@@ -759,7 +812,7 @@ DOCBOOK END
 ******************************************************************************/
 
 void
-panda_addchild (panda_object * parentObj, panda_object * panda_childObj)
+panda_addchild (panda_object * parentObj, panda_object * childObj)
 {
   panda_child *currentChild = parentObj->children;
 
@@ -775,7 +828,11 @@ panda_addchild (panda_object * parentObj, panda_object * panda_childObj)
   currentChild->next->next = NULL;
 
   // Make me be the child object
-  currentChild->me = panda_childObj;
+  currentChild->me = childObj;
+
+  // Cascade the relevant properties
+  memcpy(childObj->cascadeproperties, parentObj->cascadeproperties, 
+	 panda_object_property_max);
 
   // Cache it
   parentObj->cachedLastChild = currentChild;
@@ -843,3 +900,70 @@ panda_traverseobjects (panda_pdf * output, panda_object * dumpTarget,
   if (direction == panda_up)
     function (output, dumpTarget);
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_setobjectproperty
+PURPOSE set a property value for an object
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_setobjectproperty (panda_object *target, int scope, int propid, int propval);
+SYNOPSIS END
+
+DESCRIPTION Properties are a way of specifing things about objects. These properties can have either a cascade scope (they affect all subsequently created objects that are children of that object) -- <command>panda_scope_cascade</command>, or local (they only occur for that object) -- <command>panda_scope_local</command>. Possible properties are defined in the <command>panda_const_properties</command> manual page.
+
+RETURNS None
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_object *obj;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+obj = panda_newobject(document, panda_object_normal);
+panda_setproperty(obj, panda_scope_cascade, panda_object_property_compress, panda_true);
+
+EXAMPLE END
+SEEALSO panda_newobject, panda_const_properties
+DOCBOOK END
+******************************************************************************/
+
+void panda_setproperty(panda_object *target, int scope, int key, int value){
+#if defined DEBUG
+  printf("Set a property for object %d %d\n", target->number, target->generation);
+#endif
+
+  if((key < 0) || (key > panda_object_property_max)){
+#if defined DEBUG
+    printf("Undefined key value specifiec\n");
+#endif
+    return;
+  }
+
+  switch(scope){
+  case panda_scope_cascade:
+#if defined DEBUG
+    printf("Cascade\n");
+#endif
+    target->cascadeproperties[key] = value;
+    break;
+    
+  case panda_scope_local:
+#if defined DEBUG
+    printf("Local\n");
+#endif
+    target->localproperties[key] = value;
+      break;
+      
+  default:
+    // Do nothing
+  }
+}
+

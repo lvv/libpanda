@@ -78,8 +78,6 @@ L * New font ids are handed out too often -- what about font reuse?
 	crash with a Seg Fault. What is different between a newly initialised
 	page and one later on?
 
-  * Check the code examples for the curves.c code
-
   * Make sure the date code is portable...
 
   * Need to handle the absense of headers when libraries are not installed.
@@ -91,3 +89,9 @@ L * New font ids are handed out too often -- what about font reuse?
   * Fills don't work properly, nor do colours in lines
 
   * Template pages don't work yet
+
+  * Colour TIFF support
+
+  * Forced cascading properties
+
+  * Document wide properties (convenience)
