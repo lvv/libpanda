@@ -90,9 +90,9 @@ void pdfprintf(pdf *file, char *format, ...){
   // add (change for unix)
 
   // POSSIBLE BUG: Binary textstreams may be corrupted by Windows here
-  for(icounter = 0; counter < strlen(buffer); counter++){
+  for(counter = 0; counter < strlen(buffer); counter++){
     if(buffer[counter] == '\n') newlineCount++;
-  }
+    }
 
   // Add this number to the byteOffset
   file->byteOffset += newlineCount;

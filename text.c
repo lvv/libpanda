@@ -180,30 +180,34 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     // If we haven't displayed that first part that would otherwise be missed
     // do so now
     if(displayedFirstPart == gFalse){
-      textstreamprintf(textobj, "(%s) '\n", strtokVictim);
+      //textstreamprintf(textobj, "(%s) '\n", strtokVictim);
       displayedFirstPart = gTrue;
     }
 
     switch(text[currentToken - strtokVictim - 1]){
     case '\n':
-      textstreamprintf(textobj, "(%s) '\n", currentToken);
+      //textstreamprintf(textobj, "(%s) '\n", currentToken);
       break;
 
     case 4:
-      textstreamprintf(textobj, "%c Ts (%s) Tj\n",
-	currentToken[0], currentToken + 1);
+      //textstreamprintf(textobj, "%c Ts (%s) Tj\n",
+      //currentToken[0], currentToken + 1);
       break;
 
     case 5:
-      textstreamprintf(textobj, "-%c Ts (%s) Tj\n",
-	currentToken[0], currentToken + 1);
+      //textstreamprintf(textobj, "-%c Ts (%s) Tj\n",
+      //currentToken[0], currentToken + 1);
       break;
 
     case 6:
-      textstreamprintf(textobj, "0 Ts (%s) Tj\n", currentToken);
+      //textstreamprintf(textobj, "0 Ts (%s) Tj\n", currentToken);
       break;
     }
 
     currentToken = strtok(NULL, delim);
   }
 }
+
+
+
+

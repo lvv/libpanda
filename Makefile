@@ -1,7 +1,7 @@
-# Panda 0.1 Makefile
+# Panda 0.2 Makefile
 
-# Use the debug flag to help debug the program. I wont produce valid PDF files
-# though...
+# Use the debug flag to help debug the program. It won't produce valid PDF
+# files though...
 
 # This is used to do the Windows specific I/O things we have to do.
 #PLATFORM = WINDOWS
@@ -11,8 +11,8 @@ DODEBUG = NO
 #DODEBUG = DEBUG
 
 # The first one of these will make a profiling library
-PROFILING = -pg
-#PROFILING = 
+#PROFILING = -pg
+PROFILING = 
 
 COMPILER = gcc
 COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG) -Wall $(PROFILING)
@@ -52,12 +52,6 @@ clean:
 		rm -i libpanda.a
 		rm -i *core*
 		rm -i *~
-
-# This is used to test the functionality of routines to make sure they are not
-# broken
-test:		test.c constants.h functions.h objects.h $(OBJFILES)
-		$(COMPILER) $(COMPILER_FLAGS) test.c -o test.o
-		$(COMPILER) $(OBJFILES) test.o -o test; ./test
 
 ################################################################################
 error.o:	error.c constants.h functions.h objects.h
