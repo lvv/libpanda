@@ -369,7 +369,7 @@ panda_freeobject (panda_pdf * output, panda_object * freeVictim)
       panda_freedictionary (freeVictim->dict);
     }
 
-  // free(freeVictim);
+  free(freeVictim);
 }
 
 void

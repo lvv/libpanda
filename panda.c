@@ -119,11 +119,12 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
 	  // There is no font currently selected
 	  openedpdf->currentFont = NULL;
+	  openedpdf->currentFontMode = -1;
 	  openedpdf->currentFontSize = -1;
 	  openedpdf->nextFontNumber = 1;
 
-	  // The fonts object in the pdf * is a dummy which makes fonts external
-	  // to each page. This makes the PDF more efficient
+	  // The fonts object in the pdf * is a dummy which makes fonts 
+	  // external to each page. This makes the PDF more efficient
 	  openedpdf->fonts = panda_newobject (openedpdf, panda_placeholder);
 
 	  // Set the text mode to something basic

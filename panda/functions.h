@@ -24,7 +24,7 @@ extern "C"
 #include <string.h>
 #include <stdarg.h>
 
-#if defined DMALLOC
+#if defined HAVE_LIBDMALLOC
 #include <dmalloc.h>
 #endif
 
@@ -39,9 +39,13 @@ extern "C"
   void panda_addlinesegment (panda_page *, int, int);
   void panda_addcubiccurvesegment (panda_page *, int, int, int, int, int,
 				   int);
-  void panda_addquadraticcurvesegment (panda_page *, int, int, int, int);
+  void panda_addquadraticcurvesegmentone (panda_page *, int, int, int, int);
+  void panda_addquadraticcurvesegmenttwo (panda_page *, int, int, int, int);
   void panda_closeline (panda_page *);
+  void panda_rectangle (panda_page *, int, int, int, int);
   void panda_endline (panda_page *);
+  void panda_strokeline (panda_page *);
+  void panda_fillline (panda_page *);
 
 /******************************************************************************
   Date.c
@@ -59,7 +63,8 @@ extern "C"
 /******************************************************************************
   Images.c
 
-  - panda_imageboxrot concept by Ceasar Miquel (miquel@df.uba.ar), modified by Mikal
+  - panda_imageboxrot concept by Ceasar Miquel (miquel@df.uba.ar), 
+  modified by Mikal
 ******************************************************************************/
 
   void panda_imagebox (panda_pdf *, panda_page *, int, int, int, int, char *,

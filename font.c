@@ -52,7 +52,7 @@ void
 panda_setfont (panda_pdf * output, char *fontident)
 {
   // Free on a NULL should do nothing (check for other platforms)
-  free (output->currentFont);
+  if(output->currentFont != NULL) free (output->currentFont);
 
   output->currentFont =
     panda_xmalloc ((strlen (fontident) + 1) * sizeof (char));

@@ -8,6 +8,8 @@
   Purpose:
     The Panda codebase can be used in a variety of ways, one of them is as
     as stand alone application. This file supports that methodology.
+
+    Completely rearranged as of 20 Jan 2001 to make the tests clearer...
 ******************************************************************************/
 
 #include  <panda/functions.h>
@@ -30,108 +32,218 @@ main (int argc, char *argv[])
   if ((demo = panda_open ("output.pdf", "w")) == NULL)
     panda_error ("demo: could not open output.pdf to write to.");
 
-  // For every text mode in v 1.3
-  for (lineDepth = 0; lineDepth < 8; lineDepth++)
-    {
-#if defined DEBUG
-      printf ("Created page\n");
-#endif
+  ///////////////////////////////////////////////////////////////////////////
+  // Image functionality
+  ///////////////////////////////////////////////////////////////////////////
 
-      // Create a page
-      currPage = panda_newpage (demo, panda_pagesize_a4);
+  // Create a page
+  currPage = panda_newpage (demo, panda_pagesize_a4);
+  
+  // Put in the background images
+  panda_imagebox (demo, currPage, 0, 0, currPage->height / 2,
+		  currPage->width, "input.tif", panda_image_tiff);
+  panda_imagebox (demo, currPage, currPage->height / 2, 0,
+		  currPage->height, currPage->width, "input2.tif",
+		  panda_image_tiff);
+  
+  panda_imagebox (demo, currPage, 317, 317, 434, 434, "gnu_box.jpg",
+		  panda_image_jpeg);
+  panda_imagebox (demo, currPage, 434, 434, 551, 551, "gnu_box.jpg",
+		  panda_image_jpeg);
+  
+  // Do an panda_imageboxrot or two to test the code included by Ceasar Miquel
+  panda_imageboxrot (demo, currPage, 600, 0, 717, 117, 15.0,
+		     "gnu_box.jpg", panda_image_jpeg);
 
-      // Put in the background images
-      panda_imagebox (demo, currPage, 0, 0, currPage->height / 2,
-		      currPage->width, "input.tif", panda_image_tiff);
-      panda_imagebox (demo, currPage, currPage->height / 2, 0,
-		      currPage->height, currPage->width, "input2.tif",
-		      panda_image_tiff);
+  panda_imageboxrot (demo, currPage, 600, 200, 717, 317, 30.0,
+		     "gnu_box.jpg", panda_image_jpeg);
+  
+  panda_imageboxrot (demo, currPage, 600, 400, 717, 517, 42.0,
+		     "gnu_box.jpg", panda_image_jpeg);
+  
+  panda_imageboxrot (demo, currPage, 700, 0, 817, 117, 90.0,
+		     "gnu_box.jpg", panda_image_jpeg);
 
-      // Put some text onto it
-      panda_setfontmode (demo, lineDepth);
-      panda_setcharacterspacing (demo, (double) lineDepth);
-      panda_setwordspacing (demo, (double) lineDepth * 10);
-      panda_sethorizontalscaling (demo, (double) 1 - (lineDepth * 0.1));
-      panda_setleading (demo, 16.0);
+  panda_imageboxrot (demo, currPage, 700, 200, 817, 317, 132.0,
+		     "gnu_box.jpg", panda_image_jpeg);
 
-      // I am not drawing a multiline string here because I am not sure how to 
-      // represent this in the PDF at the moment
-      sprintf (tempString,
-	       "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.",
-	       4, 6, 5);
-      panda_textbox (demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100,
-		     30, tempString);
+  // (c) statement
+  panda_setfont (demo, tempPtr = panda_createfont (demo, "Times-Roman", 1,
+						   "MacRomanEncoding"));
+  panda_textbox (demo, currPage, 600, 10, 700, 300,
+		 "The background image on this page is Copyright 2000 Andrew Cagney");
+  panda_textbox (demo, currPage, 620, 10, 720, 300,
+		 "and is distributed under the terms of the GPL...");
+  free(tempPtr);
+  
+  ///////////////////////////////////////////////////////////////////////////
+  // Text functionality (with a few images thrown in as well)
+  ///////////////////////////////////////////////////////////////////////////
 
-      panda_setfont (demo, tempPtr = panda_createfont (demo, "Symbol", 1,
-						       "MacRomanEncoding"));
-      panda_textbox (demo, currPage, lineDepth * 20 + 50, 10 + lineDepth, 100,
-		     30, "Symbol");
-      free (tempPtr);
+  currPage = panda_newpage(demo, panda_pagesize_a4);
 
-      panda_setfont (demo, tempPtr =
-		     panda_createfont (demo, "Helvetica-Bold", 1,
-				       "MacRomanEncoding"));
-      panda_textbox (demo, currPage, lineDepth * 20 + 70, 30 + lineDepth, 100,
-		     30, "A line in Helvetica-Bold");
-      free (tempPtr);
+  // I am not drawing a multiline string here because I am not sure how to 
+  // represent this in the PDF at the moment
+  sprintf (tempString,
+	   "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.",
+	   4, 6, 5);
+  panda_textbox (demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100,
+		 30, tempString);
+  
+  panda_setfont (demo, tempPtr = panda_createfont (demo, "Symbol", 1,
+						   "MacRomanEncoding"));
+  panda_textbox (demo, currPage, lineDepth * 20 + 50, 10 + lineDepth, 100,
+		 30, "Symbol");
+  free (tempPtr);
+  
+  panda_setfont (demo, tempPtr =
+		 panda_createfont (demo, "Helvetica-Bold", 1,
+				   "MacRomanEncoding"));
+  panda_textbox (demo, currPage, lineDepth * 20 + 70, 30 + lineDepth, 100,
+		 30, "A line in Helvetica-Bold");
+  free (tempPtr);
+  
+  panda_imagebox (demo, currPage, 100, 100, 150, 150, "gnu-head.jpg",
+		  panda_image_jpeg);
+  panda_textbox (demo, currPage, 90, 110, 200, 200,
+		 "INFRONTINFRONTINFRONT");
+  
+  panda_textbox (demo, currPage, 190, 210, 300, 300,
+		 "BEHINDBEHINDBEHIND");
+  panda_imagebox (demo, currPage, 200, 200, 317, 317, "gnu_box.jpg",
+		  panda_image_jpeg);
+  
+  panda_textbox (demo, currPage, 300, 10, 400, 50,
+		 "A second textbox on the page");
 
-      // Insert some images
-      panda_imagebox (demo, currPage, 100, 100, 150, 150, "gnu-head.jpg",
-		      panda_image_jpeg);
-      panda_textbox (demo, currPage, 90, 110, 200, 200,
-		     "INFRONTINFRONTINFRONT");
+  ///////////////////////////////////////////////////////////////////////////
+  // Demonstrate the supported text modes
+  ///////////////////////////////////////////////////////////////////////////
 
-      panda_textbox (demo, currPage, 190, 210, 300, 300,
-		     "BEHINDBEHINDBEHIND");
-      panda_imagebox (demo, currPage, 200, 200, 317, 317, "gnu_box.jpg",
-		      panda_image_jpeg);
-      panda_imagebox (demo, currPage, 317, 317, 434, 434, "gnu_box.jpg",
-		      panda_image_jpeg);
-      panda_imagebox (demo, currPage, 434, 434, 551, 551, "gnu_box.jpg",
-		      panda_image_jpeg);
+  currPage = panda_newpage(demo, panda_pagesize_a4);  
+  panda_setleading (demo, 16.0);
 
-      // Do an panda_imageboxrot or two to test the code included by Ceasar Miquel
-      panda_imageboxrot (demo, currPage, 600, 0, 717, 117, 15.0,
-			 "gnu_box.jpg", panda_image_jpeg);
+  for(lineDepth = 0; lineDepth < 8; lineDepth++){
+    panda_setfontmode (demo, panda_textmode_normal);
+    
+    switch(lineDepth){
+    case panda_textmode_normal:
+      panda_textbox (demo, currPage, 20 + (lineDepth * 20), 10,
+		     40 + (lineDepth * 20), 400,
+		     "Normal");
+      break;
 
-      panda_imageboxrot (demo, currPage, 600, 200, 717, 317, 30.0,
-			 "gnu_box.jpg", panda_image_jpeg);
+    case panda_textmode_outline:
+      panda_textbox (demo, currPage, 20 + (lineDepth * 20), 10,
+		     40 + (lineDepth * 20), 400,
+		     "Outline");
+      break;
 
-      panda_imageboxrot (demo, currPage, 600, 400, 717, 517, 42.0,
-			 "gnu_box.jpg", panda_image_jpeg);
+    case panda_textmode_filledoutline:
+      panda_textbox (demo, currPage, 20 + (lineDepth * 20), 10,
+		     40 + (lineDepth * 20), 400, 
+		     "FilledOutline");
+      break;
 
-      panda_imageboxrot (demo, currPage, 700, 0, 817, 117, 90.0,
-			 "gnu_box.jpg", panda_image_jpeg);
+    case panda_textmode_invisible:
+      panda_textbox (demo, currPage, 20 + (lineDepth * 20), 10, 
+		     40 + (lineDepth * 20), 400, 
+		     "Invisible");
+      break;
 
-      panda_imageboxrot (demo, currPage, 700, 200, 817, 317, 132.0,
-			 "gnu_box.jpg", panda_image_jpeg);
+    case panda_textmode_filledclipped:
+      panda_textbox (demo, currPage, 20 + (lineDepth * 20), 10, 
+		     40 + (lineDepth * 20), 400,
+		     "FilledClipped");
+      break;
 
-#if defined DEBUG
-      printf ("Created textbox and inserted first image\n");
-#endif
+    case panda_textmode_strokedclipped:
+      panda_textbox (demo, currPage, 20 + (lineDepth * 20), 10, 
+		     40 + (lineDepth * 20), 400,
+		     "Stroked Clipped");
+      break;
 
-      panda_textbox (demo, currPage, 300, 10, 400, 50,
-		     "A second textbox on the page");
+    case panda_textmode_filledstrokedclipped:
+      panda_textbox (demo, currPage, 20 + (lineDepth * 20), 10,
+		     40 + (lineDepth * 20), 400,
+		     "Filled Stroked Clipped");
+      break;
 
-#if defined DEBUG
-      printf ("Created second textbox\n");
-#endif
-
-      panda_setfont (demo, tempPtr = panda_createfont (demo, "Times-Roman", 1,
-						       "MacRomanEncoding"));
-      panda_textbox (demo, currPage, 600, 10, 700, 300,
-		     "The background image on this page is Copyright 2000 Andrew Cagney");
-      panda_textbox (demo, currPage, 620, 10, 720, 300,
-		     "and is distributed under the terms of the GPL...");
-      free (tempPtr);
-
-      // We also put in some lines and curves so that we can test that
-      panda_setlinestart (currPage, 100, 100);
-      panda_addlinesegment (currPage, 150, 120);
-      panda_addlinesegment (currPage, 200, 176);
-      panda_addlinesegment (currPage, 86, 12);
-      panda_endline (currPage);
+    case panda_textmode_clipped:
+      panda_textbox (demo, currPage, 20 + (lineDepth * 20), 10, 
+		     40 + (lineDepth * 20), 400, 
+		     "Clipped");
+      break;
     }
+
+    panda_setcharacterspacing (demo, (double) lineDepth);
+    panda_setwordspacing (demo, (double) lineDepth * 10);
+    panda_sethorizontalscaling (demo, (double) 1 - (lineDepth * 0.1));
+
+    panda_setfontmode (demo, lineDepth);
+    panda_textbox (demo, currPage, 20 + (lineDepth * 20), 200, 
+		   40 + (lineDepth * 20), 400,
+		   "Demonstration of a text mode");
+  }
+
+  ///////////////////////////////////////////////////////////////////////////
+  // Demonstrate the supported text modes
+  ///////////////////////////////////////////////////////////////////////////
+
+  currPage = panda_newpage(demo, panda_pagesize_a4);
+  
+  panda_setfontmode (demo, panda_textmode_normal);
+  panda_textbox (demo, currPage, 40, 10, 55, 200,
+		 "Please note that these shapes are lines, and there is no");
+  panda_textbox (demo, currPage, 60, 10, 75, 200,
+		 "requirement to have the shapes closed...");
+
+
+  // Straight lines of all types
+  panda_setlinestart (currPage, 100, 100);
+  panda_addlinesegment (currPage, 150, 120);
+  panda_addlinesegment (currPage, 200, 176);
+  panda_addlinesegment (currPage, 86, 12);
+  panda_closeline (currPage);
+  panda_endline (currPage);
+
+  // Now some curves
+  panda_setlinestart (currPage, 200, 200);
+  panda_addcubiccurvesegment (currPage, 300, 200, 225, 300, 275, 400);
+  panda_addquadraticcurvesegmentone (currPage, 150, 150, 200, 225);
+  panda_addquadraticcurvesegmenttwo (currPage, 200, 200, 250, 375);
+  panda_closeline (currPage);
+  panda_endline (currPage);
+
+  // Rectangles!
+  panda_rectangle (currPage, 200, 200, 300, 300);
+  panda_endline (currPage);
+
+  // Straight lines of all types -- stroked
+  panda_setlinestart (currPage, 110, 110);
+  panda_addlinesegment (currPage, 160, 130);
+  panda_addlinesegment (currPage, 210, 186);
+  panda_addlinesegment (currPage, 96, 22);
+  panda_closeline (currPage);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  // Now some curves -- stroked
+  panda_setlinestart (currPage, 210, 210);
+  panda_addcubiccurvesegment (currPage, 310, 210, 225, 300, 275, 400);
+  panda_addquadraticcurvesegmentone (currPage, 160, 160, 200, 225);
+  panda_addquadraticcurvesegmenttwo (currPage, 210, 210, 250, 375);
+  panda_closeline (currPage);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  // Rectangles -- stroked
+  panda_rectangle (currPage, 210, 210, 310, 310);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+  
+
+
 
   panda_close (demo);
 

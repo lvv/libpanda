@@ -62,3 +62,15 @@ Release 0.3 -> Release 0.4
   * BACKPORTED FROM PANDA 0.3.2: Fixed some small problems with the
 	configure script, added the Makefile.am to the distribution and made
 	some small changes requested by the users...
+
+  * Started rearranging the demo document so that it shows the features of
+	Panda in a less confusing manner.
+
+  * If you failed to setup font details before writing a string, Panda would
+	crash. It now works on reasonable defaults.
+
+  * Made dmalloc stop complaining about freeing NULL pointers, I assume this 
+	makes the code more portable.
+
+  * Fixed a lot of memory leaks that were hiding in the code, dmalloc listed
+	them for me.

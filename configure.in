@@ -18,6 +18,9 @@ dnl We just use the default if found action which adds -l<lib> to the LIBS var
 dnl and #defined HAVE_LIB<lib>
 
 
+dnl -ldmalloc:
+AC_CHECK_LIB(dmalloc, malloc)
+
 dnl -lm:
 AC_CHECK_LIB(m, atan)
 

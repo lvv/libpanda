@@ -10,6 +10,8 @@
 ******************************************************************************/
 
 #include <stdio.h>
+#include <panda/functions.h>
+#include <panda/constants.h>
 
 void *
 panda_xmalloc (size_t size)

@@ -78,3 +78,12 @@ K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
 		- 
 
   * AM_CONFIG_HEADER problems
+
+  * String length measuring with Freetype so that textboxes wrap nicely...
+
+  * More freeing of memory than we do now
+
+  * If you set the character spacing or something like that to a very
+	negative number, then we should complain in some way...
+
+  * Fix the implicit type casts

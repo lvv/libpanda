@@ -1,14 +1,14 @@
 /******************************************************************************
-	Error.c
+  Error.c
 
-	Change Control:													DDMMYYYY
-		Michael Still		File created							03062000
+  Change Control:                                                      DDMMYYYY
+    Michael Still    File created                                      03062000
 
-	Purpose:
-		Panda can experience errors for many reasons. This file contains
-		centralised error handling code to make the programming easier and more
-		consistent elsewhere. The code should also handle all the platforms
-		the code is expected to run on correctly.
+  Purpose:
+    Panda can experience errors for many reasons. This file contains
+    centralised error handling code to make the programming easier and more
+    consistent elsewhere. The code should also handle all the platforms
+    the code is expected to run on correctly.
 ******************************************************************************/
 
 #include <stdio.h>
@@ -17,9 +17,11 @@
 #include <panda/functions.h>
 
 /******************************************************************************
-	Handle an error.
+  Handle an error.
 ******************************************************************************/
 
+// You can bang or head or you can drown in a hole
+//                                                    -- Vanessa Amarosi, Shine
 void
 panda_error (char *message)
 {

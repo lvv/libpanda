@@ -3,7 +3,6 @@
 
   Change Control:                                                      DDMMYYYY
     Michael Still    File created                                      22062000
-                     Improvements to text handling                     30062000
 
   Purpose:
     Functions related to displaying text on a PDF page.
@@ -119,28 +118,28 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left,
 			internalLeft, internalTop);
 
   // There are now a whole bunch of options that may or may not need to be set
-  if (output->currentFontMode != 0)
+  if (output->currentFontMode != -1)
     {
       textobj->layoutstream =
 	panda_streamprintf (textobj->layoutstream, "%d Tr\n",
 			    output->currentFontMode);
     }
 
-  if (output->currentCharacterSpacing != 0)
+  if (output->currentCharacterSpacing != 0.0)
     {
       textobj->layoutstream =
 	panda_streamprintf (textobj->layoutstream, "%.2f Tc\n",
 			    output->currentCharacterSpacing);
     }
 
-  if (output->currentWordSpacing != 0)
+  if (output->currentWordSpacing != 0.0)
     {
       textobj->layoutstream =
 	panda_streamprintf (textobj->layoutstream, "%.2f Tw\n",
 			    output->currentWordSpacing);
     }
 
-  if (output->currentHorizontalScaling != 1)
+  if (output->currentHorizontalScaling != 1.0)
     {
       textobj->layoutstream =
 	panda_streamprintf (textobj->layoutstream, "%.0f Tz\n",
