@@ -16,8 +16,9 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
        int right, char *text){
   // Add a box with some text in it into the PDF page
   object      *textobj, *tempObj;
-  char        commandBuffer[1024], *currentToken, *strtokVictim = NULL;
-  int         internalTop, internalLeft;
+  char        commandBuffer[1024], *currentToken, *strtokVictim = NULL,
+                delim[10];
+  int         internalTop, internalLeft, displayedFirstPart = gFalse;
   object      *subdict, *subsubdict, *fontObj;
 
   /***************************************************************************
@@ -135,6 +136,25 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     We allow the programmer to specify line breaks by putting the characters
     '\n' into the string that we is having us put into the PDF. We therefore
     need to find this character sequence and handle it...
+
+                        ---------------------------
+
+    We also now support super and subscript text options, which means we need
+    a portable way for the programmer to express these to us. I have decided
+    to go with a scheme in which the character sequence:
+           \4U<<>>
+
+    means superscript by the amount which exists at <<>>, which is a one digit
+    number expressed in ASCII
+
+    And the sequence:
+	   \5D<<>>
+
+    means subscript by the amount passed.
+
+    Finally, we need to be able to get back into normal mode, which is done
+    with a:
+           \6N
   ***************************************************************************/
 
   // Get the first token
@@ -142,13 +162,45 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     error("Could not make space for temporary copy of textbox text.");
   strcpy(strtokVictim, text);
 
-  currentToken = strtok(strtokVictim, "\n");
+  // Build the delimiter string
+  sprintf(delim, "\n%c%c%c", 4, 5, 6);
+
+  currentToken = strtok(strtokVictim, delim);
 
   while(currentToken != NULL){
-    sprintf(commandBuffer, " (%s) '\n", currentToken);
-    appendstream(textobj, commandBuffer, strlen(commandBuffer));
-  
-    currentToken = strtok(NULL, "\n");
+    // If we haven't displayed that first part that would otherwise be missed
+    // do so now
+    if(displayedFirstPart == gFalse){
+      sprintf(commandBuffer, "(%s) '\n", strtokVictim);
+      appendstream(textobj, commandBuffer, strlen(commandBuffer));
+      displayedFirstPart = gTrue;
+    }
+
+    switch(text[currentToken - strtokVictim - 1]){
+    case '\n':
+      sprintf(commandBuffer, "(%s) '\n", currentToken);
+      appendstream(textobj, commandBuffer, strlen(commandBuffer));
+      break;
+
+    case 4:
+      sprintf(commandBuffer, "%c Ts (%s) Tj\n",
+	currentToken[0], currentToken + 1);
+      appendstream(textobj, commandBuffer, strlen(commandBuffer));
+      break;
+
+    case 5:
+      sprintf(commandBuffer, "-%c Ts (%s) Tj\n",
+	currentToken[0], currentToken + 1);
+      appendstream(textobj, commandBuffer, strlen(commandBuffer));
+      break;
+
+    case 6:
+      sprintf(commandBuffer, "0 Ts (%s) Tj\n", currentToken);
+      appendstream(textobj, commandBuffer, strlen(commandBuffer));
+      break;
+    }
+
+    currentToken = strtok(NULL, delim);
   }
 
   /***************************************************************************

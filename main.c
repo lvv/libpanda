@@ -17,6 +17,7 @@ int main(int argc, char *argv[]){
   pdf    *demo;
   page   *currPage;
   int    lineDepth;
+  char   tempString[1024];
 
   // Initialise the library
   initpanda();
@@ -41,8 +42,11 @@ int main(int argc, char *argv[]){
     sethorizontalscaling(demo, (double) 1 - (lineDepth * 0.1));
     setleading(demo, (double) lineDepth);
 
+    // I am not drawing a multiline string here because I am not sure how to represent
+    // this in the PDF at the moment
+    sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!", 4, 6, 5);
     textbox(demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30, 
-      "Hello World! My name is Panda!\nI am a happy little PDF generator, who is released under the GNU GPL...\nMy name is Panda! I am a happy little PDF generator, who is released under the GNU GPL... My name is Panda! I am a happy little PDF generator, who is released under the GNU GPL...\nMy name is Panda! I am a happy little PDF generator, who is released under the GNU GPL... My name is Panda! I am a happy little PDF generator, who is released under the GNU GPL...");
+      tempString);
 
 #if defined DEBUG
     printf("Created textbox\n");
