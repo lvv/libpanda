@@ -2,6 +2,13 @@
 
 # This script makes the world nice-looking for the world.
 
+# Tag this and commit it to cvs
+cvs commit
+
+echo "Name this version e.g. panda-release-02"
+read $version
+cvs tag $version
+
 make clean
 rm ./configure
 
