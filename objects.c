@@ -24,7 +24,7 @@ object *newobject(pdf *doc, int type){
   object  *created;
 
   // Get some memory
-  if((created = (object *) malloc(sizeof(object))) == NULL)
+  if((created = (object *) malloc(100 + sizeof(object))) == NULL)
     error("Could not create an object (out of memory?)");
 
   // We have no children at the moment
@@ -159,7 +159,7 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
     // Get the value
     value = va_arg(argPtr, char *);
     if((dictNow->textValue =
-      (char *) malloc((strlen(value) + 2) * sizeof(char))) == NULL)
+      (char *) malloc((strlen(value) + 3) * sizeof(char))) == NULL)
       error("Could not make space for the new dictionary text value.");
     dictNow->textValue[0] = '\0';
 

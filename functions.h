@@ -17,6 +17,10 @@
 #include <string.h>
 #include <stdarg.h>
 
+#if defined DMALLOC
+  #include <dmalloc.h>
+#endif
+
 // A type needed for traverseObjects
 typedef void (*traverseFunct)(pdf *, object *);
 

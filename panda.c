@@ -201,7 +201,8 @@ page *pdfpage(pdf *output, char *pageSize){
   // Copy the pageSize string somewhere safe, and then clobber the copy.
   // We can't clober the original because it is a constant anyway and it would
   // be rude to screw with another person's data
-  if((pageSizeCopy = (char *) malloc(sizeof(char) * strlen(pageSize))) == NULL)
+  if((pageSizeCopy = (char *) malloc(sizeof(char) * (strlen(pageSize) + 1))) 
+    == NULL)
     error("Could not copy the pageSize string.");
   strcpy(pageSizeCopy, pageSize);
 
