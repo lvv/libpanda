@@ -31,6 +31,12 @@ extern "C" {
 typedef void (*traverseFunct) (panda_pdf *, panda_object *);
 
 /******************************************************************************
+  Curves.c
+******************************************************************************/
+
+void panda_setlinestart(panda_page *);
+
+/******************************************************************************
   Date.c
 ******************************************************************************/
 
@@ -65,6 +71,13 @@ void panda_setcreator (panda_pdf *, char *);
 void panda_settitle (panda_pdf *, char *);
 void panda_setsubject (panda_pdf *, char *);
 void panda_setkeywords (panda_pdf *, char *);
+
+/******************************************************************************
+  Internal.c
+******************************************************************************/
+
+void panda_entergraphicsmode(panda_page *);
+void panda_exitgraphicsmode(panda_page *);
 
 /******************************************************************************
   Font.c

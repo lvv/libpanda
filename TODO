@@ -61,3 +61,18 @@ K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
 
   * At the moment if we can't change font we stop the whole schmozzle - should
 	we just report an error and keep going in the old font?
+
+  * Move the constants across to the new namespace
+
+  * Re run GNU indent
+
+  * Type cast warnings
+
+  * Lines and stuff...
+	The following operations in graphics mode are needed (p 159):
+		- w (set the line width)
+		- J (set the line cap)
+		- j (set the line join style)
+		- M (set the mitre limit)
+		- d (set the dash pattern)
+		- 

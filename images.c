@@ -51,7 +51,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   printf ("Started inserting an image.\n");
 #endif
 
-  // Now we need an object to contain the tiff
+  // Now we need an object to contain the image
   imageObj = panda_newobject (output, gNormal);
   panda_addchild (target->obj, imageObj);
 
@@ -142,29 +142,12 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 
   // We also need to add some information to the layout stream for the contents
   // object for the page that the image is being displayed on. This information
-  // consists of the following:
-  //  - save the current graphics state (q operator, p 386 of spec)
-  //  - setup the current transformation matrix (ctm, s 3.2 and p 323 of spec)
-  //    such that the image is scaled correctly (cm operator)
-  //  - modify the ctm to shift the image to where it is meant to be on the
-  //    the page
-  //  - use the image xobject we have created (Do operator, p 348 of spec)
-  //  - restore the graphics state to the way it was previously (Q operator,
-  //    p 386 of spec)
-  if(target->contents->textmode == gTrue)
-    {
-      target->contents->layoutstream = 
-	panda_streamprintf(target->contents->layoutstream, "ET\n");
-      target->contents->textmode = gFalse;
-
-#if defined DEBUG
-      printf("Imageboxrot: Ended textmode for object %d\n", target->contents->number);
-#endif
-    }
+  // consists of the following [moved to internal.c]
+  panda_entergraphicsmode(target);
 
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
-		  "\nq\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
+		  "\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
 		  // The first matrix -- this has been modified because of
 		  // patches submitted by Ceasar Miquel (miquel@df.uba.ar)
 		  cos(angle * M_PI / 180.0), // x scale
@@ -186,8 +169,10 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 		  0.0);		// ???
 
   target->contents->layoutstream =
-    panda_streamprintf (target->contents->layoutstream, "/%s Do\nQ\n\n", 
+    panda_streamprintf (target->contents->layoutstream, "/%s Do\n", 
 		  pdfFilename);
+
+  panda_exitgraphicsmode(target);
 
 #if defined DEBUG
   printf ("Finished inserting an image.\n");

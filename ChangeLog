@@ -46,8 +46,9 @@ Release 0.3 -> Release 0.4
 	 there are any typos, could you please let me know... Things still
 	 compile, so at least the typos are consistent.
 	
-  * Implemented template pages for PDF documents. These are used via the
-	panda_createtemplate and panda_pagefromtemplate calls.
+  * Implemented template pages for PDF documents. These are created via the
+	panda_newpage() call with a page size of gPageSizeTemplateA4. They can
+	then be asserted on a page using panda_asserttemplate().
 
   * Fixed the namespace on variable names as well... This included moving some
 	stuff out of the gcc reserved namespace (__*) in objects.h.

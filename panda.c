@@ -294,6 +294,20 @@ panda_newpage (panda_pdf * output, char *pageSize)
   panda_page *newPage;
   char *pageSizeCopy;
 
+  ///////////////////////////////////////////////////////////////////////////
+  // A template page is treated as a special case of a page, because they are
+  // similar in many respects
+  ///////////////////////////////////////////////////////////////////////////
+  //  if(strcmp(pageSize, gPageSizeTemplate) == 0){ 
+  //    pageSizeCopy = (char *) panda_xmalloc(sizeof(char) * 
+  //					  (strlen(pageSize) + 1));
+  //    strcpy(pageSizeCopy, pageSzie);
+  //    strtok(pageSizeCopy, " ");
+  //    newPage = panda_newtemplate(output, strtok(NULL, " "));
+  //    free(pageSizeCopy);
+  //   return newPage;
+  // }
+
   // Make some space for the object
   newPage = (panda_page *) panda_xmalloc(sizeof(panda_page));
 

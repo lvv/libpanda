@@ -120,6 +120,9 @@ main (int argc, char *argv[])
       panda_textbox (demo, currPage, 620, 10, 720, 300,
 	       "and is distributed under the terms of the GPL...");
       free(tempPtr);
+
+      // We also put in some lines and curves so that we can test that
+      panda_setlinestart(currPage);
     }
 
   panda_close (demo);
