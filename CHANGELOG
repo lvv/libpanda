@@ -67,3 +67,6 @@ Release 0.2 -> Release 0.3
 
   * The createfont(3) call, and the new createdefaultfont(3) calls are now
 	documented.
+
+  * My brain had stopped working, all tiffs should now work because I removed
+	the silly bug.

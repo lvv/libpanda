@@ -237,10 +237,11 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
   adddictitem (imageObj->dict, "DecodeParms", gDictionaryValue,
 	       subdict->dict);
 
-  // Fillorder determines whether we convert on the fly or not
+  // Fillorder determines whether we convert on the fly or not, although
+  // multistrip images also need to be converted
   TIFFGetField (image, TIFFTAG_FILLORDER, &fillorder);
 
-  if (fillorder == FILLORDER_LSB2MSB)
+  if ((fillorder == FILLORDER_LSB2MSB) || (TIFFNumberOfStrips(image) > 1))
     {
     /*************************************************************************
       Convert the image
@@ -279,7 +280,7 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
       for (stripCount = 0; stripCount < stripMax; stripCount++)
 	{
 #if defined DEBUG
-	  printf ("Read a strip of the input image with offset %l\n",
+	  printf ("Read a strip of the input image with offset %ld\n",
 		  imageOffset);
 #endif
 
@@ -310,7 +311,7 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
 	TIFFSetField (conv, TIFFTAG_GROUP4OPTIONS, 0);
 
 #if defined DEBUG
-      printf ("The image buffer is ld bytes long\n", imageOffset);
+      printf ("The image buffer is %ld bytes long\n", imageOffset);
 #endif
 
       // Actually do the conversion
@@ -320,7 +321,7 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
       free (stripBuffer);
 
 #if defined DEBUG
-      printf ("The global tiff buffer became %l bytes long\n",
+      printf ("The global tiff buffer became %ld bytes long\n",
 	      globalTiffBufferOffset);
 #endif
 
