@@ -15,8 +15,15 @@
 #include <jpeglib.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <pthread.h>
 
-char  *globalTiffBuffer;
+static tsize_t libtiffDummyReadProc(thandle_t fd, tdata_t buf, tsize_t size);
+static tsize_t libtiffDummyWriteProc(thandle_t fd, tdata_t buf, tsize_t size);
+static toff_t libtiffDummySeekProc(thandle_t fd, toff_t off, int i);
+static int libtiffDummyCloseProc(thandle_t fd);
+
+char                 *globalTiffBuffer;
+pthread_mutex_t      tiffConvMutex = PTHREAD_MUTEX_INITIALIZER;
 
 // A redistribution point for image insertions based on type of image
 void imagebox(pdf *output, page *target, int top, int left,
@@ -124,14 +131,22 @@ void imagebox(pdf *output, page *target, int top, int left,
 
 // This function will insert a TIFF image into a PDF
 void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
-  TIFF          *image;
+  /**************************************************************************
+    Some notes about TIFF support inside PDF files.
+
+     - MSB2LSB is the only byte fillorder that is supported.
+     - The images must be converted to single strip
+     - G3 and G4 are supported
+  **************************************************************************/
+
+  TIFF          *image, *conv;
   object        *subdict;
   int           stripCount;
   tsize_t       stripSize;
   unsigned long imageOffset;
-  char          *tempstream;
-  uint16        tiffResponse16;
-  uint32        tiffResponse32;
+  char          *tempstream, *stripBuffer;
+  uint16        tiffResponse16, compression, fillorder;
+  uint32        height, width;
 
   // Open the file and make sure that it exists and is a TIFF file
   if((image = TIFFOpen(filename, "r")) == NULL)
@@ -171,51 +186,131 @@ void insertTiff(pdf *output, page *target, object *imageObj, char *filename){
   // adddictitem needs
   subdict = newobject(output, gPlaceholder);
 
-  // There are several parameters that we need to set for the compression to be
-  // able to do its thing
-  adddictitem(subdict->dict, "K", gIntValue, -1);
+  // K will be minus one for g4 fax, and zero for g3 fax
+  TIFFGetField(image, TIFFTAG_COMPRESSION, &compression);
+  switch(compression){
+  case COMPRESSION_CCITTFAX3:
+    adddictitem(subdict->dict, "K", gIntValue, 0);
+    break;
+
+  case COMPRESSION_CCITTFAX4:
+    adddictitem(subdict->dict, "K", gIntValue, -1);
+    break;
+
+  case COMPRESSION_LZW:
+    error("LZW is encumbered with patents and therefore not supported.");
+    break;
+
+  default:
+    error("Unsupported TIFF compression algorithm.");
+    break;
+  }
 
   // Width of the image
-  if(TIFFGetField(image, TIFFTAG_IMAGEWIDTH, &tiffResponse32) != 0){
-    adddictitem(subdict->dict, "Columns", gIntValue, tiffResponse32);
-    adddictitem(imageObj->dict, "Width", gIntValue, tiffResponse32);
+  if(TIFFGetField(image, TIFFTAG_IMAGEWIDTH, &width) != 0){
+    adddictitem(subdict->dict, "Columns", gIntValue, width);
+    adddictitem(imageObj->dict, "Width", gIntValue, width);
   }
   else error("Could not get the width of the TIFF image.");
 
   // Height of the image
-  if(TIFFGetField(image, TIFFTAG_IMAGELENGTH, &tiffResponse32) != 0){
-    adddictitem(subdict->dict, "Rows", gIntValue, tiffResponse32);
-    adddictitem(imageObj->dict, "Height", gIntValue, tiffResponse32);
+  if(TIFFGetField(image, TIFFTAG_IMAGELENGTH, &height) != 0){
+    adddictitem(subdict->dict, "Rows", gIntValue, height);
+    adddictitem(imageObj->dict, "Height", gIntValue, height);
   }
   else error("Could not get the height of the TIFF image.");
 
   // And put this into the PDF
   adddictitem(imageObj->dict, "DecodeParms", gDictionaryValue, subdict->dict);
 
-  /****************************************************************************
-     Insert the image
-  ****************************************************************************/
+  // Fillorder determines whether we convert on the fly or not
+  TIFFGetField(image, TIFFTAG_FILLORDER, &fillorder);
 
-  // We also need to add a binary stream to the object and put the image
-  // data into this stream
-  stripSize = TIFFStripSize(image);
-  imageOffset = 0;
+  if(fillorder == FILLORDER_LSB2MSB){
+    /*************************************************************************
+      Convert the image
+    *************************************************************************/
 
-  if((imageObj->binarystream = 
-      malloc(TIFFNumberOfStrips(image) * stripSize)) == NULL)
-    error("Insufficient memory for TIFF image insertion.");
+    // Because of the way this is implemented to integrate with the tiff lib
+    // we need to ensure that we are the only thread that is performing this
+    // operation at the moment. This is not a well coded piece of the library,
+    // but I am at a loss as to how to do it better...
+  
+    pthread_mutex_lock(&tiffConvMutex);
+    globalTiffBuffer = NULL;
+    
+    // Open the dummy document (which actually only exists in memory)
+    conv = TIFFClientOpen("dummy", "w", (thandle_t) -1, libtiffDummyReadProc,
+      libtiffDummyWriteProc, libtiffDummySeekProc, libtiffDummyCloseProc, 
+      NULL, NULL, NULL);		  
 
-  for(stripCount = 0; stripCount < TIFFNumberOfStrips(image); stripCount++){
-    imageOffset += TIFFReadRawStrip(image, stripCount, 
-      imageObj->binarystream + imageOffset, stripSize);
+    // Copy the image information ready for conversion
+    stripSize = TIFFStripSize(image);
+    imageOffset = 0;
+    
+    if((stripBuffer = 
+	malloc(TIFFNumberOfStrips(image) * stripSize)) == NULL)
+      error("Insufficient memory for TIFF image insertion.");
+
+    for(stripCount = 0; stripCount < TIFFNumberOfStrips(image); stripCount++){
+      imageOffset += TIFFReadRawStrip(image, stripCount, 
+	stripBuffer + imageOffset, stripSize);
+    }
+
+    // We also need to copy some of the attributes of the tiff image
+    // Bits per sample has to be 1 because this is going to be a G4/G3 image
+    // (and all other image formats were stripped out above).
+    // I need to check all of these sometime with many images...
+    TIFFSetField(conv, TIFFTAG_IMAGEWIDTH, width);
+    TIFFSetField(conv, TIFFTAG_IMAGELENGTH, height);
+    TIFFSetField(conv, TIFFTAG_BITSPERSAMPLE, 1);
+    TIFFSetField(conv, TIFFTAG_COMPRESSION, compression);
+    TIFFSetField(conv, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
+    TIFFSetField(conv, TIFFTAG_ROWSPERSTRIP, height + 1);
+    TIFFSetField(conv, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISWHITE);
+    TIFFSetField(conv, TIFFTAG_FILLORDER, FILLORDER_MSB2LSB);
+    TIFFSetField(conv, TIFFTAG_SAMPLESPERPIXEL, 1);
+    TIFFSetField(conv, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
+    TIFFSetField(conv, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH);
+    TIFFSetField(conv, TIFFTAG_XRESOLUTION, 300);
+    TIFFSetField(conv, TIFFTAG_YRESOLUTION, 300);
+    
+    // Actually do the conversion
+    TIFFWriteEncodedStrip(conv, 0, stripBuffer, imageOffset);
+
+    // Finish up
+    free(stripBuffer);
+    imageObj->binarystreamLength = sizeof(globalTiffBuffer);
+    pthread_mutex_unlock(&tiffConvMutex);
   }
 
-  // We might have too much memory, truncate to the size we have actually read
-  if((tempstream = realloc(imageObj->binarystream, imageOffset)) != NULL)
-    imageObj->binarystream = tempstream;
+  else{
+    /**************************************************************************
+       Insert the image
+    **************************************************************************/
 
-  // The image offset is the total size of the binary stream as well
-  imageObj->binarystreamLength = imageOffset;
+    // We also need to add a binary stream to the object and put the image
+    // data into this stream
+    stripSize = TIFFStripSize(image);
+    imageOffset = 0;
+    
+    if((imageObj->binarystream = 
+	malloc(TIFFNumberOfStrips(image) * stripSize)) == NULL)
+      error("Insufficient memory for TIFF image insertion.");
+
+    for(stripCount = 0; stripCount < TIFFNumberOfStrips(image); stripCount++){
+      imageOffset += TIFFReadRawStrip(image, stripCount, 
+	imageObj->binarystream + imageOffset, stripSize);
+    }
+    
+    // We might have too much memory, truncate to the size we have actually 
+    // read
+    if((tempstream = realloc(imageObj->binarystream, imageOffset)) != NULL)
+      imageObj->binarystream = tempstream;
+    
+    // The image offset is the total size of the binary stream as well
+    imageObj->binarystreamLength = imageOffset;
+  }
 }
 
 // This function will insert a JPEG image into a PDF
@@ -315,7 +410,7 @@ void insertPNG(pdf *output, page *target, object *imageObj, char *filename){
   PDF specification allows for...
 *****************************************************************************/
 
-static size_t libtiffDummyReadProc(thandle_t fd, tdata_t buf, tsize_t size){
+static tsize_t libtiffDummyReadProc(thandle_t fd, tdata_t buf, tsize_t size){
   // Return the amount of data read, which we will always set as 0 because
   // we only need to be able to write to these in-memory tiffs
   return 0;
@@ -325,13 +420,46 @@ static size_t libtiffDummyReadProc(thandle_t fd, tdata_t buf, tsize_t size){
    future. If you are reading this code and are disgusted, then feel free to
    send me a patch at mikal@stillhq.com */
 
-static size_t libtiffDummyWriteProc(thandle_t fd, tdata_t buf, tsize_t size){
+static tsize_t libtiffDummyWriteProc(thandle_t fd, tdata_t buf, tsize_t size){
+  long        prevSize;
+  
   // libtiff will try to write an 8 byte header into the tiff file. We need
   // to ignore this because PDF does not use it...
-  // if((size == 8) && (buf[0] == 'I') && (buf[1] == 'I') && (buf[2] == 42)){
+  if((size == 8) && (((char *) buf)[0] == 'I') && (((char *) buf)[1] == 'I') 
+    && (((char *) buf)[2] == 42)){
     // Skip the header
-  //}
-  //else{
-  //}
+  }
+  else{
+    // Have we done anything yet?
+    if(globalTiffBuffer == NULL){
+      if((globalTiffBuffer = (char *) malloc(size * sizeof(char))) == NULL)
+	error("Could not start tiff conversion memory buffer.");
+     
+      prevSize = 0;
+    }
+
+    // Otherwise, we need to grow the memory buffer
+    else{
+      prevSize = sizeof(globalTiffBuffer);
+
+      if((globalTiffBuffer = (char *) realloc(globalTiffBuffer,
+        (size * sizeof(char)) + sizeof(globalTiffBuffer))) == NULL)
+	error("Could not grow the tiff conversion memory buffer.");
+    }
+
+    // Now move the image data into the buffer
+    memcpy(globalTiffBuffer + prevSize, buf, size);
+  }
+
+  return(size);
 }
     
+static toff_t libtiffDummySeekProc(thandle_t fd, toff_t off, int i){
+  // This appears to return the location that it went to
+  return off;
+}
+
+static int libtiffDummyCloseProc(thandle_t fd){
+  // Return a zero meaning all is well
+  return 0;
+}

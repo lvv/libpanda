@@ -29,6 +29,7 @@ AC_HEADER_STDC
 AC_CHECK_HEADERS(stdio.h)
 AC_CHECK_HEADERS(unistd.h)
 AC_CHECK_HEADERS(sys/stat.h)
+AC_CHECK_HEADERS(pthread.h)
 
 dnl Headers for libraries
 AC_CHECK_HEADERS(jpeglib.h)
