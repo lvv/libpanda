@@ -1,4 +1,23 @@
-Panda is almost entirely written by Michael Still (mikal@stillhq.com). The assistance of the following people is gratefully acknowledged. If you have suggestions, comments or patches, please send them to panda-development@lists.sourceforge.net
+Panda is almost entirely written by Michael Still (mikal@stillhq.com).
+The assistance of the following people is gratefully acknowledged. If 
+you have suggestions, comments or patches, please send them to 
+panda-development@lists.sourceforge.net
+
+-------------------------------------------------------------------------------
+
+CORPORATE SPONSORS
+
+The following organisations have funded development on the Panda codebase. This
+development has been released back to the community, and is included in this
+distribution, which is cool to see...
+
+IPAustralia     http://www.ipaustralia.gov.au
+
+                The Australian federal body responsible for the issue and
+                administration of Patents, Trade Marks and Designs. They funded
+                the MS Windows port of Panda, including the development of the
+                C DLL, the Visual Basic examples, the ActiveX DLL and the
+                InstallShield installer.
 
 -------------------------------------------------------------------------------
 
@@ -10,24 +29,27 @@ Ceasar Miquel   miquel@df.uba.ar          submitted patches for the jpeg
                                           support and added the imageboxrot
                                           call
 
-David Goehrig   dave@valinux.com          libtool, and autotools assistance
-                                          God of all things Freshmeat
+David Goehrig   dave@valinux.com          libtool, and autotools assistance,
+                                          God of all things Freshmeat and
                                           assistance with imaging code
 
 Doug Jackson                              had ideas bounced off him a lot
-                                          understands a lot about black and
-                                          white tiff imaging
+                                          because he understands a lot about 
+                                          black and white tiff imaging
 
 Juan Herrero    juan_herrero@yahoo.com    bug reports
-                                          lots of work on the Windows 
-                                          compilation issues in 0.4 RC3
+                                          lots of work and suggestions for 
+                                          the Windows compilation issues in 
+                                          0.4 RC3
 
 Michaelw        [irc.freshmeat.net]       suggested how to fix the examples
                                           being made before the library
 
-Mirar		mirar@mirar.org	          was good enough to point out some
+Mirar            mirar@mirar.org          was good enough to point out some
                                           usability issues with the 0.3.1
                                           release
 
-Phillip Rainey                            helped with the web page
+Phillip Rainey                            helped with the web page and had code
+                                          ideas bounced off him at various
+                                          stages
 
