@@ -112,5 +112,6 @@ L * New font ids are handed out too often -- what about font reuse?
   * Windows mutexs - Juan Herrero <juan_herrero@yahoo.com>
 
   * If defined WINDOWS is not needed if the PDF is opened in binary mode - 
-	Juan Herrero <juan_herrero@yahoo.com>
+	Juan Herrero <juan_herrero@yahoo.com> [binary mode now used, remove
+	unneeded #if defined WINDOWS's]
 

@@ -155,3 +155,6 @@ Release 0.3 -> Release 0.4
 
   * michaelw on irc.freshmeat.net suggested a fix to the problem where the
 	examples were made before the library. This has now been applied...
+
+  * Open files with binary mode (fopen), so that they work on Windows despite
+	 the questionable line handling on that operating system.
