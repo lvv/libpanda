@@ -157,6 +157,18 @@ extern "C"
     panda_icon_paragraph
   };
 
+// Flags on annotation objects (these are bit fields to be OR'ed)
+  enum
+  {
+    panda_annotationflag_invisible = 1,
+    panda_annotationflag_hidden = 2,
+    panda_annotationflag_print = 4,
+    panda_annotationflag_nozoom = 8,
+    panda_annotationflag_norotate = 16,
+    panda_annotationflag_noview = 32,
+    panda_annotationflag_readonly = 64
+  };
+
 // Properties that might be held by objects -- panda_const_properties
   enum
   {

@@ -376,7 +376,7 @@ main (int argc, char *argv[])
   ///////////////////////////////////////////////////////////////////////////
 
   panda_textannotation(demo, currPage, panda_true, "Hello", 10, 10, 50, 50,
-		       panda_icon_comment);
+		       panda_icon_comment, 0);
 
   ///////////////////////////////////////////////////////////////////////////
   // We can also setup template pages to make life a little easier (and the

@@ -40,7 +40,9 @@ extern "C"
 ******************************************************************************/
 
   void panda_textannotation(panda_pdf *, panda_page *, int, char *, 
-			    int, int, int, int, int);
+			    int, int, int, int, int, int);
+  panda_object *panda_insertannotation(panda_pdf *, panda_page *, 
+				       int, int, int, int, int, int);
 
 /******************************************************************************
   Curves.c
