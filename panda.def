@@ -7,7 +7,7 @@ DESCRIPTION "Panda PDF generation API (Windows version)"
 
 EXPORTS
 ; Version 0.5
-; HIGHEST 124
+; HIGHEST 128
 
 ; Annotate.c
   panda_textannotation							@112
@@ -139,3 +139,10 @@ EXPORTS
 ; XREF.c
 
   panda_writexref								@72
+
+; Fontmetrics.c
+
+  panda_fontmetric								@125
+  panda_charwidth								@126
+  panda_stringwidth								@127
+  panda_findlinebreak								@128
