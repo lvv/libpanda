@@ -136,7 +136,7 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
 
     // Make space for the new name
     if((textobj->currentSetFont = malloc(
-      sizeof(char) * strlen(output->currentFont + 1))) == NULL)
+      sizeof(char) * strlen(output->currentFont) + 1)) == NULL)
         error("Could not copy the font to the new page.");
 
     // Store the name so we know what is happening

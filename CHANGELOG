@@ -54,3 +54,7 @@ Release 0.1 -> Release 0.2
 
   * Added the info object and added support for the tags within that object
 	(for instance Author)
+
+  * Started using dmalloc, and have therefore cleaned up a whole bunch of bad
+	memory management. I feel better now... Dmalloc is great (have a look
+	at http://www.dmalloc.com to get a copy).

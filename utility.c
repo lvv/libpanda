@@ -140,17 +140,24 @@ char *streamprintf(char *stream, char *format, ...){
   vsprintf(buffer, format, argPtr);
   va_end(argPtr);
 
-  // Determine some lengths for the various strings
-  if(stream != NULL) currentlen = strlen(stream) + 1;
-  len = strlen(buffer) + 1;
-
   // Make space for the new information
-  if((stream = (char *) realloc(stream, 
-    sizeof(char) * (len + currentlen))) == NULL)
-    error("Could not append to an object's stream (of some form).");
+  if(stream != NULL){
+    // Determine some lengths for the various strings    
+    currentlen = strlen(stream) + 1;
+    len = strlen(buffer) + 1;
 
-  // Do the actual appending
-  strcat(stream, buffer);
+    if((stream = (char *) realloc(stream, 
+      sizeof(char) * (len + currentlen))) == NULL)
+      error("Could not append to an object's stream (of some form).");
+
+    // Do the actual appending
+    strcat(stream, buffer);
+  }
+  else{
+    if((stream = (char *) malloc(sizeof(char) * (strlen(buffer) + 1))) == NULL)
+      error("Could not create the first entry for the text stream.");
+    strcpy(stream, buffer);
+  }
 
   // Return the stream
   return stream;

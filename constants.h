@@ -39,6 +39,10 @@
 #define  gTrue               0
 #define  gFalse              1
 
+// Up and down movement for the traversal functions
+#define  gUp                 7
+#define  gDown               8
+
 // Standard page sizes -- these are expressed in inches, with 72 dots per inch
 // with no fractional values shown. As many values as needed can be added here
 #define  gPageSizeA4        "[0 0 594 841]"

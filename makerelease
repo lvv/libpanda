@@ -4,6 +4,7 @@
 
 make clean
 rm ./configure
+rm ./logfile
 
 # Get rid of core files
 for item in `find . | grep core`

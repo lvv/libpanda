@@ -24,7 +24,7 @@ object *newobject(pdf *doc, int type){
   object  *created;
 
   // Get some memory
-  if((created = (object *) malloc(100 + sizeof(object))) == NULL)
+  if((created = (object *) malloc(sizeof(object))) == NULL)
     error("Could not create an object (out of memory?)");
 
   // We have no children at the moment
@@ -175,11 +175,6 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
     break;
 
   case gIntValue:
-    if(dictNow->textValue != NULL){
-      free(dictNow->textValue);
-      dictNow->textValue = NULL;
-    }
-      
     dictNow->intValue = va_arg(argPtr, int);
     break;
 
@@ -302,6 +297,20 @@ void *getdictvalue(dictionary *dictValue){
   }
 
   return NULL;
+}
+
+void freeObject(pdf *output, object *freeVictim){
+  // Free the object and all it's bits -- free of a NULL does nothing! But not
+  // in dmalloc!!!
+  //  if(freeVictim->textstream != NULL) free(freeVictim->textstream);
+  //  if(freeVictim->binarystream != NULL) free(freeVictim->binarystream);
+  //  if(freeVictim->xobjectstream != NULL) free(freeVictim->xobjectstream);
+  //  if(freeVictim->currentSetFont != NULL) free(freeVictim->currentSetFont);
+
+  // Still need to free the dictionary...
+
+
+  //  free(freeVictim);
 }
 
 void writeObject(pdf *output, object *dumpTarget){
@@ -530,7 +539,8 @@ void addchild(object *parentObj, object *childObj){
   parentObj->cachedLastChild = currentChild;
 }
 
-void traverseObjects(pdf *output, object *dumpTarget, traverseFunct function){
+void traverseObjects(pdf *output, object *dumpTarget, int direction,
+  traverseFunct function){
   // Write out an object and all of it's children. This may be done with
   // recursive calls and writeObject()
   child  *currentChild;
@@ -542,11 +552,13 @@ void traverseObjects(pdf *output, object *dumpTarget, traverseFunct function){
   }
 
   // Otherwise, for me and then for all children
-  function(output, dumpTarget);
+  if(direction == gDown) function(output, dumpTarget);
 
   currentChild = dumpTarget->children;
   while(currentChild->next != NULL){
-    traverseObjects(output, currentChild->me, function);
+    traverseObjects(output, currentChild->me, direction, function);
     currentChild = currentChild->next;
   }
+
+  if(direction == gUp) function(output, dumpTarget);
 }
