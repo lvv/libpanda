@@ -47,7 +47,7 @@ _declspec(dllexport) void __stdcall winsetfontsize(pdf *document, int size){
 }
 
 _declspec(dllexport) void __stdcall winsetfontmode(pdf *document, int size){
-  setfontmode(document, mode);
+  setfontmode(document, size);
 }
 
 _declspec(dllexport) void __stdcall winsetcharacterspacing(pdf *document, double amount){

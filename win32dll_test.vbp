@@ -1,6 +1,8 @@
 Type=Exe
 Form=win32dll_test.frm
 Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINNT\System32\STDOLE2.TLB#OLE Automation
+Module=Module1; win32dll_vbmapping.bas
+IconForm="Form1"
 Startup="Form1"
 Command32=""
 Name="Project1"
