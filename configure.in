@@ -3,7 +3,7 @@ AC_INIT(panda.c)
 AC_CONFIG_AUX_DIR(config)
 AM_CONFIG_HEADER(config.h)
 AC_REVISION
-AM_INIT_AUTOMAKE(panda, 0.5.2)
+AM_INIT_AUTOMAKE(panda, 0.5.4)
 AM_MAINTAINER_MODE
 
 dnl Libtool
@@ -91,6 +91,5 @@ AC_STRUCT_TM
 dnl Checks for library functions.
 AC_FUNC_VPRINTF
 AC_CHECK_LIB(libc,snprintf)
-
 
 AC_OUTPUT(examples/Makefile panda/Makefile Makefile panda.spec panda.pc)
