@@ -33,6 +33,17 @@ void  error(char *);
 void  imagebox(pdf *, page *, int, int, int, int, char *, int);
 
 /******************************************************************************
+  Info.c
+******************************************************************************/
+
+void  checkInfo(pdf *);
+void  setauthor(pdf *, char *);
+void  setcreator(pdf *, char *);
+void  settitle(pdf *, char *);
+void  setsubject(pdf *, char *);
+void  setkeywords(pdf *, char *);
+
+/******************************************************************************
   Font.c
 ******************************************************************************/
 

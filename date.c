@@ -23,9 +23,9 @@ char *makedate(int year, int month, int day, int hour, int minutes,
   // I can decide.
   
   // Make some space for the string we are going to return. We know this is
-  // always going to be 21 characters long (so we say 23 characters to be
+  // always going to be 21 characters long (so we say 30 characters to be
   // safe)
-  if((dateString = malloc(sizeof(char) * 23)) == NULL)
+  if((dateString = malloc(sizeof(char) * 30)) == NULL)
     error("Could not make space for the date string.");
 
   // Do some insurance things to make sure we do y2k dates ok
@@ -35,7 +35,7 @@ char *makedate(int year, int month, int day, int hour, int minutes,
   }
 
   // Make the string
-  snprintf(dateString, 22, "%4d%02d%02d%02d%02d%02d%c%02d'%02d'",
+  snprintf(dateString, 29, "D:%4d%02d%02d%02d%02d%02d%c%02d'%02d'",
 	   year, month, day, hour, minutes, seconds,
 	   zulu, gmthours, gmtminutes);
 

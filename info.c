@@ -26,7 +26,7 @@ void setauthor(pdf *document, char *author){
   checkInfo(document);
 
   // Add the author bit to it
-  adddictitem(document->info, "Author", gTextValue, author);
+  adddictitem(document->info, "Author", gBracketedTextValue, author);
 }
 
 // Set the creator string for this document
@@ -35,16 +35,16 @@ void setcreator(pdf *document, char *creator){
   checkInfo(document);
 
   // Add the creator bit to it
-  adddictitem(document->info, "Creator", gTextValue, creator);
+  adddictitem(document->info, "Creator", gBracketedTextValue, creator);
 }
 
 // Set the title string for this document
-void settitle(pdf *document, char *titler){
+void settitle(pdf *document, char *title){
   // Check the info object already exists
   checkInfo(document);
 
   // Add the title bit to it
-  adddictitem(document->info, "Title", gTextValue, title);
+  adddictitem(document->info, "Title", gBracketedTextValue, title);
 }
 
 // Set the subject string for this document
@@ -53,7 +53,7 @@ void setsubject(pdf *document, char *subject){
   checkInfo(document);
 
   // Add the subject bit to it
-  adddictitem(document->info, "Subject", gTextValue, subject);
+  adddictitem(document->info, "Subject", gBracketedTextValue, subject);
 }
 
 // Set the keywords string for this document
@@ -62,5 +62,5 @@ void setkeywords(pdf *document, char *keywords){
   checkInfo(document);
 
   // Add the keywords bit to it
-  adddictitem(document->info, "Keywords", gTextValue, keywords);
+  adddictitem(document->info, "Keywords", gBracketedTextValue, keywords);
 }

@@ -145,16 +145,25 @@ void adddictitem(object *input, char *name, int valueType, ...){
   switch(valueType){
   case gTextValue:
   case gLiteralTextValue:
+  case gBracketedTextValue:
     // Get the value
     value = va_arg(argPtr, char *);
     if((dictNow->textValue =
-      (char *) malloc(strlen(value) * sizeof(char))) == NULL)
+      (char *) malloc((strlen(value) + 2) * sizeof(char))) == NULL)
       error("Could not make space for the new dictionary text value.");
     dictNow->textValue[0] = '\0';
+
+    // Some stuff for different types
     if(valueType != gLiteralTextValue) strcat(dictNow->textValue, "/");
+    if(valueType != gBracketedTextValue) strcat(dictNow->textValue, "(");
+
+    // The string
     strcat(dictNow->textValue, value);
+
+    // Some more stuff for different types
+    if(valueType != gBracketedTextValue) strcat(dictNow->textValue, ")");
     break;
-  
+
   case gIntValue:
     dictNow->textValue = NULL;
     dictNow->intValue = va_arg(argPtr, int);

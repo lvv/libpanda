@@ -27,6 +27,7 @@
 
 // We sometimes need to specify what type of value we are passing to a 
 // function. These are the supported types.
+#define  gBracketedTextValue 6
 #define  gDictionaryValue    4
 #define  gIntValue           0
 #define  gTextValue          1
