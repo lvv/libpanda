@@ -666,6 +666,10 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
   panda_adddictitem (imageObj->dict, "Height", panda_integervalue,
 		     cinfo.image_height);
 
+  // This cleans things up for us in the JPEG library
+  jpeg_destroy_decompress (&cinfo);
+  fclose (image);
+
   /****************************************************************************
     Read the image into it's memory buffer
   ****************************************************************************/
@@ -693,10 +697,7 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
     }
 
   imageObj->binarystream[imageObj->binarystreamLength++] = 0;
-  fclose (image);
-
-  // This cleans things up for us in the JPEG library
-  jpeg_destroy_decompress (&cinfo);
+  fclose(image);
 
 #if defined DEBUG
   printf("Finished inserting the JPEG\n");
