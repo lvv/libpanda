@@ -55,11 +55,11 @@ main (int argc, char *argv[])
       textbox (demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30,
 	       tempString);
 
-      setfont (demo, "Helvetica-Bold");
+      setfont (demo, createfont(demo, "Helvetica-Bold", 1, "MacRomanEncoding"));
       textbox (demo, currPage, lineDepth * 20 + 30, 30 + lineDepth, 100, 30,
 	       "A line in Helvetica-Bold");
 
-      setfont (demo, "Symbol");
+      setfont (demo, createfont(demo, "Symbol", 1, "MacRomanEncoding"));
       textbox (demo, currPage, lineDepth * 20 + 50, 10 + lineDepth, 100, 30,
 	       "Symbol");
 
