@@ -60,7 +60,7 @@ void    writeObject(pdf *, object *);
 void    writeDictionary(pdf *, dictionary *);
 void    addchild(object *, object *);
 void    traverseObjects(pdf *, object *, traverseFunct);
-void    appendstream(object *, char *, unsigned long);
+void    appendtextstream(object *, char *, unsigned long);
 
 /******************************************************************************
   Text.c
@@ -79,7 +79,7 @@ void  writeTrailer(pdf *);
 ******************************************************************************/
 
 void  pdfprintf(pdf *, char *, ...);
-void  streamprintf(object *, char *, ...);
+void  textstreamprintf(object *, char *, ...);
 
 /******************************************************************************
   XREF.c

@@ -91,35 +91,35 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   // This is a little dodgy at the moment because I do not understand the
   // PS matrix environment well enough to be writing this sort of code. I am
   // going to have to have a look into this a little more...
-  streamprintf(textobj, "BT\n1 0 0 1 %d %d Tm\n",
+  textstreamprintf(textobj, "BT\n1 0 0 1 %d %d Tm\n",
     internalLeft, internalTop);
 
   // There are now a whole bunch of options that may or may not need to be set
   if(output->currentFontMode != 0){
-    streamprintf(textobj, "%d Tr\n", output->currentFontMode);
+    textstreamprintf(textobj, "%d Tr\n", output->currentFontMode);
   }
 
   if(output->currentCharacterSpacing != 0){
-    streamprintf(textobj, "%.2f Tc\n", 
+    textstreamprintf(textobj, "%.2f Tc\n", 
       output->currentCharacterSpacing);
   }
 
   if(output->currentWordSpacing != 0){
-    streamprintf(textobj, "%.2f Tw\n", 
+    textstreamprintf(textobj, "%.2f Tw\n", 
       output->currentWordSpacing);
   }
 
   if(output->currentHorizontalScaling != 1){
-    streamprintf(textobj, "%.0f Tz\n",
+    textstreamprintf(textobj, "%.0f Tz\n",
       output->currentHorizontalScaling * 100);
   }
 
   if(output->currentLeading != 0){
-    streamprintf(textobj, "%.2f TL\n", output->currentLeading);
+    textstreamprintf(textobj, "%.2f TL\n", output->currentLeading);
   }
 
   // Set the font that we want to use
-  streamprintf(textobj, "/%s %d Tf\n", 
+  textstreamprintf(textobj, "/%s %d Tf\n", 
     output->currentFont, output->currentFontSize);
 
   /***************************************************************************
@@ -162,27 +162,27 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     // If we haven't displayed that first part that would otherwise be missed
     // do so now
     if(displayedFirstPart == gFalse){
-      streamprintf(textobj, "(%s) '\n", strtokVictim);
+      textstreamprintf(textobj, "(%s) '\n", strtokVictim);
       displayedFirstPart = gTrue;
     }
 
     switch(text[currentToken - strtokVictim - 1]){
     case '\n':
-      streamprintf(textobj, "(%s) '\n", currentToken);
+      textstreamprintf(textobj, "(%s) '\n", currentToken);
       break;
 
     case 4:
-      streamprintf(textobj, "%c Ts (%s) Tj\n",
+      textstreamprintf(textobj, "%c Ts (%s) Tj\n",
 	currentToken[0], currentToken + 1);
       break;
 
     case 5:
-      streamprintf(textobj, "-%c Ts (%s) Tj\n",
+      textstreamprintf(textobj, "-%c Ts (%s) Tj\n",
 	currentToken[0], currentToken + 1);
       break;
 
     case 6:
-      streamprintf(textobj, "0 Ts (%s) Tj\n", currentToken);
+      textstreamprintf(textobj, "0 Ts (%s) Tj\n", currentToken);
       break;
     }
 
@@ -192,5 +192,5 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   /***************************************************************************
     Now finish the text off
   ***************************************************************************/
-  streamprintf(textobj, "ET");
+  textstreamprintf(textobj, "ET");
 }

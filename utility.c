@@ -8,7 +8,7 @@
                        you don't ask it to, and even if you
                        have added your own. I need to take
                        this into account in the byte offsets.
-		     Added streamprintf(...) call.                     17072000
+		     Added textstreamprintf(...) call.                     17072000
 
   Purpose:
     Utility functions for the panda library.
@@ -71,7 +71,7 @@ void pdfprintf(pdf *file, char *format, ...){
   // Count how many \n's there are and take into account the \r windows will
   // add (change for unix)
 
-  // POSSIBLE BUG: Binary streams may be corrupted by Windows here
+  // POSSIBLE BUG: Binary textstreams may be corrupted by Windows here
   for(icounter = 0; counter < strlen(buffer); counter++){
     if(buffer[counter] == '\n') newlineCount++;
   }
@@ -88,15 +88,15 @@ void pdfprintf(pdf *file, char *format, ...){
   va_end(argPtr);
 }
 
-void streamprintf(object *textobj, char *format, ...){
+void textstreamprintf(object *textobj, char *format, ...){
   va_list   argPtr;
   char      buffer[2048];
 
   va_start(argPtr, format);
   vsprintf(buffer, format, argPtr);
 
-  // This new object has a stream with the text in it
-  appendstream(textobj, buffer, strlen(buffer));
+  // This new object has a textstream with the text in it
+  appendtextstream(textobj, buffer, strlen(buffer));
 
   va_end(argPtr);
 }

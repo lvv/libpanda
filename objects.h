@@ -38,8 +38,8 @@ typedef struct __object{    // BOOK: Chapter 1
   int            generation;
   unsigned long  byteOffset;
   dictionary     *dict;
-  char           *stream;
-  unsigned long  streamLength;
+  char           *textstream;
+  unsigned long  textstreamLength;
 
   void           *children;
 } object;

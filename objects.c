@@ -53,9 +53,9 @@ object *newobject(pdf *doc, int type){
   printf("Created object %d\n", created->number);
 #endif
 
-  // We do not possess a stream at the moment
-  created->stream = NULL;
-  created->streamLength = 0;
+  // We do not possess a textstream at the moment
+  created->textstream = NULL;
+  created->textstreamLength = 0;
 
   // New objects have a generation number of 0 by definition
   created->generation = 0;
@@ -213,10 +213,10 @@ void writeObject(pdf *output, object *dumpTarget){
     // needed for the XREF later
     dumpTarget->byteOffset = output->byteOffset;
 
-    // Do we have a stream? If we do, work out the length of the stream and
+    // Do we have a textstream? If we do, work out the length of the stream and
     // save that as a dictionary element
-    if((dumpTarget->streamLength > 0) && (dumpTarget->stream != NULL)){
-      adddictitem(dumpTarget, "Length", gIntValue, dumpTarget->streamLength);
+    if((dumpTarget->textstreamLength > 0) && (dumpTarget->stream != NULL)){
+      adddictitem(dumpTarget, "Length", gIntValue, dumpTarget->textstreamLength);
     }
     
     // We are going to dump the named object (and only the named object) to disk
@@ -225,16 +225,16 @@ void writeObject(pdf *output, object *dumpTarget){
 
     writeDictionary(output, dumpTarget->dict);
 
-    // Do we have a stream?
-    if((dumpTarget->streamLength > 0) && (dumpTarget->stream != NULL)){
-      pdfprintf(output, "stream\n");
+    // Do we have a textstream?
+    if((dumpTarget->textstreamLength > 0) && (dumpTarget->stream != NULL)){
+      pdfprintf(output, "textstream\n");
 
-      // This is done because a valid stream count contain a \0, which
+      // This is done because a valid textstream count contain a \0, which
       // would confuse pdfprintf with a %s
-      for(count = 0; count < dumpTarget->streamLength; count ++)
-        pdfprintf(output, "%c", dumpTarget->stream[count]);
+      for(count = 0; count < dumpTarget->textstreamLength; count ++)
+        pdfprintf(output, "%c", dumpTarget->textstream[count]);
 
-      pdfprintf(output, "\nendstream\n");
+      pdfprintf(output, "\nendtextstream\n");
     }
     
     pdfprintf(output, "endobj\n");
@@ -336,21 +336,21 @@ void traverseObjects(pdf *output, object *dumpTarget, traverseFunct function){
   }
 }
 
-void appendstream(object *target, char *data, unsigned long len){
-  // We are going to append to the stream that the object already has
+void appendtextstream(object *target, char *data, unsigned long len){
+  // We are going to append to the textstream that the object already has
   unsigned long  initial, count;
   
-  initial = count = target->streamLength;
+  initial = count = target->textstreamLength;
 
-  // Increase the length of the stream
-  target->streamLength += len;
+  // Increase the length of the textstream
+  target->textstreamLength += len;
 
   // Make space for the new information
-  if((target->stream = realloc(target->stream,
-    sizeof(char) * target->streamLength)) == NULL)
-    error("Could not append to an object's stream.");
+  if((target->textstream = realloc(target->stream,
+    sizeof(char) * target->textstreamLength)) == NULL)
+    error("Could not append to an object's textstream.");
 
   // Append
-  for(; count < target->streamLength; count++)
-    target->stream[count] = data[count - initial];
+  for(; count < target->textstreamLength; count++)
+    target->textstream[count] = data[count - initial];
 }
