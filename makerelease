@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# This script makes the world nice-looking for the world.
+
+make clean
+rm ./configure
+
+# Get rid of core files
+for item in `find . | grep core`
+do
+  rm -i $item
+done
+
+# Get rid of makefiles
+for item in `find . -name Makefile -print`
+do
+  rm -i $item
+done
