@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -x
+
 # This script makes the world nice-looking for the world.
 cvs commit
 
