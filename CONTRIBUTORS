@@ -1,5 +1,11 @@
-Ben Elliston - provided advice whenever I needed it
+Ben Elliston                              provided advice whenever I needed it,
+                                          also heaps of support with autoconf
+                                          and automake
 
-Doug Jackson - had ideas bounced off him a lot
+Doug Jackson                              had ideas bounced off him a lot
 
-Phillip Rainey - helped with the web page
+Ceasar Miquel   miquel@df.uba.ar          submitted patches for the jpeg
+                                          support and added the imageboxrot
+                                          call
+
+Phillip Rainey                            helped with the web page
