@@ -99,20 +99,20 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
 	  // We need a catalog object with some elements within it's dictionary
 	  openedpdf->catalog = panda_newobject (openedpdf, gNormal);
-	  panda_adddictitem (openedpdf->catalog->dict, "Type", gTextValue,
+	  panda_adddictitem (openedpdf->catalog->dict, "Type", panda_textvalue,
 		       "Catalog");
 
 	  // We need a reference to our pages object
 	  panda_addchild (openedpdf->catalog,
 		    openedpdf->pages = panda_newobject (openedpdf, gNormal));
-	  panda_adddictitem (openedpdf->catalog->dict, "Pages", gObjValue,
+	  panda_adddictitem (openedpdf->catalog->dict, "Pages", panda_objectvalue,
 		       openedpdf->pages);
 
 	  // We need to remember how many pages there are for later
 	  openedpdf->pageCount = 0;
 
 	  // We now need to setup some information in the pages object
-	  panda_adddictitem (openedpdf->pages->dict, "Type", gTextValue, "Pages");
+	  panda_adddictitem (openedpdf->pages->dict, "Type", panda_textvalue, "Pages");
 	  openedpdf->pages->isPages = gTrue;
 
 	  // There is no font currently selected
@@ -139,10 +139,10 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	      ("Failed to make an info object for the PDF. Not sure why...");
 
 	  // Add some stuff
-	  panda_adddictitem (openedpdf->info->dict, "Producer", gBracketedTextValue,
+	  panda_adddictitem (openedpdf->info->dict, "Producer", panda_brackettedtextvalue,
 		       "Panda 0.4");
 	  panda_adddictitem (openedpdf->info->dict, "CreationDate",
-		       gBracketedTextValue, tempPtr = panda_nowdate ());
+		       panda_brackettedtextvalue, tempPtr = panda_nowdate ());
 	  free (tempPtr);
 	}
       else
@@ -162,7 +162,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	{
 	  openedpdf->mode = gWriteLinear;
 	  openedpdf->linear = panda_newobject (openedpdf, gNormal);
-	  panda_adddictitem (openedpdf->linear->dict, "Linearised", gIntValue, 1);
+	  panda_adddictitem (openedpdf->linear->dict, "Linearised", panda_integervalue, 1);
 	}
       else
 	{
@@ -194,7 +194,7 @@ panda_close (panda_pdf * openedpdf)
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
   if (openedpdf->pages != NULL)
-    panda_adddictitem (openedpdf->pages->dict, "Count", gIntValue,
+    panda_adddictitem (openedpdf->pages->dict, "Count", panda_integervalue,
 		 openedpdf->pageCount);
 
   // Before we do anything, we need to make sure that we have ended the
@@ -318,15 +318,15 @@ panda_newpage (panda_pdf * output, char *pageSize)
   panda_addchild (output->pages, newPage->obj);
 
   // Setup some basic things within the page object's dictionary
-  panda_adddictitem (newPage->obj->dict, "Type", gTextValue, "Page");
-  panda_adddictitem (newPage->obj->dict, "MediaBox", gLiteralTextValue, pageSize);
-  panda_adddictitem (newPage->obj->dict, "Parent", gObjValue, output->pages);
+  panda_adddictitem (newPage->obj->dict, "Type", panda_textvalue, "Page");
+  panda_adddictitem (newPage->obj->dict, "MediaBox", panda_literaltextvalue, pageSize);
+  panda_adddictitem (newPage->obj->dict, "Parent", panda_objectvalue, output->pages);
 
   // We also need to do the same sort of thing for the contents object
   // that each page owns
   newPage->contents = panda_newobject (output, gNormal);
   panda_addchild (newPage->obj, newPage->contents);
-  panda_adddictitem (newPage->obj->dict, "Contents", gObjValue, newPage->contents);
+  panda_adddictitem (newPage->obj->dict, "Contents", panda_objectvalue, newPage->contents);
 
   // Copy the pageSize string somewhere safe, and then clobber the copy.
   // We can't clober the original because it is a constant anyway and it would

@@ -19,7 +19,7 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int
   // Add a box with some text in it into the PDF page
   panda_object *textobj;
   char *currentToken, *strtokVictim = NULL, delim[10];
-  int internalTop, internalLeft, displayedFirstPart = gFalse;
+  int internalTop, internalLeft, displayedFirstPart = panda_false;
   panda_object *subdict, *subsubdict, *fontObj;
 
   /***************************************************************************
@@ -96,11 +96,11 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int
   ***************************************************************************/
 
   // Build the command buffer
-  if(textobj->textmode == gFalse)
+  if(textobj->textmode == panda_false)
     {
       textobj->layoutstream = 
 	panda_streamprintf(textobj->layoutstream, "\nBT\n");
-      textobj->textmode = gTrue;
+      textobj->textmode = panda_true;
 
 #if defined DEBUG
       printf("Textbox: Entered textmode for object %d\n", textobj->number);
@@ -204,11 +204,11 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int
     {
       // If we haven't displayed that first part that would otherwise be missed
       // do so now
-      if (displayedFirstPart == gFalse)
+      if (displayedFirstPart == panda_false)
 	{
 	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream, "(%s) '\n",
 					      strtokVictim);
-	  displayedFirstPart = gTrue;
+	  displayedFirstPart = panda_true;
 	}
 
       switch (text[currentToken - strtokVictim - 1])

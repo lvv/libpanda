@@ -41,16 +41,16 @@ extern char panda_binaryheaderstring[12];
 #define  panda_objectarrayvalue    3
 
 // True and false
-#define  gTrue               0
-#define  gFalse              1
+#define  panda_true               0
+#define  panda_false              1
 
 // Up and down movement for the traversal functions
-#define  gUp                 7
-#define  gDown               8
+#define  panda_up                 7
+#define  panda_down               8
 
 // File modes for the PDF object
-#define  gWrite              9
-#define  gWriteLinear        10
+#define  panda_write              9
+#define  panda_writelinear        10
 
 // Standard page sizes -- these are expressed in inches, with 72 dots per inch
 // with no fractional values shown. As many values as needed can be added here

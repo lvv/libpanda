@@ -142,13 +142,13 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
   else
     switch (valueType)
       {
-      case gObjArrayValue:
-      case gDictionaryValue:
-      case gTextValue:
-      case gLiteralTextValue:
-      case gBracketedTextValue:
-      case gIntValue:
-      case gObjValue:
+      case panda_objectarrayvalue:
+      case panda_dictionaryvalue:
+      case panda_textvalue:
+      case panda_literaltextvalue:
+      case panda_brackettedtextvalue:
+      case panda_integervalue:
+      case panda_objectvalue:
 	break;
 
       default:
@@ -157,9 +157,9 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 
   switch (valueType)
     {
-    case gTextValue:
-    case gLiteralTextValue:
-    case gBracketedTextValue:
+    case panda_textvalue:
+    case panda_literaltextvalue:
+    case panda_brackettedtextvalue:
       // Are we overwriting?
       if ((overwriting == gTrue) && (dictNow->textValue != NULL))
 	free (dictNow->textValue);
@@ -171,24 +171,24 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       dictNow->textValue[0] = '\0';
 
       // Some stuff for different types
-      if (valueType == gTextValue)
+      if (valueType == panda_textvalue)
 	strcat (dictNow->textValue, "/");
-      if (valueType == gBracketedTextValue)
+      if (valueType == panda_brackettedtextvalue)
 	strcat (dictNow->textValue, "(");
 
       // The string
       strcat (dictNow->textValue, value);
 
       // Some more stuff for different types
-      if (valueType == gBracketedTextValue)
+      if (valueType == panda_brackettedtextvalue)
 	strcat (dictNow->textValue, ")");
       break;
 
-    case gIntValue:
+    case panda_integervalue:
       dictNow->intValue = va_arg (argPtr, int);
       break;
 
-    case gObjValue:
+    case panda_objectvalue:
       // Are we overwriting?
       if ((overwriting == gTrue) && (dictNow->textValue != NULL))
 	free (dictNow->textValue);
@@ -203,7 +203,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 	       objValue->generation);
       break;
 
-    case gObjArrayValue:
+    case panda_objectarrayvalue:
       objValue = va_arg (argPtr, panda_object *);
 
       if (dictNow->objectarrayValue == NULL)
@@ -228,7 +228,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       currentObjectArray->next->next = NULL;
       break;
 
-    case gDictionaryValue:
+    case panda_dictionaryvalue:
       // This is a sub-dictionary
       dictValue = va_arg (argPtr, panda_dictionary *);
 
@@ -255,29 +255,29 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 
 	      switch (dictValue->valueType)
 		{
-		case gTextValue:
-		case gBracketedTextValue:
-		case gLiteralTextValue:
+		case panda_textvalue:
+		case panda_brackettedtextvalue:
+		case panda_literaltextvalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
 			       dictValue->valueType, dictValue->textValue);
 		  break;
 
-		case gObjValue:
+		case panda_objectvalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
-			       gLiteralTextValue, dictValue->textValue);
+			       panda_literaltextvalue, dictValue->textValue);
 		  break;
 
-		case gDictionaryValue:
+		case panda_dictionaryvalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
 			       dictValue->valueType, dictValue->dictValue);
 		  break;
 
-		case gIntValue:
+		case panda_integervalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
 			       dictValue->valueType, dictValue->intValue);
 		  break;
 
-		case gObjArrayValue:
+		case panda_objectarrayvalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
 			       dictValue->valueType,
 			       dictValue->objectarrayValue);
@@ -304,23 +304,23 @@ panda_getdictvalue (panda_dictionary * dictValue)
   // Return a panda_dictionary value
   switch (dictValue->valueType)
     {
-    case gDictionaryValue:
+    case panda_dictionaryvalue:
       return dictValue->dictValue;
       break;
 
       // This line is a little scary -- we are going to make the int look like
       // a pointer for just a little while
-    case gIntValue:
+    case panda_integervalue:
       return dictValue->intValue;
       break;
 
-    case gTextValue:
-    case gLiteralTextValue:
-    case gObjValue:
+    case panda_textvalue:
+    case panda_literaltextvalue:
+    case panda_objectvalue:
       return dictValue->textValue;
       break;
 
-    case gObjArrayValue:
+    case panda_objectarrayvalue:
       return dictValue->objectarrayValue;
       break;
     }
@@ -448,14 +448,14 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 
       if (dumpTarget->layoutstream != NULL)
 	{
-	  panda_adddictitem (dumpTarget->dict, "Length", gIntValue,
+	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
 		       strlen (dumpTarget->layoutstream) - 1);
 	}
 
       // We cannot have a layoutstream and a binary stream in the same object
       else if (dumpTarget->binarystream != NULL)
 	{
-	  panda_adddictitem (dumpTarget->dict, "Length", gIntValue,
+	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
 		       dumpTarget->binarystreamLength);
 	}
 
@@ -513,10 +513,10 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
     {
       switch (dictNow->valueType)
 	{
-	case gTextValue:
-	case gObjValue:
-	case gLiteralTextValue:
-	case gBracketedTextValue:
+	case panda_textvalue:
+	case panda_objectvalue:
+	case panda_literaltextvalue:
+	case panda_brackettedtextvalue:
 #if defined DEBUG
 	  printf ("Writing a text value named %s into the dictionary\n",
 		  dictNow->name);
@@ -554,7 +554,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 	    }
 	  break;
 
-	case gIntValue:
+	case panda_integervalue:
 #if defined DEBUG
 	  printf ("Writing a int value with name %s into the dictionary\n",
 		  dictNow->name);
@@ -563,7 +563,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 	  panda_printf (output, "\t/%s %d\n", dictNow->name, dictNow->intValue);
 	  break;
 
-	case gObjArrayValue:
+	case panda_objectarrayvalue:
 #if defined DEBUG
 	  printf
 	    ("Writing an object array value with name %s into dictionary\n",
@@ -595,7 +595,7 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 	  panda_print (output, "]\n");
 	  break;
 
-	case gDictionaryValue:
+	case panda_dictionaryvalue:
 	  // These are handled recursively
 	  if (dictNow->dictValue == NULL)
 	    panda_error ("Subdictionary value erroneously NULL.");
