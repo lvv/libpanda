@@ -104,8 +104,13 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     appendstream(textobj, commandBuffer, strlen(commandBuffer));
   }
 
-  if(output->currentFontCharacterSpacing != 0){
-    sprintf(commandBuffer, "%d Tc\n", output->currentFontCharacterSpacing);
+  if(output->currentCharacterSpacing != 0){
+    sprintf(commandBuffer, "%.2f Tc\n", output->currentCharacterSpacing);
+    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+  }
+
+  if(output->currentWordSpacing != 0){
+    sprintf(commandBuffer, "%.2f Tw\n", output->currentWordSpacing);
     appendstream(textobj, commandBuffer, strlen(commandBuffer));
   }
 

@@ -36,6 +36,7 @@ void    setfontsize(pdf *, int);
 object  *getfontobj(pdf *, char *);
 void    setfontmode(pdf *, int);
 void    setcharacterspacing(pdf *, double);
+void    setwrodspacing(pdf *, double);
 
 /******************************************************************************
   Panda.c

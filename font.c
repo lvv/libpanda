@@ -88,5 +88,9 @@ void setfontmode(pdf *output, int mode){
 }
 
 void setcharacterspacing(pdf *output, double amount){
-  output->currentFontCharacterSpacing = amount;
+  output->currentCharacterSpacing = amount;
+}
+
+void setwordspacing(pdf *output, double amount){
+  output->currentWordSpacing = amount;
 }

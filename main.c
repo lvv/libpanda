@@ -36,7 +36,8 @@ int main(int argc, char *argv[]){
 
     // Put some text onto it
     setfontmode(demo, lineDepth);
-    setcharacterspacing(demo, lineDepth);
+    setcharacterspacing(demo, (double) lineDepth);
+    setwordspacing(demo, (double) lineDepth * 10);
     textbox(demo, currPage, lineDepth * 20 + 10, 10, 100, 30, "Hello World!");
 
 #if defined DEBUG
