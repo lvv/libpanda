@@ -22,7 +22,8 @@ do
   done
 done
 
-
+# Generate the configure script
+autoconf
 
 
 

@@ -8,8 +8,8 @@
 #PLATFORM = WINDOWS
 PLATFORM = LINUX
 
-#DODEBUG = NO
-DODEBUG = DEBUG
+DODEBUG = NO
+#DODEBUG = DEBUG
 
 # The first one of these will make a profiling library
 PROFILING = -pg
