@@ -129,7 +129,7 @@ void pdfprintf(pdf *file, char *format, ...){
   va_end(argPtr);
 }
 
-// Append some text to the textstream that we are creating for a given page
+// Append some text to the stream that we are creating for a given page
 char *streamprintf(char *stream, char *format, ...){
   va_list        argPtr;
   char           buffer[2048];
@@ -142,6 +142,11 @@ char *streamprintf(char *stream, char *format, ...){
 
   // Make space for the new information
   if(stream != NULL){
+    // Print the stream for debugging
+#if defined DEBUG
+    printf("-----\nStream is: \"%s\"\n-----\n", stream);
+#endif
+
     // Determine some lengths for the various strings    
     currentlen = strlen(stream) + 1;
     len = strlen(buffer) + 1;
@@ -151,12 +156,12 @@ char *streamprintf(char *stream, char *format, ...){
       error("Could not append to an object's stream (of some form).");
 
     // Do the actual appending
-    strcat(stream, buffer);
+    strncat(stream, buffer, len + currentlen);
   }
   else{
     if((stream = (char *) malloc(sizeof(char) * (strlen(buffer) + 1))) == NULL)
       error("Could not create the first entry for the text stream.");
-    strcpy(stream, buffer);
+    strncpy(stream, buffer, strlen(buffer) + 1);
   }
 
   // Return the stream

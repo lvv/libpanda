@@ -235,7 +235,6 @@ void insertJpeg(pdf *output, page *target, object *imageObj, char *filename){
     
   // Setup the decompression options
   cinfo.err = jpeg_std_error(&jerr);
-  jpeg_stdio_src(&cinfo, image);
 
   // Start decompressing
   jpeg_create_decompress(&cinfo);
@@ -284,8 +283,8 @@ void insertJpeg(pdf *output, page *target, object *imageObj, char *filename){
       imageBufSize += 1024;
       
       if((imageObj->binarystream = realloc(imageObj->binarystream,
-	imageBufSize)) == NULL)
-	error("Could not make enough space for the JPEG image.");
+        imageBufSize)) == NULL)
+      error("Could not make enough space for the JPEG image.");
     }
 
     // Store the info

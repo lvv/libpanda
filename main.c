@@ -16,7 +16,7 @@
 int main(int argc, char *argv[]){
   pdf    *demo;
   page   *currPage;
-  int    lineDepth;
+  int    lineDepth, boxx, boxy;
   char   tempString[1024];
 
   printf("Welcome to the Panda 0.2 sample application...\n");
@@ -55,8 +55,11 @@ int main(int argc, char *argv[]){
       "input.tif", gImageTiff);
     imagebox(demo, currPage, currPage->height / 2, 0, currPage->height, 
       currPage->width, "input2.tif", gImageTiff);
+
     imagebox(demo, currPage, 100, 100, 150, 150, "gnu-head.jpg", gImageJpeg);
     imagebox(demo, currPage, 200, 200, 317, 317, "gnu_box.jpg", gImageJpeg);
+    imagebox(demo, currPage, 317, 317, 434, 434, "gnu_box.jpg", gImageJpeg);
+    imagebox(demo, currPage, 434, 434, 551, 551, "gnu_box.jpg", gImageJpeg);
 
 #if defined DEBUG
     printf("Created textbox and inserted first image\n");
