@@ -18,7 +18,7 @@ libs="clibpdf-202r1 pdflib-30 panda-01"
 tests="hello"
 
 # How many times per test
-number=1000
+number=100
 delay=5
 
 for test in $tests
