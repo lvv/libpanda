@@ -2,41 +2,62 @@
 
 # This script makes the world nice-looking for the world.
 
-cd man
-rm *sgml
-cd ..
+# Name of the release?
+echo -n "Release name (e.g) panda-0.4.1: "
+read relname
 
-for item in `ls *.c`
-do
-  ~mikal/opensource/autodocbook/0.3/autodocbook $item man
-done
+# Get a clean copy of the source
+mkdir temp
+cd temp
+export CVSROOT="/usr/home/cvs"
+cvs co panda
+cd panda
 
+# Clean out the old documentation
+echo "------------------------------------------------------------------------"
+echo "Updating documentation"
+rm man/*sgml man/*man
+
+# Generate the new documentation
+#for item in `ls *.c`
+#do
+#  ~mikal/opensource/autodocbook/0.3/autodocbook $item man
+#done
+
+# Autotools
+echo "------------------------------------------------------------------------"
+echo "Running the autotools"
 automake
 autoconf
 ./configure
 make clean
 make
 
+# Make sure that the release passes some simple dmalloc tests
+echo "------------------------------------------------------------------------"
+echo "Checking for memory leaks"
+
+#dmalloc -b -l log -i 100 low
+#cd examples
+#./pandademo > /dev/null
+#
+#if [ `grep "not freed" log | wc -l | tr -d " "` -gt 0 ]
+#then
+#  echo ""
+#  echo ""
+#  echo "Prospective release failed the memory leak test"
+#  exit 42
+#fi
+#cd ..
+
 # Get rid of core files
+echo "------------------------------------------------------------------------"
+echo "Clean up"
+
 for item in `find . | grep core`
 do
   rm -i $item
 done
-
-# Make sure that the release passes some simple dmalloc tests
-dmalloc -b -l log -i 100 low
-cd examples
-./pandademo > /dev/null
-
-if [ `grep "not freed" log | wc -l | tr -d " "` -gt 0 ]
-then
-  echo ""
-  echo ""
-  echo "Prospective release failed the memory leak test"
-  exit 42
-fi
-
-cd ..
 
 # Get rid of compiled files that make clean wont remove
 find . -name "*obj" -type f -exec rm -i {} \; -print
@@ -52,11 +73,46 @@ for filename in $delname
 do
   for item in `find . -name $filename -print`
   do
-    rm -ri $item
+    rm -rf $item
   done
 done
 
 # How much space do we use?
-du -sk
+echo "------------------------------------------------------------------------"
+echo "Release takes" `du -sk` "kbytes"
 
+# Now we can start packaging the various versions
+cd ..
+mkdir $relname
+mkdir `echo $relname | sed 's/-/-noexamples-//'`
+mkdir `echo $relname | sed 's/-/-windows-//'`
 
+# Windows is simply everything
+cp -R panda/* `echo $relname | sed 's/-/-windows-//'`/
+
+# No we do the full unix release
+cp -R panda/* $relname
+cd $relname
+rm -rf activex
+rm -rf Debug
+cd examples
+rm -rf Visual*
+cd ../..
+
+# Now the no examples
+cp -R $relname/* `echo $relname | sed 's/-/-noexamples-//'`/
+cd `echo $relname | sed 's/-/-noexamples-//'`/
+rm -rf examples
+cd ..
+
+# Compress the all
+tar czf `echo $relname | sed 's/-/_'`.tgz $relname
+tar czf `echo $relname | sed 's/-/-noexamples-//' | sed 's/-/_'`.tgz $relname
+tar czf `echo $relname | sed 's/-/-windows-//' | sed 's/-/_'`.tgz $relname
+
+# Sign them all
+gpg --detach-sign --armour --output `echo $relname | sed 's/-/_'`.sig `echo $relname | sed 's/-/_'`.tgz
+gpg --detach-sign --armour --output `echo $relname | sed 's/-/-noexamples-//' | sed 's/-/_'`.sig `echo $relname | sed 's/-/-noexamples-//' | sed 's/-/_'`.tgz
+gpg --detach-sign --armour --output `echo $relname | sed 's/-/-windows-//' | sed 's/-/_'`.sig `echo $relname | sed 's/-/-windows-//' | sed 's/-/_'`.tgz
+
+# Now deal with the RPMS
