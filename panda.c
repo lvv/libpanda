@@ -119,6 +119,10 @@ pdf *pdfopen(char *filename, char *mode){
     // Setup the info object with some stuff which makes me happy... :)
     openedpdf->info = NULL;
     checkInfo(openedpdf);
+    if(openedpdf->info == NULL)
+      error("Failed to make an info object for the PDF. Not sure why...");
+
+    // Add some stuff
     adddictitem(openedpdf->info, "Producer", gBracketedTextValue, "Panda 0.2");
     adddictitem(openedpdf->info, "CreationDate", gBracketedTextValue,
       tempPtr = nowdate());

@@ -154,7 +154,7 @@ void adddictitem(object *input, char *name, int valueType, ...){
     dictNow->textValue[0] = '\0';
 
     // Some stuff for different types
-    if(valueType != gLiteralTextValue) strcat(dictNow->textValue, "/");
+    if(valueType == gTextValue) strcat(dictNow->textValue, "/");
     if(valueType == gBracketedTextValue) strcat(dictNow->textValue, "(");
 
     // The string
@@ -349,6 +349,7 @@ void writeDictionary(pdf *output, object *obj, dictionary *incoming){
     case gTextValue:
     case gObjValue:
     case gLiteralTextValue:
+    case gBracketedTextValue:
       pdfprintf(output, "\t/%s %s\n", dictNow->name, dictNow->textValue);
 
       // If the type is type, then possibly output the Kids line for the pages
