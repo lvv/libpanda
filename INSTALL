@@ -1,0 +1,14 @@
+Welcome to GNU PDF 0.1.
+
+As the name implies, this code is covered by the GNU Public License.
+Please respect the conditions of this license, which is included in
+this distribution.
+
+INSTALLATION
+
+At the moment the codebase is very simple. Type gcc *.c -o gnupdf to
+make the library. You can then author hello world PDFs to your hearts
+content!
+
+Michael Still (mikal@stillhq.com)
+24 June 2000
