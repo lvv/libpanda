@@ -12,7 +12,7 @@
 
 <!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 
-<refentry id="panda_init">
+<refentry id="panda-init">
 <refmeta>
 <refentrytitle>panda_init</refentrytitle>
 <manvolnum>3</manvolnum>
@@ -72,3 +72,4 @@ This documentation was generated for <command>Panda</command> 0.4 by <command>au
 There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
 </para>
 </refsect1>
+</refentry>
