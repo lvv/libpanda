@@ -2,8 +2,10 @@
 
 # This script makes the world nice-looking for the world.
 
+automake
+autoconf
+./configure
 make clean
-rm ./configure
 
 # Get rid of core files
 for item in `find . | grep core`
@@ -13,8 +15,9 @@ done
 
 # Get rid of the timetrials -- they are too big
 rm -rf timetrials
+rm -rf testdata
 
-delname="Makefile config.cache config.log config.status logfile math"
+delname="Makefile Makefile.am config.cache config.log config.status logfile math config.h output.pdf"
 
 # Get rid of makefiles
 for filename in $delname
@@ -25,15 +28,7 @@ do
   done
 done
 
-# Generate the configure script
-autoconf
-
 # How much space do we use?
 du -sk
-
-
-
-
-
 
 
