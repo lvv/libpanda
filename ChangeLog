@@ -47,3 +47,6 @@ Release 0.4 -> Release 0.5
 
 2002-07-09 Michael Still mikal@stillhq.com
 	Fixed textboxes bug
+
+2003-04-25 Michael Still mikal@stillhq.com
+	Fixed a bug in panda_streamprintf which meant that complex graphical streams caused a segmentation fault.

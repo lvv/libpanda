@@ -212,12 +212,30 @@ char *
 panda_streamprintf (char *stream, char *format, ...)
 {
   va_list argPtr;
-  char buffer[2048];
-  unsigned long currentlen = 0, len;
+  char *buffer;
+  unsigned long currentlen = 0, actualLen, len;
+
+  buffer = panda_xmalloc(sizeof(char) * 1024);
 
   // Get the data to add to the stream
   va_start (argPtr, format);
-  vsprintf (buffer, format, argPtr);
+  if ((actualLen = vsnprintf (buffer, 1024, format, argPtr)) > 1020)
+    {
+      // We did not fit! Try again...
+      panda_xfree (buffer);
+      
+#if defined DEBUG
+      printf
+	("Needed to make a bigger space for the buffer in panda_streamprintf\n");
+#endif
+
+      buffer = (char *) panda_xmalloc (actualLen * sizeof (char));
+
+      if (vsnprintf (buffer, actualLen, format, argPtr) > actualLen)
+	{
+	  panda_error (panda_true, "Really bad file i/o error.");
+	}
+    }
   va_end (argPtr);
 
   // Make space for the new information
