@@ -1,0 +1,20 @@
+#!/bin/bash
+
+for endian in B L
+do
+  for compression in none packbits jpeg zip g3 g4
+  do
+    for fill in msb2lsb lsb2msb
+    do
+      for planar in contig # separate
+      do
+        for rows in 1 1000 1000000
+	do
+  	  echo tiffcp -$endian -c $compression -f $fill -p $planar -r $rows input.tif $compression-$endian-$fill-$planar-$rows.tif
+
+  	  tiffcp -$endian -c $compression -f $fill -p $planar -r $rows input.tif $compression-$endian-$fill-$planar-$rows.tif
+	done
+      done
+    done
+  done
+done
