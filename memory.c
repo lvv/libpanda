@@ -61,7 +61,6 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-/*
 void *
 panda_xmalloc (size_t size)
 {
@@ -74,7 +73,6 @@ panda_xmalloc (size_t size)
 
   return buffer;
 }
-*/
 
 /******************************************************************************
 DOCBOOK START
@@ -103,7 +101,6 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-/*
 void *
 panda_xrealloc (void *memory, size_t size)
 {
@@ -116,7 +113,6 @@ panda_xrealloc (void *memory, size_t size)
 
   return buffer;
 }
-*/
 
 /******************************************************************************
 DOCBOOK START

@@ -14,16 +14,15 @@
 #define PANDA_OBJECTS_H 1
 
 #if defined _WINDOWS
-#if defined _DEMO
-#include "../panda/constants.h"
-#else	/*  */
-#include "panda/constants.h"
-#endif	/*  */
-#else	/*  */
-#include <panda/constants.h>
+  #if defined _DEMO
+    #include "../panda/constants.h"
+  #else
+    #include "panda/constants.h"
+  #endif
+#else
+  #include <panda/constants.h>
+  #include <tdb.h>
 #endif
-
-#include <tdb.h>
 
 #ifdef __cplusplus
 extern "C"
@@ -118,7 +117,11 @@ extern "C"
     panda_object *dummyObj;
 
     // Database for the internal representation of the PDF
+#if defined _WINDOWS
+	void *db;
+#else
     TDB_CONTEXT *db;
+#endif
   }
   panda_pdf;
    
