@@ -1,6 +1,6 @@
 legacymain.o: legacymain.c ../panda/functions.h ../panda/objects.h \
-  ../panda/constants.h ../panda/panda_tdb.h /usr/include/stdlib.h \
-  /usr/include/features.h /usr/include/sys/cdefs.h \
+  ../panda/constants.h ../config.h ../panda/panda_tdb.h \
+  /usr/include/stdlib.h /usr/include/features.h /usr/include/sys/cdefs.h \
   /usr/include/gnu/stubs.h \
   /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
   /usr/include/sys/types.h /usr/include/bits/types.h \
@@ -23,6 +23,7 @@ legacymain.c :
 ../panda/functions.h :
 ../panda/objects.h :
 ../panda/constants.h :
+../config.h :
 ../panda/panda_tdb.h :
 /usr/include/stdlib.h :
 /usr/include/features.h :

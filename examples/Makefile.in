@@ -62,22 +62,23 @@ host_triplet = @host@
 AS = @AS@
 CC = @CC@
 DLLTOOL = @DLLTOOL@
-LD = @LD@
-LEX = @LEX@
+ECHO = @ECHO@
+EXEEXT = @EXEEXT@
 LIBTOOL = @LIBTOOL@
 LN_S = @LN_S@
 MAINT = @MAINT@
 MAKEINFO = @MAKEINFO@
-NM = @NM@
 OBJDUMP = @OBJDUMP@
+OBJEXT = @OBJEXT@
 PACKAGE = @PACKAGE@
 PLATFORM = @PLATFORM@
 RANLIB = @RANLIB@
+STRIP = @STRIP@
 VERSION = @VERSION@
 
 noinst_PROGRAMS = pandademo pandademolegacy circles morecircles empty template exercise
 
-LDADD = -lpanda -L../.libs
+LDADD = -lpanda
 INCLUDES = -I..
 
 pandademo_SOURCES = main.c
@@ -88,39 +89,43 @@ empty_SOURCES = empty.c
 template_SOURCES = template.c
 exercise_SOURCES = exercise.c
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
+CONFIG_HEADER = ../config.h
 CONFIG_CLEAN_FILES = 
+noinst_PROGRAMS =  pandademo$(EXEEXT) pandademolegacy$(EXEEXT) \
+circles$(EXEEXT) morecircles$(EXEEXT) empty$(EXEEXT) template$(EXEEXT) \
+exercise$(EXEEXT)
 PROGRAMS =  $(noinst_PROGRAMS)
 
 
-DEFS = @DEFS@ -I. -I$(srcdir) 
+DEFS = @DEFS@ -I. -I$(srcdir) -I..
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
-pandademo_OBJECTS =  main.o
+pandademo_OBJECTS =  main.$(OBJEXT)
 pandademo_LDADD = $(LDADD)
 pandademo_DEPENDENCIES = 
 pandademo_LDFLAGS = 
-pandademolegacy_OBJECTS =  legacymain.o
+pandademolegacy_OBJECTS =  legacymain.$(OBJEXT)
 pandademolegacy_LDADD = $(LDADD)
 pandademolegacy_DEPENDENCIES = 
 pandademolegacy_LDFLAGS = 
-circles_OBJECTS =  circles.o
+circles_OBJECTS =  circles.$(OBJEXT)
 circles_LDADD = $(LDADD)
 circles_DEPENDENCIES = 
 circles_LDFLAGS = 
-morecircles_OBJECTS =  morecircles.o
+morecircles_OBJECTS =  morecircles.$(OBJEXT)
 morecircles_LDADD = $(LDADD)
 morecircles_DEPENDENCIES = 
 morecircles_LDFLAGS = 
-empty_OBJECTS =  empty.o
+empty_OBJECTS =  empty.$(OBJEXT)
 empty_LDADD = $(LDADD)
 empty_DEPENDENCIES = 
 empty_LDFLAGS = 
-template_OBJECTS =  template.o
+template_OBJECTS =  template.$(OBJEXT)
 template_LDADD = $(LDADD)
 template_DEPENDENCIES = 
 template_LDFLAGS = 
-exercise_OBJECTS =  exercise.o
+exercise_OBJECTS =  exercise.$(OBJEXT)
 exercise_LDADD = $(LDADD)
 exercise_DEPENDENCIES = 
 exercise_LDFLAGS = 
@@ -143,7 +148,7 @@ OBJECTS = $(pandademo_OBJECTS) $(pandademolegacy_OBJECTS) $(circles_OBJECTS) $(m
 
 all: all-redirect
 .SUFFIXES:
-.SUFFIXES: .S .c .lo .o .s
+.SUFFIXES: .S .c .lo .o .obj .s
 $(srcdir)/Makefile.in: @MAINTAINER_MODE_TRUE@ Makefile.am $(top_srcdir)/configure.in $(ACLOCAL_M4) 
 	cd $(top_srcdir) && $(AUTOMAKE) --gnu examples/Makefile
 
@@ -161,6 +166,11 @@ distclean-noinstPROGRAMS:
 
 maintainer-clean-noinstPROGRAMS:
 
+# FIXME: We should only use cygpath when building on Windows,
+# and only if it is available.
+.c.obj:
+	$(COMPILE) -c `cygpath -w $<`
+
 .s.o:
 	$(COMPILE) -c $<
 
@@ -169,6 +179,7 @@ maintainer-clean-noinstPROGRAMS:
 
 mostlyclean-compile:
 	-rm -f *.o core *.core
+	-rm -f *.$(OBJEXT)
 
 clean-compile:
 
@@ -193,32 +204,32 @@ distclean-libtool:
 
 maintainer-clean-libtool:
 
-pandademo: $(pandademo_OBJECTS) $(pandademo_DEPENDENCIES)
-	@rm -f pandademo
+pandademo$(EXEEXT): $(pandademo_OBJECTS) $(pandademo_DEPENDENCIES)
+	@rm -f pandademo$(EXEEXT)
 	$(LINK) $(pandademo_LDFLAGS) $(pandademo_OBJECTS) $(pandademo_LDADD) $(LIBS)
 
-pandademolegacy: $(pandademolegacy_OBJECTS) $(pandademolegacy_DEPENDENCIES)
-	@rm -f pandademolegacy
+pandademolegacy$(EXEEXT): $(pandademolegacy_OBJECTS) $(pandademolegacy_DEPENDENCIES)
+	@rm -f pandademolegacy$(EXEEXT)
 	$(LINK) $(pandademolegacy_LDFLAGS) $(pandademolegacy_OBJECTS) $(pandademolegacy_LDADD) $(LIBS)
 
-circles: $(circles_OBJECTS) $(circles_DEPENDENCIES)
-	@rm -f circles
+circles$(EXEEXT): $(circles_OBJECTS) $(circles_DEPENDENCIES)
+	@rm -f circles$(EXEEXT)
 	$(LINK) $(circles_LDFLAGS) $(circles_OBJECTS) $(circles_LDADD) $(LIBS)
 
-morecircles: $(morecircles_OBJECTS) $(morecircles_DEPENDENCIES)
-	@rm -f morecircles
+morecircles$(EXEEXT): $(morecircles_OBJECTS) $(morecircles_DEPENDENCIES)
+	@rm -f morecircles$(EXEEXT)
 	$(LINK) $(morecircles_LDFLAGS) $(morecircles_OBJECTS) $(morecircles_LDADD) $(LIBS)
 
-empty: $(empty_OBJECTS) $(empty_DEPENDENCIES)
-	@rm -f empty
+empty$(EXEEXT): $(empty_OBJECTS) $(empty_DEPENDENCIES)
+	@rm -f empty$(EXEEXT)
 	$(LINK) $(empty_LDFLAGS) $(empty_OBJECTS) $(empty_LDADD) $(LIBS)
 
-template: $(template_OBJECTS) $(template_DEPENDENCIES)
-	@rm -f template
+template$(EXEEXT): $(template_OBJECTS) $(template_DEPENDENCIES)
+	@rm -f template$(EXEEXT)
 	$(LINK) $(template_LDFLAGS) $(template_OBJECTS) $(template_LDADD) $(LIBS)
 
-exercise: $(exercise_OBJECTS) $(exercise_DEPENDENCIES)
-	@rm -f exercise
+exercise$(EXEEXT): $(exercise_OBJECTS) $(exercise_DEPENDENCIES)
+	@rm -f exercise$(EXEEXT)
 	$(LINK) $(exercise_LDFLAGS) $(exercise_OBJECTS) $(exercise_LDADD) $(LIBS)
 
 tags: TAGS

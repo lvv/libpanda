@@ -1,6 +1,6 @@
 noinst_PROGRAMS = pandademo pandademolegacy circles morecircles empty template exercise
 
-LDADD = -lpanda -L../.libs
+LDADD = -lpanda
 INCLUDES = -I..
 
 pandademo_SOURCES = main.c

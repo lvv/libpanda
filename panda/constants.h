@@ -10,6 +10,12 @@
     the one source file which owns the variables
 ******************************************************************************/
 
+// This might cause problems with other people's applications... Email
+// mikal@stillhq.com and let me know if you have pain...
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #ifndef PANDA_CONSTANTS_H
 #define PANDA_CONSTANTS_H 1
 
