@@ -62,8 +62,6 @@ clean:
 		rm -i libpanda.a
 		rm -i configure
 		rm -rf mctemp
-		rm -i *~
-		rm -i *core*
 
 ###############################################################################
 
