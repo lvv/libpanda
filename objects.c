@@ -545,7 +545,7 @@ void appendtextstream(object *target, char *data, unsigned long len){
   initial = count = target->textstreamLength;
 
   // Increase the length of the textstream
-  target->textstreamLength += len;
+  target->textstreamLength += len - 1;
 
   // Make space for the new information
   if((target->textstream = realloc(target->textstream,
