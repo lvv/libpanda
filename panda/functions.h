@@ -195,9 +195,14 @@ extern "C"
   View.c
 ******************************************************************************/
 
-  void panda_toolbar (panda_pdf *, int);
+  void panda_hidetoolbar (panda_pdf *, int);
   void panda_hidemenubar (panda_pdf *, int);
   void panda_hidewindowui (panda_pdf *, int);
+  void panda_fitwindow (panda_pdf *, int);
+  void panda_centerwindow (panda_pdf *, int);
+  void panda_nfspagemode (panda_pdf *, int);
+  void panda_fullscreen (panda_pdf *, int);
+  void panda_textdirection (panda_pdf *, int);
 
 /******************************************************************************
   Windows.c -- Windows specific function calls

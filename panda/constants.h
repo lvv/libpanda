@@ -31,6 +31,7 @@ extern "C"
   extern char panda_binaryheaderstring[12];
 #endif
 
+  // General values
   enum{
     // True and false
     panda_true = 0,
@@ -103,6 +104,21 @@ extern "C"
     panda_image_tiff = 0,
     panda_image_jpeg,
     panda_image_png
+  };
+
+// The display modes that the viewer window can be asked to conform to
+  enum
+  {
+    panda_window_usenone = 0,
+    panda_window_useoutlines,
+    panda_window_usethumbs
+  };
+
+// Possible text directions (for reading the document)
+  enum
+  {
+    panda_textdirection_l2r = 0,
+    panda_textdirection_r2l
   };
 
 // Properties that might be held by objects -- panda_const_properties

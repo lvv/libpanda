@@ -130,3 +130,225 @@ void panda_hidewindowui(panda_pdf *document, int onoff)
   panda_adddictitem(document->viewerPrefs->dict, "HideWindowUI", 
 		    panda_booleanvalue, onoff);
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_fitwindow
+PURPOSE ask the viewer to fit the viewer window to the first page of the PDF document when it is opened
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_fitwindow (panda_pdf *document, int onoroff);
+SYNOPSIS END
+
+DESCRIPTION This function records information in the output PDF document requesting that the viewing application fit the display window to the first page of the PDF document when it is opened. This option is not supported by all viewers, and therefore should not be relied upon. The on or off arguement is a panda_true value, which does the obvious thing. The default is to not fit the document to the window.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_fitwindow(document, panda_true);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void panda_fitwindow(panda_pdf *document, int onoff)
+{
+  panda_adddictitem(document->viewerPrefs->dict, "FitWindow", 
+		    panda_booleanvalue, onoff);
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_centerwindow
+PURPOSE ask the viewer to center the document's window on the screen when the PDF is displayed
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_centerwindow (panda_pdf *document, int onoroff);
+SYNOPSIS END
+
+DESCRIPTION This function records information in the output PDF document requesting that the viewing application center the displayed PDF document on the screen when it is opened. This option is not supported by all viewers, and therefore should not be relied upon. The on or off arguement is a panda_true value, which does the obvious thing. The default is to not center the window.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_centerwindow(document, panda_true);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void panda_centerwindow(panda_pdf *document, int onoff)
+{
+  panda_adddictitem(document->viewerPrefs->dict, "CenterWindow", 
+		    panda_booleanvalue, onoff);
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_nfspagemodde
+PURPOSE defines display characteristics for the PDF document if it is using non fullscreen mode after defaulting to fullscreen mode
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_nfspagemode (panda_pdf *document, int pagemode);
+SYNOPSIS END
+
+DESCRIPTION If the document in question is using fullscreen mode and then exits from fullscreen mode, then this function configures the behaviour of several of the 'eye candy' options available in some viewers. The possible values for pagemode are: <command>panda_window_usenone</command>, which displays neither the outline or thumbnails (if present); <command>panda_window_useoutlines</command>, which displays only the outline for the document; <command>panda_window_usethumbs</command>, which only displays thumbnails. <command>Please note that this function will only have an effect on the viewer if the page mode has been set to fullscreen with the panda_fullscreen() function call</command>
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_nfspagemode(document, panda_window_usenone);
+EXAMPLE END
+SEEALSO panda_fullscreen
+DOCBOOK END
+******************************************************************************/
+
+void panda_nfspagemode(panda_pdf *document, int pagemode)
+{
+  switch(pagemode)
+    {
+    case panda_window_usenone:
+      panda_adddictitem(document->viewerPrefs->dict, "NonFullScreenPageMode", 
+			panda_textvalue, "UseNone");
+      break;
+
+    case panda_window_useoutlines:
+      panda_adddictitem(document->viewerPrefs->dict, "NonFullScreenPageMode", 
+			panda_textvalue, "UseOutlines");
+      break;
+
+    case panda_window_usethumbs:
+      panda_adddictitem(document->viewerPrefs->dict, "NonFullScreenPageMode", 
+			panda_textvalue, "UseThumbs");
+      break;
+
+    default:
+      panda_error(panda_false, "Attempt to set a value for the non fullscreen page mode which is invalid");
+      break;
+    }
+}
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_fullscreen
+PURPOSE ask the viewer to display the PDF document in fullscreen mode
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_fullscreen (panda_pdf *document, int onoroff);
+SYNOPSIS END
+
+DESCRIPTION This function records information in the output PDF document requesting that the viewing application display the document in full screen mode. This option is not supported by all viewers, and therefore should not be relied upon. The on or off arguement is a panda_true value, which does the obvious thing. The default is to not display the PDF in fullscreen mode.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_fullscreen(document, panda_true);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void panda_fullscreen(panda_pdf *document, int onoff)
+{
+  // todo_mikal
+
+  if(onoff == panda_true)
+    panda_adddictitem(document->catalog->dict, "PageMode", 
+		      panda_textvalue, "FullScreen");
+  else
+    panda_adddictitem(document->catalog->dict, "PageMode", 
+		      panda_textvalue, "TODO");
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_textdirection
+PURPOSE specify the direction that the text flows within the document
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_textdirection (panda_pdf *document, int dir);
+SYNOPSIS END
+
+DESCRIPTION This function records information within the PDF indicating the direction that the text in the document flows in. The possible values for the dir arguement are: <command>panda_textdirection_l2r</command>, text is read left to right; <command>panda_textdirection_r2l</command>, text is read right to left. The default for this value is <command>panda_textdirection_l2r</command>.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+panda_textdirection(document, panda_tesxtdirection_r2l);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+void panda_textdirection(panda_pdf *document, int dir)
+{
+  switch(dir)
+    {
+    case panda_textdirection_l2r:
+      panda_adddictitem(document->viewerPrefs->dict, "Direction", 
+			panda_textvalue, "L2R");
+      break;
+
+    case panda_textdirection_r2l:
+      panda_adddictitem(document->viewerPrefs->dict, "Direction", 
+			panda_textvalue, "R2L");
+      break;
+
+    default:
+      panda_error(panda_false, "Invalid text direction specified");
+      break;
+    }
+}
