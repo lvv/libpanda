@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_makedate (int year, int month, int day, int hour, int minutes, int seconds);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. The function makedate generates a date that is suitable to be embedded into a PDF. This date will include information about the timezone in which the PDF was created and the relationship that this timezone has with GMT (Zulu) time. Mostly this function is used internally within Panda, and should not concern the average programmer too much.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. The function makedate generates a date that is suitable to be embedded into a PDF. This date will include information about the timezone in which the PDF was created and the relationship that this timezone has with GMT (Zulu) time. Mostly this function is used internally within Panda, and should not concern the average programmer too much.</para>
 </refsect1>
 
 <refsect1>
@@ -44,13 +44,14 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  printf("Panda would encode 19 July 1977 3:14:23 AM as: %s\n",
  panda_makedate(1977, 7, 19, 3, 14, 23));
  
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

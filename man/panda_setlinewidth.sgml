@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_setlinewidth (panda_page * target, int width);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>Set the width of the line that is being drawn... You can use <command>panda_setlinecap</command>(), <command>panda_setlinejoin</command>() and <command>panda_setlinedash</command>() to change other characteristics of the line.</para>
+<para>Set the width of the line that is being drawn... You can use &lt;command&gt;panda_setlinecap&lt;/command&gt;(), &lt;command&gt;panda_setlinejoin&lt;/command&gt;() and &lt;command&gt;panda_setlinedash&lt;/command&gt;() to change other characteristics of the line.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_page *page;
@@ -58,7 +59,7 @@
  panda_setlinestart (page, 100, 200);
  panda_setlinewidth (page, 42);
  panda_addlinesegment (page, 200, 200);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  char * panda_createfont (panda_pdf * output, char *fontname, int type, char *encoding)
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This funtion call creates a font object for the requested font and returns the identifier that should be used when the font is set within the PDF document.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This funtion call creates a font object for the requested font and returns the identifier that should be used when the font is set within the PDF document.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *output;
  char *fonthandle;
@@ -53,7 +54,7 @@
  panda_init();
  output = panda_open("output.pdf", "w");
  fonthandle = (output, "Helventica", 3, "MacRomanEncoding");
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

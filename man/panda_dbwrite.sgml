@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_dbwrite(panda_pdf *document, char *key, char *value);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This function write a value into the Panda internal database.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This function write a value into the Panda internal database.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> here is no examples for this internal call
-</para>
+<programlisting>
+ There is no examples for this internal call
+</programlisting>
 </refsect1>
 
 <refsect1>

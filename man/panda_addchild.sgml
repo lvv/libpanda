@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_addchild (panda_object *parent, panda_object *child);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. Once an object has been created with <command>panda_newobject</command>() it is added to the object tree with this call. This ensures it is written out to disc via <command>panda_writeobject</command>() when <command>panda_close</command>() is called.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. Once an object has been created with &lt;command&gt;panda_newobject&lt;/command&gt;() it is added to the object tree with this call. This ensures it is written out to disc via &lt;command&gt;panda_writeobject&lt;/command&gt;() when &lt;command&gt;panda_close&lt;/command&gt;() is called.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_object *obj, *obj2;
@@ -56,7 +57,7 @@
  obj = panda_newobject(document, panda_object_normal);
  obj2 = panda_newobject(document, panda_object_normal);
  panda_addhild(obj, obj2);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_setfontsize (panda_page *target, int size);
 
 </synopsis>
@@ -44,15 +44,16 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *output;
  
  panda_init();
  output = panda_open("output.pdf", "w");
  setfontsize(output, 42);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

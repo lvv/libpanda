@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_textdirection (panda_pdf *document, int dir);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function records information within the PDF indicating the direction that the text in the document flows in. The possible values for the dir arguement are: <command>panda_textdirection_l2r</command>, text is read left to right; <command>panda_textdirection_r2l</command>, text is read right to left. The default for this value is <command>panda_textdirection_l2r</command>.</para>
+<para>This function records information within the PDF indicating the direction that the text in the document flows in. The possible values for the dir arguement are: &lt;command&gt;panda_textdirection_l2r&lt;/command&gt;, text is read left to right; &lt;command&gt;panda_textdirection_r2l&lt;/command&gt;, text is read right to left. The default for this value is &lt;command&gt;panda_textdirection_l2r&lt;/command&gt;.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  
@@ -53,7 +54,7 @@
  
  document = panda_open("filename.pdf", "w");
  panda_textdirection(document, panda_textdirection_r2l);
-</para>
+</programlisting>
 </refsect1>
 
 

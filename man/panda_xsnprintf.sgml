@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  char *panda_xsnprintf(const char* format, va_list ap);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This command behaves like a slightly modified version of <command>vsnprintf</command>. The main difference is that if catches the various different ways that errors can be returned, and turns these into a single NULL is a string big enough to hold the formatted string could not be allocated. </para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This command behaves like a slightly modified version of &lt;command&gt;vsnprintf&lt;/command&gt;. The main difference is that if catches the various different ways that errors can be returned, and turns these into a single NULL is a string big enough to hold the formatted string could not be allocated. </para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> his is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
-</para>
+<programlisting>
+ This is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+</programlisting>
 </refsect1>
 
 

@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_traverseobjects (panda_pdf * output, panda_object * startObject, int direction, traverseFunct function);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This function traverses the object tree created by <command>panda_addchild</command>() and repeatedly calls the function defined as a callback. The traversal has a direction as defined by: panda_up (bottom up) or panda_down (top down). This call is commonly used by <command>panda_close</command> to call <command>panda_writeobject</command>() and <command>panda_freeobject</command>(). API users might also find it useful, although I wouldn't know why.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This function traverses the object tree created by &lt;command&gt;panda_addchild&lt;/command&gt;() and repeatedly calls the function defined as a callback. The traversal has a direction as defined by: panda_up (bottom up) or panda_down (top down). This call is commonly used by &lt;command&gt;panda_close&lt;/command&gt; to call &lt;command&gt;panda_writeobject&lt;/command&gt;() and &lt;command&gt;panda_freeobject&lt;/command&gt;(). API users might also find it useful, although I wouldn't know why.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  
@@ -54,8 +55,8 @@
  document = panda_open("filename.pdf", "w");
  
  ... create a whole bunch of objects and add them to the tree ...
- panda_traverseobjects(document, document->catalog, panda_down, panda_writeobject);
-</para>
+ panda_traverseobjects(document, document-&gt;catalog, panda_down, panda_writeobject);
+</programlisting>
 </refsect1>
 
 <refsect1>

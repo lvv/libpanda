@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  panda_pdf * panda_open_actual (char *filename, char *mode);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. Open the named PDF document with the mode specified. The only mode currently supported is "w", but others will be integrated later. The interface to this function is identical in it's behaviour to the <command>fopen</command>() function call offered by the ANSI C standard IO library. This call actually does the opening for <command/>panda_open</command>() and <command>panda_open_suppress</command>().</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. Open the named PDF document with the mode specified. The only mode currently supported is "w", but others will be integrated later. The interface to this function is identical in it's behaviour to the &lt;command&gt;fopen&lt;/command&gt;() function call offered by the ANSI C standard IO library. This call actually does the opening for &lt;command/&gt;panda_open&lt;/command&gt;() and &lt;command&gt;panda_open_suppress&lt;/command&gt;().</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> se panda_open!
-</para>
+<programlisting>
+ Use panda_open!
+</programlisting>
 </refsect1>
 
 <refsect1>

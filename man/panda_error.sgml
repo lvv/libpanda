@@ -20,13 +20,13 @@
 
 <refnamediv>
 <refname>panda_error</refname>
-<refpurpose>handle a <command>Panda</command> error</refpurpose>
+<refpurpose>handle a &lt;command&gt;Panda&lt;/command&gt; error</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_error (int fatal, char *msg);
 
 </synopsis>
@@ -44,11 +44,12 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_error ("All is rotten in the state of Denmark");
-</para>
+</programlisting>
 </refsect1>
 
 

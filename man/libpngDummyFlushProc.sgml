@@ -32,7 +32,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This call implements a dummy flush proceedure for libpng. This is needed so that Panda can get at the compressed PNG data, whilst converting it on the fly from unsupported PNG variants, and while not having to deal with temporary files. PDF documents only need the content of the IDAT chunks within the PNG file, and this method eases gaining access to those chunks.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This call implements a dummy flush proceedure for libpng. This is needed so that Panda can get at the compressed PNG data, whilst converting it on the fly from unsupported PNG variants, and while not having to deal with temporary files. PDF documents only need the content of the IDAT chunks within the PNG file, and this method eases gaining access to those chunks.</para>
 </refsect1>
 
 <refsect1>
@@ -42,8 +42,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> ee panda_insertPNG for an example usage
-</para>
+<programlisting>
+ See panda_insertPNG for an example usage
+</programlisting>
 </refsect1>
 
 <refsect1>

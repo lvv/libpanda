@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_endline( panda_page *target);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>Finalise the line shape we are drawing. Only one line shape may be drawn at any one time. There is no need for this call with the <command>panda_rectangle</command>() call.</para>
+<para>Finalise the line shape we are drawing. Only one line shape may be drawn at any one time. There is no need for this call with the &lt;command&gt;panda_rectangle&lt;/command&gt;() call.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_page *page;
@@ -58,7 +59,7 @@
  panda_setlinestart (page, 100, 200);
  panda_addlinesegment (page, 200, 200);
  panda_endline (page);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

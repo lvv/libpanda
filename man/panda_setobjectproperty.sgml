@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_setobjectproperty (panda_object *target, int scope, int propid, int propval);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>Properties are a way of specifing things about objects. These properties can have either a cascade scope (they affect all subsequently created objects that are children of that object) -- <command>panda_scope_cascade</command>, or local (they only occur for that object) -- <command>panda_scope_local</command>. Possible properties are defined in the <command>panda_const_properties</command> manual page.</para>
+<para>Properties are a way of specifing things about objects. These properties can have either a cascade scope (they affect all subsequently created objects that are children of that object) -- &lt;command&gt;panda_scope_cascade&lt;/command&gt;, or local (they only occur for that object) -- &lt;command&gt;panda_scope_local&lt;/command&gt;. Possible properties are defined in the &lt;command&gt;panda_const_properties&lt;/command&gt; manual page.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_object *obj;
@@ -56,7 +57,7 @@
  obj = panda_newobject(document, panda_object_normal);
  panda_setproperty(obj, panda_scope_cascade, panda_object_property_compress, panda_true);
  
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_getfontobj (panda_pdf *output, char *fontident);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This function is used to map a font identifier handed to <command>Panda</command> by a user to the object that actually stores the font requested. This is because the PDF specification actually wants a reference to this object, instead of merely the name of the font.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This function is used to map a font identifier handed to &lt;command&gt;Panda&lt;/command&gt; by a user to the object that actually stores the font requested. This is because the PDF specification actually wants a reference to this object, instead of merely the name of the font.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *output;
  
@@ -54,8 +55,8 @@
  
  fonthandle = panda_createfont (output, "Helventica", 3, "MacRomanEncoding");
  printf("The font was stored in object number %d\n",
- (panda_getfont (output, fonthandle))->number);
-</para>
+ (panda_getfont (output, fonthandle))-&gt;number);
+</programlisting>
 </refsect1>
 
 <refsect1>

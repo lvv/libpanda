@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_checkinfo (panda_pdf *output);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This function call ensures that the info object exists inside the PDF document so that information may be safely added. This function call is unlikely to be needed by users of the API because it is used whenever one of the info object functions is called by the <command>Panda</command> code itself.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This function call ensures that the info object exists inside the PDF document so that information may be safely added. This function call is unlikely to be needed by users of the API because it is used whenever one of the info object functions is called by the &lt;command&gt;Panda&lt;/command&gt; code itself.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  
@@ -53,7 +54,7 @@
  
  document = panda_open("filename.pdf", "w");
  panda_checkinfo(document);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_close (panda_pdf *document);
 
 </synopsis>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_page *page;
@@ -55,7 +56,7 @@
  document = panda_open("filename.pdf", "w");
  page = panda_newpage (document, panda_pagesize_a4);
  panda_close(document);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

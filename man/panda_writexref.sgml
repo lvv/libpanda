@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_writexref (panda_pdf * output);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. Write out the XREF table in the PDF file that we have just generated.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. Write out the XREF table in the PDF file that we have just generated.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> his command is internal to Panda, and you shouldn't ever need to call it...
-</para>
+<programlisting>
+ This command is internal to Panda, and you shouldn't ever need to call it...
+</programlisting>
 </refsect1>
 
 

@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_writetrailer (panda_pdf *output);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This command is used to write out the trailer of the PDF document, which contains information about the PDF document, including a pointer to the XREF table.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This command is used to write out the trailer of the PDF document, which contains information about the PDF document, including a pointer to the XREF table.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> hy would you need an example?
-</para>
+<programlisting>
+ Why would you need an example?
+</programlisting>
 </refsect1>
 
 

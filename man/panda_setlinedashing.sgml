@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_setlinedashing (panda_page *target, int on, int off, int pahse);
 
 </synopsis>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_page *page;
@@ -58,7 +59,7 @@
  panda_setlinestart (page, 100, 200);
  panda_setlinedash (page, 2, 4, 0);
  panda_addlinesegment (page, 200, 200);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

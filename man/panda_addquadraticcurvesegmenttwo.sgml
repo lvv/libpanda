@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_addquadraticcurvesegmenttwo (panda_page * target, int x, int y, int cx1, int cy1);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function adds a curved segment to the line shape that we are drawing. The curved segment has a control point, namely (cx1, cy1). This call creates slightly different curves from <command>panda_addquadraticcurvesegmentone</command>();</para>
+<para>This function adds a curved segment to the line shape that we are drawing. The curved segment has a control point, namely (cx1, cy1). This call creates slightly different curves from &lt;command&gt;panda_addquadraticcurvesegmentone&lt;/command&gt;();</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_page *page;
@@ -57,7 +58,7 @@
  
  panda_setlinestart (page, 100, 200);
  panda_addquadraticcurvesegmenttwo (page, 200, 200, 12, 32);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

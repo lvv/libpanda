@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_textannotation(panda_pdf *document, panda_page *page, int open,
  char *text, int top, int left, int bottom, int right,
  int icon, int flags);
@@ -46,8 +46,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *demo;
  panda_page *currPage;
@@ -59,7 +60,7 @@
  
  panda_textannotation(demo, currPage, panda_true, "Hello", 10, 10, 50, 50,
  panda_icon_comment, 0);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

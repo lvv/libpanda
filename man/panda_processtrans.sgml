@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_processtrans(panda_pdf *document, panda_object *victim);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This function is called by the <command>panda_traverseobjects</command>() function to deal with transition effects attached to objects when <command>panda_close</command>() call. You shouldn't need to ever call this function.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This function is called by the &lt;command&gt;panda_traverseobjects&lt;/command&gt;() function to deal with transition effects attached to objects when &lt;command&gt;panda_close&lt;/command&gt;() call. You shouldn't need to ever call this function.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> ou shouldn't need to use this function.
-</para>
+<programlisting>
+ You shouldn't need to use this function.
+</programlisting>
 </refsect1>
 
 

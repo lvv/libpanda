@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_panda_imagebox (panda_pdf * output, panda_page * target, int top, int left, int bottom, int right, char *filename, int type);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function call inserts an image into the PDF document at the specified location using a reasonable default for rotation (none). This call is included for backward compatability withprevious releases of the API and it is recommened that new code call <command>panda_imageboxrot</command>(). It is unlikely that this call will be retired however. The image types accepted by this call are: panda_image_tiff, panda_image_jpeg and panda_image_png.</para>
+<para>This function call inserts an image into the PDF document at the specified location using a reasonable default for rotation (none). This call is included for backward compatability withprevious releases of the API and it is recommened that new code call &lt;command&gt;panda_imageboxrot&lt;/command&gt;(). It is unlikely that this call will be retired however. The image types accepted by this call are: panda_image_tiff, panda_image_jpeg and panda_image_png.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *demo;
  panda_page *currPage;
@@ -57,9 +58,9 @@
  
  currPage = panda_newpage (demo, panda_pagesize_a4);
  
- panda_imagebox (demo, currPage, 0, 0, currPage->height / 2,
- currPage->width, "input.tif", panda_image_tiff);
-</para>
+ panda_imagebox (demo, currPage, 0, 0, currPage-&gt;height / 2,
+ currPage-&gt;width, "input.tif", panda_image_tiff);
+</programlisting>
 </refsect1>
 
 <refsect1>

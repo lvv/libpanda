@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  char *panda_streamprintf (char *stream, char *format, ...);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This function call behaves just like <command>printf</command>(), but the output goes to a textstream within a PDF object, instead of to stdout. Set the value of the textstream to the value returned...</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This function call behaves just like &lt;command&gt;printf&lt;/command&gt;(), but the output goes to a textstream within a PDF object, instead of to stdout. Set the value of the textstream to the value returned...</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> his is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
-</para>
+<programlisting>
+ This is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+</programlisting>
 </refsect1>
 
 <refsect1>

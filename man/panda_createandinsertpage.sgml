@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_createandinsertpage (panda_pdf *output);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This function creates the objects required for a page to exist within <command>Panda</command>. This function is wrappered by other <command>Panda</command> function calls.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This function creates the objects required for a page to exist within &lt;command&gt;Panda&lt;/command&gt;. This function is wrappered by other &lt;command&gt;Panda&lt;/command&gt; function calls.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_page *page;
@@ -54,7 +55,7 @@
  
  document = panda_open("filename.pdf", "w");
  page = panda_createandinsertpage(document);
-</para>
+</programlisting>
 </refsect1>
 
 

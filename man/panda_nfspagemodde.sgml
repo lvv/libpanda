@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_nfspagemode (panda_pdf *document, int pagemode);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>If the document in question is using fullscreen mode and then exits from fullscreen mode, then this function configures the behaviour of several of the 'eye candy' options available in some viewers. The possible values for pagemode are: <command>panda_window_usenone</command>, which displays neither the outline or thumbnails (if present); <command>panda_window_useoutlines</command>, which displays only the outline for the document; <command>panda_window_usethumbs</command>, which only displays thumbnails. <command>Please note that this function will only have an effect on the viewer if the page mode has been set to fullscreen with the panda_fullscreen() function call</command></para>
+<para>If the document in question is using fullscreen mode and then exits from fullscreen mode, then this function configures the behaviour of several of the 'eye candy' options available in some viewers. The possible values for pagemode are: &lt;command&gt;panda_window_usenone&lt;/command&gt;, which displays neither the outline or thumbnails (if present); &lt;command&gt;panda_window_useoutlines&lt;/command&gt;, which displays only the outline for the document; &lt;command&gt;panda_window_usethumbs&lt;/command&gt;, which only displays thumbnails. &lt;command&gt;Please note that this function will only have an effect on the viewer if the page mode has been set to fullscreen with the panda_fullscreen() function call&lt;/command&gt;</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  
@@ -53,7 +54,7 @@
  
  document = panda_open("filename.pdf", "w");
  panda_nfspagemode(document, panda_window_usenone);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

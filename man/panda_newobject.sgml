@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  panda_object *panda_newobject (panda_pdf *output, int type);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. Create a new object within the PDF document output. The types of object are panda_object_normal and panda_object_placeholder -- the difference is that a placeholder object wont be written out when the PDF is dumped to disc. This is an internal function call and would only be need by API users if they are creating support for object types not currently supported by <command>Panda</command>. If this is the case, then these users are encouraged to submit their code changes back to mikal@stillhq.com for inclusion with the next release of <command>Panda</command>, and are reminded of their obligations under the GNU GPL.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. Create a new object within the PDF document output. The types of object are panda_object_normal and panda_object_placeholder -- the difference is that a placeholder object wont be written out when the PDF is dumped to disc. This is an internal function call and would only be need by API users if they are creating support for object types not currently supported by &lt;command&gt;Panda&lt;/command&gt;. If this is the case, then these users are encouraged to submit their code changes back to mikal@stillhq.com for inclusion with the next release of &lt;command&gt;Panda&lt;/command&gt;, and are reminded of their obligations under the GNU GPL.</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_object *obj;
@@ -54,7 +55,7 @@
  
  document = panda_open("filename.pdf", "w");
  obj = panda_newobject(document, panda_object_normal);
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

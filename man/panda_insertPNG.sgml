@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_insertPNG (panda_pdf * output, panda_page * target, panda_object * imageObj, char *filename);
 
 </synopsis>
@@ -34,9 +34,9 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para> <command>PANDA INTERNAL</command>. Do the actual insertion of the PNG image into the PDF document. This routine handles the conversion of the PNG image into the form supported by the PDF specification, and similar operations. It is an internal <command>Panda</command> call and should not be needed by users of the API.
+<para> &lt;command&gt;PANDA INTERNAL&lt;/command&gt;. Do the actual insertion of the PNG image into the PDF document. This routine handles the conversion of the PNG image into the form supported by the PDF specification, and similar operations. It is an internal &lt;command&gt;Panda&lt;/command&gt; call and should not be needed by users of the API.
  
- hile developing this function call, some reference was made to the source code for iText (http://www.lowagie.com/iText), which is a GPL'ed PDF generator written in Java. The code in Panda is original though...
+ While developing this function call, some reference was made to the source code for iText (http://www.lowagie.com/iText), which is a GPL'ed PDF generator written in Java. The code in Panda is original though...
 </para>
 </refsect1>
 
@@ -47,8 +47,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> ee panda_imageboxrot for an example usage
-</para>
+<programlisting>
+ See panda_imageboxrot for an example usage
+</programlisting>
 </refsect1>
 
 <refsect1>

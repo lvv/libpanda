@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_nowdate ();
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. The function nowdate generates a date that is suitable to be embedded into a PDF. This date will include information about the timezone in which the PDF was created and the relationship that this timezone has with GMT (Zulu) time. Mostly this function is used internally within Panda, and should not concern the avaerage programmer too much. This version takes no input, and makes a date for the current time.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. The function nowdate generates a date that is suitable to be embedded into a PDF. This date will include information about the timezone in which the PDF was created and the relationship that this timezone has with GMT (Zulu) time. Mostly this function is used internally within Panda, and should not concern the avaerage programmer too much. This version takes no input, and makes a date for the current time.</para>
 </refsect1>
 
 <refsect1>
@@ -44,11 +44,12 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  printf("The time now is %s\n", panda_nowdate());
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>

@@ -32,7 +32,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This call implements a dummy seek procedure for libtiff to allow for the conversion of TIFF images on the fly in memory without the use of temporary files. It is an internal call and should NEVER be called by users of the API.</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This call implements a dummy seek procedure for libtiff to allow for the conversion of TIFF images on the fly in memory without the use of temporary files. It is an internal call and should NEVER be called by users of the API.</para>
 </refsect1>
 
 <refsect1>
@@ -42,8 +42,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> ee panda_insertTIFF for an example usage
-</para>
+<programlisting>
+ See panda_insertTIFF for an example usage
+</programlisting>
 </refsect1>
 
 <refsect1>

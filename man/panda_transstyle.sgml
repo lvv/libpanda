@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_transstyle (panda_page *target, int style);
 
 </synopsis>
@@ -34,30 +34,30 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para> his function records information within the PDF indicating the preferred page transition style to use. The following are valid styles to use:
- <orderedlist>
- <listitem>panda_pagetrans_split_yi -- vertical split from the inside of the page</listitem>
- <listitem>panda_pagetrans_split_yo -- vertical split from the outside of the page</listitem>
- <listitem>panda_pagetrans_split_xi -- horizontal split from the inside of the page</listitem>
- <listitem>panda_pagetrans_split_xo -- horizontal split from the outside of the page</listitem>
- <listitem>panda_pagetrans_blinds_y -- vertical blinds effect</listitem>
- <listitem>panda_pagetrans_blinds_x -- horizontal blinds effect</listitem>
- <listitem>panda_pagetrans_box_i -- box expanding from the inside of the page</listitem>
- <listitem>panda_pagetrans_box_o -- box contracting from the outside of the page</listitem>
- <listitem>panda_pagetrans_wipe_0 -- a single line wipes the page away from the left to the right</listitem>
- <listitem>panda_pagetrans_wipe_90 -- a single line wipes the page away from the bottom to the top</listitem>
- <listitem>panda_pagetrans_wipe_180 -- a single line wipes the page away from the right to the left</listitem>
- <listitem>panda_pagetrans_wipe_270 -- a single line wipes the page away from the top to the bottom</listitem>
- <listitem>panda_pagetrans_dissolve -- the old page dissolves slowly into the new page</listitem>
- <listitem>panda_pagetrans_glitter_0 -- a glitter effect that moves from the left to the right of the page</listitem>
- <listitem>panda_pagetrans_glitter_270 -- a glitter effect that moves from the top to the bottom of the page</listitem>
- <listitem>panda_pagetrans_glitter_315 -- a glitter effect that moves from the top left to the bottom right of the page</listitem>
- <listitem>panda_pagetrans_none -- no transition effect</listitem>
- </orderedlist>
+<para> This function records information within the PDF indicating the preferred page transition style to use. The following are valid styles to use:
+ &lt;orderedlist&gt;
+ &lt;listitem&gt;panda_pagetrans_split_yi -- vertical split from the inside of the page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_split_yo -- vertical split from the outside of the page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_split_xi -- horizontal split from the inside of the page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_split_xo -- horizontal split from the outside of the page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_blinds_y -- vertical blinds effect&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_blinds_x -- horizontal blinds effect&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_box_i -- box expanding from the inside of the page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_box_o -- box contracting from the outside of the page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_wipe_0 -- a single line wipes the page away from the left to the right&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_wipe_90 -- a single line wipes the page away from the bottom to the top&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_wipe_180 -- a single line wipes the page away from the right to the left&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_wipe_270 -- a single line wipes the page away from the top to the bottom&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_dissolve -- the old page dissolves slowly into the new page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_glitter_0 -- a glitter effect that moves from the left to the right of the page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_glitter_270 -- a glitter effect that moves from the top to the bottom of the page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_glitter_315 -- a glitter effect that moves from the top left to the bottom right of the page&lt;/listitem&gt;
+ &lt;listitem&gt;panda_pagetrans_none -- no transition effect&lt;/listitem&gt;
+ &lt;/orderedlist&gt;
  
- </para>
- <para>
- he default transition is to have no transition at all. It should be noted that not all viewers support these transition effects.
+ &lt;/para&gt;
+ &lt;para&gt;
+ The default transition is to have no transition at all. It should be noted that not all viewers support these transition effects.
 </para>
 </refsect1>
 
@@ -68,8 +68,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  panda_page *page;
@@ -80,7 +81,7 @@
  page = panda_newpage (document, panda_pagesize_a4);
  
  panda_transduration (page, 30.5);
-</para>
+</programlisting>
 </refsect1>
 
 

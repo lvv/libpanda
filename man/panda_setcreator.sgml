@@ -25,8 +25,8 @@
 
 <refsynopsisdiv>
 <synopsis>
- #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  void panda_setcreator (panda_pdf *output, char *value);
 
 </synopsis>
@@ -34,7 +34,7 @@
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para><command>PANDA INTERNAL</command>. This function sets the value of the creator within the PDF document. This is normally the string "Panda", but may be overridden by another call to the function by a user of the API. I'm not sure why you would want to do that though...</para>
+<para>&lt;command&gt;PANDA INTERNAL&lt;/command&gt;. This function sets the value of the creator within the PDF document. This is normally the string "Panda", but may be overridden by another call to the function by a user of the API. I'm not sure why you would want to do that though...</para>
 </refsect1>
 
 <refsect1>
@@ -44,8 +44,9 @@
 
 <refsect1>
 <title>EXAMPLE</title>
-<para> #include&lt;panda/constants.h&gt;
- #include&lt;panda/functions.h&gt;
+<programlisting>
+ #include&amp;lt;panda/constants.h&amp;gt;
+ #include&amp;lt;panda/functions.h&amp;gt;
  
  panda_pdf *document;
  
@@ -53,7 +54,7 @@
  
  document = panda_open("filename.pdf", "w");
  panda_setcreator(document, "Panda PDF Generator");
-</para>
+</programlisting>
 </refsect1>
 
 <refsect1>
