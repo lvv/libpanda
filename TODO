@@ -21,20 +21,21 @@
 
   * Arbitrary image rotations
 
-  * Make all kinds of TIFFs work
+  * Make all kinds of TIFFs work. There is currently on support for:
+      - LZW
+      - Deflated (zip)
+      - Uncompressed
+      - Packbits
 
   * At the moment you can only have background images, make foreground images
-	work as well...
+	work as well... (I think I have this arse about -- you can only have 
+	foreground images...)
 
   * Be a bit more sensible in some of our error handling, for instance, if we
   	can't find a file to include in the PDF we shouldn't exit -- we should
 	report it to the calling function and let them deal with it...
 
   * Documentation!
-
-  * JPEG support needs the following things done:
-	* Multiple jpegs on the one page causes a segmentation fault
-	* Image placement on the page does not work correctly
 
   * Linearisation (also known as optimised PDF)
 

@@ -39,6 +39,8 @@ Release 0.2 -> Release 0.3
 	errors from tiffcp (files much too small to be real):
 	* Planar config (contiguous or separate)
 
+        Feel free to send me some test images for this if you have some...
+
 	The following compression schemes have been tested so far:
 	* CCITT Fax Group 3
 	* CCITT Fax Group 4
@@ -70,3 +72,5 @@ Release 0.2 -> Release 0.3
 
   * My brain had stopped working, all tiffs should now work because I removed
 	the silly bug.
+
+  * Ensured that multiple tiffs and jpegs on the one page works as expected.

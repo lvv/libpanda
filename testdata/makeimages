@@ -2,12 +2,14 @@
 
 # Sometimes we just want to be lazy and make one compression format. See if 
 # this is so
-if [ `echo $1 | wc -c | tr -d " "` -gt 0 ]
+if [ `echo $1 | wc -c | tr -d " "` -gt 1 ]
 then
   compressionOptions=$1
 else
   compressionOptions="none packbits jpeg zip g3 g4"
 fi
+
+echo "Compressions selected: $compressionOptions"
 
 for endian in B L
 do
