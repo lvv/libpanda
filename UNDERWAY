@@ -3,3 +3,5 @@ This file documents work that is currently being undertaken on the Panda codebas
   * Lexer development (opening PDF documents for modification)
 
   * TIFF improvements (testing)
+
+  * Implementation of automake and stuff like that
