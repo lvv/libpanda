@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for item in `ls *db`
+do
+  echo $item
+  tail -1 $item
+done
