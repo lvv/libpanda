@@ -213,13 +213,24 @@ void writeObject(pdf *output, object *dumpTarget){
     // needed for the XREF later
     dumpTarget->byteOffset = output->byteOffset;
 
-    // Do we have a textstream? If we do, work out the length of the stream and
-    // save that as a dictionary element
+    /*************************************************************************
+      Do we have a textstream? If we do, work out the length of the stream and
+      save that as a dictionary element -- this needs to include all of the
+      different stream types eventually...
+
+      The +6 is because of the BT and ET that are added at this stage...
+
+    *************************************************************************/
+
+    // Textstream
+
     if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
-      adddictitem(dumpTarget, "Length", gIntValue, dumpTarget->textstreamLength);
+      adddictitem(dumpTarget, "Length", gIntValue, 
+        dumpTarget->textstreamLength + 6);
     }
     
-    // We are going to dump the named object (and only the named object) to disk
+    // We are going to dump the named object (and only the named object) to 
+    // disk
     pdfprintf(output, "%d %d obj\n", dumpTarget->number, 
       dumpTarget->generation);
 
@@ -227,14 +238,14 @@ void writeObject(pdf *output, object *dumpTarget){
 
     // Do we have a textstream?
     if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
-      pdfprintf(output, "textstream\n");
+      pdfprintf(output, "stream\nBT\n");
 
       // This is done because a valid textstream count contain a \0, which
       // would confuse pdfprintf with a %s
       for(count = 0; count < dumpTarget->textstreamLength; count ++)
         pdfprintf(output, "%c", dumpTarget->textstream[count]);
 
-      pdfprintf(output, "\nendtextstream\n");
+      pdfprintf(output, "ET\nendstream\n");
     }
     
     pdfprintf(output, "endobj\n");

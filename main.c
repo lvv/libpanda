@@ -44,7 +44,7 @@ int main(int argc, char *argv[]){
 
     // I am not drawing a multiline string here because I am not sure how to 
     // represent this in the PDF at the moment
-    sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok (once you have set a leading)", 4, 6, 5);
+    sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.", 4, 6, 5);
     textbox(demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30, 
       tempString);
 

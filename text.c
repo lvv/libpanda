@@ -91,7 +91,7 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   // This is a little dodgy at the moment because I do not understand the
   // PS matrix environment well enough to be writing this sort of code. I am
   // going to have to have a look into this a little more...
-  textstreamprintf(textobj, "BT\n1 0 0 1 %d %d Tm\n",
+  textstreamprintf(textobj, "1 0 0 1 %d %d Tm\n",
     internalLeft, internalTop);
 
   // There are now a whole bunch of options that may or may not need to be set
@@ -188,9 +188,4 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
 
     currentToken = strtok(NULL, delim);
   }
-
-  /***************************************************************************
-    Now finish the text off
-  ***************************************************************************/
-  textstreamprintf(textobj, "ET");
 }

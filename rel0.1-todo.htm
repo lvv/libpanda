@@ -65,7 +65,7 @@ the moment, because everything is so simple).</td>
 <center>
 <p><i>Bugs known in rel0.1 (hopefully fixed in rel0.2)</i></center>
 
-<br><i></i>&nbsp;
+<p><br>
 <table COLS=1 WIDTH="100%" >
 <tr>
 <td><b><i>Bugs</i></b></td>
@@ -76,7 +76,8 @@ the moment, because everything is so simple).</td>
 </tr>
 
 <tr>
-<td>Multiple text boxes on one page causes a bus error.</td>
+<td>You cannot use the ( or ) characters in textboxes because of the way
+strings are quoted within the PDF.</td>
 </tr>
 
 <tr>
@@ -84,9 +85,11 @@ the moment, because everything is so simple).</td>
 </tr>
 
 <tr>
-<td>Multiple lines of text in a textbox does not work yet.</td>
+<td><i>Semi bug: </i>Font handling for multiple text boxes on one page
+is not very intelligent... It will set the font multiple times, despite
+whether it has changed or not.</td>
 </tr>
 </table>
-<i></i>
+
 </body>
 </html>
