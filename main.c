@@ -9,7 +9,6 @@
 		as stand alone application. This file supports that methodology.
 ******************************************************************************/
 
-#define		GLOBALS			here
 #include	"functions.h"
 #include	"constants.h"
 

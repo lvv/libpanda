@@ -4,23 +4,30 @@ COMPILER = gcc
 COMPILER_FLAGS = -g -c
 
 # This is used to do the Windows specific I/O things we have to do.
-#PLATFORM = WINDOWS
-PLATFORM = LINUX
+PLATFORM = WINDOWS
+#PLATFORM = LINUX
 
-OBJFILES = error.o  font.o  main.o  objects.o  panda.o  text.o  trailer.o  utility.o  xref.o
+# Main is excluded from here for the benefit of the tests
+OBJFILES = error.o  font.o  objects.o  panda.o  text.o  trailer.o  utility.o  xref.o
 
 # Build panda
-all:		$(OBJFILES)
-		gcc $(OBJFILES) -o panda
+all:		$(OBJFILES) main.o
+		gcc $(OBJFILES) main.o -o panda
 
 # Clean up
 clean:	
-		rm *.o; rm panda
+		rm *.o; rm panda; rm *core*
 
 # Make sure we build a realistic release for the world
 release:
 		make clean; make all; rm *.o; strip panda
 
+# This is used to test the functionality of routines to make sure they are not
+# broken
+test:		test.c constants.h functions.h objects.h $(OBJFILES)
+		$(COMPILER) $(COMPILER_FLAGS) test.c -o test.o; gcc $(OBJFILES) test.o -o test; ./test
+
+################################################################################
 error.o:	error.c constants.h functions.h objects.h
 		$(COMPILER) $(COMPILER_FLAGS) error.c -o error.o
 

@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# This files is a whole bunch of tests of things that have previously failed.
+# It is run before a release is made.
+
+# Make sure xpdf can open the PDF at all without many errors

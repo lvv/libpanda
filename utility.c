@@ -32,12 +32,14 @@ void pdfprintf(pdf *file, char *format, ...){
 #if defined WINDOWS
   if((formatString = malloc(strlen(format) * sizeof(char))) == NULL)
     error("Could not make temporary printing space.");
+
+  strcpy(formatString, format);
 #else
   // We need to go through the format string and replace \n with \r\n
   // because lines in a PDF end with \r\n (one of the options)
 
   // Count the number of \n's.
-  for(counter = 0; counter < strlen(format); counter++)
+/*  for(counter = 0; counter < strlen(format); counter++)
     if(format[counter] == '\n') newlineCount++;
 
   if((formatString = 
@@ -45,24 +47,26 @@ void pdfprintf(pdf *file, char *format, ...){
     error("Could not make temporary printing space.");
 
   for(counter = indent = 0; counter < strlen(format); counter++){
-    if(format[counter] == '\n'){
-      formatString[indent++] = '\r';
-      formatString[indent++] = format[counter];
-      }
-    else formatString[indent++] = format[counter];
+    //    if(format[counter] == '\n'){
+    //  formatString[indent++] = '\r';
+    //  formatString[indent++] = format[counter];
+    //  }
+    // else
+
+    formatString[indent++] = format[counter];
     }
 
-  formatString[indent] = 0;
+  formatString[indent] = 0; */
 #endif
 
   // Build the information
   va_start(argPtr, format);
   vsprintf(buffer, formatString, argPtr);
-  va_end(argPtr);
 
   // Record how long it was
   file->byteOffset += strlen(buffer);
 
+#if defined WINDOWS
   // Count how many \n's there are and take into account the \r windows will
   // add (change for unix)
 
@@ -72,7 +76,6 @@ void pdfprintf(pdf *file, char *format, ...){
     counter++;
   }
 
-#if defined WINDOWS
   // Add this number to the byteOffset
   file->byteOffset += newlineCount;
 #endif
@@ -82,4 +85,5 @@ void pdfprintf(pdf *file, char *format, ...){
 
   // Free the temp string
   free(formatString);
+  va_end(argPtr);
 }
