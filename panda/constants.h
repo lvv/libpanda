@@ -145,6 +145,18 @@ extern "C"
     panda_pagetrans_none
   };
 
+// Possible annotation icons
+  enum
+  {
+    panda_icon_comment = 0,
+    panda_icon_help,
+    panda_icon_insert,
+    panda_icon_key,
+    panda_icon_newparagraph,
+    panda_icon_note,
+    panda_icon_paragraph
+  };
+
 // Properties that might be held by objects -- panda_const_properties
   enum
   {

@@ -276,8 +276,8 @@ panda_imageboxinternal (panda_pdf * output, panda_page * target, int top,
       panda_adddictitem (output, imageObj, "Subtype", panda_textvalue,
 			 "Image");
 
-      // This line will need to be changed to gaurantee that the internal name is
-      // unique unless the actual image is the same
+      // This line will need to be changed to gaurantee that the internal 
+      // name is unique unless the actual image is the same
       panda_adddictitem (output, imageObj, "Name", panda_textvalue,
 			 pdfFilename);
     }
