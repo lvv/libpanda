@@ -7,10 +7,13 @@
 	PDF fonts are defined below
 ******************************************************************************/
 
+#if defined _WINDOWS
+#include "stdafx.h"
+#else
 #include <panda/constants.h>
 #include <panda/functions.h>
+#endif
 #include <math.h>
-
 
 /* Generated From .afm files for the 14 Core PDF fonts see:-         */
 /* http://partners.adobe.com/asn/developer/technotes/acrobatpdf.html */
@@ -271,8 +274,15 @@ panda_getfontmetric (panda_pdf * output)
   fontname = panda_dbread (output, fontname);
 
   while (fontmetric && fontmetric->fontName &&
+	 // Dirty hack: Anyone know if Win32 includes a strcasecmp that I'm missing?
+#ifdef _WINDOWS
+	 (strcmp (fontmetric->fontName, fontname) != 0
+	  && strcmp (fontmetric->fontName, "*") != 0)
+#else
 	 (strcasecmp (fontmetric->fontName, fontname) != 0
-	  && strcasecmp (fontmetric->fontName, "*") != 0))
+	  && strcasecmp (fontmetric->fontName, "*") != 0)
+#endif _WINDOWS
+	 )
     {
       fontmetric = fontmetric++;
     }
