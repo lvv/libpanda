@@ -3,3 +3,5 @@
 	once per page).
 
   * Callback for error handling implementation.
+
+  * Only one font will work per page at the moment. Fix this.

@@ -49,4 +49,6 @@ int main(int argc, char *argv[]){
   }
 
   pdfclose(demo);
+
+  exit(0);
 }

@@ -30,17 +30,12 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   //  adddictitem(thisPage->obj, "Contents", gObjValue, textobj);
   textobj = thisPage->contents;
 
-  // Is there a font setup?
+  // Is there a font setup? Does this work with changing the font?
   if(output->currentFont == NULL){
     setfont(output,
       createfont(output, "Helvetica", 1, "MacRomanEncoding"));
-  }
 
-  // Is there a text size setup?
-  if(output->currentFontSize == -1)
-    setfontsize(output, 16);
-
-  /***************************************************************************
+    /************************************************************************
     This font has to be referred to in the resources entry in the dictionary.
 
     The resources dictionary looks a lot like:
@@ -51,22 +46,27 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
         >>
 
     An example line is /MikalsFont 54 0 R
-  ***************************************************************************/
+    *************************************************************************/
 
-  // Find the font object needed
-  if((fontObj = getfontobj(output, output->currentFont)) == NULL)
-    error("Could not find the font requested.");
+    // Find the font object needed
+    if((fontObj = getfontobj(output, output->currentFont)) == NULL)
+      error("Could not find the font requested.");
 
-  // We make an object not just a dictionary because this is what
-  // adddictitem needs
-  subsubdict = newobject(output, gPlaceholder);
-  adddictitem(subsubdict, output->currentFont, gObjValue, fontObj);
+    // We make an object not just a dictionary because this is what
+    // adddictitem needs
+    subsubdict = newobject(output, gPlaceholder);
+    adddictitem(subsubdict, output->currentFont, gObjValue, fontObj);
   
-  subdict = newobject(output, gPlaceholder);
-  adddictitem(subdict, "Font", gDictionaryValue, subsubdict->dict);
+    subdict = newobject(output, gPlaceholder);
+    adddictitem(subdict, "Font", gDictionaryValue, subsubdict->dict);
 
-  // And put this into the PDF
-  adddictitem(thisPage->obj, "Resources", gDictionaryValue, subdict->dict);
+    // And put this into the PDF
+    adddictitem(thisPage->obj, "Resources", gDictionaryValue, subdict->dict);
+  }
+
+  // Is there a text size setup?
+  if(output->currentFontSize == -1)
+    setfontsize(output, 16);
   
   /***************************************************************************
     PDF deals in points, with the bottom left hand side of the page being at

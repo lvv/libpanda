@@ -51,7 +51,9 @@ do
 
       for item in `grep system timings | tr " " "_"`
       do
-        time=`echo $item | sed 's/.*user_//' | sed 's/system.*//'`
+        utime=`echo $item | sed 's/user.*//'`
+        stime=`echo $item | sed 's/.*user_//' | sed 's/system.*//'`
+	time=`/.math $utime + $stime`
         runningtime=`./math $runningtime + $time`
       done
 

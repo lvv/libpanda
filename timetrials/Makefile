@@ -1,7 +1,11 @@
 # Panda 0.1 Makefile -- Time trials
 
+# First one turns profiling on
+PROFILING = -pg
+# PROFILING =
+
 COMPILER=gcc
-COMPOPTS=-I/usr/local/include -L/usr/local/lib -Wall -ggdb
+COMPOPTS=-I/usr/local/include -L/usr/local/lib -Wall -ggdb $(PROFILING)
 
 ##############################################################################
 

@@ -243,11 +243,14 @@ void writeObject(pdf *output, object *dumpTarget){
     if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
       pdfprintf(output, "stream\nBT\n");
 
-      // This is done because a valid textstream could contain a \0, which
+      // This is done because a valid stream could contain a \0, which
       // would confuse pdfprintf with a %s
-      for(count = 0; count < dumpTarget->textstreamLength; count ++)
-        pdfputc(output, dumpTarget->textstream[count]);
+      //for(count = 0; count < dumpTarget->textstreamLength; count ++)
+      //  pdfputc(output, dumpTarget->textstream[count]);
 
+
+      // We know that textstreams never contain a \0, so we can use pdfprintf
+      pdfprintf(output, "%s\n", dumpTarget->textstream);
       pdfprintf(output, "ET\nendstream\n");
     }
     

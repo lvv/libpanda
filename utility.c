@@ -25,8 +25,8 @@ void pdfprintf(pdf *file, char *format, ...){
   // bytes we have gone into the file. POSSIBLE BUG: Cannot print more than
   // 1024 bytes at a time. I am not sure how to decide how much memory to
   // allocate...
-  char     buffer[1024], *formatString;
-  int      newlineCount = 0, counter = 0, indent = 0;
+  char     *buffer, *formatString;
+  int      newlineCount = 0, counter = 0, indent = 0, actualLen;
   va_list  argPtr;
 
   // This is a little strange... On a windows machine, printf inserts \r's 
@@ -63,9 +63,24 @@ void pdfprintf(pdf *file, char *format, ...){
   formatString[indent] = 0;
 #endif
 
+  // Now we need to make a best guess at how long buffer needs to be -- it is 
+  // hardly ever longer than 1k...
+  if((buffer = malloc(1024 * sizeof(char))) == NULL)
+    error("Could not grab space for a pdfprintf call (1k).");
+
   // Build the information
   va_start(argPtr, format);
-  vsprintf(buffer, formatString, argPtr);
+  if((actualLen = vsnprintf(buffer, 1024, formatString, argPtr)) > 1020){
+    // We did not fit! Try again...
+    free(buffer);
+
+    if((buffer = malloc(actualLen * sizeof(char))) == NULL)
+      error("Could not grab space for a pdfprintf call (actual).");
+
+    if(vsnprintf(buffer, actualLen, formatString, argPtr) > actualLen){
+      error("Really bad file i/o error.");
+    }
+  }
 
   // Record how long it was
   file->byteOffset += strlen(buffer);
