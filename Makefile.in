@@ -16,8 +16,8 @@ PROFILING = -pg
 #PROFILING = 
 
 # Use dmalloc to find memory allocation bugs?
-#DMALLOC = NO2
-DMALLOC = DMALLOC -ldmalloc
+DMALLOC = NO
+#DMALLOC = DMALLOC -ldmalloc
 
 # Do we optomise?
 OPTO = 
