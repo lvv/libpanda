@@ -167,6 +167,9 @@ panda_open_actual (char *filename, char *mode, int suppress)
   // Make some space for the PDF information
   openedpdf = (panda_pdf *) panda_xmalloc (sizeof (panda_pdf));
 
+  // Every PDF needs a database
+  panda_dbopen(openedpdf);
+
   // Every PDF is going to have to have some xref information associated with
   // it at some stage.
   openedpdf->xrefList = (panda_xref *) panda_xmalloc (sizeof (panda_xref));
@@ -202,6 +205,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
       // We have no objects yet
       openedpdf->nextObjectNumber = 1;
+      openedpdf->nextPHObjectNumber = 1;
       openedpdf->totalObjectNumber = 0;
 
       // We are at the begining of the file
@@ -217,7 +221,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  // We need a catalog object with some elements within it's dictionary
 	  openedpdf->catalog = (panda_object *) panda_newobject (openedpdf,
 								 panda_normal);
-	  panda_adddictitem (openedpdf->catalog->dict, "Type",
+	  panda_adddictitem (openedpdf, openedpdf->catalog, "Type",
 			     panda_textvalue, "Catalog");
 
 	  // We need a reference to our pages object
@@ -225,7 +229,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 			  openedpdf->pages =
 			  (panda_object *) panda_newobject (openedpdf,
 							    panda_normal));
-	  panda_adddictitem (openedpdf->catalog->dict, "Pages",
+	  panda_adddictitem (openedpdf, openedpdf->catalog, "Pages",
 			     panda_objectvalue, openedpdf->pages);
 
 	  // We need to remember how many pages there are for later
@@ -236,7 +240,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  openedpdf->pageholders->next = NULL;
 
 	  // We now need to setup some information in the pages object
-	  panda_adddictitem (openedpdf->pages->dict, "Type", panda_textvalue,
+	  panda_adddictitem (openedpdf, openedpdf->pages, "Type", panda_textvalue,
 			     "Pages");
 	  openedpdf->pages->isPages = panda_true;
 
@@ -266,7 +270,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	      (panda_true, "Failed to make an info object for the PDF. Not sure why...");
 
 	  // Add some stuff
-	  panda_adddictitem (openedpdf->info->dict, "Producer",
+	  panda_adddictitem (openedpdf, openedpdf->info, "Producer",
 			     panda_brackettedtextvalue, 
 #if defined _WINDOWS
 				 "Panda 0.4.2 MS Windows Version"
@@ -274,7 +278,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 				 "Panda 0.4.2"
 #endif			 
 				 );
-	  panda_adddictitem (openedpdf->info->dict, "CreationDate",
+	  panda_adddictitem (openedpdf, openedpdf->info, "CreationDate",
 			     panda_brackettedtextvalue, tempPtr =
 			     panda_nowdate ());
 
@@ -313,7 +317,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  openedpdf->mode = panda_writelinear;
 	  openedpdf->linear = (panda_object *) panda_newobject (openedpdf,
 								panda_normal);
-	  panda_adddictitem (openedpdf->linear->dict, "Linearised",
+	  panda_adddictitem (openedpdf, openedpdf->linear, "Linearised",
 			     panda_integervalue, 1);
 	}
       else
@@ -381,26 +385,10 @@ panda_close (panda_pdf * openedpdf)
 
   // The header was written when we created the file on disk
 
-  // We need to move the view preferences into the catalog from their
-  // temporary location
-#if defined DEBUG
-  printf("Viewer preferences being moved across\n");
-#endif
-
-  panda_adddictitem(openedpdf->catalog->dict, "ViewerPreferences",
-  		    panda_dictionaryvalue, openedpdf->viewerPrefs->dict);
-  
-#if defined DEBUG
-  printf("Determining if there are any transitions on any of the pages and moving them if needed\n");
-#endif
-
-  panda_traverseobjects (openedpdf, openedpdf->pages, panda_down,
-			 panda_processtrans);
-
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
   if (openedpdf->pages != NULL)
-    panda_adddictitem (openedpdf->pages->dict, "Count", panda_integervalue,
+    panda_adddictitem (openedpdf, openedpdf->pages, "Count", panda_integervalue,
 		       openedpdf->pageCount);
 
   // Before we do anything, we need to make sure that we have ended the
@@ -534,6 +522,8 @@ panda_close (panda_pdf * openedpdf)
 
   free (openedpdf->xrefList);
   //free (openedpdf->dummyObj);
+  
+  panda_dbclose(openedpdf);
   free (openedpdf);
 }
 
@@ -581,11 +571,13 @@ panda_newpage (panda_pdf * output, char *pageSize)
   newPage = panda_createandinsertpage (output);
 
   // Setup some basic things within the page object's dictionary
-  panda_adddictitem (newPage->obj->dict, "Type", panda_textvalue, "Page");
-  panda_adddictitem (newPage->obj->dict, "MediaBox", panda_literaltextvalue,
+  panda_adddictitem (output, newPage->obj, "Type", panda_textvalue, "Page");
+  panda_adddictitem (output, newPage->obj, "MediaBox", panda_literaltextvalue,
 		     pageSize);
-  panda_adddictitem (newPage->obj->dict, "Parent", panda_objectvalue,
+  panda_adddictitem (output, newPage->obj, "Parent", panda_objectvalue,
 		     output->pages);
+  panda_adddictitem (output, output->pages, "Kids", panda_objectarrayvalue,
+		     newPage->obj);
 
   // Copy the pageSize string somewhere safe, and then clobber the copy.
   // We can't clobber the original because it is a constant anyway and it would
@@ -670,18 +662,5 @@ DOCBOOK END
 void
 panda_processtrans (panda_pdf * opened, panda_object * obj)
 {
-#if defined DEBUG
-  printf ("processtrans() traversal struct object numbered %d\n", obj->number);
-#endif
-
-  // If the transitions dictionary has anything in it
-  if(obj->trans->name != NULL)
-    {
-#if defined DEBUG
-      printf("Moved the transitions dictionary into the page contents\n");
-#endif
-
-      panda_adddictitem(obj->dict, "Trans", panda_dictionaryvalue,
-			obj->trans);
-    }
+  // todo_mikal
 }

@@ -62,10 +62,10 @@ panda_createfont (panda_pdf * output, char *fontname, int type,
   panda_addchild (output->fonts, font);
 
   // Setup some values within the font object
-  panda_adddictitem (font->dict, "Type", panda_textvalue, "Font");
+  panda_adddictitem (output, font, "Type", panda_textvalue, "Font");
 
   tempBuffer = panda_xsnprintf ("Type%d", type);
-  panda_adddictitem (font->dict, "Subtype", panda_textvalue, tempBuffer);
+  panda_adddictitem (output, font, "Subtype", panda_textvalue, tempBuffer);
   if(tempBuffer != NULL)
     free(tempBuffer);
   
@@ -73,10 +73,10 @@ panda_createfont (panda_pdf * output, char *fontname, int type,
   fontident = panda_xsnprintf ("F%08d", output->nextFontNumber);
   output->nextFontNumber++;
 
-  panda_adddictitem (font->dict, "Name", panda_textvalue, fontident);
+  panda_adddictitem (output, font, "Name", panda_textvalue, fontident);
   
-  panda_adddictitem (font->dict, "BaseFont", panda_textvalue, fontname);
-  panda_adddictitem (font->dict, "Encoding", panda_textvalue, encoding);
+  panda_adddictitem (output, font, "BaseFont", panda_textvalue, fontname);
+  panda_adddictitem (output, font, "Encoding", panda_textvalue, encoding);
 
 #if defined DEBUG
   printf ("Returning the font ident \"%s\"\n", fontident);
@@ -206,8 +206,7 @@ panda_getfontobj (panda_pdf * output, char *fontident)
   // Name with the value fontident. Find it. We do not handle
   // sub-dictionaries here at the moment...
   panda_child *thisChild;
-  panda_dictionary *thisDict;
-  char *valueString;
+  char *valueString, *found, *foundkey;
 
 #if defined DEBUG
   printf ("Looking in pdf for font object \"%s\"\n", fontident);
@@ -222,18 +221,37 @@ panda_getfontobj (panda_pdf * output, char *fontident)
   // Go through each of the children until we find something
   while (thisChild->next != NULL)
     {
+#if defined DEBUG
+      printf("Checking the object numbered %d\n", thisChild->me->number);
+#endif
+
       // We are now going to go through this dictionary
-      thisDict = thisChild->me->dict;
+      if((foundkey = panda_finddictitem(output, thisChild->me, "Name")) 
+	 != NULL){
+#if defined DEBUG
+	printf("Found a contender key: %s\n", foundkey);
+#endif
 
-      while (thisDict->next != NULL)
-	{
-	  // Is this the one?
-	  if ((strcmp (thisDict->name, "Name") == 0) &&
-	      (strcmp (thisDict->textValue, valueString) == 0))
-	    return thisChild->me;
+	if(((found = panda_dbread(output, foundkey)) != NULL) && 
+	   (strcmp(found, valueString) == 0)){
+#if defined DEBUG
+	  printf("The value for this key was: %s\n", found);
+#endif
 
-	  thisDict = thisDict->next;
+	  free(found);
+	  free(foundkey);
+	  return thisChild->me;
 	}
+
+	if(found != NULL){
+#if defined DEBUG
+	  printf("Found font contender: (%s) (%s)\n", found, valueString);
+#endif
+	  free(found);
+	}
+	
+	free(foundkey);
+      }
 
       thisChild = thisChild->next;
     }

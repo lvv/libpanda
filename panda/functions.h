@@ -64,6 +64,15 @@ extern "C"
   void panda_setlinecolor (panda_page *, int, int, int);
 
 /******************************************************************************
+  Database.c
+******************************************************************************/
+
+  void panda_dbopen(panda_pdf *);
+  void panda_dbclose(panda_pdf *);
+  void panda_dbwrite(panda_pdf *, char *, char *);
+  char *panda_dbread(panda_pdf *, char *);
+
+/******************************************************************************
   Date.c
 ******************************************************************************/
 
@@ -152,16 +161,27 @@ extern "C"
 ******************************************************************************/
 
   panda_object *panda_newobject (panda_pdf *, int);
-  panda_dictionary *panda_adddictitem (panda_dictionary *, char *, int, ...);
-  void *panda_getdictvalue (panda_dictionary *);
-  panda_dictionary *panda_getdict (panda_dictionary *, char *);
+  
+  int panda_adddict(panda_pdf *);
+  char * panda_adddictitem (panda_pdf *, panda_object *, char *, int, ...);
+  char * panda_adddictiteminternal(panda_pdf *document, int dictno, 
+				   int dictelem, char *name, int valueType, 
+				   char *value);
+  int panda_getobjdictno(panda_pdf *, panda_object *);
+  int panda_getdictelem(panda_pdf *, int, char *);
+  char *panda_finddictitem (panda_pdf *, panda_object *, char *);
+  char *panda_finddictiteminternal (panda_pdf *, int, char *);
+
   void panda_freeobject (panda_pdf *, panda_object *);
   void panda_freetempobject (panda_pdf *, panda_object *, int);
   void panda_freeobjectactual (panda_pdf *, panda_object *, int, int);
-  void panda_freedictionary (panda_dictionary *);
+  //  void panda_freedictionary (panda_dictionary *);
+  void panda_freedictionary (panda_object *);
   void panda_writeobject (panda_pdf *, panda_object *);
-  void panda_writedictionary (panda_pdf *, panda_object *,
-			      panda_dictionary *);
+
+  void panda_writedictionary (panda_pdf *, panda_object *);
+  void panda_writedictionaryinternal (panda_pdf *, int, int);
+
   void panda_addchild (panda_object *, panda_object *);
   void panda_traverseobjects (panda_pdf *, panda_object *, int,
 			      traverseFunct);
@@ -210,9 +230,9 @@ extern "C"
   void panda_nfspagemode (panda_pdf *, int);
   void panda_fullscreen (panda_pdf *, int);
   void panda_textdirection (panda_pdf *, int);
-  void panda_pageduration (panda_page *, int);
-  void panda_transduration (panda_page *, double);
-  void panda_transstyle (panda_page *, int);
+  void panda_pageduration (panda_pdf *, panda_page *, int);
+  void panda_transduration (panda_pdf *, panda_page *, double);
+  void panda_transstyle (panda_pdf *,panda_page *, int);
 
 /******************************************************************************
   Windows.c -- Windows specific function calls

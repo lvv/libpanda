@@ -23,6 +23,8 @@
   #include <panda/constants.h>
 #endif
 
+#include <tdb.h>
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -37,18 +39,18 @@ extern "C"
   }
   panda_objectarray;
 
-  typedef struct panda_internal_dictionary
-  {
-    char *name;
-    int valueType;
-    int intValue;
-    char *textValue;
-    panda_objectarray *objectarrayValue;
-    struct panda_internal_dictionary *dictValue;
-
-    struct panda_internal_dictionary *next;
-  }
-  panda_dictionary;
+  //  typedef struct panda_internal_dictionary
+  //  {
+  //    char *name;
+  //    int valueType;
+  //    int intValue;
+  //    char *textValue;
+  //    panda_objectarray *objectarrayValue;
+  //    struct panda_internal_dictionary *dictValue;
+  //
+  //    struct panda_internal_dictionary *next;
+  //  }
+  //  panda_dictionary;
 
   typedef struct panda_internal_object
   {
@@ -58,8 +60,8 @@ extern "C"
     int textmode;
     int insidegraphicsblock;
     unsigned long byteOffset;
-    panda_dictionary *dict;
-    panda_dictionary *trans;
+    //    panda_dictionary *dict;
+    //    panda_dictionary *trans;
     char *currentSetFont;
 
     char *layoutstream, *binarystream;
@@ -72,6 +74,7 @@ extern "C"
     int isPages;
     int isContents;
     int isTemplate;
+    int isPlaceholder;
 
     char cascadeproperties[panda_object_property_max];
     char localproperties[panda_object_property_max];
@@ -82,7 +85,7 @@ extern "C"
   {
     panda_object *obj;
     panda_object *contents;
-    panda_dictionary *annotations;
+    //    panda_dictionary *annotations;
 
     int height;
     int width;
@@ -116,7 +119,7 @@ extern "C"
     FILE *file;
     panda_object *catalog, *pages, *fonts, *info, *linear;
     unsigned long byteOffset, xrefOffset;
-    int nextObjectNumber, pageCount, totalObjectNumber;
+    int nextObjectNumber, nextPHObjectNumber, pageCount, totalObjectNumber;
     panda_xref *xrefList, *xrefTail;
     int mode;
 
@@ -141,25 +144,28 @@ extern "C"
 
     // This is a dummy object for the viewer preferences dictionary
     panda_object *viewerPrefs;
+
+    // Database for the internal representation of the PDF
+    TDB_CONTEXT *db;
   }
   panda_pdf;
 
-#if defined _WINDOWS
-  typedef struct windows_panda_internal_ptrlist
-  {
-    void *me;
-	int number;
-    struct windows_panda_internal_ptrlist *next;
-  }
-  windows_panda_ptrlist;
+  //#if defined _WINDOWS
+  //  typedef struct windows_panda_internal_ptrlist
+  //  {
+  //    void *me;
+  //	int number;
+  //    struct windows_panda_internal_ptrlist *next;
+  //  }
+  //  windows_panda_ptrlist;
 
-  typedef struct windows_panda_internal_abs
-  {
-    int highest;
-	windows_panda_ptrlist *list;
-  }
-  windows_panda_abs;
-#endif
+  //  typedef struct windows_panda_internal_abs
+  //  {
+  //    int highest;
+  //	windows_panda_ptrlist *list;
+  //  }
+  //  windows_panda_abs;
+  //#endif
 
 #ifdef __cplusplus
 }

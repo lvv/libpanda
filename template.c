@@ -28,7 +28,6 @@ panda_page *
 panda_newtemplate (panda_pdf * output, char *pageSize)
 {
   panda_page *template;
-  panda_object *xobjrefsubdict;
 
   // Make some space for the object
   template = (panda_page *) panda_xmalloc (sizeof (panda_page));
@@ -48,31 +47,15 @@ panda_newtemplate (panda_pdf * output, char *pageSize)
   template->contents->insidegraphicsblock = panda_false;
 
   // Add the required dictionary elements for a template page
-  panda_adddictitem (template->obj->dict, "Type", panda_textvalue, "XObject");
-  panda_adddictitem (template->obj->dict, "Subtype", panda_textvalue, "Form");
-  panda_adddictitem (template->obj->dict, "FormType", panda_integervalue, 1);
-  panda_adddictitem (template->obj->dict, "BBox", panda_literaltextvalue,
+  panda_adddictitem (output, template->obj, "Type", panda_textvalue, "XObject");
+  panda_adddictitem (output, template->obj, "Subtype", panda_textvalue, "Form");
+  panda_adddictitem (output, template->obj, "FormType", panda_integervalue, 1);
+  panda_adddictitem (output, template->obj, "BBox", panda_literaltextvalue,
 		     pageSize);
-  panda_adddictitem (template->obj->dict, "Matrix", panda_literaltextvalue,
+  panda_adddictitem (output, template->obj, "Matrix", panda_literaltextvalue,
 		     "[1 0 0 1 0 0]");
-
-  // We make an object not just a dictionary because this is what
-  // adddictitem needs
-  xobjrefsubdict = (panda_object *) panda_newobject (output,
-                                                     panda_placeholder);
-  panda_adddictitem (xobjrefsubdict->dict, "ProcSet", panda_literaltextvalue,
-		     "[/PDF]");
-
-  // And put this into the PDF
-  panda_adddictitem (template->obj->dict, "Resources", panda_dictionaryvalue,
-                     xobjrefsubdict->dict);
-
-  // Now we need to clean up the temporary objects
-#if defined DEBUG
-  printf("Freeing a temporary object\n");
-#endif
-
-  panda_freetempobject(output, xobjrefsubdict, panda_false);
+  panda_adddictitem (output, template->obj, "Resources/ProcSet", 
+		     panda_literaltextvalue, "[/PDF]");
 
   // There is a pdf wide name that we use in resources sections to refer to
   // this template
@@ -88,8 +71,8 @@ void
 panda_applytemplate(panda_pdf *output, panda_page *target, 
 		    panda_page *template)
 {
-  panda_object *xobjrefsubdict, *xobjrefsubsubdict;
   int left = 0, right = 200, top = 0, bottom = 200;
+  char *dictkey;
 
   // We also need to add some information to the layout stream for the contents
   // object for the page that the image is being displayed on. This information
@@ -117,27 +100,8 @@ panda_applytemplate(panda_pdf *output, panda_page *target,
 
   panda_exitgraphicsmode (target);
 
-  // We make an object not just a dictionary because this is what
-  // adddictitem needs
-  xobjrefsubsubdict = (panda_object *) panda_newobject (output,
-                                                        panda_placeholder);
-  panda_adddictitem (xobjrefsubsubdict->dict, template->templatename, 
+  dictkey = panda_xsnprintf("Resources/XObject/%s", template->templatename);
+  panda_adddictitem (output, target->obj, dictkey, 
 		     panda_objectvalue, template->obj);
-
-  xobjrefsubdict = (panda_object *) panda_newobject (output,
-                                                     panda_placeholder);
-  panda_adddictitem (xobjrefsubdict->dict, "XObject", panda_dictionaryvalue,
-                     xobjrefsubsubdict->dict);
-
-  // And put this into the PDF
-  panda_adddictitem (target->obj->dict, "Resources", panda_dictionaryvalue,
-                     xobjrefsubdict->dict);
-
-  // Now we need to clean up the temporary objects
-#if defined DEBUG
-  printf("Freeing two temporary objects (templates)\n");
-#endif
-
-  panda_freetempobject(output, xobjrefsubsubdict, panda_false);
-  panda_freetempobject(output, xobjrefsubdict, panda_false);
+  free(dictkey);
 }

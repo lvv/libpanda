@@ -78,7 +78,7 @@ VERSION = @VERSION@
 SUBDIRS = . panda examples
 
 lib_LTLIBRARIES = libpanda.la
-libpanda_la_SOURCES = annotation.c curves.c date.c font.c info.c memory.c panda.c trailer.c error.c images.c internal.c objects.c template.c text.c utility.c view.c xref.c
+libpanda_la_SOURCES = curves.c database.c date.c font.c info.c memory.c panda.c trailer.c error.c images.c internal.c objects.c template.c text.c utility.c view.c xref.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
 CONFIG_CLEAN_FILES = 
@@ -91,7 +91,7 @@ LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
 libpanda_la_LDFLAGS = 
 libpanda_la_LIBADD = 
-libpanda_la_OBJECTS =  annotation.lo curves.lo date.lo font.lo info.lo \
+libpanda_la_OBJECTS =  curves.lo database.lo date.lo font.lo info.lo \
 memory.lo panda.lo trailer.lo error.lo images.lo internal.lo objects.lo \
 template.lo text.lo utility.lo view.lo xref.lo
 CFLAGS = @CFLAGS@
@@ -107,8 +107,8 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 
 TAR = gtar
 GZIP_ENV = --best
-DEP_FILES =  .deps/annotation.P .deps/curves.P .deps/date.P \
-.deps/error.P .deps/font.P .deps/images.P .deps/info.P .deps/internal.P \
+DEP_FILES =  .deps/curves.P .deps/database.P .deps/date.P .deps/error.P \
+.deps/font.P .deps/images.P .deps/info.P .deps/internal.P \
 .deps/memory.P .deps/objects.P .deps/panda.P .deps/template.P \
 .deps/text.P .deps/trailer.P .deps/utility.P .deps/view.P .deps/xref.P
 SOURCES = $(libpanda_la_SOURCES)

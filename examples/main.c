@@ -393,9 +393,9 @@ main (int argc, char *argv[])
   for(trans = 0; trans < panda_pagetrans_none; trans++)
     {
       currPage = panda_newpage(demo, panda_pagesize_a4);
-      panda_pageduration(currPage, 5);
-      panda_transduration(currPage, 5.0);
-      panda_transstyle(currPage, trans);
+      panda_pageduration(demo, currPage, 5);
+      panda_transduration(demo, currPage, 5.0);
+      panda_transstyle(demo, currPage, trans);
       
       panda_setlinecolor (currPage, trans * 20, 0, trans * 10);
       panda_setfillcolor (currPage, trans * 20, 0, trans * 10);

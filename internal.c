@@ -183,7 +183,7 @@ panda_createandinsertpage (panda_pdf * output)
   // that each page owns
   newPage->contents = (panda_object *) panda_newobject (output, panda_normal);
   panda_addchild (newPage->obj, newPage->contents);
-  panda_adddictitem (newPage->obj->dict, "Contents", panda_objectvalue,
+  panda_adddictitem (output, newPage->obj, "Contents", panda_objectvalue,
 		     newPage->contents);
   newPage->contents->isContents = panda_true;
 

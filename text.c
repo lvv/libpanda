@@ -97,9 +97,9 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
 {
   // Add a box with some text in it into the PDF page
   panda_object *textobj;
-  char *currentToken, *strtokVictim = NULL, *delim, *tempPtr;
+  char *currentToken, *strtokVictim = NULL, *delim, *tempPtr, *dictkey;
   int internalTop, internalLeft, displayedFirstPart = panda_false;
-  panda_object *subdict, *subsubdict, *fontObj;
+  panda_object *fontObj;
 
   /***************************************************************************
      Some text handling
@@ -143,28 +143,15 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
       if ((fontObj = panda_getfontobj (output, output->currentFont)) == NULL)
 	panda_error (panda_true, "Could not find the font requested.");
 
-      // We make an object not just a dictionary because this is what
-      // adddictitem needs
-      subsubdict = (panda_object *) panda_newobject (output,
-						     panda_placeholder);
-      panda_adddictitem (subsubdict->dict, output->currentFont,
-			 panda_objectvalue, fontObj);
-
-      subdict = (panda_object *) panda_newobject (output, panda_placeholder);
-      panda_adddictitem (subdict->dict, "Font", panda_dictionaryvalue,
-			 subsubdict->dict);
-
-      // And put this into the PDF
-      panda_adddictitem (thisPage->obj->dict, "Resources",
-			 panda_dictionaryvalue, subdict->dict);
-
-      // Now we need to clean up the temporary objects
 #if defined DEBUG
-      printf("Freeing two temporary objects (text)\n");
+      printf("Found 0x%08x (num %d gen %d)\n", fontObj, fontObj->number,
+	     fontObj->generation);
 #endif
 
-      panda_freetempobject(output, subsubdict, panda_false);
-      panda_freetempobject(output, subdict, panda_false);
+      dictkey = panda_xsnprintf("Resources/Font/%s", output->currentFont);
+      panda_adddictitem (output, thisPage->obj, dictkey,
+			 panda_objectvalue, fontObj);
+      free(dictkey);
     }
 
   return;

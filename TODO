@@ -75,3 +75,10 @@ L * New font ids are handed out too often -- what about font reuse?
   * Testing of the user interface toggles -- e.g. panda_hidemenubar
 
   * Page duration doesn't seem to work
+
+*****************************
+* CONVERSION TASKS          *
+*****************************
+
+  * Optomise database accesses
+  * Possible caching implementation for the tdb stuff
