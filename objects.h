@@ -43,6 +43,7 @@ typedef struct __object{
   unsigned long  textstreamLength;
 
   void           *children;
+  void           *cachedLastChild;
 } object;
 
 typedef struct __page{

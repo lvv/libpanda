@@ -31,10 +31,12 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   textobj = thisPage->contents;
 
   // Is there a font setup? Does this work with changing the font?
-  if(output->currentFont == NULL){
+  if(output->currentFont == NULL)
     setfont(output,
       createfont(output, "Helvetica", 1, "MacRomanEncoding"));
 
+  // If the font is not defined on this page
+  if(thisPage->currentFont == NULL){
     /************************************************************************
     This font has to be referred to in the resources entry in the dictionary.
 
@@ -46,6 +48,8 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
         >>
 
     An example line is /MikalsFont 54 0 R
+
+    This does not currently allow more than one font per page... Doh!
     *************************************************************************/
 
     // Find the font object needed

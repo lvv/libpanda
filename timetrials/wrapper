@@ -15,7 +15,7 @@ starttime=`date`
 libs="clibpdf-202r1 pdflib-30 panda-02"
 
 # This variable is a list of tests
-tests="hello manytextboxes"
+tests="hello manytextboxes manypages"
 
 # How many times per test
 number=100
