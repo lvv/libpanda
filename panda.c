@@ -343,6 +343,8 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  openedpdf->linear = NULL;
 	}
 
+      openedpdf->outline = NULL;
+
 #if defined DEBUG
       printf ("PDF file opened ok\n");
 #endif
@@ -414,6 +416,9 @@ panda_close (panda_pdf * openedpdf)
   // having had it written out to disk
   panda_traverseobjects (openedpdf, openedpdf->pages, panda_down,
 			 panda_closetext);
+
+  // Link the outline together.
+  panda_writeoutline(openedpdf, openedpdf->outline);
 
   // We do some different things to write out the PDF depending on the mode
   switch (openedpdf->mode)

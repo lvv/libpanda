@@ -461,3 +461,143 @@ panda_link (panda_pdf * document, panda_page * dest, int dest_top,
 				      dest->height - dest_top, zoom));
   panda_xfree (tmpPtr);
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_outlineitem
+PURPOSE Create an outline item (commonly referred to as a bookmark).
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_outline *panda_outlineitem(panda_pdf *pdf, panda_outline *parent, char *title, panda_page *dest, int dest_top, int dest_left, int zoom);
+
+SYNOPSIS END
+
+DESCRIPTION This function will create an outline item with the specified proerties. If the second argument is NULL, it will be assumed that this is a top level outline. Otherwise, it must be a pointer an address of a previously created outline, and the new outline will be created as sub-outline of that outline.
+
+RETURNS The outline which was created.
+
+EXAMPLE START
+
+panda_pdf *pdf;
+panda_page *page;
+panda_outline *main_document;
+char *tmpPtr;
+int x;
+
+pdf = panda_open("outlines.pdf", "w");
+for ( x=0 ; x<10 ; x++ ) {
+  page = panda_newpage(pdf, panda_pagesize_a4);
+  main_document = panda_outlineitem(pdf, NULL, tmpPtr = panda_xsnprintf("Section %d", x+1), page, 0, 0, 0);
+  panda_xfree(tmpPtr);
+  panda_outlineitem(pdf, main_document, "Sub 1", page, 100, 0, 0);
+  panda_outlineitem(pdf, main_document, "Sub 2", page, 200, 0, 0);
+}
+
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+panda_outline *
+panda_outlineitem (panda_pdf * pdf, panda_outline * parent, char *title,
+		   panda_page * dest, int dest_top, int dest_left, int zoom)
+{
+  panda_outline *o, *t;
+  void *tmpPtr;
+
+  // Initialize the new outline item;
+  o = panda_xmalloc (sizeof (panda_outline));
+  o->obj = panda_newobject (pdf, panda_normal);
+  o->oldest = o->prev = o->parent = o->next = o->youngest = NULL;
+  o->count = 0;
+
+  if (pdf->outline == NULL)
+    { // We are the first outline of the document.
+      // Initialize the document outline.
+      pdf->outline = panda_xmalloc (sizeof (panda_outline));
+      pdf->outline->obj = panda_newobject (pdf, panda_normal);
+      panda_addchild (pdf->catalog, pdf->outline->obj);
+      pdf->outline->oldest = pdf->outline->prev = pdf->outline->parent =
+	pdf->outline->next = pdf->outline->youngest = NULL;
+      pdf->outline->count = 0;
+
+      // Tell the document catalog an outline exists here.
+      panda_adddictitem (pdf, pdf->catalog, "Outlines", panda_objectvalue,
+			 pdf->outline->obj);
+    }
+
+  if (parent == NULL) // Assume this is to be a child of the top level.
+    parent = pdf->outline;
+
+  o->parent = parent;
+  panda_addchild (o->parent->obj, o->obj);
+
+  if (o->parent->oldest == NULL) // We are the first born.
+    o->parent->oldest = o;
+  else
+    { // There are others.
+      o->parent->youngest->next = o;
+      o->prev = o->parent->youngest;
+    }
+  o->parent->youngest = o;
+
+  // Rather annoying that each item's count must reflect total items, not just direct children.
+  t = o;
+  while (t->parent != NULL)
+    {
+      t->parent->count++;
+      t = t->parent;
+    }
+
+  // Create the static portion of the object.
+  panda_adddictitem (pdf, o->obj, "Dest", panda_literaltextvalue, tmpPtr =
+		     panda_xsnprintf ("[%d %d R /XYZ %d %d %d]",
+				      dest->obj->number,
+				      dest->obj->generation, dest_left,
+				      dest->height - dest_top, zoom));
+  panda_adddictitem (pdf, o->obj, "Title", panda_brackettedtextvalue, title);
+
+  return o;
+}
+
+void
+panda_writeoutline (panda_pdf * pdf, panda_outline * t)
+{
+  if (t == NULL) // And so it begins...
+    t = pdf->outline;
+
+  while (t != NULL)
+    {
+      if (t->parent == NULL) // This is the Outline dictionary
+	panda_adddictitem (pdf, t->obj, "Type", panda_textvalue, "Outlines");
+      else
+	{ // Every item except the first will go through this.
+	  panda_adddictitem (pdf, t->obj, "Parent", panda_objectvalue,
+			     t->parent->obj);
+
+	  if (t->prev != NULL)
+	    panda_adddictitem (pdf, t->obj, "Prev", panda_objectvalue,
+			       t->prev->obj);
+	  if (t->next != NULL)
+	    panda_adddictitem (pdf, t->obj, "Next", panda_objectvalue,
+			       t->next->obj);
+	}
+      if (t->count > 0)
+	{ // There are children.
+	  panda_adddictitem (pdf, t->obj, "First", panda_objectvalue,
+			     t->oldest->obj);
+	  panda_adddictitem (pdf, t->obj, "Last", panda_objectvalue,
+			     t->youngest->obj);
+	  panda_adddictitem (pdf, t->obj, "Count", panda_integervalue,
+			     t->count);
+
+	  // This function is recursive. Yay!
+	  panda_writeoutline (pdf, t->oldest);
+	}
+      // Nothing to see here. Please disperse. Nothing to see here...
+      t = t->next;
+    }
+}

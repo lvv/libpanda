@@ -87,10 +87,20 @@ extern "C"
   }
   panda_xref;
 
+  typedef struct panda_internal_outline
+  {
+    panda_object *obj;
+    struct panda_internal_outline *oldest, *prev, *parent, *next, *youngest;
+
+    int count;
+  }
+  panda_outline;
+
   typedef struct panda_internal_pdf
   {
     FILE *file;
     panda_object *catalog, *pages, *fonts, *info, *linear;
+    panda_outline *outline;
     unsigned long byteOffset, xrefOffset;
     int nextObjectNumber, nextPHObjectNumber, pageCount, totalObjectNumber;
     panda_xref *xrefList, *xrefTail;
