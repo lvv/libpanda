@@ -50,7 +50,7 @@ The default value is 0.
 
 Horizontal Scaling (Tz operator)
 .RS
-The definition of this operator may be found on page 340 of the PDF specification.
+The definition of this operator may be found on page 341 of the PDF specification.
 
 The mode is fully implemented in Panda, and is accessible through the
 .B sethorizontalscaling (3)
@@ -58,6 +58,21 @@ function call in Panda. Note that this attribute is 'sticky' and therefore will 
 
 The default value is 1, meaning 100% of the normal width of the text.
 .RE
+
+Leading (TL operator)
+.RS
+The definition of this operator may be found on page 342 of the PDF specification.
+
+The mode is fully implemented in Panda, and is accessible through the
+.B setleading (3)
+function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
+
+The default value is 0, meaning no extra space between lines of text.
+.RE
+
+
+
+
 
 
 
