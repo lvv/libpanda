@@ -66,6 +66,10 @@ static tsize_t libtiffDummyWriteProc (thandle_t fd, tdata_t buf,
 static toff_t libtiffDummySeekProc (thandle_t fd, toff_t off, int i);
 static int libtiffDummyCloseProc (thandle_t fd);
 
+static toff_t libtiffDummySizeProc (thandle_t fd);
+static int libtiffDummyMapFileProc (thandle_t fd, tdata_t *data, toff_t *off);
+static void libtiffDummyUnmapFileProc (thandle_t fd, tdata_t data, toff_t off);
+
 void libpngDummyWriteProc (png_structp png, png_bytep data, png_uint_32 len);
 void libpngDummyFlushProc (png_structp png);
 
@@ -564,7 +568,8 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       conv =
 	TIFFClientOpen ("dummy", "w", (thandle_t) - 1, libtiffDummyReadProc,
 			libtiffDummyWriteProc, libtiffDummySeekProc,
-			libtiffDummyCloseProc, NULL, NULL, NULL);
+			libtiffDummyCloseProc, libtiffDummySizeProc,
+			libtiffDummyMapFileProc, libtiffDummyUnmapFileProc);
 
       // Copy the image information ready for conversion
       stripSize = TIFFStripSize (image);
@@ -1207,6 +1212,37 @@ libtiffDummyCloseProc (thandle_t fd)
   // Return a zero meaning all is well
   return 0;
 }
+
+// TODO: Documentation
+
+static toff_t 
+libtiffDummySizeProc (thandle_t fd)
+{
+#if defined DEBUG
+  printf("libtiffDummySizeProc called\n");
+#endif
+
+  return 0;
+}
+
+static int
+libtiffDummyMapFileProc (thandle_t fd, tdata_t *data, toff_t *off)
+{
+#if defined DEBUG
+  printf("libtiffDummyMapFileProc called\n");
+#endif
+
+  return -1;
+}
+
+static void
+libtiffDummyUnmapFileProc (thandle_t fd, tdata_t data, toff_t off)
+{
+#if defined DEBUG
+  printf("libtiffDummyUnmapFileProc called\n");
+#endif
+}
+
 
 /******************************************************************************
 DOCBOOK START

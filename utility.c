@@ -215,6 +215,9 @@ panda_streamprintf (char *stream, char *format, ...)
   char *buffer;
   unsigned long currentlen = 0, actualLen, len;
 
+#if defined DEBUG
+  printf("Appending to the stream\n");
+#endif
   buffer = panda_xmalloc(sizeof(char) * 1024);
 
   // Get the data to add to the stream
