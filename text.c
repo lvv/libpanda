@@ -62,13 +62,13 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int
       // We make an object not just a dictionary because this is what
       // adddictitem needs
       subsubdict = panda_newobject (output, gPlaceholder);
-      panda_adddictitem (subsubdict->dict, output->currentFont, gObjValue, fontObj);
+      panda_adddictitem (subsubdict->dict, output->currentFont, panda_objectvalue, fontObj);
 
       subdict = panda_newobject (output, gPlaceholder);
-      panda_adddictitem (subdict->dict, "Font", gDictionaryValue, subsubdict->dict);
+      panda_adddictitem (subdict->dict, "Font", panda_dictionaryvalue, subsubdict->dict);
 
       // And put this into the PDF
-      panda_adddictitem (thisPage->obj->dict, "Resources", gDictionaryValue,
+      panda_adddictitem (thisPage->obj->dict, "Resources", panda_dictionaryvalue,
 		   subdict->dict);
     }
 

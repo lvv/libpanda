@@ -32,13 +32,13 @@ extern char panda_binaryheaderstring[12];
 
 // We sometimes need to specify what type of value we are passing to a 
 // function. These are the supported types.
-#define  gBracketedTextValue 6
-#define  gDictionaryValue    4
-#define  gIntValue           0
-#define  gTextValue          1
-#define  gLiteralTextValue   5
-#define  gObjValue           2
-#define  gObjArrayValue      3
+#define  panda_brackettedtextvalue 6
+#define  panda_dictionaryvalue     4
+#define  panda_integervalue        0
+#define  panda_textvalue           1
+#define  panda_literaltextvalue    5
+#define  panda_objectvalue         2
+#define  panda_objectarrayvalue    3
 
 // True and false
 #define  gTrue               0
