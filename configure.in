@@ -9,8 +9,6 @@ dnl Replace `main' with a function in -lcpdf:
 AC_CHECK_LIB(cpdf, cpdfInit)
 dnl Replace `main' with a function in -lm:
 AC_CHECK_LIB(m, sqrt)
-dnl Replace `main' with a function in -lpanda:
-AC_CHECK_LIB(panda, initpanda)
 dnl Replace `main' with a function in -lpdf:
 AC_CHECK_LIB(pdf, )
 dnl Replace `main' with a function in -lpng:
