@@ -13,7 +13,35 @@
 #include <panda/constants.h>
 
 /******************************************************************************
-  Create an object with error checking.
+DOCBOOK START
+
+FUNCTION panda_newobject
+PURPOSE create a new object
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+panda_object *panda_newobject (panda_pdf *output, int type);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Create a new object within the PDF document output. The types of object are panda_object_normal and panda_object_placeholder -- the difference is that a placeholder object wont be written out when the PDF is dumped to disc. This is an internal function call and would only be need by API users if they are creating support for object types not currently supported by <command>Panda</command>. If this is the case, then these users are encouraged to submit their code changes back to mikal@stillhq.com for inclusion with the next release of <command>Panda</command>, and are reminded of their obligations under the GNU GPL.
+
+RETURNS A pointer to the new object (a panda_object *)
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_object *obj;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+obj = panda_newobject(document, panda_object_normal);
+EXAMPLE END
+SEEALSO panda_freeobject, panda_writeobject, panda_traverseobjects, panda_addchild
+DOCBOOK END
 ******************************************************************************/
 
 panda_object *
@@ -346,6 +374,39 @@ panda_getdict (panda_dictionary * head, char *name)
   return head;
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_freeobject
+PURPOSE free the memory used by a previously created object
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_freeobject (panda_pdf *output, panda_object *);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function call frees the memory used by an object. It is used during the cleanup process prior to finishing closing a PDF document. Even if a user of the API has added object types to their code, they should not have to call this function, as their objects should be added to the object tree via <command>panda_addchild</command>() to ensure they are written to disc by <command>panda_writeobject</command>() having been traversed by <command>panda_traverseobjects</command>() at PDF close time.
+
+RETURNS None
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_object *obj;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+obj = panda_newobject(document, panda_object_normal);
+panda_freeobject(document, obj)l
+EXAMPLE END
+SEEALSO panda_newobject, panda_writeobject, panda_traverseobjects, panda_addchild
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_freeobject (panda_pdf * output, panda_object * freeVictim)
 {
@@ -420,6 +481,38 @@ panda_freedictionary (panda_dictionary * freeDict)
     }
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_writeobject
+PURPOSE write a given object to disc
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_writeobject (panda_pdf *output, object *obj);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Writes all objects created with <command>panda_newobject</command>(), that have been added to the object tree with <command>panda_addchild</command>() via a call to <command>panda_traverseobjects</command>().
+
+RETURNS None
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_object *obj;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+obj = panda_newobject(document, panda_object_normal);
+panda_writeobject(document, obj);
+EXAMPLE END
+SEEALSO panda_newobject, panda_freeobject, panda_traverseobjects, panda_addchild
+DOCBOOK END
+******************************************************************************/
 
 void
 panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
@@ -631,6 +724,40 @@ panda_writedictionary (panda_pdf * output, panda_object * obj,
   panda_print (output, ">>\n");
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_addchild
+PURPOSE add an object to the object tree
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_addchild (panda_object *parent, panda_object *child);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. Once an object has been created with <command>panda_newobject</command>() it is added to the object tree with this call. This ensures it is written out to disc via <command>panda_writeobject</command>() when <command>panda_close</command>() is called.
+
+RETURNS None
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_object *obj, *obj2;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+obj = panda_newobject(document, panda_object_normal);
+obj2 = panda_newobject(document, panda_object_normal);
+panda_addhild(obj, obj2);
+EXAMPLE END
+SEEALSO panda_newobject, panda_freeobject, panda_writeobject, panda_traverseobjects
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_addchild (panda_object * parentObj, panda_object * panda_childObj)
 {
@@ -653,6 +780,39 @@ panda_addchild (panda_object * parentObj, panda_object * panda_childObj)
   // Cache it
   parentObj->cachedLastChild = currentChild;
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_traverseobjects
+PURPOSE traverse the PDF object tree and perform an operation
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_traverseobjects (panda_pdf * output, panda_object * startObject, int direction, traverseFunct function);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function traverses the object tree created by <command>panda_addchild</command>() and repeatedly calls the function defined as a callback. The traversal has a direction as defined by: panda_up (bottom up) or panda_down (top down). This call is commonly used by <command>panda_close</command> to call <command>panda_writeobject</command>() and <command>panda_freeobject</command>(). API users might also find it useful, although I wouldn't know why.
+
+RETURNS None
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+
+... create a whole bunch of objects and add them to the tree ...
+panda_traverseobjects(document, document->catalog, panda_down, panda_writeobject);
+EXAMPLE END
+SEEALSO panda_newobject, panda_freeobject, panda_writeobject, panda_addchild
+DOCBOOK END
+******************************************************************************/
 
 void
 panda_traverseobjects (panda_pdf * output, panda_object * dumpTarget,

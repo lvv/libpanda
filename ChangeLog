@@ -99,3 +99,9 @@ Release 0.3 -> Release 0.4
   * Documented all the function calls in font.c using autodocbook
 
   * Documented all of the function calls in images.c using autodocbook
+
+  * Documented all of the function calls in info.c using autodocbook
+
+  * Documented all of the function calls in internal.c using autodocbook
+
+  * Documented all of the function calls in memory.c using autodocbook

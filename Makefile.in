@@ -66,15 +66,9 @@ PLATFORM = @PLATFORM@
 RANLIB = @RANLIB@
 VERSION = @VERSION@
 
-SUBDIRS = panda
+SUBDIRS = panda examples
 
-noinst_PROGRAMS = pandademo pandademolegacy
 lib_LIBRARIES = libpanda.a
-
-pandademo_SOURCES = curves.c date.c font.c info.c main.c memory.c panda.c trailer.c error.c images.c internal.c objects.c template.c text.c utility.c xref.c
-
-pandademolegacy_SOURCES = curves.c date.c font.c info.c legacymain.c memory.c panda.c trailer.c error.c images.c internal.c objects.c template.c text.c utility.c xref.c
-
 libpanda_a_SOURCES = curves.c date.c font.c info.c memory.c panda.c trailer.c error.c images.c internal.c objects.c template.c text.c utility.c xref.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
@@ -91,20 +85,6 @@ libpanda_a_OBJECTS =  curves.o date.o font.o info.o memory.o panda.o \
 trailer.o error.o images.o internal.o objects.o template.o text.o \
 utility.o xref.o
 AR = ar
-PROGRAMS =  $(noinst_PROGRAMS)
-
-pandademo_OBJECTS =  curves.o date.o font.o info.o main.o memory.o \
-panda.o trailer.o error.o images.o internal.o objects.o template.o \
-text.o utility.o xref.o
-pandademo_LDADD = $(LDADD)
-pandademo_DEPENDENCIES = 
-pandademo_LDFLAGS = 
-pandademolegacy_OBJECTS =  curves.o date.o font.o info.o legacymain.o \
-memory.o panda.o trailer.o error.o images.o internal.o objects.o \
-template.o text.o utility.o xref.o
-pandademolegacy_LDADD = $(LDADD)
-pandademolegacy_DEPENDENCIES = 
-pandademolegacy_LDFLAGS = 
 CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
@@ -118,12 +98,11 @@ DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
 TAR = gtar
 GZIP_ENV = --best
 DEP_FILES =  .deps/curves.P .deps/date.P .deps/error.P .deps/font.P \
-.deps/images.P .deps/info.P .deps/internal.P .deps/legacymain.P \
-.deps/main.P .deps/memory.P .deps/objects.P .deps/panda.P \
-.deps/template.P .deps/text.P .deps/trailer.P .deps/utility.P \
-.deps/xref.P
-SOURCES = $(libpanda_a_SOURCES) $(pandademo_SOURCES) $(pandademolegacy_SOURCES)
-OBJECTS = $(libpanda_a_OBJECTS) $(pandademo_OBJECTS) $(pandademolegacy_OBJECTS)
+.deps/images.P .deps/info.P .deps/internal.P .deps/memory.P \
+.deps/objects.P .deps/panda.P .deps/template.P .deps/text.P \
+.deps/trailer.P .deps/utility.P .deps/xref.P
+SOURCES = $(libpanda_a_SOURCES)
+OBJECTS = $(libpanda_a_OBJECTS)
 
 all: all-redirect
 .SUFFIXES:
@@ -195,23 +174,6 @@ libpanda.a: $(libpanda_a_OBJECTS) $(libpanda_a_DEPENDENCIES)
 	-rm -f libpanda.a
 	$(AR) cru libpanda.a $(libpanda_a_OBJECTS) $(libpanda_a_LIBADD)
 	$(RANLIB) libpanda.a
-
-mostlyclean-noinstPROGRAMS:
-
-clean-noinstPROGRAMS:
-	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
-
-distclean-noinstPROGRAMS:
-
-maintainer-clean-noinstPROGRAMS:
-
-pandademo: $(pandademo_OBJECTS) $(pandademo_DEPENDENCIES)
-	@rm -f pandademo
-	$(LINK) $(pandademo_LDFLAGS) $(pandademo_OBJECTS) $(pandademo_LDADD) $(LIBS)
-
-pandademolegacy: $(pandademolegacy_OBJECTS) $(pandademolegacy_DEPENDENCIES)
-	@rm -f pandademolegacy
-	$(LINK) $(pandademolegacy_LDFLAGS) $(pandademolegacy_OBJECTS) $(pandademolegacy_LDADD) $(LIBS)
 
 # This directory's subdirectories are mostly independent; you can cd
 # into them and run `make' without going through this Makefile.
@@ -348,7 +310,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -416,7 +378,7 @@ install-am: all-am
 install: install-recursive
 uninstall-am: uninstall-libLIBRARIES
 uninstall: uninstall-recursive
-all-am: Makefile $(LIBRARIES) $(PROGRAMS)
+all-am: Makefile $(LIBRARIES)
 all-redirect: all-recursive
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
@@ -435,26 +397,23 @@ distclean-generic:
 
 maintainer-clean-generic:
 mostlyclean-am:  mostlyclean-libLIBRARIES mostlyclean-compile \
-		mostlyclean-noinstPROGRAMS mostlyclean-tags \
-		mostlyclean-depend mostlyclean-generic
+		mostlyclean-tags mostlyclean-depend mostlyclean-generic
 
 mostlyclean: mostlyclean-recursive
 
-clean-am:  clean-libLIBRARIES clean-compile clean-noinstPROGRAMS \
-		clean-tags clean-depend clean-generic mostlyclean-am
+clean-am:  clean-libLIBRARIES clean-compile clean-tags clean-depend \
+		clean-generic mostlyclean-am
 
 clean: clean-recursive
 
-distclean-am:  distclean-libLIBRARIES distclean-compile \
-		distclean-noinstPROGRAMS distclean-tags \
+distclean-am:  distclean-libLIBRARIES distclean-compile distclean-tags \
 		distclean-depend distclean-generic clean-am
 
 distclean: distclean-recursive
 	-rm -f config.status
 
 maintainer-clean-am:  maintainer-clean-libLIBRARIES \
-		maintainer-clean-compile \
-		maintainer-clean-noinstPROGRAMS maintainer-clean-tags \
+		maintainer-clean-compile maintainer-clean-tags \
 		maintainer-clean-depend maintainer-clean-generic \
 		distclean-am
 	@echo "This command is intended for maintainers to use;"
@@ -466,9 +425,7 @@ maintainer-clean: maintainer-clean-recursive
 .PHONY: mostlyclean-libLIBRARIES distclean-libLIBRARIES \
 clean-libLIBRARIES maintainer-clean-libLIBRARIES uninstall-libLIBRARIES \
 install-libLIBRARIES mostlyclean-compile distclean-compile \
-clean-compile maintainer-clean-compile mostlyclean-noinstPROGRAMS \
-distclean-noinstPROGRAMS clean-noinstPROGRAMS \
-maintainer-clean-noinstPROGRAMS install-data-recursive \
+clean-compile maintainer-clean-compile install-data-recursive \
 uninstall-data-recursive install-exec-recursive \
 uninstall-exec-recursive installdirs-recursive uninstalldirs-recursive \
 all-recursive check-recursive installcheck-recursive info-recursive \

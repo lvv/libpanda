@@ -12,6 +12,39 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_entergraphicsmode
+PURPOSE make sure the page description stream is in graphics mode
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_entergraphicsmode (panda_page * target);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. PDF pages are described with a text stream full of commands. Many of these commands are similar to those used within Postscript. This function call ensures that the text stream is in a graphics state.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+panda_entergraphicsmode (page);
+EXAMPLE END
+SEEALSO panda_exitgraphicsmode
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_entergraphicsmode (panda_page * target)
 {
@@ -41,6 +74,41 @@ panda_entergraphicsmode (panda_page * target)
     }
 }
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_exitgraphicsmode
+PURPOSE make sure the page description stream is out of graphics mode
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_exitgraphicsmode (panda_page * target);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. PDF pages are described with a text stream full of commands. Many of these commands are similar to those used within Postscript. This function call ensures that the text stream is not in a graphics state.
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+panda_entergraphicsmode (page);
+...
+panda_exitgraphicsmode (page);
+EXAMPLE END
+SEEALSO panda_entergraphicsmode
+DOCBOOK END
+******************************************************************************/
+
 void
 panda_exitgraphicsmode (panda_page * target)
 {
@@ -48,6 +116,37 @@ panda_exitgraphicsmode (panda_page * target)
     panda_streamprintf (target->contents->layoutstream, "Q\n\n");
   target->contents->insidegraphicsblock = panda_false;
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_createandinsertpage
+PURPOSE create a page within the PDF document
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_createandinsertpage (panda_pdf *output);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function creates the objects required for a page to exist within <command>Panda</command>. This function is wrappered by other <command>Panda</command> function calls.
+
+RETURNS A pointer to a panda_page object
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_createandinsertpage(document);
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
 
 panda_page *
 panda_createandinsertpage (panda_pdf * output){

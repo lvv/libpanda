@@ -387,7 +387,7 @@ SYNOPSIS START
 void panda_strokeline (panda_page * target);
 SYNOPSIS END
 
-DESCRIPTION Instead of drawing a solid line for the line shape we have just drawn, use a stroked line instead.
+DESCRIPTION This function must be called for the line shape that we have drawn to actually display on the PDF page. This process is known as 'stroking', and hence the name of this function call.
 
 RETURNS Nothing
 
