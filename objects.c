@@ -522,8 +522,8 @@ panda_freeobjectactual (panda_pdf * output, panda_object * freeVictim,
   free (freeVictim);
 }
 
-// Dictionaries have an empty item at the end ready for next time, so we need to be
-// ready for that here
+// Dictionaries have an empty item at the end ready for next time, so we 
+// need to be ready for that here
 void
 panda_freedictionary (panda_dictionary * freeDict)
 {
@@ -543,7 +543,7 @@ panda_freedictionary (panda_dictionary * freeDict)
 	free(now->textValue);
 
       if(now->dictValue != NULL)
-	panda_freedictionary(now->dictValue);
+      	panda_freedictionary(now->dictValue);
 
       if(now->objectarrayValue != NULL)
 	printf("WE NEED TO FREE OBJECT ARRAYS!\n");

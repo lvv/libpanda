@@ -73,3 +73,5 @@ L * New font ids are handed out too often -- what about font reuse?
   * A simple say of being able to change the value of a variable in a subdictionary would simplify the code for view.c and for the page transition effects...
 
   * Testing of the user interface toggles -- e.g. panda_hidemenubar
+
+  * Page duration doesn't seem to work

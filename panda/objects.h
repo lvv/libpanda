@@ -82,6 +82,8 @@ extern "C"
   {
     panda_object *obj;
     panda_object *contents;
+    panda_dictionary *annotations;
+
     int height;
     int width;
     char *templatename;

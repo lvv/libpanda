@@ -683,8 +683,5 @@ panda_processtrans (panda_pdf * opened, panda_object * obj)
 
       panda_adddictitem(obj->dict, "Trans", panda_dictionaryvalue,
 			obj->trans);
-
-      // We also clean up that trans dictionary
-      //      panda_freeobject(obj->trans, panda_true);
     }
 }
