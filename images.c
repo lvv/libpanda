@@ -14,8 +14,8 @@
 #include <tiffio.h>
 
 // A redistribution point for image insertions based on type of image
-void imagebox(pdf *output, page *target, int top, int left, int bottom, 
-  int right, char *filename, int type){
+void imagebox(pdf *output, page *target, int top, int left,
+  int bottom, int right, char *filename, int type){
 
 #if defined DEBUG
   printf("Started inserting an image.\n");
@@ -34,8 +34,8 @@ void imagebox(pdf *output, page *target, int top, int left, int bottom,
 }
 
 // This function will insert a TIFF image into a PDF
-void insertTiff(pdf *output, page *target, int top, int left, int bottom,
-  int right, char *filename){
+void insertTiff(pdf *output, page *target, int top, int left, 
+  int bottom, int right, char *filename){
   TIFF          *image;
   object        *imageObj, *subdict, *xobjrefsubdict, *xobjrefsubsubdict;
   int           stripCount;
@@ -175,7 +175,7 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   //    p 386 of spec)
   target->contents->xobjectstream = 
     streamprintf(target->contents->xobjectstream, 
-    "\nq\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
+    "\nq\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
     
     // The first matrix
     1.0, // xscale
@@ -183,16 +183,19 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
     0.0, // ???
     1.0, // yscale
     right - left, // x size
-    bottom - top, // y size
+    bottom - top); // y size
+
+  target->contents->xobjectstream =
+    streamprintf(target->contents->xobjectstream,
+    "%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
 
     // The second matrix
-    left, // x left offset
+    (double) target->width - left, // x left offset
     0.0, // ???
     0.0, // ???
-    bottom, // y bottom offset
+    (double) target->height - top, // y bottom offset
     0.0, // ???
-    0.0 // ???
-    );
+    0.0); // ???
 
   target->contents->xobjectstream = 
     streamprintf(target->contents->xobjectstream,

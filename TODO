@@ -22,3 +22,5 @@
 	glibc behaves...
 
   * Arbitrary image rotations
+
+  * Make all kinds of TIFFs work

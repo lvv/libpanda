@@ -90,6 +90,7 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
   object      *objValue;
   objectArray *currentObjectArray;
   dictionary  *dictValue, *prevDictValue;
+  int         overwriting = gFalse;
 
 #if defined DEBUG
   printf("Added dictionary item %s to object\n", name);
@@ -114,7 +115,8 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
     }
   else{
 #if defined DEBUG
-    printf(" (Overwriting a dictionary element) ");
+    printf(" (Overwriting a dictionary element)\n");
+    overwriting = gTrue;
     fflush(stdout);
 #endif
   }
@@ -123,7 +125,7 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
   va_start(argPtr, valueType);
 
   // And add some content to this entry if needed
-  if(dictNow->next->next == NULL){
+  if(overwriting == gFalse){
     if((dictNow->name =
       (char *) malloc((strlen(name) + 1) * sizeof(char))) == NULL)
       error("Could not make space for the new tag name value.");
@@ -135,6 +137,11 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
   else switch(valueType){
   case gObjArrayValue:
   case gDictionaryValue:
+  case gTextValue:
+  case gLiteralTextValue:
+  case gBracketedTextValue:
+  case gIntValue:
+  case gObjValue:
     break;
 
   default:
@@ -145,6 +152,10 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
   case gTextValue:
   case gLiteralTextValue:
   case gBracketedTextValue:
+    // Are we overwriting?
+    if(overwriting == gTrue)
+      free(dictNow->textValue);
+
     // Get the value
     value = va_arg(argPtr, char *);
     if((dictNow->textValue =
@@ -164,11 +175,19 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
     break;
 
   case gIntValue:
-    dictNow->textValue = NULL;
+    if(dictNow->textValue != NULL){
+      free(dictNow->textValue);
+      dictNow->textValue = NULL;
+    }
+      
     dictNow->intValue = va_arg(argPtr, int);
     break;
 
   case gObjValue:
+    // Are we overwriting?
+    if(overwriting == gTrue)
+      free(dictNow->textValue);
+
     objValue = va_arg(argPtr, object *);
 
     // We assume we need no more than 20 characters to store this. This
@@ -211,7 +230,11 @@ void adddictitem(dictionary *input, char *name, int valueType, ...){
     // This is a sub-dictionary
     dictValue = va_arg(argPtr, dictionary *);
 
-    if(dictNow->next->next == NULL){
+    if(overwriting == gFalse){
+#if defined DEBUG
+      printf("This is a new dictionary value\n");
+#endif
+
       // This is a new dictionary item, just copy the info across
       dictNow->dictValue = dictValue;
     }
@@ -332,16 +355,18 @@ void writeObject(pdf *output, object *dumpTarget){
 
     // Do we have a textstream?
     if(dumpTarget->textstream != NULL){
-      pdfprint(output, "stream\nBT\n");
-      pdfprintf(output, "%s", dumpTarget->textstream);
-      pdfprint(output, "ET\n");
+      pdfprint(output, "stream\n");
 
       // We might also have an xobjectstream
       if(dumpTarget->xobjectstream != NULL){
         pdfprintf(output, "%s", dumpTarget->xobjectstream);
       }
 
-      pdfprint(output, "\nendstream\n");
+      pdfprint(output, "BT\n");
+      pdfprintf(output, "%s", dumpTarget->textstream);
+      pdfprint(output, "ET\n");
+
+      pdfprint(output, "endstream\n");
     }
 
     // Do we have a binary stream? We cannot have both cause how would be 

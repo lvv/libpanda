@@ -38,6 +38,7 @@ void  error(char *);
 ******************************************************************************/
 
 void  imagebox(pdf *, page *, int, int, int, int, char *, int);
+void  insertTiff(pdf *, page *, int, int, int, int, char *);
 
 /******************************************************************************
   Info.c

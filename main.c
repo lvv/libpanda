@@ -29,7 +29,7 @@ int main(int argc, char *argv[]){
     error("demo: could not open output.pdf to write to.");
 
   // For every text mode in v 1.3
-  for(lineDepth = 0; lineDepth < 8; lineDepth++){
+  for(lineDepth = 0; lineDepth < 1; lineDepth++){
 #if defined DEBUG
     printf("Created page\n");
 #endif
@@ -38,24 +38,24 @@ int main(int argc, char *argv[]){
     currPage = pdfpage(demo, gPageSizeA4);
 
     // Put some text onto it
-    //setfontmode(demo, lineDepth);
-    //setcharacterspacing(demo, (double) lineDepth);
-    //setwordspacing(demo, (double) lineDepth * 10);
-    //sethorizontalscaling(demo, (double) 1 - (lineDepth * 0.1));
-    //setleading(demo, 16.0);
+    setfontmode(demo, lineDepth);
+    setcharacterspacing(demo, (double) lineDepth);
+    setwordspacing(demo, (double) lineDepth * 10);
+    sethorizontalscaling(demo, (double) 1 - (lineDepth * 0.1));
+    setleading(demo, 16.0);
 
     // I am not drawing a multiline string here because I am not sure how to 
     // represent this in the PDF at the moment
     sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.", 4, 6, 5);
-    //textbox(demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30, 
-    //  tempString);
+    textbox(demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30, 
+      tempString);
     imagebox(demo, currPage, 10, 10, 20, 20, "input.tif", gImageTiff);
 
 #if defined DEBUG
     printf("Created textbox and inserted first image\n");
 #endif
 
-    //textbox(demo, currPage, 300, 10, 400, 50, "A second textbox on the page");
+    textbox(demo, currPage, 300, 10, 400, 50, "A second textbox on the page");
 
 #if defined DEBUG
     printf("Created second textbox\n");
