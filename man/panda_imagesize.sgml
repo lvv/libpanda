@@ -12,29 +12,29 @@
 
 <!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
 
-<refentry id="panda_imagebox">
+<refentry id="panda_imagesize">
 <refmeta>
-<refentrytitle>panda_imagebox</refentrytitle>
+<refentrytitle>panda_imagesize</refentrytitle>
 <manvolnum>3</manvolnum>
 </refmeta>
 
 <refnamediv>
-<refname>panda_imagebox</refname>
-<refpurpose>insert an image into the PDF document at the specified location</refpurpose>
+<refname>panda_imagesize</refname>
+<refpurpose>determine the size of an image</refpurpose>
 </refnamediv>
 
 <refsynopsisdiv>
 <synopsis>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- void panda_panda_imagebox (panda_pdf * output, panda_page * target, int top, int left, int bottom, int right, char *filename, int type);
+ void panda_panda_imagesize (int *width, int *height, char *filename, int type);
 
 </synopsis>
 </refsynopsisdiv>
 
 <refsect1>
 <title>DESCRIPTION</title>
-<para>This function call inserts an image into the PDF document at the specified location using a reasonable default for rotation (none). This call is included for backward compatability withprevious releases of the API and it is recommened that new code call &lt;command&gt;panda_imageboxrot&lt;/command&gt;(). It is unlikely that this call will be retired however. The image types accepted by this call are: panda_image_tiff, panda_image_jpeg and panda_image_png.</para>
+<para>This function can be used to determine the size of an image before a &lt;command&gt;panda_imagebox&lt;/command&gt;() function call.</para>
 </refsect1>
 
 <refsect1>
@@ -47,21 +47,16 @@
 <programlisting>
  #include&amp;lt;panda/constants.h&amp;gt;
  #include&amp;lt;panda/functions.h&amp;gt;
- panda_pdf *demo;
- panda_page *currPage;
+ int height, width;
  panda_init ();
- if ((demo = panda_open ("output.pdf", "w")) == NULL)
- panda_error (panda_true, "demo: could not open output.pdf to write to.");
- currPage = panda_newpage (demo, panda_pagesize_a4);
   
- panda_imagebox (demo, currPage, 0, 0, currPage-&gt;height / 2,
- currPage-&gt;width, "input.tif", panda_image_tiff);
+ panda_imagesize (&amp;width, &amp;height, "input.tif", panda_image_tiff);
 </programlisting>
 </refsect1>
 
 <refsect1>
 <title>SEE ALSO</title>
-<para>panda_imageboxrot</para>
+<para>panda_imagebox, panda_imageboxrot</para>
 </refsect1>
 
 

@@ -35,7 +35,6 @@
 <refsect1>
 <title>DESCRIPTION</title>
 <para> &lt;command&gt;PANDA INTERNAL&lt;/command&gt;. Do the actual insertion of the PNG image into the PDF document. This routine handles the conversion of the PNG image into the form supported by the PDF specification, and similar operations. It is an internal &lt;command&gt;Panda&lt;/command&gt; call and should not be needed by users of the API.
- 
  While developing this function call, some reference was made to the source code for iText (http://www.lowagie.com/iText), which is a GPL'ed PDF generator written in Java. The code in Panda is original though...
 </para>
 </refsect1>
