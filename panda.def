@@ -1,0 +1,125 @@
+;------------------------------------------
+; The definition file for what should be exported from Panda
+;------------------------------------------
+
+LIBRARY
+DESCRIPTION "Panda PDF generation API (Windows version)"
+
+EXPORTS
+; Version 0.4
+
+; Curves.c
+  panda_setlinestart					@1
+  panda_addlinesegment					@2			
+  panda_addcubiccurvesegment			@3
+  panda_addquadraticcurvesegmentone		@4
+  panda_addquadraticcurvesegmenttwo		@5
+  panda_closeline						@6
+  panda_rectangle						@7
+  panda_endline							@8
+  panda_strokeline						@9
+  panda_fillline						@10
+  panda_setlinewidth					@11
+  panda_setlinecap						@12
+  panda_setlinejoin						@13
+  panda_setlinedash						@14
+  panda_setfillcolor					@15
+  panda_setlinecolor					@16
+
+; Date.c
+
+  panda_makedate						@17
+  panda_nowdate							@18
+
+; Error.c
+
+  panda_error							@19
+
+; Images.c
+
+  panda_imagebox						@20
+  panda_imageboxrot						@21
+  panda_insertTIFF						@22
+  panda_insertJPEG						@23
+  panda_insertPNG						@24
+
+; Info.c
+
+  panda_checkinfo						@25
+  panda_setauthor						@26
+  panda_setcreator						@27
+  panda_settitle						@28
+  panda_setsubject						@29
+  panda_setkeywords						@30
+
+; Internal.c
+
+  panda_entergraphicsmode				@31
+  panda_exitgraphicsmode				@32
+  panda_createandinsertpage				@33
+
+; Font.c
+
+  panda_createfont						@34
+  panda_setfont							@35
+  panda_setfontsize						@36
+  panda_getfontobj						@37
+  panda_setfontmode						@38
+  panda_setcharacterspacing				@39
+  panda_setwordspacing					@40
+  panda_sethorizontalscaling			@41
+  panda_setleading						@42
+
+; Memory.c
+
+  panda_xmalloc							@43
+  panda_xrealloc						@44
+
+; Panda.c
+
+  panda_init							@45
+  panda_open							@46
+  panda_open_suppress					@47
+  panda_open_actual						@48
+  panda_close							@49
+  panda_newpage							@50
+  panda_closetext						@51
+
+; Objects.c
+
+  panda_newobject						@52
+  panda_adddictitem						@53
+  panda_getdictvalue					@54
+  panda_getdict							@55
+  panda_freeobject						@56
+  panda_freedictionary					@57
+  panda_writeobject						@58
+  panda_writedictionary					@59
+  panda_addchild						@60
+  panda_traverseobjects					@61
+  panda_setproperty						@62
+
+; Template.c
+
+  panda_newtemplate						@63
+  panda_applytemplate					@64
+
+; Text.c
+
+  panda_textbox							@65
+
+; Trailer.c
+
+  panda_writetrailer					@66
+
+; Utility.c
+
+  panda_printf							@67
+  panda_streamprintf					@68
+  panda_putc							@69
+  panda_print							@70
+  panda_xsnprintf						@71
+
+; XREF.c
+
+  panda_writexref						@72
