@@ -65,6 +65,10 @@ object *newobject(pdf *doc, int type){
   created->binarystream = NULL;
   created->binarystreamLength = 0;
 
+  // Nor a xobjectstream
+  created->xobjectstream = NULL;
+  created->xobjectstreamLength = 0;
+
   // There is no font defined
   created->currentSetFont = NULL;
 
@@ -218,12 +222,12 @@ void *getdictvalue(dictionary *dictValue){
 
   // This line is a little scary -- we are going to make the int look like
   // a pointer for just a little while
-  case gIntValue:      return dictValue->intValue;      break;
+  case gIntValue:       return dictValue->intValue;         break;
 
   case gTextValue:
   case gLiteralTextValue:
   case gObjValue:
-              return dictValue->textValue;    break;
+                        return dictValue->textValue;        break;
 
   case gObjArrayValue:  return dictValue->objectArrayValue; break;
   }
@@ -248,17 +252,29 @@ void writeObject(pdf *output, object *dumpTarget){
 
       The +6 is because of the BT and ET that are added at this stage...
 
+      There is also the option that we have commands that go after the
+      stream from the xobjectsstream, which we need to check for as well.
+
+      We also handle binarystreams here.
+
     *************************************************************************/
 
-    if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
+    if(dumpTarget->textstreamLength > 0){
+      // Do we also have an xobjectstream?
       adddictitem(dumpTarget, "Length", gIntValue, 
-        dumpTarget->textstreamLength + 6);
+        dumpTarget->textstreamLength + 6 + dumpTarget->xobjectstream);
     }
 
-    if((dumpTarget->binarystreamLength > 0) && 
-      (dumpTarget->binarystream != NULL)){
+    // We cannot have a textstream and a binary stream in the same object
+    else if(dumpTarget->binarystreamLength > 0){
       adddictitem(dumpTarget, "Length", gIntValue,
 	dumpTarget->binarystreamLength);
+    }
+
+    // We might also only have an xobjectstream here
+    if(dumpTarget->xobjectstreamLength > 0){
+      adddictitem(dumpTarget, "Length", gIntValue, 
+	dumpTarget->xobjectstreamLength);
     }
     
     // We are going to dump the named object (and only the named object) to 
@@ -273,14 +289,21 @@ void writeObject(pdf *output, object *dumpTarget){
     if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
       pdfprint(output, "stream\nBT\n");
       pdfprintf(output, "%s", dumpTarget->textstream);
-      pdfprint(output, "ET\nendstream\n");
+      pdfprint(output, "ET\n");
+
+      // We might also have an xobjectstream
+      if(dumpTarget->xobjectstreamLength > 0){
+        pdfprintf(output, "%s", dumpTarget->xobjectstream);
+      }
+
+      pdfprint(output, "\nendstream\n");
     }
 
     // Do we have a binary stream? We cannot have both cause how would be 
     // differentiate?
     else if((dumpTarget->binarystreamLength > 0) &&
       (dumpTarget->binarystream != NULL)){
-      pdfprintf(output, "stream\n");
+      pdfprint(output, "stream\n");
 
       for(count = 0; count < dumpTarget->binarystreamLength; count ++)
 	pdfputc(output, dumpTarget->binarystream[count]);
@@ -288,6 +311,13 @@ void writeObject(pdf *output, object *dumpTarget){
       pdfprint(output, "\nendstream\n");
     }
     
+    // We might also only have an xobject stream
+    else if(dumpTarget->xobjectstream > 0){
+      pdfprint(output, "stream\n");
+      pdfprintf(output, "%s", dumpTarget->xobjectstream);
+      pdfprint(output, "\nendstream\n");
+    }
+
     pdfprint(output, "endobj\n");
   }
 }
@@ -437,4 +467,23 @@ void appendtextstream(object *target, char *data, unsigned long len){
   // Append
   for(; count < target->textstreamLength; count++)
     target->textstream[count] = data[count - initial];
+}
+
+void appendxobjectstream(object *target, char *data, unsigned long len){
+  // We are going to append to the xobjectstream that the object already has
+  unsigned long  initial, count;
+  
+  initial = count = target->xobjectstreamLength;
+
+  // Increase the length of the xobjectstream
+  target->xobjectstreamLength += len;
+
+  // Make space for the new information
+  if((target->xobjectstream = realloc(target->xobjectstream,
+    sizeof(char) * target->xobjectstreamLength)) == NULL)
+    error("Could not append to an object's xobject stream.");
+
+  // Append
+  for(; count < target->xobjectstreamLength; count++)
+    target->xobjectstream[count] = data[count - initial];
 }
