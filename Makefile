@@ -3,6 +3,10 @@
 COMPILER = gcc
 COMPILER_FLAGS = -g -c
 
+# This is used to do the Windows specific I/O things we have to do.
+#PLATFORM = WINDOWS
+PLATFORM = LINUX
+
 OBJFILES = error.o  font.o  main.o  objects.o  panda.o  text.o  trailer.o  utility.o  xref.o
 
 # Build panda
@@ -39,7 +43,7 @@ trailer.o:	trailer.c constants.h functions.h objects.h
 		$(COMPILER) $(COMPILER_FLAGS) trailer.c -o trailer.o
 
 utility.o:	utility.c constants.h functions.h objects.h
-		$(COMPILER) $(COMPILER_FLAGS) utility.c -o utility.o
+		$(COMPILER) $(COMPILER_FLAGS) -D$(PLATFORM) utility.c -o utility.o
 
 xref.o:		xref.c constants.h functions.h objects.h
 		$(COMPILER) $(COMPILER_FLAGS) xref.c -o xref.o
