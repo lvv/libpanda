@@ -78,6 +78,24 @@ extern "C"
     panda_textmode_clipped
   };
 
+// The line cap styles (p 139 v 1.3 II)
+  enum
+  {
+    panda_linecap_butt = 0,
+    panda_linecap_round,
+    panda_linecap_projectedsquare,
+    panda_linecap_max                              // Not in the spec!
+  };
+
+// The line join styles (p 140 v 1.3 II)
+  enum
+  {
+    panda_linejoin_miter = 0,
+    panda_linejoin_round,
+    panda_linejoin_bevel,
+    panda_linejoin_max                             // Not in the spec!
+  };
+
 // The image types supported
   enum
   {

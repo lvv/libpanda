@@ -40,7 +40,7 @@ panda_addcubiccurvesegment (panda_page * target, int x, int y, int cx1,
 {
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
-			"%d %d %d %d %d %d v\n", cx1, target->height - cy1, 
+			"%d %d %d %d %d %d c\n", cx1, target->height - cy1, 
 			cx2, target->height - cy2, x, target->height - y);
 }
 
@@ -79,6 +79,8 @@ void
 panda_rectangle (panda_page * target, int top, int left, int bottom, 
 		 int right)
 {
+  panda_entergraphicsmode(target);
+
   target->contents->layoutstream = 
     panda_streamprintf (target->contents->layoutstream,
 			"%d %d %d %d re\n", left, target->height - top,
@@ -93,8 +95,6 @@ panda_endline (panda_page * target)
 }
 
 // Stroke the path that we have just described
-// You say "you've never had a mum and nobody needs you"; So cry; So cry
-//                                                    -- Vanessa Amarosi, Shine
 void
 panda_strokeline (panda_page * target)
 {
@@ -105,9 +105,9 @@ panda_strokeline (panda_page * target)
 			"S\n");
 }  
 
-// Stroke the path that we have just described
-// Now that we are through, I realise that I want you
-//                                              -- Vanessa Amarosi, Have a Look
+// Fill the region we just drew
+// You say "you've never had a mum and nobody needs you"; So cry; So cry
+//                                                    -- Vanessa Amarosi, Shine
 void
 panda_fillline (panda_page * target)
 {
@@ -116,4 +116,82 @@ panda_fillline (panda_page * target)
   target->contents->layoutstream = 
     panda_streamprintf (target->contents->layoutstream,
 			"f\n");
-}  
+}
+
+// Set the line width
+void
+panda_setlinewidth(panda_page * target, int width)
+{
+  // The width must be positive
+  if(width < 0){
+    fprintf(stderr, "Panda ignoring bad width\n");
+    return;
+  }
+    
+  panda_entergraphicsmode(target);
+  target->contents->layoutstream = 
+    panda_streamprintf (target->contents->layoutstream,
+			"%d w\n", width);
+}
+
+// Set the line cap
+void
+panda_setlinecap(panda_page * target, int cap)
+{
+  // The width must be positive
+  if((cap < 0) || (cap >= panda_linecap_max)){
+    fprintf(stderr, "Panda ignoring bad line cap\n");
+    return;
+  }
+
+  panda_entergraphicsmode(target);
+  target->contents->layoutstream = 
+    panda_streamprintf (target->contents->layoutstream,
+			"%d J\n", cap);
+}
+
+// Set the line width
+void
+panda_setlinejoin(panda_page * target, int join)
+{
+  // The width must be positive
+  if((join < 0) || (join >= panda_linejoin_max)){
+    fprintf(stderr, "Panda ignoring bad line join\n");
+    return;
+  }
+
+  panda_entergraphicsmode(target);
+  target->contents->layoutstream = 
+    panda_streamprintf (target->contents->layoutstream,
+			"%d j\n", join);
+}
+
+// Set the line dashing pattern (my, isn't this line dashing?)
+void
+panda_setlinedash(panda_page *target, int on, int off, int phase)
+{
+  panda_entergraphicsmode(target);
+  target->contents->layoutstream = 
+    panda_streamprintf (target->contents->layoutstream,
+			"[%d %d] %d d\n", on, off, phase);
+}
+
+// We also need to be able to set the fill colour
+void
+panda_setfillcolor(panda_page *target, int red, int green, int blue)
+{
+  panda_entergraphicsmode(target);
+  target->contents->layoutstream = 
+    panda_streamprintf (target->contents->layoutstream,
+			"%d %d %d rg\n", red, green, blue);
+}
+
+// And the line colour
+void
+panda_setlinecolor(panda_page *target, int red, int green, int blue)
+{
+  panda_entergraphicsmode(target);
+  target->contents->layoutstream = 
+    panda_streamprintf (target->contents->layoutstream,
+			"%d %d %d RG\n", red, green, blue);
+}

@@ -46,6 +46,12 @@ extern "C"
   void panda_endline (panda_page *);
   void panda_strokeline (panda_page *);
   void panda_fillline (panda_page *);
+  void panda_setlinewidth (panda_page *, int);
+  void panda_setlinecap (panda_page *, int);
+  void panda_setlinejoin (panda_page *, int);
+  void panda_setlinedash (panda_page *, int, int, int);
+  void panda_setfillcolor (panda_page *, int, int, int);
+  void panda_setlinecolor (panda_page *, int, int, int);
 
 /******************************************************************************
   Date.c

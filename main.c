@@ -198,27 +198,6 @@ main (int argc, char *argv[])
   panda_textbox (demo, currPage, 60, 10, 75, 200,
 		 "requirement to have the shapes closed...");
 
-
-  // Straight lines of all types
-  panda_setlinestart (currPage, 100, 100);
-  panda_addlinesegment (currPage, 150, 120);
-  panda_addlinesegment (currPage, 200, 176);
-  panda_addlinesegment (currPage, 86, 12);
-  panda_closeline (currPage);
-  panda_endline (currPage);
-
-  // Now some curves
-  panda_setlinestart (currPage, 200, 200);
-  panda_addcubiccurvesegment (currPage, 300, 200, 225, 300, 275, 400);
-  panda_addquadraticcurvesegmentone (currPage, 150, 150, 200, 225);
-  panda_addquadraticcurvesegmenttwo (currPage, 200, 200, 250, 375);
-  panda_closeline (currPage);
-  panda_endline (currPage);
-
-  // Rectangles!
-  panda_rectangle (currPage, 200, 200, 300, 300);
-  panda_endline (currPage);
-
   // Straight lines of all types -- stroked
   panda_setlinestart (currPage, 110, 110);
   panda_addlinesegment (currPage, 160, 130);
@@ -241,8 +220,124 @@ main (int argc, char *argv[])
   panda_rectangle (currPage, 210, 210, 310, 310);
   panda_strokeline (currPage);
   panda_endline (currPage);
-  
 
+  // Straight lines of all types -- stroked and filled
+  panda_setlinecolor(currPage, 99, 33, 255);
+  panda_setlinestart (currPage, 110, 310);
+  panda_setlinewidth (currPage, 5);
+  panda_addlinesegment (currPage, 160, 330);
+  panda_addlinesegment (currPage, 210, 386);
+  panda_addlinesegment (currPage, 96, 222);
+  panda_closeline (currPage);
+  panda_strokeline (currPage);
+  panda_fillline (currPage);
+  panda_endline (currPage);
+
+  // Now some curves -- stroked and filled
+  panda_setlinestart (currPage, 210, 410);
+  panda_setlinewidth (currPage, 5);
+  panda_addcubiccurvesegment (currPage, 310, 410, 225, 500, 275, 600);
+  panda_addquadraticcurvesegmentone (currPage, 160, 360, 200, 425);
+  panda_addquadraticcurvesegmenttwo (currPage, 210, 410, 250, 575);
+  panda_closeline (currPage);
+  panda_strokeline (currPage);
+  panda_fillline (currPage);
+  panda_endline (currPage);
+
+  // Rectangles -- stroked filled
+  panda_setlinewidth (currPage, 5);
+  panda_rectangle (currPage, 410, 210, 510, 310);
+  panda_strokeline (currPage);
+  panda_fillline (currPage);
+  panda_endline (currPage);
+
+  // Straight lines of all types -- stroked and capped
+  panda_setlinewidth (currPage, 10);
+  panda_setlinestart (currPage, 100, 600);
+  panda_addlinesegment (currPage, 200, 600);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  panda_setlinewidth (currPage, 10);
+  panda_setlinecap (currPage, panda_linecap_butt);
+  panda_setlinestart (currPage, 100, 625);
+  panda_addlinesegment (currPage, 200, 625);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  panda_setlinewidth (currPage, 10);
+  panda_setlinecap (currPage, panda_linecap_round);
+  panda_setlinestart (currPage, 100, 650);
+  panda_addlinesegment (currPage, 200, 650);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  panda_setlinewidth (currPage, 10);
+  panda_setlinecap (currPage, panda_linecap_projectedsquare);
+  panda_setlinestart (currPage, 100, 675);
+  panda_addlinesegment (currPage, 200, 675);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  // Mitre joints
+  panda_setlinewidth (currPage, 10);
+  panda_setlinecap (currPage, panda_linecap_butt);
+  panda_setlinestart (currPage, 300, 600);
+  panda_addlinesegment (currPage, 350, 650);
+  panda_addlinesegment (currPage, 400, 600);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  panda_setlinewidth (currPage, 10);
+  panda_setlinejoin (currPage, panda_linejoin_miter);
+  panda_setlinestart (currPage, 300, 625);
+  panda_addlinesegment (currPage, 350, 675);
+  panda_addlinesegment (currPage, 400, 625);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  panda_setlinewidth (currPage, 10);
+  panda_setlinejoin (currPage, panda_linejoin_round);
+  panda_setlinestart (currPage, 300, 650);
+  panda_addlinesegment (currPage, 350, 700);
+  panda_addlinesegment (currPage, 400, 650);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  panda_setlinewidth (currPage, 10);
+  panda_setlinejoin (currPage, panda_linejoin_bevel);
+  panda_setlinestart (currPage, 300, 675);
+  panda_addlinesegment (currPage, 350, 725);
+  panda_addlinesegment (currPage, 400, 675);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  // Do some work with line dashing
+  panda_setlinedash(currPage, 1, 0, 0);
+  panda_setlinejoin(currPage, panda_linejoin_round);
+
+  panda_setlinestart (currPage, 100, 800);
+  panda_addlinesegment (currPage, 100, 750);
+  panda_addlinesegment (currPage, 140, 800);
+  panda_closeline (currPage);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  panda_setlinedash(currPage, 3, 3, 0);
+  panda_setlinestart (currPage, 150, 800);
+  panda_addlinesegment (currPage, 150, 750);
+  panda_addlinesegment (currPage, 190, 800);
+  panda_closeline (currPage);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
+
+  panda_setlinedash(currPage, 2, 1, 1);
+  panda_setlinestart (currPage, 200, 800);
+  panda_addlinesegment (currPage, 200, 750);
+  panda_addlinesegment (currPage, 240, 800);
+  panda_closeline (currPage);
+  panda_strokeline (currPage);
+  panda_endline (currPage);
 
 
   panda_close (demo);
