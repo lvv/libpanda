@@ -131,17 +131,30 @@ void pdfprintf(pdf *file, char *format, ...){
 }
 
 // Append some text to the textstream that we are creating for a given page
-void textstreamprintf(object *textobj, char *format, ...){
-  va_list   argPtr;
-  char      buffer[2048];
+char *streamprintf(char *stream, char *format, ...){
+  va_list        argPtr;
+  char           buffer[2048];
+  unsigned long  currentlen = 0, len;
 
+  // Get the data to add to the stream
   va_start(argPtr, format);
   vsprintf(buffer, format, argPtr);
-
-  // This new object has a textstream with the text in it
-  appendtextstream(textobj, buffer, strlen(buffer) + 1);
-
   va_end(argPtr);
+
+  // Determine some lengths for the various strings
+  if(stream != NULL) currentlen = strlen(stream);
+  len = strlen(buffer);
+
+  // Make space for the new information
+  if((stream = (char *) realloc(stream, 
+    sizeof(char) * (len + currentlen))) == NULL)
+    error("Could not append to an object's stream (of some form).");
+
+  // Do the actual appending
+  strcat(stream, buffer);
+
+  // Return the stream
+  return stream;
 }
 
 // Put just one character into the PDF file, while updating the offset so that

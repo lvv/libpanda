@@ -20,3 +20,5 @@
 
   * Handling of vsnprintf return number based on the differnt ways that
 	glibc behaves...
+
+  * Arbitrary image rotations

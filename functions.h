@@ -84,8 +84,6 @@ void    writeObject(pdf *, object *);
 void    writeDictionary(pdf *, object *, dictionary *);
 void    addchild(object *, object *);
 void    traverseObjects(pdf *, object *, traverseFunct);
-void    appendtextstream(object *, char *, unsigned long);
-void    appendxobjectstream(object *, char *, unsigned long);
 
 /******************************************************************************
   Text.c
@@ -110,7 +108,7 @@ void  writeTrailer(pdf *);
 ******************************************************************************/
 
 void  pdfprintf(pdf *, char *, ...);
-void  textstreamprintf(object *, char *, ...);
+char  *streamprintf(char *, char *, ...);
 void  pdfputc(pdf *, int c);
 void  pdfprint(pdf *, char *);
 
