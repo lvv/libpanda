@@ -49,7 +49,8 @@ if [ `echo $4 | wc -c | tr -d " "` -gt 1 ]
 then
   number=$4
 else
-  number=100
+#  number=100
+  number=10
 fi
 
 echo Iterations is $number
