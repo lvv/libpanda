@@ -394,7 +394,7 @@ panda_xsnprintf (char *format, ...)
       else
 	{
 	  /* Check if we are done */
-      if (result < size)
+	  if (result < size)
 	    break;
 
 	  /* Glibc from now on */

@@ -66,13 +66,15 @@ panda_createfont (panda_pdf * output, char *fontname, int type,
 
   tempBuffer = panda_xsnprintf ("Type%d", type);
   panda_adddictitem (font->dict, "Subtype", panda_textvalue, tempBuffer);
-
+  if(tempBuffer != NULL)
+    free(tempBuffer);
+  
   // Make a font identifier string for this font
   fontident = panda_xsnprintf ("F%08d", output->nextFontNumber);
   output->nextFontNumber++;
 
   panda_adddictitem (font->dict, "Name", panda_textvalue, fontident);
-
+  
   panda_adddictitem (font->dict, "BaseFont", panda_textvalue, fontname);
   panda_adddictitem (font->dict, "Encoding", panda_textvalue, encoding);
 

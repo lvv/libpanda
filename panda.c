@@ -269,9 +269,9 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  panda_adddictitem (openedpdf->info->dict, "Producer",
 			     panda_brackettedtextvalue, 
 #if defined _WINDOWS
-				 "Panda 0.4 MS Windows Version"
+				 "Panda 0.4.2 MS Windows Version"
 #else
-				 "Panda 0.4"
+				 "Panda 0.4.2"
 #endif			 
 				 );
 	  panda_adddictitem (openedpdf->info->dict, "CreationDate",
@@ -282,8 +282,12 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  printf ("Inserted the creation date\n");
 #endif
 
-	  if (tempPtr != NULL)
+	  if (tempPtr != NULL){
+#if defined DEBUG
+	    printf("Freeing the creation date\n");
+#endif
 	    free (tempPtr);
+	  }
 	}
       else
 	{

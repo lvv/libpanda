@@ -97,7 +97,7 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
 {
   // Add a box with some text in it into the PDF page
   panda_object *textobj;
-  char *currentToken, *strtokVictim = NULL, *delim;
+  char *currentToken, *strtokVictim = NULL, *delim, *tempPtr;
   int internalTop, internalLeft, displayedFirstPart = panda_false;
   panda_object *subdict, *subsubdict, *fontObj;
 
@@ -109,10 +109,13 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
   textobj = thisPage->contents;
 
   // Is there a font setup? Does this work with changing the font?
-  if (output->currentFont == NULL)
+  if (output->currentFont == NULL){
     panda_setfont (output,
-		   panda_createfont (output, "Helvetica", 1,
-				     "MacRomanEncoding"));
+		   tempPtr = panda_createfont (output, "Helvetica", 1,
+					       "MacRomanEncoding"));
+    if(tempPtr != NULL)
+      free(tempPtr);
+  }
 
   // If the font is not defined on this page
   if (thisPage->obj->currentSetFont == NULL)
