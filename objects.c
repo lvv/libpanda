@@ -110,6 +110,11 @@ panda_newobject (panda_pdf * doc, int type)
   memset(created->localproperties, panda_false, panda_object_property_max);
   memset(created->cascadeproperties, panda_false, panda_object_property_max);
 
+  // The compression level is a little different
+  created->localproperties[panda_object_property_compress_level] = 
+    created->cascadeproperties[panda_object_property_compress_level] =
+    panda_default_compress_level;
+
   // Return
   return created;
 }
@@ -530,7 +535,7 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
   // Do all that is needed to dump a PDF object to disk
   unsigned long count, compressedLen;
   char *compressed;
-  int compressResult;
+  int compressResult, level;
 
 #if defined DEBUG
   printf ("Writing object number %d\n", dumpTarget->number);
@@ -578,10 +583,20 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 	    // See zlib.h
 	    compressedLen = dumpTarget->layoutstreamLength * 1.2 + 12;
 	    compressed = panda_xmalloc(compressedLen);
+
+	    // Determine what compression level to use
+	    if(dumpTarget->localproperties
+	       [panda_object_property_compress_level] !=
+	       panda_default_compress_level)
+	      level = dumpTarget->localproperties
+		[panda_object_property_compress_level];
+	    else level = dumpTarget->cascadeproperties
+		[panda_object_property_compress_level];
 	    
-	    if(((compressResult = compress(compressed, &compressedLen,
-					  dumpTarget->layoutstream, 
-					  dumpTarget->layoutstreamLength)) 
+	    if(((compressResult = compress2(compressed, &compressedLen,
+					    dumpTarget->layoutstream, 
+					    dumpTarget->layoutstreamLength,
+					    level)) 
 	       == Z_OK) && (compressedLen < dumpTarget->layoutstreamLength)){
 	      printf("Compressed is %d [obj %d]\n", compressedLen,
 		     dumpTarget->number);

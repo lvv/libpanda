@@ -108,6 +108,7 @@ extern "C"
   enum
   {
     panda_object_property_compress = 0,
+    panda_object_property_compress_level,
     panda_object_property_ignorepageerrors,
     panda_object_property_max
   };
@@ -121,6 +122,9 @@ extern "C"
 
 // Sometimes we need PI
 #define panda_pi 3.1415926535
+
+// The default compression level
+#define panda_default_compress_level 6
 
 #ifdef __cplusplus
 }

@@ -158,3 +158,7 @@ Release 0.3 -> Release 0.4
 
   * Open files with binary mode (fopen), so that they work on Windows despite
 	 the questionable line handling on that operating system.
+
+  * Different compression levels for various objects can now be set by the
+	user. Note that the higher the level (the number) the more CPU used,
+	but hopefully the smaller the file...
