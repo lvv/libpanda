@@ -34,6 +34,8 @@ createfont (pdf * output, char *fontname, int type, char *encoding)
   if ((fontident = (char *) malloc (10 * sizeof (char))) == NULL)
     error ("Could not make space for a new font identifier.");
   sprintf (fontident, "F%08d", output->nextFontNumber);
+  output->nextFontNumber++;
+
   adddictitem (font->dict, "Name", gTextValue, fontident);
 
   adddictitem (font->dict, "BaseFont", gTextValue, fontname);

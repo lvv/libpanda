@@ -57,3 +57,5 @@
 
   * Are the font man pages right? Perhaps I changed them to something that was
 	wrong in a fit of confusion.
+
+  * Memory leaks caused by createfont in main()

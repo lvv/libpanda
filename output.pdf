@@ -21,6 +21,9 @@ endobj
 	/Resources <<
 	/Font <<
 	/F00000001 6 0 R
+	/F00000002 7 0 R
+	/F00000003 8 0 R
+	/F00000004 15 0 R
 >>
 	/XObject <<
 	/input.tif 9 0 R
@@ -33,7 +36,7 @@ endobj
 endobj
 5 0 obj
 <<
-	/Length 1116
+	/Length 1167
 >>
 stream
 
@@ -88,17 +91,20 @@ BT
 -5 Ts (is Panda!) Tj
 (And I am a PDF generator) '
 (I handle multiple line text ok .once you have set a leading.) '
-1 0 0 1 30 795 Tm
+1 0 0 1 30 755 Tm
 16.00 TL
+/F00000002 16 Tf
 (A line in Helvetica-Bold) '
 1 0 0 1 10 775 Tm
 16.00 TL
+/F00000003 16 Tf
 (Symbol) '
 1 0 0 1 10 525 Tm
 16.00 TL
 (A second textbox on the page) '
 1 0 0 1 10 225 Tm
 16.00 TL
+/F00000004 16 Tf
 (The background image on this page is Copyright 2000 Andrew Cagney) '
 1 0 0 1 10 205 Tm
 16.00 TL
@@ -167,7 +173,7 @@ endobj
 <<
 	/Type /Font
 	/Subtype /Type1
-	/Name /F00000001
+	/Name /F00000002
 	/BaseFont /Helvetica-Bold
 	/Encoding /MacRomanEncoding
 >>
@@ -176,7 +182,7 @@ endobj
 <<
 	/Type /Font
 	/Subtype /Type1
-	/Name /F00000001
+	/Name /F00000003
 	/BaseFont /Symbol
 	/Encoding /MacRomanEncoding
 >>
@@ -185,7 +191,7 @@ endobj
 <<
 	/Type /Font
 	/Subtype /Type1
-	/Name /F00000001
+	/Name /F00000004
 	/BaseFont /Times-Roman
 	/Encoding /MacRomanEncoding
 >>
@@ -195,19 +201,19 @@ xref
 0000000000 65535 f
 0000000022 00000 n
 0000000079 00000 n
-0000002068 00000 n
+0000002177 00000 n
 0000000146 00000 n
-0000000402 00000 n
-0000002159 00000 n
-0000002288 00000 n
-0000002422 00000 n
-0000001579 00000 n
-0000001658 00000 n
-0000001739 00000 n
-0000001822 00000 n
-0000001904 00000 n
-0000001986 00000 n
-0000002548 00000 n
+0000000460 00000 n
+0000002268 00000 n
+0000002397 00000 n
+0000002531 00000 n
+0000001688 00000 n
+0000001767 00000 n
+0000001848 00000 n
+0000001931 00000 n
+0000002013 00000 n
+0000002095 00000 n
+0000002657 00000 n
 trailer
 <<
 /Size 17
@@ -215,5 +221,5 @@ trailer
 /Info 3 0 R
 >>
 startxref
-2680
+2789
 %%EOF

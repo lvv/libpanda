@@ -56,7 +56,7 @@ main (int argc, char *argv[])
 	       tempString);
 
       setfont (demo, createfont(demo, "Helvetica-Bold", 1, "MacRomanEncoding"));
-      textbox (demo, currPage, lineDepth * 20 + 30, 30 + lineDepth, 100, 30,
+      textbox (demo, currPage, lineDepth * 20 + 70, 30 + lineDepth, 100, 30,
 	       "A line in Helvetica-Bold");
 
       setfont (demo, createfont(demo, "Symbol", 1, "MacRomanEncoding"));
