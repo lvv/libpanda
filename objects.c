@@ -215,7 +215,7 @@ void writeObject(pdf *output, object *dumpTarget){
 
     // Do we have a textstream? If we do, work out the length of the stream and
     // save that as a dictionary element
-    if((dumpTarget->textstreamLength > 0) && (dumpTarget->stream != NULL)){
+    if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
       adddictitem(dumpTarget, "Length", gIntValue, dumpTarget->textstreamLength);
     }
     
@@ -226,7 +226,7 @@ void writeObject(pdf *output, object *dumpTarget){
     writeDictionary(output, dumpTarget->dict);
 
     // Do we have a textstream?
-    if((dumpTarget->textstreamLength > 0) && (dumpTarget->stream != NULL)){
+    if((dumpTarget->textstreamLength > 0) && (dumpTarget->textstream != NULL)){
       pdfprintf(output, "textstream\n");
 
       // This is done because a valid textstream count contain a \0, which
@@ -346,7 +346,7 @@ void appendtextstream(object *target, char *data, unsigned long len){
   target->textstreamLength += len;
 
   // Make space for the new information
-  if((target->textstream = realloc(target->stream,
+  if((target->textstream = realloc(target->textstream,
     sizeof(char) * target->textstreamLength)) == NULL)
     error("Could not append to an object's textstream.");
 
