@@ -325,8 +325,11 @@ panda_textboxrotalign (panda_pdf * output, panda_page * thisPage, int top,
   p = text;
   while (p && *p)
     {
-      len =
-	panda_findlinebreak (output, p, fontmetric, wrapWidth, &lineWidth);
+      if((len = panda_findlinebreak (output, p, fontmetric, wrapWidth, 
+				     &lineWidth)) <= 0)
+	panda_error(panda_true, 
+		    "Not enough room provided to create text box.");
+
       numSpaces = 0;
       buf = panda_streamprintf (buf, "(");
       for (t = p; t < (p + len); t++)
