@@ -51,5 +51,3 @@ main (int argc, char *argv[])
   // We should return a value here
   return 0;
 }
-
-
