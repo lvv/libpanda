@@ -122,9 +122,12 @@ extern "C"
   Memory.c
 ******************************************************************************/
 
-  void *panda_xmalloc (size_t);
-  void *panda_xrealloc (void *, size_t);
+  //  void *panda_xmalloc (size_t);
+  //  void *panda_xrealloc (void *, size_t);
   
+  #define panda_xmalloc malloc
+  #define panda_xrealloc realloc
+
 /******************************************************************************
   Panda.c
 ******************************************************************************/

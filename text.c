@@ -258,7 +258,17 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
 	panda_streamprintf (textobj->layoutstream, "/%s %d Tf\n",
 			    output->currentFont, output->currentFontSize);
 
+      // If we previously had one set, then get rid of it
+      if(textobj->currentSetFont != NULL)
+	{
+	  free(textobj->currentSetFont);
+	}
+
       // Make space for the new name
+#if defined DEBUG
+      printf("Defining the current set font for object %d\n", textobj->number);
+#endif
+
       textobj->currentSetFont =
 	(char *) panda_xmalloc (sizeof (char) *
 				(strlen (output->currentFont) + 1));

@@ -457,6 +457,8 @@ panda_close (panda_pdf * openedpdf)
   if (openedpdf->fonts != NULL)
     panda_traverseobjects (openedpdf, openedpdf->fonts, panda_up,
 			   panda_freeobject);
+  if (openedpdf->currentFont != NULL)
+    free(openedpdf->currentFont);
 
 #if defined DEBUG
   printf("Cleaning up page holder items\n");
