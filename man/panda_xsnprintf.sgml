@@ -1,0 +1,76 @@
+<!-- 
+
+     This document is part of the panda distribution, and is covered
+     by the GNU GPL, a copy of which is in the file named COPYING inside the
+     distribution.
+
+     This program and it's documentation are distributed in the hope that 
+     they will be useful,but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+-->
+
+<!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
+
+<refentry id="panda_xsnprintf">
+<refmeta>
+<refentrytitle>panda_xsnprintf</refentrytitle>
+<manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>panda_xsnprintf</refname>
+<refpurpose>a safe version of vnsprintf</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<synopsis>
+ #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ char panda_xsnprintf(const char* format, va_list ap);
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>DESCRIPTION</title>
+<para><command>PANDA INTERNAL</command>. This command behaves like a slightly modified version of <command>vsnprintf</command>. The main difference is that if catches the various different ways that errors can be returned, and turns these into a single NULL is a string big enough to hold the formatted string could not be allocated. </para>
+</refsect1>
+
+<refsect1>
+<title>RETURNS</title>
+<para>A string</para>
+</refsect1>
+
+<refsect1>
+<title>EXAMPLE</title>
+<para> his is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+</para>
+</refsect1>
+
+<refsect1>
+<title>SEE ALSO</title>
+<para>panda_putc, panda_printf, panda_streamprintf</para>
+</refsect1>
+
+
+<refsect1>
+    <title>VERSION</title>
+    <para>
+This documentation was generated for <command>Panda</command> 0.4 by <command>autodocbook</command> (http://www.stillhq.com).
+    </para>
+</refsect1>
+
+<refsect1>
+    <title>AUTHOR</title>
+    <para>
+<command>Panda</command> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+</para>
+</refsect1>
+
+<refsect1>
+    <title>BUGS</title>
+    <para>
+There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
+</para>
+</refsect1>

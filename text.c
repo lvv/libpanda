@@ -16,6 +16,8 @@
   #include <panda/functions.h>
 #endif
 
+#include <math.h>
+
 /******************************************************************************
 DOCBOOK START
 
@@ -45,13 +47,53 @@ document = panda_open("filename.pdf", "w");
 page = panda_newpage (document, panda_pagesize_a4);
 panda_textbox (demo, currPage, 20 + (lineDepth * 20), 200, 40 + (lineDepth * 20), 400, "Demonstration of a text mode");
 EXAMPLE END
-SEEALSO panda_createfont, panda_setfont, panda_panda_setfontsize, panda_getfontobj, panda_setfontmode, panda_setcharacterspacing, panda_setwordspacing, panda_sethorizontalscaling, panda_setleading
+SEEALSO panda_createfont, panda_setfont, panda_panda_setfontsize, panda_getfontobj, panda_setfontmode, panda_setcharacterspacing, panda_setwordspacing, panda_sethorizontalscaling, panda_setleading, panda_textboxrot
 DOCBOOK END
 ******************************************************************************/
 
 void
 panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left,
 	       int bottom, int right, char *text)
+{
+  panda_textboxrot (output, thisPage, top, left, bottom, right, 0.0, text);
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_textboxrot
+PURPOSE display some text at a jaunty angle on the PDF page specified
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left, int bottom, int right, double angle, char *text);
+SYNOPSIS END
+
+DESCRIPTION This function call creates a textbox on the specified page, and then displays the specified text within that page. The text is displayed at the spefied angle. The current font mode and style et cetera will be used. Sometime in the near future, line wrapping will be used...
+
+RETURNS Nothing
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+panda_pdf *document;
+panda_page *page;
+
+panda_init();
+
+document = panda_open("filename.pdf", "w");
+page = panda_newpage (document, panda_pagesize_a4);
+panda_textboxrot (demo, currPage, 20 + (lineDepth * 20), 200, 40 + (lineDepth * 20), 400, 33.0, "Demonstration of a text mode");
+EXAMPLE END
+SEEALSO panda_createfont, panda_setfont, panda_panda_setfontsize, panda_getfontobj, panda_setfontmode, panda_setcharacterspacing, panda_setwordspacing, panda_sethorizontalscaling, panda_setleading, panda_textbox
+DOCBOOK END
+******************************************************************************/
+
+void
+panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top, int left,
+	       int bottom, int right, double angle, char *text)
 {
   // Add a box with some text in it into the PDF page
   panda_object *textobj;
@@ -153,7 +195,12 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left,
   // PS matrix environment well enough to be writing this sort of code. I am
   // going to have to have a look into this a little more...
   textobj->layoutstream =
-    panda_streamprintf (textobj->layoutstream, "1 0 0 1 %d %d Tm\n",
+    panda_streamprintf (textobj->layoutstream, 
+			"%.2f %.2f %.2f %.2f %d %d Tm\n",
+			cos (angle * panda_pi / 180.0),
+			sin (angle * panda_pi / 180.0),
+			-sin (angle * panda_pi / 180.0),
+			cos (angle * panda_pi / 180.0),
 			internalLeft, internalTop);
 
   // There are now a whole bunch of options that may or may not need to be set

@@ -54,8 +54,6 @@ L * New font ids are handed out too often -- what about font reuse?
 
   * Memory leaks
 
-  * Make sure the date code is portable...
-
   * PNG images have their alpha channel ignored, with the background colour not
 	being used. PDF does "poor man's alpha channelling", which we should 
 	try to support...
@@ -66,25 +64,8 @@ L * New font ids are handed out too often -- what about font reuse?
 
   * Document wide properties (convenience)
 
-  * Windows uses _snprintf instead of snprintf - Juan Herrero 
-	<juan_herrero@yahoo.com>
-
-  * Windows wont use my time code - Juan Herrero <juan_herrero@yahoo.com>
-
-  * Include path problems on Windows - Juan Herrero <juan_herrero@yahoo.com>
-
   * Error callback (including on Windows) - Juan Herrero <juan_herrero@yahoo.com>
 
-  * Windows version of libpng - Juan Herrero <juan_herrero@yahoo.com>
-
-  * M_PI needs to be #defined on Windows boxen - Juan Herrero <juan_herrero@yahoo.com>
-
-  * Windows mutexs - Juan Herrero <juan_herrero@yahoo.com>
-
-  * If defined WINDOWS is not needed if the PDF is opened in binary mode - 
-	Juan Herrero <juan_herrero@yahoo.com> [binary mode now used, remove
-	unneeded #if defined WINDOWS's]
-
-  * snprintf() usage in printing functions in utility.c
-
   * I think I have the conversion matrix wrong for the line drawing stuff...
+
+  * AUTOTOOLS FOR MAN PAGES

@@ -16,7 +16,7 @@ main (int argc, char *argv[])
   panda_page *mypage;
 
   if ((document = panda_open ("morecircles.pdf", "w")) == NULL)
-    panda_error ("Could not create morecircles.pdf");
+    panda_error (panda_true, "Could not create morecircles.pdf");
 
   mypage = panda_newpage (document, panda_pagesize_a4);
 

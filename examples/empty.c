@@ -23,7 +23,7 @@ main (int argc, char *argv[])
 
   // Open our demo PDF
   if ((demo = panda_open ("empty.pdf", "w")) == NULL)
-    panda_error ("demo: could not open output.pdf to write to.");
+    panda_error (panda_true, "demo: could not open output.pdf to write to.");
 
   // Create a page
   currPage = panda_newpage (demo, panda_pagesize_a4);

@@ -1,0 +1,76 @@
+<!-- 
+
+     This document is part of the panda distribution, and is covered
+     by the GNU GPL, a copy of which is in the file named COPYING inside the
+     distribution.
+
+     This program and it's documentation are distributed in the hope that 
+     they will be useful,but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+-->
+
+<!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
+
+<refentry id="panda_printf">
+<refmeta>
+<refentrytitle>panda_printf</refentrytitle>
+<manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>panda_printf</refname>
+<refpurpose>output a formatted string to the PDF file</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<synopsis>
+ #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ void panda_printf (panda_pdf * file, char *format, ...);
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>DESCRIPTION</title>
+<para><command>PANDA INTERNAL</command>. This function call behaves just like <command>printf</command>(), but the output goes to a PDF file, instead of to stdout.</para>
+</refsect1>
+
+<refsect1>
+<title>RETURNS</title>
+<para>Nothing</para>
+</refsect1>
+
+<refsect1>
+<title>EXAMPLE</title>
+<para> his is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+</para>
+</refsect1>
+
+<refsect1>
+<title>SEE ALSO</title>
+<para>panda_streamprintf, panda_putc, panda_print</para>
+</refsect1>
+
+
+<refsect1>
+    <title>VERSION</title>
+    <para>
+This documentation was generated for <command>Panda</command> 0.4 by <command>autodocbook</command> (http://www.stillhq.com).
+    </para>
+</refsect1>
+
+<refsect1>
+    <title>AUTHOR</title>
+    <para>
+<command>Panda</command> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+</para>
+</refsect1>
+
+<refsect1>
+    <title>BUGS</title>
+    <para>
+There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
+</para>
+</refsect1>

@@ -1,0 +1,76 @@
+<!-- 
+
+     This document is part of the panda distribution, and is covered
+     by the GNU GPL, a copy of which is in the file named COPYING inside the
+     distribution.
+
+     This program and it's documentation are distributed in the hope that 
+     they will be useful,but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+-->
+
+<!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
+
+<refentry id="panda_open_actual">
+<refmeta>
+<refentrytitle>panda_open_actual</refentrytitle>
+<manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>panda_open_actual</refname>
+<refpurpose>actually open a PDF document</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<synopsis>
+ #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ panda_pdf * panda_open_actual (char *filename, char *mode);
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>DESCRIPTION</title>
+<para><command>PANDA INTERNAL</command>. Open the named PDF document with the mode specified. The only mode currently supported is "w", but others will be integrated later. The interface to this function is identical in it's behaviour to the <command>fopen</command>() function call offered by the ANSI C standard IO library. This call actually does the opening for <command/>panda_open</command>() and <command>panda_open_suppress</command>().</para>
+</refsect1>
+
+<refsect1>
+<title>RETURNS</title>
+<para>A pointer to a panda_pdf structure</para>
+</refsect1>
+
+<refsect1>
+<title>EXAMPLE</title>
+<para> se panda_open!
+</para>
+</refsect1>
+
+<refsect1>
+<title>SEE ALSO</title>
+<para>panda_init, panda_open, panda_open_suppress, panda_close</para>
+</refsect1>
+
+
+<refsect1>
+    <title>VERSION</title>
+    <para>
+This documentation was generated for <command>Panda</command> 0.4 by <command>autodocbook</command> (http://www.stillhq.com).
+    </para>
+</refsect1>
+
+<refsect1>
+    <title>AUTHOR</title>
+    <para>
+<command>Panda</command> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+</para>
+</refsect1>
+
+<refsect1>
+    <title>BUGS</title>
+    <para>
+There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
+</para>
+</refsect1>

@@ -24,7 +24,7 @@ main (int argc, char *argv[])
 
   // Open our demo PDF
   if ((demo = panda_open ("template.pdf", "w")) == NULL)
-    panda_error ("demo: could not open output.pdf to write to.");
+    panda_error (panda_true, "demo: could not open output.pdf to write to.");
 
   ///////////////////////////////////////////////////////////////////////////
   // Test template functionality

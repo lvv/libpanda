@@ -1,4 +1,0 @@
-This file lists known bugs in Panda.
-
-  * TIFF images with fillorder msb2lsb which have more than on strip don't
-	work. I'm not sure why. I'm looking into it.

@@ -171,6 +171,8 @@ extern "C"
 ******************************************************************************/
 
   void panda_textbox (panda_pdf *, panda_page *, int, int, int, int, char *);
+  void panda_textboxrot (panda_pdf *, panda_page *, int, int, int, int, 
+			 double, char *);
 
 /******************************************************************************
   Trailer.c

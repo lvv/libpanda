@@ -1,0 +1,74 @@
+<!-- 
+
+     This document is part of the panda distribution, and is covered
+     by the GNU GPL, a copy of which is in the file named COPYING inside the
+     distribution.
+
+     This program and it's documentation are distributed in the hope that 
+     they will be useful,but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+-->
+
+<!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
+
+<refentry id="libtiffDummyWriteProc">
+<refmeta>
+<refentrytitle>libtiffDummyWriteProc</refentrytitle>
+<manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>libtiffDummyWriteProc</refname>
+<refpurpose>mangle libtiff to do image conversion in memory without temportary files</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<synopsis>
+ static tsize_t libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size);
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>DESCRIPTION</title>
+<para><command>PANDA INTERNAL</command>. This call implements a dummy write procedure for libtiff to allow for the conversion of TIFF images on the fly in memory without the use of temporary files. It is an internal call and should NEVER be called by users of the API.</para>
+</refsect1>
+
+<refsect1>
+<title>RETURNS</title>
+<para>The amount of daat written</para>
+</refsect1>
+
+<refsect1>
+<title>EXAMPLE</title>
+<para> ee panda_insertTIFF for an example usage
+</para>
+</refsect1>
+
+<refsect1>
+<title>SEE ALSO</title>
+<para>panda_insertTIFF, libtiffDummWriteProc</para>
+</refsect1>
+
+
+<refsect1>
+    <title>VERSION</title>
+    <para>
+This documentation was generated for <command>Panda</command> 0.4 by <command>autodocbook</command> (http://www.stillhq.com).
+    </para>
+</refsect1>
+
+<refsect1>
+    <title>AUTHOR</title>
+    <para>
+<command>Panda</command> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+</para>
+</refsect1>
+
+<refsect1>
+    <title>BUGS</title>
+    <para>
+There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
+</para>
+</refsect1>

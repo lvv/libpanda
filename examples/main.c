@@ -30,7 +30,7 @@ main (int argc, char *argv[])
 
   // Open our demo PDF
   if ((demo = panda_open ("output.pdf", "w")) == NULL)
-    panda_error ("demo: could not open output.pdf to write to.");
+    panda_error (panda_true, "demo: could not open output.pdf to write to.");
 
   if ((argc > 1) && (strcmp (argv[1], "compressed") == 0))
     {
@@ -55,41 +55,41 @@ main (int argc, char *argv[])
 
   // Put in the background images
   panda_imagebox (demo, currPage, 0, 0, currPage->height / 2,
-		  currPage->width, "input.tif", panda_image_tiff);
+		  currPage->width, "images/input.tif", panda_image_tiff);
   panda_imagebox (demo, currPage, currPage->height / 2, 0,
-		  currPage->height, currPage->width, "input2.tif",
+		  currPage->height, currPage->width, "images/input2.tif",
 		  panda_image_tiff);
 
-  panda_imagebox (demo, currPage, 317, 317, 434, 434, "gnu_box.jpg",
+  panda_imagebox (demo, currPage, 317, 317, 434, 434, "images/gnu_box.jpg",
 		  panda_image_jpeg);
-  panda_imagebox (demo, currPage, 434, 434, 551, 551, "gnu_box.jpg",
+  panda_imagebox (demo, currPage, 434, 434, 551, 551, "images/gnu_box.jpg",
 		  panda_image_jpeg);
 
   // Do an panda_imageboxrot or two to test the code included by Ceasar Miquel
   panda_imageboxrot (demo, currPage, 600, 0, 717, 117, 15.0,
-		     "gnu_box.jpg", panda_image_jpeg);
+		     "images/gnu_box.jpg", panda_image_jpeg);
 
   panda_imageboxrot (demo, currPage, 600, 200, 717, 317, 30.0,
-		     "gnu_box.jpg", panda_image_jpeg);
+		     "images/gnu_box.jpg", panda_image_jpeg);
 
   panda_imageboxrot (demo, currPage, 600, 400, 717, 517, 42.0,
-		     "gnu_box.jpg", panda_image_jpeg);
+		     "images/gnu_box.jpg", panda_image_jpeg);
 
   panda_imageboxrot (demo, currPage, 700, 0, 817, 117, 90.0,
-		     "gnu_box.jpg", panda_image_jpeg);
+		     "images/gnu_box.jpg", panda_image_jpeg);
 
   panda_imageboxrot (demo, currPage, 700, 200, 817, 317, 132.0,
-		     "gnu_box.jpg", panda_image_jpeg);
+		     "images/gnu_box.jpg", panda_image_jpeg);
 
   // Insert a PNG to show that I can
   panda_imageboxrot (demo, currPage, 100, 200, 200, 300, 0.0,
-		     "libpng.png", panda_image_png);
+		     "images/libpng.png", panda_image_png);
 
   panda_imageboxrot (demo, currPage, 300, 200, 400, 300, 0.0,
-		     "gnu.png", panda_image_png);
+		     "images/gnu.png", panda_image_png);
 
   panda_imageboxrot (demo, currPage, 100, 420, 310, 620, 36.0,
-		     "RedbrushAlpha.png", panda_image_png);
+		     "images/RedbrushAlpha.png", panda_image_png);
 
   // (c) statement
   panda_setfont (demo, tempPtr = panda_createfont (demo, "Times-Roman", 1,
@@ -100,6 +100,13 @@ main (int argc, char *argv[])
 		 "and is distributed under the terms of the GPL...");
   panda_textbox (demo, currPage, 310, 320, 330, 800,
 		 "Flower (c) 1999 Pieter S. van der Meulen");
+  free (tempPtr);
+
+  panda_setfont (demo, tempPtr =
+		 panda_createfont (demo, "Helvetica-Bold", 1,
+				   "MacRomanEncoding"));
+  panda_textboxrot (demo, currPage, 200, 30, 230,
+		 30, 45.0, "With new improved angled text!");
   free (tempPtr);
 
   ///////////////////////////////////////////////////////////////////////////
@@ -113,28 +120,25 @@ main (int argc, char *argv[])
   sprintf (tempString,
 	   "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.",
 	   4, 6, 5);
-  panda_textbox (demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100,
-		 30, tempString);
+  panda_textbox (demo, currPage, 10, 10, 100, 30, tempString);
 
   panda_setfont (demo, tempPtr = panda_createfont (demo, "Symbol", 1,
 						   "MacRomanEncoding"));
-  panda_textbox (demo, currPage, lineDepth * 20 + 50, 10 + lineDepth, 100,
-		 30, "Symbol");
+  panda_textbox (demo, currPage, 50, 10, 100, 30, "Symbol");
   free (tempPtr);
 
   panda_setfont (demo, tempPtr =
 		 panda_createfont (demo, "Helvetica-Bold", 1,
 				   "MacRomanEncoding"));
-  panda_textbox (demo, currPage, lineDepth * 20 + 70, 30 + lineDepth, 100,
-		 30, "A line in Helvetica-Bold");
+  panda_textbox (demo, currPage, 70, 30, 100, 30, "A line in Helvetica-Bold");
   free (tempPtr);
 
-  panda_imagebox (demo, currPage, 100, 100, 150, 150, "gnu-head.jpg",
+  panda_imagebox (demo, currPage, 100, 100, 150, 150, "images/gnu-head.jpg",
 		  panda_image_jpeg);
   panda_textbox (demo, currPage, 90, 110, 200, 200, "INFRONTINFRONTINFRONT");
 
   panda_textbox (demo, currPage, 190, 210, 300, 300, "BEHINDBEHINDBEHIND");
-  panda_imagebox (demo, currPage, 200, 200, 317, 317, "gnu_box.jpg",
+  panda_imagebox (demo, currPage, 200, 200, 317, 317, "images/gnu_box.jpg",
 		  panda_image_jpeg);
 
   panda_textbox (demo, currPage, 300, 10, 400, 50,

@@ -172,3 +172,8 @@ Release 0.3 -> Release 0.4
 	- Wrappering the #includes for Panda headers
 	- Adding Windows GMT handling code
 	- Changing the Creator string to identify this version
+
+  * Implemented Windows stuff including an ActiveX DLL, a normal DLL and an
+	installer
+
+  * Angled text (panda_textboxrot)

@@ -17,7 +17,7 @@ IPAustralia     http://www.ipaustralia.gov.au
                 administration of Patents, Trade Marks and Designs. They funded
                 the MS Windows port of Panda, including the development of the
                 C DLL, the Visual Basic examples, the ActiveX DLL and the
-                InstallShield installer.
+                installer.
 
 -------------------------------------------------------------------------------
 
@@ -51,5 +51,5 @@ Mirar            mirar@mirar.org          was good enough to point out some
 
 Phillip Rainey                            helped with the web page and had code
                                           ideas bounced off him at various
-                                          stages
+                                          stages. The ActiveX porting work.
 

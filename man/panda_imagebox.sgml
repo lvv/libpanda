@@ -1,0 +1,90 @@
+<!-- 
+
+     This document is part of the panda distribution, and is covered
+     by the GNU GPL, a copy of which is in the file named COPYING inside the
+     distribution.
+
+     This program and it's documentation are distributed in the hope that 
+     they will be useful,but WITHOUT ANY WARRANTY; without even the implied 
+     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+     GNU General Public License for more details.
+-->
+
+<!DOCTYPE refentry PUBLIC "-//Davenport//DTD DocBook V3.0//EN">
+
+<refentry id="panda_imagebox">
+<refmeta>
+<refentrytitle>panda_imagebox</refentrytitle>
+<manvolnum>3</manvolnum>
+</refmeta>
+
+<refnamediv>
+<refname>panda_imagebox</refname>
+<refpurpose>insert an image into the PDF document at the specified location</refpurpose>
+</refnamediv>
+
+<refsynopsisdiv>
+<synopsis>
+ #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ void panda_panda_imagebox (panda_pdf * output, panda_page * target, int top, int left, int bottom, int right, char *filename, int type);
+
+</synopsis>
+</refsynopsisdiv>
+
+<refsect1>
+<title>DESCRIPTION</title>
+<para>This function call inserts an image into the PDF document at the specified location using a reasonable default for rotation (none). This call is included for backward compatability withprevious releases of the API and it is recommened that new code call <command>panda_imageboxrot</command>(). It is unlikely that this call will be retired however. The image types accepted by this call are: panda_image_tiff, panda_image_jpeg and panda_image_png.</para>
+</refsect1>
+
+<refsect1>
+<title>RETURNS</title>
+<para>Nothing</para>
+</refsect1>
+
+<refsect1>
+<title>EXAMPLE</title>
+<para> #include&lt;panda/constants.h&gt;
+ #include&lt;panda/functions.h&gt;
+ 
+ panda_pdf *demo;
+ panda_page *currPage;
+ 
+ panda_init ();
+ 
+ if ((demo = panda_open ("output.pdf", "w")) == NULL)
+ panda_error (panda_true, "demo: could not open output.pdf to write to.");
+ 
+ currPage = panda_newpage (demo, panda_pagesize_a4);
+ 
+ panda_imagebox (demo, currPage, 0, 0, currPage->height / 2,
+ currPage->width, "input.tif", panda_image_tiff);
+</para>
+</refsect1>
+
+<refsect1>
+<title>SEE ALSO</title>
+<para>panda_imageboxrot</para>
+</refsect1>
+
+
+<refsect1>
+    <title>VERSION</title>
+    <para>
+This documentation was generated for <command>Panda</command> 0.4 by <command>autodocbook</command> (http://www.stillhq.com).
+    </para>
+</refsect1>
+
+<refsect1>
+    <title>AUTHOR</title>
+    <para>
+<command>Panda</command> is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000 and 2001,  and is released under the GNU GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+</para>
+</refsect1>
+
+<refsect1>
+    <title>BUGS</title>
+    <para>
+There  are no known bugs in <command>Panda</command>. If you find one, please contact mikal@stillhq.com and let me know.
+</para>
+</refsect1>

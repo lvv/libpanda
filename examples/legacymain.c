@@ -29,7 +29,7 @@ main (int argc, char *argv[])
 
   // Open our demo PDF
   if ((demo = pdfopen ("legacy.pdf", "w")) == NULL)
-    error ("demo: could not open legacy.pdf to write to.");
+    error (panda_true, "demo: could not open legacy.pdf to write to.");
 
   // For every text mode in v 1.3
   for (lineDepth = 0; lineDepth < 8; lineDepth++)

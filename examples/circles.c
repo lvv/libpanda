@@ -13,7 +13,7 @@ main (int argc, char *argv[])
   int *results, count;
 
   if ((document = panda_open ("circles.pdf", "w")) == NULL)
-    panda_error ("Could not create circles.pdf");
+    panda_error (panda_true, "Could not create circles.pdf");
 
   mypage = panda_newpage (document, panda_pagesize_a4);
 
