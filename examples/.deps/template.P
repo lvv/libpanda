@@ -1,5 +1,5 @@
 template.o: template.c ../panda/functions.h ../panda/objects.h \
-  ../panda/constants.h /usr/local/include/tdb.h /usr/include/stdlib.h \
+  ../panda/constants.h ../tdb.h /usr/include/stdlib.h \
   /usr/include/features.h /usr/include/sys/cdefs.h \
   /usr/include/gnu/stubs.h \
   /usr/lib/gcc-lib/i386-redhat-linux/2.96/include/stddef.h \
@@ -23,7 +23,7 @@ template.c :
 ../panda/functions.h :
 ../panda/objects.h :
 ../panda/constants.h :
-/usr/local/include/tdb.h :
+../tdb.h :
 /usr/include/stdlib.h :
 /usr/include/features.h :
 /usr/include/sys/cdefs.h :

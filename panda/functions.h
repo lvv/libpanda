@@ -235,6 +235,8 @@ extern "C"
   void panda_putc (panda_pdf *, int c);
   void panda_print (panda_pdf *, char *);
   char *panda_xsnprintf (char *, ...);
+  char *panda_md5hash(char *);
+  char *panda_hexstring(char *);
 
 /******************************************************************************
   View.c

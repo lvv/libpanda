@@ -24,9 +24,6 @@ dnl and #defined HAVE_LIB<lib>
 dnl -lm:
 AC_CHECK_LIB(m, atan)
 
-dnl -ltdb:
-AC_CHECK_LIB(tdb, tdb_fetch)
-
 dnl -ldmalloc:
 AC_CHECK_LIB(dmalloc, malloc)
 

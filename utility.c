@@ -454,9 +454,47 @@ panda_md5hash(char *input){
 
   digest = panda_xmalloc(16);
 
-  MDInit (&context);
-  MDUpdate (&context, input, strlen(input));
-  MDFinal (digest, &context);
+  MD5Init (&context);
+  MD5Update (&context, input, strlen(input));
+  MD5Final (digest, &context);
 
   return digest;
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_hexstring
+PURPOSE take a string of possibly binary bytes, and represent them in hex
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+char *panda_hexstring(char *input);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This function converts a binary array of chars into an array of hex characters. An assumption is made that there are no zero bytes in the middle of the string.
+
+RETURNS A string of hex
+
+EXAMPLE START
+This is an internal function which will only be needed by those playing deeply with Panda itself, so I won't provide an example.
+EXAMPLE END
+DOCBOOK END
+******************************************************************************/
+
+char *
+panda_hexstring(char *input){
+  int length, count;
+  char *output;
+
+  length = strlen(input);
+  output = panda_xmalloc((length + 1) * sizeof(char));
+
+  for(count = 0; count < length; count++){
+    snprintf(output[count], 1, "%2x", input[count]);
+  }
+
+  output[length + 1] = 0;
+  return output;
 }

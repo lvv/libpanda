@@ -323,17 +323,29 @@ DOCBOOK END
 void
 panda_setid (panda_pdf * document, char *filename)
 {
-  char *now, *input, *hash;
+  char *now, *input, *hash, *version, *hexHash, *hexVersion, *totalString;
 
   // Check the info object already exists
   panda_checkinfo (document);
 
   now = panda_nowdate();
-  input = panda_xsprintf("%s-%s", now, filename);
+  input = panda_xsnprintf("%s-%s", now, filename);
   hash = panda_md5hash(input);
+  version = panda_md5hash("001");
+  hexHash = panda_hexstring(hash);
+  hexVersion = panda_hexstring(version);
+  totalString = panda_xsnprintf("[<%s><%s>]", hexHash, hexVersion);
 
-  // Add the creator bit to it
-  panda_adddictitem (document, document->info, "Creator",
-		     panda_brackettedtextvalue, creator);
+  // Add the ID bit to the dictionary
+  panda_adddictitem (document, document->info, "ID",
+		     panda_literaltextvalue, totalString);
+
+  panda_xfree(totalString);
+  panda_xfree(hexHash);
+  panda_xfree(hexVersion);
+  panda_xfree(hash);
+  panda_xfree(version);
+  panda_xfree(input);
+  panda_xfree(now);
 }
 
