@@ -313,7 +313,7 @@ void writeObject(pdf *output, object *dumpTarget){
     // We cannot have a textstream and a binary stream in the same object
     else if(dumpTarget->binarystream != NULL){
       adddictitem(dumpTarget->dict, "Length", gIntValue,
-	strlen(dumpTarget->binarystream));
+	dumpTarget->binarystreamLength);
     }
 
     // We might also only have an xobjectstream here
@@ -349,7 +349,7 @@ void writeObject(pdf *output, object *dumpTarget){
     else if(dumpTarget->binarystream != NULL){
       pdfprint(output, "stream\n");
 
-      for(count = 0; count < strlen(dumpTarget->binarystream); count ++)
+      for(count = 0; count < dumpTarget->binarystreamLength; count ++)
 	pdfputc(output, dumpTarget->binarystream[count]);
 
       pdfprint(output, "\nendstream\n");

@@ -1,0 +1,5 @@
+This file contains hints for developers of Panda...
+
+  * There are some Unix editors that hide DOS style line endings. PDF uses 
+	this style for most (but not all) of the file, so something like 
+	od -Ad -w10 -c | more

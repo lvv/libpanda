@@ -83,7 +83,6 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
   // This line will need to be changed to gaurantee that the internal name is
   // unique unless the actual image is the same
   adddictitem(imageObj->dict, "Name", gTextValue, filename);
-
   adddictitem(imageObj->dict, "Filter", gTextValue, "CCITTFaxDecode");
   
   // Bits per component is per colour component, not per sample. Does this
@@ -157,5 +156,42 @@ void insertTiff(pdf *output, page *target, int top, int left, int bottom,
 
   // The image offset is the total size of the binary stream as well
   imageObj->binarystreamLength = imageOffset;
+
+  // We also need to add some information to the text stream for the contents
+  // object for the page that the image is being displayed on. This information
+  // consists of the following:
+  //  - save the current graphics state (q operator, p 386 of spec)
+  //  - setup the current transformation matrix (ctm, s 3.2 and p 323 of spec)
+  //    such that the image is scaled correctly (cm operator)
+  //  - modify the ctm to shift the image to where it is meant to be on the
+  //    the page
+  //  - use the image xobject we have created (Do operator, p 348 of spec)
+  //  - restore the graphics state to the way it was previously (Q operator,
+  //    p 386 of spec)
+  target->contents->xobjectstream = 
+    streamprintf(target->contents->xobjectstream, 
+    "\nq\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
+    
+    // The first matrix
+    1.0, // xscale
+    0.0, // rot and scale?
+    0.0, // ???
+    1.0, // yscale
+    right - left, // x size
+    bottom - top, // y size
+
+    // The second matrix
+    left, // x left offset
+    0.0, // ???
+    0.0, // ???
+    bottom, // y bottom offset
+    0.0, // ???
+    0.0 // ???
+    );
+
+  target->contents->xobjectstream = 
+    streamprintf(target->contents->xobjectstream,
+    "/%s Do\nQ\n\n", filename);
 }
+
 
