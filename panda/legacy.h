@@ -77,33 +77,35 @@ extern "C"
 #define xref panda_xref
 #define pdf panda_pdf
 
-#define  panda_brackettedtextvalue
-#define  panda_dictionaryvalue
-#define  panda_integervalue
-#define  panda_textvalue
-#define  panda_literaltextvalue
-#define  panda_objectvalue
-#define  panda_objectarrayvalue
-#define  panda_true
-#define  panda_false
-#define  panda_up
-#define  panda_down
-#define  panda_write
-#define  panda_writelinear
-#define  panda_pagesize_a4
-#define  panda_pagesize_usletter
-#define  panda_pagesize_template_a4
-#define  panda_pagesize_template_usletter
-#define  panda_placeholder
-#define  panda_normal
-  panda_textmode_normal
-    panda_textmode_outline
-    panda_textmode_filledoutline
-    panda_textmode_invisible
-    panda_textmode_filledclipped
-    panda_textmode_strokedclipped
-    panda_textmode_filledstrokedclipped
-    panda_textmode_clipped panda_image_tiff panda_image_jpeg panda_image_png
+#define gBracketedTextValue panda_brackettedtextvalue
+#define gDictionaryValue panda_dictionaryvalue
+#define gIntValue panda_integervalue
+#define gTextValue panda_textvalue
+#define gLiteralTextValue panda_literaltextvalue
+#define gObjValue panda_objectvalue
+#define gObjArrayValue panda_objectarrayvalue
+#define gTrue panda_true
+#define gFalse panda_false
+#define gUp panda_up
+#define gDown panda_down
+#define gWrite panda_write
+#define gWriteLinear panda_writelinear
+#define gPageSizeA4 panda_pagesize_a4
+#define gPageSizeUsLetter panda_pagesize_usletter
+#define gPlaceholder panda_placeholder
+#define gNormal panda_normal
+#define gTextModeNormal panda_textmode_normal
+#define gTextModeOutline panda_textmode_outline
+#define gTextModeFilledOutline panda_textmode_filledoutline
+#define gTextModeInvisible panda_textmode_invisible
+#define gTextModeFilledClipped panda_textmode_filledclipped
+#define gTextModeStrokedClipped panda_textmode_strokedclipped
+#define gTextModeFilledStrokedClipped panda_textmode_filledstrokedclipped
+#define gTextModeClipped panda_textmode_clipped 
+#define gImageTiff panda_image_tiff 
+#define gImageJpeg panda_image_jpeg 
+#define gImagePNG panda_image_png
+
 #ifdef __cplusplus
 }
 #endif
