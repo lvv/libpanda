@@ -25,7 +25,7 @@ dnl -lm:
 AC_CHECK_LIB(m, atan)
 
 dnl -ldmalloc:
-AC_CHECK_LIB(dmalloc, malloc)
+dnl AC_CHECK_LIB(dmalloc, malloc)
 
 dnl -lpng::
 AC_CHECK_LIB(png, png_libpng_ver, CFLAGS="$CFLAGS -DHAVE_LIBPNG" LDFLAGS="$LDFLAGS -lpng" )

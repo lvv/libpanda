@@ -275,9 +275,9 @@ extern "C"
   dmalloc needs to be at the end of the file
 ******************************************************************************/
 
-#if defined HAVE_LIBDMALLOC
-#include <dmalloc.h>
-#endif
+  // #if defined HAVE_LIBDMALLOC
+  // #include <dmalloc.h>
+  // #endif
 
 #ifdef __cplusplus
 }

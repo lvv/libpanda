@@ -20,7 +20,7 @@ circles.o: circles.c /usr/include/stdio.h /usr/include/features.h \
   /usr/include/string.h /usr/include/bits/string.h \
   /usr/include/bits/string2.h /usr/include/sys/mman.h \
   /usr/include/bits/mman.h /usr/include/sys/stat.h \
-  /usr/include/bits/stat.h /usr/include/sys/time.h /usr/include/dmalloc.h
+  /usr/include/bits/stat.h /usr/include/sys/time.h
 circles.c :
 /usr/include/stdio.h :
 /usr/include/features.h :
@@ -72,4 +72,3 @@ circles.c :
 /usr/include/sys/stat.h :
 /usr/include/bits/stat.h :
 /usr/include/sys/time.h :
-/usr/include/dmalloc.h :

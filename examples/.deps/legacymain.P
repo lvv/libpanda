@@ -18,8 +18,7 @@ legacymain.o: legacymain.c ../panda/functions.h ../panda/objects.h \
   /usr/include/getopt.h /usr/include/string.h /usr/include/bits/string.h \
   /usr/include/bits/string2.h /usr/include/sys/mman.h \
   /usr/include/bits/mman.h /usr/include/sys/stat.h \
-  /usr/include/bits/stat.h /usr/include/sys/time.h /usr/include/dmalloc.h \
-  ../panda/legacy.h
+  /usr/include/bits/stat.h /usr/include/sys/time.h ../panda/legacy.h
 legacymain.c :
 ../panda/functions.h :
 ../panda/objects.h :
@@ -66,5 +65,4 @@ legacymain.c :
 /usr/include/sys/stat.h :
 /usr/include/bits/stat.h :
 /usr/include/sys/time.h :
-/usr/include/dmalloc.h :
 ../panda/legacy.h :
