@@ -11,7 +11,7 @@ do
   rm -i $item
 done
 
-delname="Makefile config.cache config.log config.status logfile"
+delname="Makefile config.cache config.log config.status logfile math"
 
 # Get rid of makefiles
 for filename in $delname
