@@ -19,20 +19,22 @@
 .\" License along with this manual; if not, write to the Free
 .\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
 .\" USA.
-.TH PDFOPEN 3  "24 July 2000" "Panda PDF Generator Programmer's Manual" "Panda PDF Generator"
+.TH PDFPAGE 3  "24 July 2000" "Panda PDF Generator Programmer's Manual" "Panda PDF Generator"
 .SH NAME
-pdfopen
+pdfpage
 .SH SYNOPSIS
 .B #include <panda/constants.h>
 .B #include <panda/functions.h>
 .sp
-.BI "pdf *pdfopen(char *filename, char *mode);"
+.BI "page *pdfpage(pdf *document, char *pageSize);"
 .SH DESCRIPTION
 The function
-.B pdfopen
-opens a PDF document in the given mode. At the current time the only mode supported is "w", which means write from scratch. Further modes will be implemented at a later time. Any number of PDF documents may be open simultaneously.
+.B pdfpage
+creates a new page in the PDF document that you pass to it and returns a pointer to the page to you. Many pages may simultaneously be open in this manner, and there is no proceedure for 'closing' a page -- this is done automatically when the document is closed. Once you are finished with the page you may discard the pointer you have been given, but
+.B do not
+call free() on the pointer or the library will break.
 
-This function is modelled on the fopen() call.
+The page size string is a description of the size of the page that you would like inserted into the document. This may be any arbitary size that you desire, with the following forwat being used: "0 0 <width> <height>". Size of the pages is measured in points, of which there are 72 in an inch. For your convenience, standard page sizes are defined in the header file panda/constants.h -- there are gPageSizeA4 and gPageSizeUsLetter.
 .SH EXAMPLE
 .br
 Simply use:
@@ -41,21 +43,21 @@ Simply use:
 #include <panda/constants.h>
 #include <panda/functions.h>
 
-pdf *demo;
+pdf  *demo;
+page *first;
 
 demo = pdfopen("output.pdf", "w");
-.fi
-.RE
+first = pdfpage(demo, gPageSizeA4);
+
 .SH RETURNS
 .br
-.B pdfopen
-returns NULL if the document could not be opened for any reason. Otherwise a pointer to the PDF document is returned.
+.B pdfpage
+returns a pointer to the page created. If a page cannot be created, the error routine is called.
+.fi
+.RE
 .SH AUTHOR
 .br
 Panda is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000, and is released under the GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
 .SH BUGS
 .br
 There are no known bugs in Panda. If you find one, please contact mikal@stillhq.com and let me know.
-
-
-

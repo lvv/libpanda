@@ -19,18 +19,18 @@
 .\" License along with this manual; if not, write to the Free
 .\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
 .\" USA.
-.TH PDFOPEN 3  "24 July 2000" "Panda PDF Generator Programmer's Manual" "Panda PDF Generator"
+.TH PDFCLOSE 3  "24 July 2000" "Panda PDF Generator Programmer's Manual" "Panda PDF Generator"
 .SH NAME
-pdfopen
+pdfclose
 .SH SYNOPSIS
 .B #include <panda/constants.h>
 .B #include <panda/functions.h>
 .sp
-.BI "pdf *pdfopen(char *filename, char *mode);"
+.BI "void pdfclose(pdf *document);"
 .SH DESCRIPTION
 The function
-.B pdfopen
-opens a PDF document in the given mode. At the current time the only mode supported is "w", which means write from scratch. Further modes will be implemented at a later time. Any number of PDF documents may be open simultaneously.
+.B pdfclose
+closes the given PDF document and causes it to be written out to disc. This may take sometime, depending on the size of the PDF that you have generated.
 
 This function is modelled on the fopen() call.
 .SH EXAMPLE
@@ -44,18 +44,16 @@ Simply use:
 pdf *demo;
 
 demo = pdfopen("output.pdf", "w");
+
+// PDF operations here
+
+pdfclose(demo);
+
 .fi
 .RE
-.SH RETURNS
-.br
-.B pdfopen
-returns NULL if the document could not be opened for any reason. Otherwise a pointer to the PDF document is returned.
 .SH AUTHOR
 .br
 Panda is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000, and is released under the GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
 .SH BUGS
 .br
 There are no known bugs in Panda. If you find one, please contact mikal@stillhq.com and let me know.
-
-
-

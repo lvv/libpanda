@@ -7,3 +7,11 @@ Release 0.1 -> Release 0.2
 	stream when the font name changes or at the start of the page
 	description. This reduces the size of the output documents in some
 	cases dramatically.
+
+  * Introduction of a Windows DLL project for MS Visual Studio.
+
+  * Fixed various errors in the documentation. Also added more man pages so
+	all external functions are documented by a man page.
+
+  * Improved the commenting in some of the code (added function descriptions
+  	to the source files).

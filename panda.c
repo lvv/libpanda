@@ -17,6 +17,7 @@
 #include "constants.h"
 #include "functions.h"
 
+// Initialise the PDF library ready for operations
 void initpanda(){
   int  generalCounter;
 
@@ -28,6 +29,7 @@ void initpanda(){
   }
 }
 
+// Open the named PDF document in the given mode
 pdf *pdfopen(char *filename, char *mode){
   pdf  *openedpdf;
 
@@ -114,6 +116,7 @@ pdf *pdfopen(char *filename, char *mode){
   return NULL;
 }
 
+// Finish operations on a given PDF document and write the result to disc
 void pdfclose(pdf *openedpdf){
   // It is now worth our time to count the number of pages and make the count
   // entry in the pages object
@@ -135,6 +138,7 @@ void pdfclose(pdf *openedpdf){
   fclose(openedpdf->file);
 }
 
+// Insert a page into the PDF
 page *pdfpage(pdf *output, char *pageSize){
   // Add a page to the PDF
   page  *newPage;
