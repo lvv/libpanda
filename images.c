@@ -25,9 +25,13 @@ static tsize_t libtiffDummyWriteProc (thandle_t fd, tdata_t buf,
 static toff_t libtiffDummySeekProc (thandle_t fd, toff_t off, int i);
 static int libtiffDummyCloseProc (thandle_t fd);
 
-char *globalTiffBuffer;
-unsigned long globalTiffBufferOffset;
-pthread_mutex_t tiffConvMutex = PTHREAD_MUTEX_INITIALIZER;
+void libpngDummyWriteProc (png_structp png, png_bytep data, png_uint_32 len);
+void libpngDummyFlushProc (png_structp png);
+
+char *globalImageBuffer;
+unsigned long globalImageBufferOffset;
+pthread_mutex_t convMutex = PTHREAD_MUTEX_INITIALIZER;
+char globalIsIDAT;
 
 /******************************************************************************
 DOCBOOK START
@@ -427,9 +431,9 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       // have already used global tiff buffer, because we are still using it's
       // old contents...
 
-      pthread_mutex_lock (&tiffConvMutex);
-      globalTiffBuffer = NULL;
-      globalTiffBufferOffset = 0;
+      pthread_mutex_lock (&convMutex);
+      globalImageBuffer = NULL;
+      globalImageBufferOffset = 0;
 
       // Open the dummy document (which actually only exists in memory)
       conv =
@@ -488,12 +492,12 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
 
 #if defined DEBUG
       printf ("The global tiff buffer became %ld bytes long\n",
-	      globalTiffBufferOffset);
+	      globalImageBufferOffset);
 #endif
 
-      imageObj->binarystream = globalTiffBuffer;
-      imageObj->binarystreamLength = globalTiffBufferOffset;
-      pthread_mutex_unlock (&tiffConvMutex);
+      imageObj->binarystream = globalImageBuffer;
+      imageObj->binarystreamLength = globalImageBufferOffset;
+      pthread_mutex_unlock (&convMutex);
     }
 
   else
@@ -662,7 +666,11 @@ SYNOPSIS START
 void panda_insertPNG (panda_pdf * output, panda_page * target, panda_object * imageObj, char *filename);
 SYNOPSIS END
 
-DESCRIPTION <command>PANDA INTERNAL</command>. Do the actual insertion of the PNG image into the PDF document. This routine handles the conversion of the PNG image into the form supported by the PDF specification, and similar operations. It is an internal <command>Panda</command> call and should not be needed by users of the API.
+DESCRIPTION START
+<command>PANDA INTERNAL</command>. Do the actual insertion of the PNG image into the PDF document. This routine handles the conversion of the PNG image into the form supported by the PDF specification, and similar operations. It is an internal <command>Panda</command> call and should not be needed by users of the API.
+
+While developing this function call, some reference was made to the source code for iText (http://www.lowagie.com/iText), which is a GPL'ed PDF generator written in Java. The code in Panda is original though...
+DESCRIPTION END
 
 RETURNS Nothing
 
@@ -671,6 +679,15 @@ See panda_imageboxrot for an example usage
 EXAMPLE END
 SEEALSO panda_imagebox, panda_imageboxrot, panda_insertJPEG, panda_insertTIFF
 DOCBOOK END
+
+-----------------------------------------------------------------------------
+This code is loosely based on examples from the libpng package, as well as
+some GPL'ed work from Paulo Soares for PNG insertion into PDFs using iText,
+a Java PDF generator (http://www.lowagie.com/iText). The code below was,
+however, written by mikal@stillhq.com... iText was merely used for hints on
+how to do it.
+
+The PNG specification is also a good read...
 ******************************************************************************/
 
 void
@@ -680,12 +697,13 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   FILE *image;
   unsigned long imageBufSize, width, height;
   unsigned char signature;
-  int bitdepth, colourtype;
+  int bitdepth, colourtype, c, outColourType;
   png_uint_32 i, rowbytes;
   png_structp png;
   png_infop info;
   unsigned char sig[8];
   png_bytepp row_pointers = NULL;
+  panda_object *subdict;
 
 #if defined DEBUG
   printf ("Inserting a PNG image on page with object number %d.\n",
@@ -715,6 +733,8 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
     panda_error("Could not set PNG jump value");
 
   // Get ready for IO and tell the API we have already read the image signature
+  // The IHDR chunk inside the PNG defines some info we need about the picture
+  // (see PNG specification 1.2, page 15).
   png_init_io(png, image);
   png_set_sig_bytes(png, 8);
   png_read_info(png, info);
@@ -729,18 +749,34 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   panda_adddictitem (imageObj->dict, "BitsPerComponent", panda_integervalue,
 		     bitdepth);
 
-  // The colour device will change based on this number as well -- THIS 
-  // NEEDS WORK
+  // I can't find any documentation for why the predictor should always be
+  // 15. If I ever do, then I will update this...
+  subdict = panda_newobject (output, panda_placeholder);
+  panda_adddictitem (subdict->dict, "Predictor", panda_integervalue,
+		     15);
+  panda_adddictitem (subdict->dict, "Columns", panda_integervalue,
+		     width);
+  panda_adddictitem (subdict->dict, "BitsPerComponent", panda_integervalue,
+		     bitdepth);
+
+  // The colour device will change based on this number as well
   switch (colourtype)
     {
     case PNG_COLOR_TYPE_GRAY:
-	panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue,
-			   "DeviceGray");
+    case PNG_COLOR_TYPE_GRAY_ALPHA:
+      panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue,
+			 "DeviceGray");
+      panda_adddictitem (subdict->dict, "Colors", panda_integervalue,
+			 1);
+      outColourType = PNG_COLOR_TYPE_GRAY;
       break;
 
     default:
       panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue,
 			 "DeviceRGB");
+      panda_adddictitem (subdict->dict, "Colors", panda_integervalue,
+			 3);
+      outColourType = PNG_COLOR_TYPE_RGB;
       break;
     }
 
@@ -752,11 +788,21 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 		     width);
   panda_adddictitem (imageObj->dict, "Height", panda_integervalue,
 		     height);
+  panda_adddictitem (imageObj->dict, "Filter", panda_textvalue,
+  		     "FlateDecode");
+  panda_adddictitem (imageObj->dict, "DecodeParms", panda_dictionaryvalue,
+  		     subdict->dict);
   
   /****************************************************************************
      Now actually insert the image. libpng lets us do some cool stuff with
      the data before it is handed to us like expanding it to our expectations.
      I don't use this at the moment, but reserve the right to one day...
+
+     We read the image into a memory buffer...
+  ****************************************************************************/
+
+  /****************************************************************************
+    Read the image into it's memory buffer
   ****************************************************************************/
 
   if(colourtype == PNG_COLOR_TYPE_PALETTE)
@@ -774,7 +820,7 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   for (i = 0;  i < height;  ++i) row_pointers[i] = 
 				   imageObj->binarystream + (i * rowbytes);
   png_read_image(png, row_pointers);
-  free(row_pointers);
+  // free(row_pointers);
   png_read_end(png, NULL);
 
   imageObj->binarystream[imageObj->binarystreamLength++] = 0;
@@ -782,6 +828,45 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 
   // This cleans things up for us in the PNG library
   png_destroy_read_struct(&png, &info, NULL);
+
+  /****************************************************************************
+     ... And now we write that image out into another memory buffer (this one
+     compressed) via some funky callbacks to libpng...
+  ****************************************************************************/
+
+  if((png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL)) == NULL)
+    panda_error("Could not create write structure for PNG (out of memory?)");
+
+  if((info = png_create_info_struct(png)) == NULL)
+    panda_error("Could not create PNG info structure for writing (out of memory?)");
+
+  if(setjmp(png_jmpbuf(png)))
+    panda_error("Could not set the PNG jump value for writing");
+
+  // If this call is done before png_create_write_struct, then everything seg faults...
+  pthread_mutex_lock (&convMutex);
+  png_set_write_fn(png, NULL, (png_rw_ptr) libpngDummyWriteProc, 
+  		   (png_flush_ptr) libpngDummyFlushProc);
+  globalIsIDAT = panda_false;
+  globalImageBuffer = NULL;
+  globalImageBufferOffset = 0;
+
+  png_set_IHDR(png, info, width, height, bitdepth, outColourType, 
+	       PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, 
+	       PNG_FILTER_TYPE_DEFAULT);
+  png_write_info(png, info);
+
+  png_write_image(png, row_pointers);
+  png_write_end(png, info);
+  png_destroy_write_struct(&png, &info);
+
+  /****************************************************************************
+     ... Finally, we have something that we can insert into the PDF stream
+  ****************************************************************************/
+
+  imageObj->binarystream = globalImageBuffer;
+  imageObj->binarystreamLength = globalImageBufferOffset;
+  pthread_mutex_unlock (&convMutex);    
 }
 
 /*****************************************************************************
@@ -794,7 +879,7 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 DOCBOOK START
 
 FUNCTION libtiffDummyReadProc
-PURPOSE mangle libtiff to doc image conversion in memory without temportary files
+PURPOSE mangle libtiff to do image conversion in memory without temportary files
 
 SYNOPSIS START
 static tsize_t libtiffDummyReadProc (thandle_t fd, tdata_t buf, tsize_t size);
@@ -823,7 +908,7 @@ libtiffDummyReadProc (thandle_t fd, tdata_t buf, tsize_t size)
 DOCBOOK START
 
 FUNCTION libtiffDummyWriteProc
-PURPOSE mangle libtiff to doc image conversion in memory without temportary files
+PURPOSE mangle libtiff to do image conversion in memory without temportary files
 
 SYNOPSIS START
 static tsize_t libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size);
@@ -867,22 +952,22 @@ libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size)
   else
     {
       // Have we done anything yet?
-      if (globalTiffBuffer == NULL)
-	globalTiffBuffer = (char *) panda_xmalloc (size * sizeof (char));
+      if (globalImageBuffer == NULL)
+	globalImageBuffer = (char *) panda_xmalloc (size * sizeof (char));
 
       // Otherwise, we need to grow the memory buffer
       else
 	{
-	  if ((globalTiffBuffer = (char *) realloc (globalTiffBuffer,
+	  if ((globalImageBuffer = (char *) realloc (globalImageBuffer,
 						    (size * sizeof (char)) +
-						    globalTiffBufferOffset))
+						    globalImageBufferOffset))
 	      == NULL)
 	    panda_error ("Could not grow the tiff conversion memory buffer.");
 	}
 
       // Now move the image data into the buffer
-      memcpy (globalTiffBuffer + globalTiffBufferOffset, buf, size);
-      globalTiffBufferOffset += size;
+      memcpy (globalImageBuffer + globalImageBufferOffset, buf, size);
+      globalImageBufferOffset += size;
     }
 
   return (size);
@@ -920,7 +1005,7 @@ libtiffDummySeekProc (thandle_t fd, toff_t off, int i)
 DOCBOOK START
 
 FUNCTION libtiffDummyCloseProc
-PURPOSE mangle libtiff to doc image conversion in memory without temportary files
+PURPOSE mangle libtiff to do image conversion in memory without temportary files
 
 SYNOPSIS START
 static int libtiffDummyCloseProc (thandle_t);
@@ -943,3 +1028,96 @@ libtiffDummyCloseProc (thandle_t fd)
   // Return a zero meaning all is well
   return 0;
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION libpngDummyWriteProc
+PURPOSE mangle libpng to do image conversion in memory without temportary files
+
+SYNOPSIS START
+void libpngDummyWriteProc(png_structp png, png_bytep data, png_uint_32 len);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This call implements a dummy write proceedure for libpng. This is needed so that Panda can get at the compressed PNG data, whilst converting it on the fly from unsupported PNG variants, and while not having to deal with temporary files. PDF documents only need the content of the IDAT chunks within the PNG file, and this method eases gaining access to those chunks.
+
+RETURNS Zero
+
+EXAMPLE START
+See panda_insertPNG for an example usage
+EXAMPLE END
+SEEALSO panda_insertPNG, libpngDummyReadProc, libpngDummyFlushProc
+DOCBOOK END
+******************************************************************************/
+
+void libpngDummyWriteProc(png_structp png, png_bytep data, png_uint_32 len)
+{
+  unsigned long count;
+  char tempString[5];
+
+  // Copy the first 4 bytes into a string
+  tempString[0] = data[0];
+  tempString[1] = data[1];
+  tempString[2] = data[2];
+  tempString[3] = data[3];
+  tempString[4] = '\0';
+
+  // If we know this is an IDAT, then copy the compressed image information
+  if(globalIsIDAT == panda_true)
+    {
+#if defined DEBUG
+      printf("Inserted %d bytes into the PNG\n", len);
+#endif
+
+      // Have we done anything yet?
+      if (globalImageBuffer == NULL)
+	globalImageBuffer = (char *) panda_xmalloc (len * sizeof (char));
+
+      // Otherwise, we need to grow the memory buffer
+      else
+	{
+	  if ((globalImageBuffer = (char *) realloc (globalImageBuffer,
+						    (len * sizeof (char)) +
+						    globalImageBufferOffset))
+	      == NULL)
+	    panda_error ("Could not grow the png conversion memory buffer.");
+	}
+
+      // Now move the image data into the buffer
+      memcpy (globalImageBuffer + globalImageBufferOffset, data, len);
+      globalImageBufferOffset += len;
+
+      globalIsIDAT = panda_false;
+    }
+  else if((len == 4) && (strcmp(tempString, "IDAT") == 0)) globalIsIDAT = panda_true;
+  else globalIsIDAT = panda_false;
+}
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION libpngDummyFlushProc
+PURPOSE mangle libpng to do image conversion in memory without temportary files
+
+SYNOPSIS START
+void libpngDummyFlushProc(png_structp png);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. This call implements a dummy flush proceedure for libpng. This is needed so that Panda can get at the compressed PNG data, whilst converting it on the fly from unsupported PNG variants, and while not having to deal with temporary files. PDF documents only need the content of the IDAT chunks within the PNG file, and this method eases gaining access to those chunks.
+
+RETURNS Zero
+
+EXAMPLE START
+See panda_insertPNG for an example usage
+EXAMPLE END
+SEEALSO panda_insertPNG, libpngDummyReadProc, libpngDummyWriteProc
+DOCBOOK END
+******************************************************************************/
+
+void libpngDummyFlushProc(png_structp png)
+{
+}
+
+
+
+
