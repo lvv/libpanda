@@ -1,0 +1,47 @@
+.\" Copyright (c) 2000 Michael Still (mikal@stillhq.com)
+.\"
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 2 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, write to the Free
+.\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
+.\" USA.
+.TH INITPANDA 3  "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
+.SH NAME
+initpanda
+.SH SYNOPSIS
+.B #include <panda.h>
+.sp
+.BI "void initpanda(void);"
+.SH DESCRIPTION
+The function
+.B initpanda
+setup the panda PDF generation library ready for operations. These operations are currently limited to the generation of new PDF documents, although editing of existing documents will be added in a subsequent version. Any number of PDF documents may be generated simultaneously.
+.SH EXAMPLE
+.br
+Simply use:
+.RS
+.nf
+#include <panda.h>
+initpanda();
+.fi
+.RE
+.SH AUTHOR
+.br
+Panda is under development by Michael Still (mikal@stillhq.com). All code is Copyright Michael Still 2000, and is released under the GPL. Code submissions are welcomed. Contact Michael at the address above if you have something you would like to contribute.
+.SH BUGS
+.br
+There are no known bugs in Panda. If you find one, please contact mikal@stillhq.com and let me know.
