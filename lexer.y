@@ -31,7 +31,12 @@
 pdf       : header objects xref trailer
           ;
 
-header    : VERSION binary {}
+header    : VERSION binary {
+                      // I'm not sure what the binary is doing for me, 
+                      // the version seems to have all of the header 
+                      // information...
+                      pdfprintf(yypdf, "%s", $1);
+                                                                             }
           ;
 
 objects   : object objects
@@ -53,7 +58,10 @@ object    : INT INT OBJ {
           ;
 
 dict      : NAME STRING dict {}
-          | NAME NAME dict {}
+          | NAME NAME dict {
+	              // Add the dictionary item
+	    //adddictitem(yycurobj->dict, $1, gLiteralTextValue, $2);
+                                                                             }
           | NAME ARRAY arrayvals ENDARRAY dict {}
           | NAME OBJREF dict {}
           | NAME DBLLT dict DBLGT dict {}
