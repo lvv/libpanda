@@ -64,4 +64,4 @@ AC_FUNC_VPRINTF
 AC_CHECK_LIB(libc,snprintf)
 
 
-AC_OUTPUT(examples/Makefile panda/Makefile Makefile)
+AC_OUTPUT(examples/Makefile panda/Makefile Makefile panda.spec panda.pc)

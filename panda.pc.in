@@ -1,0 +1,10 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+ 
+Name: panda
+Description: Panda PDF generation API.
+Version: @VERSION@
+Libs: @LDFLAGS@ -lpanda
+Cflags: @CFLAGS@

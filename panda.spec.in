@@ -1,0 +1,54 @@
+Summary:    A PDF generation API
+Name:       @PACKAGE@
+Version:    @VERSION@
+Release:    1
+License:    LGPL/GPL
+Group:      Development/Libraries
+URL:        http://stillhq.com/cgi-bin/getpage?area=panda&page=index.htm
+Source:     http://savannah.nongnu.org/download/panda/panda-%{version}.tar.bz2
+BuildRoot:  %{_tmppath}/%{name}-%{version}-root
+
+%package devel
+Summary: Development libraries for Panda
+Requires: panda = %{version}-%{release}
+Group: Development/Libraries
+
+%description
+A PDF generation API written in C.
+
+%description devel
+This package is only needed if you intend to develop and/or compile programs based on the Panda library.
+
+%prep
+%setup -q
+./configure --prefix=/usr
+
+%build
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+make DESTDIR=$RPM_BUILD_ROOT install
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+%files
+%defattr(-,root,root)
+%{_libdir}/libpanda.so
+%{_libdir}/libpanda.so.0
+%{_libdir}/libpanda.so.0.0.0
+
+%files devel
+%doc AUTHORS ChangeLog COPYING INSTALL NEWS README TODO
+%{_libdir}/pkgconfig/panda.pc
+%{_libdir}/libpanda.a
+%{_libdir}/libpanda.la
+%{_includedir}/panda/functions.h
+%{_includedir}/panda/constants.h
+%{_includedir}/panda/objects.h
+%{_includedir}/panda/legacy.h
+
+%changelog
+* Mon Jan 27 2004 Evan Nemerson <evan@coeus-group.com>
+- RPM created
