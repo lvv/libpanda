@@ -23,3 +23,6 @@ Release 0.4 -> Release 0.5
 
 2002-01-24 Michael Still mikal@stillhq.com
 	Finished implementing the new database style dictionary for objects... This is slightly slower than the in memory option, but can probably be sped up later on and is much nicer...
+
+2002-01-25 Michael Still mikal@stillhq.com
+	Removed the unused panda_objectarray structure...

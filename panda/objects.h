@@ -31,27 +31,6 @@ extern "C"
 #endif
 #include <stdio.h>
 
-  typedef struct panda_internal_objectarray
-  {
-    int number;
-    int generation;
-    struct panda_internal_objectarray *next;
-  }
-  panda_objectarray;
-
-  //  typedef struct panda_internal_dictionary
-  //  {
-  //    char *name;
-  //    int valueType;
-  //    int intValue;
-  //    char *textValue;
-  //    panda_objectarray *objectarrayValue;
-  //    struct panda_internal_dictionary *dictValue;
-  //
-  //    struct panda_internal_dictionary *next;
-  //  }
-  //  panda_dictionary;
-
   typedef struct panda_internal_object
   {
     int type;
