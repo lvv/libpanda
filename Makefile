@@ -11,7 +11,7 @@ DODEBUG = NO
 #DODEBUG = DEBUG
 
 COMPILER = gcc
-COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG)
+COMPILER_FLAGS = -g -c -D$(PLATFORM) -D$(DODEBUG) -Wall
 
 # Main is excluded from here for the benefit of the tests and the library
 OBJFILES = error.o  font.o  objects.o  panda.o  text.o  trailer.o  utility.o  xref.o

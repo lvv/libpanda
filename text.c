@@ -15,7 +15,7 @@
 void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
        int right, char *text){
   // Add a box with some text in it into the PDF page
-  object      *textobj, *tempObj;
+  object      *textobj;
   char        *currentToken, *strtokVictim = NULL, delim[10];
   int         internalTop, internalLeft, displayedFirstPart = gFalse;
   object      *subdict, *subsubdict, *fontObj;
