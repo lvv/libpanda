@@ -4,8 +4,6 @@
 
   * Callback for error handling implementation.
 
-  * Only one font will work per page at the moment. Fix this.
-
   * Make the \n -> \r\n conversion into a function call and make it faster...
 
   * Add see also sections in the man pages
@@ -18,14 +16,6 @@
 
   * Handling of vsnprintf return number based on the differnt ways that
 	glibc behaves...
-
-  * Arbitrary image rotations
-
-  * Make all kinds of TIFFs work. There is currently on support for:
-      - LZW
-      - Deflated (zip)
-      - Uncompressed
-      - Packbits
 
   * At the moment you can only have background images, make foreground images
 	work as well... (I think I have this arse about -- you can only have 
