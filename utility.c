@@ -15,8 +15,15 @@
     Utility functions for the panda library.
 ******************************************************************************/
 
-#include <panda/constants.h>
-#include <panda/functions.h>
+#if defined _WINDOWS
+  #include "panda/constants.h"
+  #include "panda/functions.h"
+
+  #define vsnprintf _vsnprintf
+#else
+  #include <panda/constants.h>
+  #include <panda/functions.h>
+#endif
 
 /******************************************************************************
 DOCBOOK START

@@ -11,8 +11,14 @@
     264 of the PDF Spec 1.3, second edition.
 ******************************************************************************/
 
-#include <panda/constants.h>
-#include <panda/functions.h>
+#if defined _WINDOWS
+  #include "panda/constants.h"
+  #include "panda/functions.h"
+#else
+  #include <panda/constants.h>
+  #include <panda/functions.h>
+#endif
+
 #include <math.h>
 
 // Here the user creates a dummy page which they can make look nice and then

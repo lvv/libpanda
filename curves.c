@@ -11,8 +11,13 @@
     later in this file...
 ******************************************************************************/
 
-#include "panda/constants.h"
-#include <panda/functions.h>
+#if defined _WINDOWS
+  #include "panda/constants.h"
+  #include "panda/functions.h"
+#else
+  #include <panda/constants.h>
+  #include <panda/functions.h>
+#endif
 
 /******************************************************************************
 DOCBOOK START

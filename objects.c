@@ -9,9 +9,17 @@
     methods needed to maintain the objects that we have.
 ******************************************************************************/
 
-#include <panda/functions.h>
-#include <panda/constants.h>
-#include <zlib.h>
+#if defined _WINDOWS
+  #include "panda/constants.h"
+  #include "panda/functions.h"
+
+  #include "contrib/libz/zlib.h"
+#else
+  #include <panda/constants.h>
+  #include <panda/functions.h>
+
+  #include <zlib.h>
+#endif
 
 /******************************************************************************
 DOCBOOK START
@@ -1008,6 +1016,7 @@ panda_setproperty (panda_object * target, int scope, int key, int value)
       break;
 
     default:
-      // Do nothing
+      // Do nothing -- Windows requires the semi colon for some reason
+	  ;
     }
 }

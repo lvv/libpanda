@@ -9,8 +9,13 @@
     Handle all things related to the XREF table at the end of the PDF.
 ******************************************************************************/
 
-#include <panda/constants.h>
-#include <panda/functions.h>
+#if defined _WINDOWS
+  #include "panda/constants.h"
+  #include "panda/functions.h"
+#else
+  #include <panda/constants.h>
+  #include <panda/functions.h>
+#endif
 
 /******************************************************************************
 DOCBOOK START

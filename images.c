@@ -9,15 +9,32 @@
     calls the functions that know about particular image types...
 ******************************************************************************/
 
-#include <panda/constants.h>
-#include <panda/functions.h>
-#include <tiffio.h>
+#if defined _WINDOWS
+  #include "panda/constants.h"
+  #include "panda/functions.h"
+
+  #include "contrib/libtiff/tiffio.h"
+  #include "contrib/libjpeg/jpeglib.h"
+  #include "contrib/libpng/png.h"
+
+  #include <windows.h>
+
+  HANDLE winmutex;
+#else
+  #include <panda/constants.h>
+  #include <panda/functions.h>
+
+  #include <tiffio.h>
+  #include <jpeglib.h>
+  #include <unistd.h>
+  #include <pthread.h>
+  #include <png.h>
+
+  pthread_mutex_t convMutex = PTHREAD_MUTEX_INITIALIZER;
+#endif
+
 #include <math.h>
-#include <jpeglib.h>
 #include <sys/stat.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <png.h>
 
 static tsize_t libtiffDummyReadProc (thandle_t fd, tdata_t buf, tsize_t size);
 static tsize_t libtiffDummyWriteProc (thandle_t fd, tdata_t buf,
@@ -30,7 +47,6 @@ void libpngDummyFlushProc (png_structp png);
 
 char *globalImageBuffer;
 unsigned long globalImageBufferOffset;
-pthread_mutex_t convMutex = PTHREAD_MUTEX_INITIALIZER;
 char globalIsIDAT;
 
 /******************************************************************************
@@ -76,7 +92,7 @@ void
 panda_imagebox (panda_pdf * output, panda_page * target, int top, int left,
 		int bottom, int right, char *filename, int type)
 {
-  return panda_imageboxrot (output, target, top, left, bottom, right, 0.0,
+  panda_imageboxrot (output, target, top, left, bottom, right, 0.0,
 			    filename, type);
 }
 
@@ -431,9 +447,14 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       // but I am at a loss as to how to do it better... We don't check if we
       // have already used global tiff buffer, because we are still using it's
       // old contents...
-
-      pthread_mutex_lock (&convMutex);
-      globalImageBuffer = NULL;
+#if defined _WINDOWS
+	  winmutex = CreateMutex(NULL, TRUE, "Panda");
+	  WaitForSingleObject(winmutex, INFINITE);
+#else
+	  pthread_mutex_lock (&convMutex);
+#endif
+      
+	  globalImageBuffer = NULL;
       globalImageBufferOffset = 0;
 
       // Open the dummy document (which actually only exists in memory)
@@ -498,7 +519,12 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
 
       imageObj->binarystream = globalImageBuffer;
       imageObj->binarystreamLength = globalImageBufferOffset;
-      pthread_mutex_unlock (&convMutex);
+
+#if defined _WINDOWS
+	  ReleaseMutex(winmutex);
+#else
+	  pthread_mutex_unlock (&convMutex);
+#endif
     }
 
   else
@@ -699,8 +725,7 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 {
   FILE *image;
   unsigned long imageBufSize, width, height;
-  unsigned char signature;
-  int bitdepth, colourtype, c, outColourType;
+  int bitdepth, colourtype, outColourType;
   png_uint_32 i, rowbytes;
   png_structp png;
   png_infop info;
@@ -846,7 +871,13 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
     panda_error ("Could not set the PNG jump value for writing");
 
   // If this call is done before png_create_write_struct, then everything seg faults...
-  pthread_mutex_lock (&convMutex);
+#if defined _WINDOWS
+	  winmutex = CreateMutex(NULL, TRUE, "Panda");
+	  WaitForSingleObject(winmutex, INFINITE);
+#else
+	  pthread_mutex_lock (&convMutex);
+#endif
+
   png_set_write_fn (png, NULL, (png_rw_ptr) libpngDummyWriteProc,
 		    (png_flush_ptr) libpngDummyFlushProc);
   globalIsIDAT = panda_false;
@@ -868,7 +899,12 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 
   imageObj->binarystream = globalImageBuffer;
   imageObj->binarystreamLength = globalImageBufferOffset;
-  pthread_mutex_unlock (&convMutex);
+
+#if defined _WINDOWS
+	  ReleaseMutex(winmutex);
+#else
+	  pthread_mutex_unlock (&convMutex);
+#endif
 }
 
 /*****************************************************************************
@@ -1055,7 +1091,6 @@ DOCBOOK END
 void
 libpngDummyWriteProc (png_structp png, png_bytep data, png_uint_32 len)
 {
-  unsigned long count;
   char tempString[5];
 
   // Copy the first 4 bytes into a string

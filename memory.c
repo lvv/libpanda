@@ -9,9 +9,15 @@
     memory was returned by malloc et al.
 ******************************************************************************/
 
+#if defined _WINDOWS
+  #include "panda/constants.h"
+  #include "panda/functions.h"
+#else
+  #include <panda/constants.h>
+  #include <panda/functions.h>
+#endif
+
 #include <stdio.h>
-#include <panda/functions.h>
-#include <panda/constants.h>
 
 /******************************************************************************
 DOCBOOK START

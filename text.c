@@ -8,8 +8,13 @@
     Functions related to displaying text on a PDF page.
 ******************************************************************************/
 
-#include <panda/constants.h>
-#include <panda/functions.h>
+#if defined _WINDOWS
+  #include "panda/constants.h"
+  #include "panda/functions.h"
+#else
+  #include <panda/constants.h>
+  #include <panda/functions.h>
+#endif
 
 /******************************************************************************
 DOCBOOK START

@@ -10,8 +10,14 @@
 ******************************************************************************/
 
 #define  GLOBALS	here
-#include <panda/constants.h>
-#include <panda/functions.h>
+
+#if defined _WINDOWS
+  #include "panda/constants.h"
+  #include "panda/functions.h"
+#else
+  #include <panda/constants.h>
+  #include <panda/functions.h>
+#endif
 
 /******************************************************************************
 DOCBOOK START
@@ -256,7 +262,13 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
 	  // Add some stuff
 	  panda_adddictitem (openedpdf->info->dict, "Producer",
-			     panda_brackettedtextvalue, "Panda 0.4");
+			     panda_brackettedtextvalue, 
+#if defined _WINDOWS
+				 "Panda 0.4 MS Windows Version"
+#else
+				 "Panda 0.4"
+#endif			 
+				 );
 	  panda_adddictitem (openedpdf->info->dict, "CreationDate",
 			     panda_brackettedtextvalue, tempPtr =
 			     panda_nowdate ());
