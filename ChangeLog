@@ -65,3 +65,6 @@ Release 0.4 -> Release 0.5
 
 2003-05-28 Michael Still mikal@stillhq.com
 	Build tweak so that the examples with compile on a machine which has never had Panda before...
+
+2004-05-11 Michael Still mikal@stillhq.com
+	Compile time fixes, including getting the Berkeley DB stuff to compile properly. Better checking for which image libraries were found during the configure script. Randomized the filename for the database file so that we can be producing more than one PDF at a time.
