@@ -11,3 +11,6 @@ Release 0.4 -> Release 0.5
 
 2002-01-08 Michael Still mikal@stillhq.com
 	Implemented the viewer preference functions in view.c... You can now hide the toolbar, the menubar, the view window user interface, and other cool things like that.
+
+2002-01-09 Michael Still mikal@stillhq.com
+	Implemented the rest of the page layout commands.
