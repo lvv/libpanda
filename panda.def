@@ -6,8 +6,12 @@ LIBRARY
 DESCRIPTION "Panda PDF generation API (Windows version)"
 
 EXPORTS
-; Version 0.4
-; HIGHEST 111
+; Version 0.5
+; HIGHEST 124
+
+; Annotate.c
+  panda_textannotation							@112
+
 
 ; Curves.c
   panda_setlinestart							@1
@@ -90,10 +94,7 @@ EXPORTS
 
   panda_newobject								@52
   panda_adddictitem								@53
-  panda_getdictvalue							@54
-  panda_getdict									@55
   panda_freeobject								@56
-  panda_freedictionary							@57
   panda_writeobject								@58
   panda_writedictionary							@59
   panda_addchild								@60
@@ -108,6 +109,7 @@ EXPORTS
 ; Text.c
 
   panda_textbox									@65
+  panda_textboxrot								@124
 
 ; Trailer.c
 
@@ -121,54 +123,18 @@ EXPORTS
   panda_print									@70
   panda_xsnprintf								@71
 
-; Windows.c
-
-  windows_panda_init							@74
-  windows_panda_test							@73
-
-  windows_panda_setlinestart					@78
-  windows_panda_addlinesegment					@79
-  windows_panda_addcubiccurvesegment			@80
-  windows_panda_addquadraticcurvesegmentone		@81
-  windows_panda_addquadraticcurvesegmenttwo		@82
-  windows_panda_closeline						@83
-  windows_panda_rectangle						@84
-  windows_panda_endline							@85
-  windows_panda_strokeline						@86
-  windows_panda_fillline						@87
-  windows_panda_setlinewidth					@88
-  windows_panda_setlinecap						@89
-  windows_panda_setlinejoin						@90
-  windows_panda_setlinedash						@91
-  windows_panda_setfillcolor					@92
-  windows_panda_setlinecolor					@93
-
-  windows_panda_imagebox						@94
-  windows_panda_imageboxrot						@95
-
-  windows_panda_setauthor						@96
-  windows_panda_setcreator						@97
-  windows_panda_settitle						@98
-  windows_panda_setsubject						@99
-  windows_panda_setkeywords						@100
-
-  windows_panda_createfont						@111
-  windows_panda_setfont							@101
-  windows_panda_setfontsize						@102
-  windows_panda_setfontmode						@103
-  windows_panda_setcharacterspacing				@104
-  windows_panda_setwordspacing					@105
-  windows_panda_sethorizontalscaling			@106
-  windows_panda_setleading						@107
-
-  windows_panda_open							@75
-  windows_panda_newpage							@76
-  windows_panda_close							@77
-
-  windows_panda_newtemplate						@108
-  windows_panda_applytemplate					@109
-
-  windows_panda_textbox							@110
+; View.c
+  panda_hidetoolbar								@113
+  panda_hidemenubar								@114
+  panda_hidewindowui							@115
+  panda_fitwindow								@116
+  panda_centerwindow							@117
+  panda_nfspagemode								@118
+  panda_fullscreen								@119
+  panda_textdirection							@120
+  panda_pageduration							@121
+  panda_transduration							@122
+  panda_transstyle								@123
 
 ; XREF.c
 

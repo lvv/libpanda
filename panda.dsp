@@ -91,7 +91,15 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\annotate.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\curves.c
+# End Source File
+# Begin Source File
+
+SOURCE=.\database.c
 # End Source File
 # Begin Source File
 
@@ -151,6 +159,10 @@ SOURCE=.\utility.c
 # End Source File
 # Begin Source File
 
+SOURCE=.\view.c
+# End Source File
+# Begin Source File
+
 SOURCE=.\windows.c
 # End Source File
 # Begin Source File
@@ -161,6 +173,22 @@ SOURCE=.\xref.c
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\panda\constants.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\panda\functions.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\panda\objects.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\StdAfx.h
+# End Source File
 # End Group
 # Begin Group "Resource Files"
 
