@@ -88,7 +88,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
   switch (type)
     {
     case gImageTiff:
-#if defined D_HAVE_LIBTIFF
+#if defined HAVE_LIBTIFF
       insertTiff (output, target, imageObj, filename);
 #else
       #warning "TIFF support missing at compile time"
@@ -99,7 +99,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
       break;
 
     case gImageJpeg:
-#if defined D_HAVE_LIBJPEG
+#if defined HAVE_LIBJPEG
       insertJpeg (output, target, imageObj, filename);
 #else
       #warning "JPEG support missing at compile time"
@@ -110,7 +110,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
       break;
 
     case gImagePNG:
-#if defined D_HAVE_LIBPNG
+#if defined HAVE_LIBPNG
       insertPNG (output, target, imageObj, filename);
 #else
       #warning "PNG support missing at compile time"

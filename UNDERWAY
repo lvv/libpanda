@@ -5,3 +5,5 @@ This file documents work that is currently being undertaken on the Panda codebas
   * TIFF improvements (testing)
 
   * Implementation of automake and stuff like that
+
+  * Font problems which stop the demo app from running at the moment
