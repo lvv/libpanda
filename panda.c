@@ -277,7 +277,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  panda_setcharacterspacing (openedpdf, 0.0);
 	  panda_setwordspacing (openedpdf, 0.0);
 	  panda_sethorizontalscaling (openedpdf, 1.0);
-	  panda_setleading (openedpdf, 0.0);
+	  panda_setleading (openedpdf, 10.0);
 
 	  // Setup the info object with some stuff which makes me happy... :)
 	  openedpdf->info = NULL;

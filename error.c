@@ -76,7 +76,8 @@ panda_error (int fatal, char *message)
 		"Non-fatal Panda Windows DLL error", MB_OK);
   
 #else
-    fprintf (stderr, "%s\n", message);
+    fprintf (stderr, "%sError: %s\n", (fatal == panda_true) ? "Fatal " : "",
+	     message);
 #endif /*  */
   if (fatal == panda_true)
     exit (42);

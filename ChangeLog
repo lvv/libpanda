@@ -53,3 +53,6 @@ Release 0.4 -> Release 0.5
 
 2003-05-28 Evan Nemerson evan@coeus-group.com
 	Fix a bug causing an endless loop in textboxes.
+
+2003-05-28 Michael Still mikal@stillhq.com
+	Changed the default leading to something which should at least work a little for multiline textboxes. If you have problems with overlapping text, call panda_setleading() to fix them...

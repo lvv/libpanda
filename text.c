@@ -216,9 +216,6 @@ panda_textboxrotalign (panda_pdf * output, panda_page * thisPage, int top,
 #endif
     }
 
-  // This is a little dodgy at the moment because I do not understand the
-  // PS matrix environment well enough to be writing this sort of code. I am
-  // going to have to have a look into this a little more...
   textobj->layoutstream =
     panda_streamprintf (textobj->layoutstream,
 			"%.2f %.2f %.2f %.2f %d %d Tm\n",
@@ -331,6 +328,7 @@ panda_textboxrotalign (panda_pdf * output, panda_page * thisPage, int top,
 		    "Not enough room provided to create text box.");
 
       numSpaces = 0;
+      
       buf = panda_streamprintf (buf, "(");
       for (t = p; t < (p + len); t++)
 	{
@@ -372,26 +370,27 @@ panda_textboxrotalign (panda_pdf * output, panda_page * thisPage, int top,
 	    }
 	}
 
-
       switch (hAlign)
 	{
 	case panda_halign_center:
-	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
-						      "%.2f 0 Td %s) Tj -%.2f -%.2f Td\n",
-						      (wrapWidth -
-						       lineWidth) / 2, buf,
-						      (wrapWidth -
-						       lineWidth) / 2,
-						      output->currentLeading);
+	  textobj->layoutstream = 
+	    panda_streamprintf (textobj->layoutstream,
+				"%.2f 0 Td %s) Tj -%.2f -%.2f Td\n",
+				(wrapWidth -
+				 lineWidth) / 2, buf,
+				(wrapWidth -
+				 lineWidth) / 2,
+				output->currentLeading);
 	  break;
 
 	case panda_halign_right:
-	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
-						      "%.2f 0 Td %s) Tj -%.2f -%.2f Td\n",
-						      (wrapWidth - lineWidth),
-						      buf,
-						      (wrapWidth - lineWidth),
-						      output->currentLeading);
+	  textobj->layoutstream = 
+	    panda_streamprintf (textobj->layoutstream,
+				"%.2f 0 Td %s) Tj -%.2f -%.2f Td\n",
+				(wrapWidth - lineWidth),
+				buf,
+				(wrapWidth - lineWidth),
+				output->currentLeading);
 	  break;
 
 	case panda_halign_justify:
@@ -405,23 +404,25 @@ panda_textboxrotalign (panda_pdf * output, panda_page * thisPage, int top,
 	      Tw = output->currentWordSpacing
 		+ ((wrapWidth - lineWidth) / numSpaces);
 	    }
-	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
-						      "%.2f Tw %s) Tj %.2f Tw 0 -%.2f Td\n",
-						      Tw,
-						      buf,
-						      output->
-						      currentWordSpacing,
-						      output->currentLeading);
-
-
+	  textobj->layoutstream = 
+	    panda_streamprintf (textobj->layoutstream,
+				"%.2f Tw %s) Tj %.2f Tw 0 -%.2f Td\n",
+				Tw,
+				buf,
+				output->
+				currentWordSpacing,
+				output->currentLeading);
+	  
+	  
 	  break;
 
 	case panda_halign_left:
 	default:
-	  textobj->layoutstream = panda_streamprintf (textobj->layoutstream,
-						      "%s) Tj 0 -%.2f Td\n",
-						      buf,
-						      output->currentLeading);
+	  textobj->layoutstream = 
+	    panda_streamprintf (textobj->layoutstream,
+				"%s) Tj 0 -%.2f Td\n",
+				buf,
+				output->currentLeading);
 	  break;
 
 	}

@@ -125,14 +125,15 @@ main (int argc, char *argv[])
   // represent this in the PDF at the moment
   sprintf (tempString,
 	   "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF "
-	   "generator\nI handle multiple line text ok .once you have set a "
+	   "generator\nI handle multiple line text ok. Once you have set a "
 	   "leading.",
 	   4, 6, 5);
-  panda_textbox (demo, currPage, 10, 10, 100, 30, tempString);
+  panda_setleading(demo, 15.0);
+  panda_textbox (demo, currPage, 10, 10, 100, 500, tempString);
 
   panda_setfont (demo, tempPtr = panda_createfont (demo, "Symbol", 1,
 						   "MacRomanEncoding"));
-  panda_textbox (demo, currPage, 50, 10, 100, 30, "Symbol");
+  panda_textbox (demo, currPage, 50, 10, 100, 200, "Symbol");
   free (tempPtr);
 
   panda_setfont (demo, tempPtr =
