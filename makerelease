@@ -98,8 +98,8 @@ echo "Release takes" `du -sk` "kbytes"
 # Now we can start packaging the various versions
 cd ..
 
-relnamenoexamples=`echo $relname | sed 's/-/-noexamples-/'`
-relnamewindows=`echo $relname | sed 's/-/-windows-/'`
+relnamenoexamples=`echo $relname | sed 's/-/-noexamples-/g'`
+relnamewindows=`echo $relname | sed 's/-/-windows-/g'`
 
 mkdir $relname
 mkdir $relnamenoexamples
