@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# Check that the temp space exists
+if [! -d mctemp]
+then
+  mkdir mctemp
+fi
+
+# Copy all the c files there
+cp *.c mctemp/
+
+# Now go through what we have there and add some space to the mallocs
