@@ -1,0 +1,5 @@
+// This header defines information that came from within the confines of
+// autoconf and automake
+#define HAVE_LIBTIFF	@HAVE_LIBTIFF@
+#define HAVE_LIBJPEG	@HAVE_LIBJPEG@
+#define HAVE_LIBPNG	@HAVE_LIBPNG@
