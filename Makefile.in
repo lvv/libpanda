@@ -67,8 +67,11 @@ RANLIB = @RANLIB@
 VERSION = @VERSION@
 YACC = @YACC@
 
-bin_PROGRAMS = panda
+pandaincludedir = $(includedir)/panda
+
+noinst_PROGRAMS = panda
 lib_LIBRARIES = libpanda.a
+pandainclude_HEADERS = constants.h functions.h objects.h
 
 panda_SOURCES = date.c font.c info.c main.c panda.c trailer.c error.c images.c objects.c text.c utility.c xref.c
 panda_LDADD = 
@@ -76,12 +79,11 @@ panda_LDADD =
 libpanda_a_SOURCES = date.c font.c info.c panda.c trailer.c error.c images.c objects.c text.c utility.c xref.c
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 mkinstalldirs = $(SHELL) $(top_srcdir)/config/mkinstalldirs
-CONFIG_HEADER = config.h
 CONFIG_CLEAN_FILES = 
 LIBRARIES =  $(lib_LIBRARIES)
 
 
-DEFS = @DEFS@ -I. -I$(srcdir) -I.
+DEFS = @DEFS@ -I. -I$(srcdir) 
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS = @LDFLAGS@
 LIBS = @LIBS@
@@ -89,7 +91,7 @@ libpanda_a_LIBADD =
 libpanda_a_OBJECTS =  date.o font.o info.o panda.o trailer.o error.o \
 images.o objects.o text.o utility.o xref.o
 AR = ar
-PROGRAMS =  $(bin_PROGRAMS)
+PROGRAMS =  $(noinst_PROGRAMS)
 
 panda_OBJECTS =  date.o font.o info.o main.o panda.o trailer.o error.o \
 images.o objects.o text.o utility.o xref.o
@@ -99,9 +101,10 @@ CFLAGS = @CFLAGS@
 COMPILE = $(CC) $(DEFS) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
 CCLD = $(CC)
 LINK = $(CCLD) $(AM_CFLAGS) $(CFLAGS) $(LDFLAGS) -o $@
-DIST_COMMON =  README ./stamp-h.in AUTHORS COPYING ChangeLog INSTALL \
-Makefile.am Makefile.in NEWS TODO aclocal.m4 config.h.in configure \
-configure.in
+HEADERS =  $(pandainclude_HEADERS)
+
+DIST_COMMON =  README AUTHORS COPYING ChangeLog INSTALL Makefile.am \
+Makefile.in NEWS TODO aclocal.m4 configure configure.in
 
 
 DISTFILES = $(DIST_COMMON) $(SOURCES) $(HEADERS) $(TEXINFOS) $(EXTRA_DIST)
@@ -131,34 +134,6 @@ config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
 	$(SHELL) ./config.status --recheck
 $(srcdir)/configure: @MAINTAINER_MODE_TRUE@$(srcdir)/configure.in $(ACLOCAL_M4) $(CONFIGURE_DEPENDENCIES)
 	cd $(srcdir) && $(AUTOCONF)
-
-config.h: stamp-h
-	@if test ! -f $@; then \
-		rm -f stamp-h; \
-		$(MAKE) stamp-h; \
-	else :; fi
-stamp-h: $(srcdir)/config.h.in $(top_builddir)/config.status
-	cd $(top_builddir) \
-	  && CONFIG_FILES= CONFIG_HEADERS=config.h:config.h.in \
-	     $(SHELL) ./config.status
-	@echo timestamp > stamp-h 2> /dev/null
-$(srcdir)/config.h.in: @MAINTAINER_MODE_TRUE@$(srcdir)/stamp-h.in
-	@if test ! -f $@; then \
-		rm -f $(srcdir)/stamp-h.in; \
-		$(MAKE) $(srcdir)/stamp-h.in; \
-	else :; fi
-$(srcdir)/stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) 
-	cd $(top_srcdir) && $(AUTOHEADER)
-	@echo timestamp > $(srcdir)/stamp-h.in 2> /dev/null
-
-mostlyclean-hdr:
-
-clean-hdr:
-
-distclean-hdr:
-	-rm -f config.h
-
-maintainer-clean-hdr:
 
 mostlyclean-libLIBRARIES:
 
@@ -213,34 +188,33 @@ libpanda.a: $(libpanda_a_OBJECTS) $(libpanda_a_DEPENDENCIES)
 	$(AR) cru libpanda.a $(libpanda_a_OBJECTS) $(libpanda_a_LIBADD)
 	$(RANLIB) libpanda.a
 
-mostlyclean-binPROGRAMS:
+mostlyclean-noinstPROGRAMS:
 
-clean-binPROGRAMS:
-	-test -z "$(bin_PROGRAMS)" || rm -f $(bin_PROGRAMS)
+clean-noinstPROGRAMS:
+	-test -z "$(noinst_PROGRAMS)" || rm -f $(noinst_PROGRAMS)
 
-distclean-binPROGRAMS:
+distclean-noinstPROGRAMS:
 
-maintainer-clean-binPROGRAMS:
-
-install-binPROGRAMS: $(bin_PROGRAMS)
-	@$(NORMAL_INSTALL)
-	$(mkinstalldirs) $(DESTDIR)$(bindir)
-	@list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  if test -f $$p; then \
-	    echo "  $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`"; \
-	     $(INSTALL_PROGRAM) $$p $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
-	  else :; fi; \
-	done
-
-uninstall-binPROGRAMS:
-	@$(NORMAL_UNINSTALL)
-	list='$(bin_PROGRAMS)'; for p in $$list; do \
-	  rm -f $(DESTDIR)$(bindir)/`echo $$p|sed 's/$(EXEEXT)$$//'|sed '$(transform)'|sed 's/$$/$(EXEEXT)/'`; \
-	done
+maintainer-clean-noinstPROGRAMS:
 
 panda: $(panda_OBJECTS) $(panda_DEPENDENCIES)
 	@rm -f panda
 	$(LINK) $(panda_LDFLAGS) $(panda_OBJECTS) $(panda_LDADD) $(LIBS)
+
+install-pandaincludeHEADERS: $(pandainclude_HEADERS)
+	@$(NORMAL_INSTALL)
+	$(mkinstalldirs) $(DESTDIR)$(pandaincludedir)
+	@list='$(pandainclude_HEADERS)'; for p in $$list; do \
+	  if test -f "$$p"; then d= ; else d="$(srcdir)/"; fi; \
+	  echo " $(INSTALL_DATA) $$d$$p $(DESTDIR)$(pandaincludedir)/$$p"; \
+	  $(INSTALL_DATA) $$d$$p $(DESTDIR)$(pandaincludedir)/$$p; \
+	done
+
+uninstall-pandaincludeHEADERS:
+	@$(NORMAL_UNINSTALL)
+	list='$(pandainclude_HEADERS)'; for p in $$list; do \
+	  rm -f $(DESTDIR)$(pandaincludedir)/$$p; \
+	done
 
 tags: TAGS
 
@@ -252,15 +226,15 @@ ID: $(HEADERS) $(SOURCES) $(LISP)
 	here=`pwd` && cd $(srcdir) \
 	  && mkid -f$$here/ID $$unique $(LISP)
 
-TAGS:  $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) $(LISP)
+TAGS:  $(HEADERS) $(SOURCES)  $(TAGS_DEPENDENCIES) $(LISP)
 	tags=; \
 	here=`pwd`; \
 	list='$(SOURCES) $(HEADERS)'; \
 	unique=`for i in $$list; do echo $$i; done | \
 	  awk '    { files[$$0] = 1; } \
 	       END { for (i in files) print i; }'`; \
-	test -z "$(ETAGS_ARGS)config.h.in$$unique$(LISP)$$tags" \
-	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags config.h.in $$unique $(LISP) -o $$here/TAGS)
+	test -z "$(ETAGS_ARGS)$$unique$(LISP)$$tags" \
+	  || (cd $(srcdir) && etags $(ETAGS_ARGS) $$tags  $$unique $(LISP) -o $$here/TAGS)
 
 mostlyclean-tags:
 
@@ -317,7 +291,7 @@ distdir: $(DISTFILES)
 	@for file in $(DISTFILES); do \
 	  d=$(srcdir); \
 	  if test -d $$d/$$file; then \
-	    cp -pr $$/$$file $(distdir)/$$file; \
+	    cp -pr $$d/$$file $(distdir)/$$file; \
 	  else \
 	    test -f $(distdir)/$$file \
 	    || ln $$d/$$file $(distdir)/$$file 2> /dev/null \
@@ -364,26 +338,23 @@ check-am: all-am
 check: check-am
 installcheck-am:
 installcheck: installcheck-am
-all-recursive-am: config.h
-	$(MAKE) $(AM_MAKEFLAGS) all-recursive
-
-install-exec-am: install-libLIBRARIES install-binPROGRAMS
+install-exec-am: install-libLIBRARIES
 install-exec: install-exec-am
 
-install-data-am:
+install-data-am: install-pandaincludeHEADERS
 install-data: install-data-am
 
 install-am: all-am
 	@$(MAKE) $(AM_MAKEFLAGS) install-exec-am install-data-am
 install: install-am
-uninstall-am: uninstall-libLIBRARIES uninstall-binPROGRAMS
+uninstall-am: uninstall-libLIBRARIES uninstall-pandaincludeHEADERS
 uninstall: uninstall-am
-all-am: Makefile $(LIBRARIES) $(PROGRAMS) config.h
+all-am: Makefile $(LIBRARIES) $(PROGRAMS) $(HEADERS)
 all-redirect: all-am
 install-strip:
 	$(MAKE) $(AM_MAKEFLAGS) AM_INSTALL_PROGRAM_FLAGS=-s install
 installdirs:
-	$(mkinstalldirs)  $(DESTDIR)$(libdir) $(DESTDIR)$(bindir)
+	$(mkinstalldirs)  $(DESTDIR)$(libdir) $(DESTDIR)$(pandaincludedir)
 
 
 mostlyclean-generic:
@@ -395,45 +366,45 @@ distclean-generic:
 	-rm -f config.cache config.log stamp-h stamp-h[0-9]*
 
 maintainer-clean-generic:
-mostlyclean-am:  mostlyclean-hdr mostlyclean-libLIBRARIES \
-		mostlyclean-compile mostlyclean-binPROGRAMS \
-		mostlyclean-tags mostlyclean-depend mostlyclean-generic
+mostlyclean-am:  mostlyclean-libLIBRARIES mostlyclean-compile \
+		mostlyclean-noinstPROGRAMS mostlyclean-tags \
+		mostlyclean-depend mostlyclean-generic
 
 mostlyclean: mostlyclean-am
 
-clean-am:  clean-hdr clean-libLIBRARIES clean-compile clean-binPROGRAMS \
+clean-am:  clean-libLIBRARIES clean-compile clean-noinstPROGRAMS \
 		clean-tags clean-depend clean-generic mostlyclean-am
 
 clean: clean-am
 
-distclean-am:  distclean-hdr distclean-libLIBRARIES distclean-compile \
-		distclean-binPROGRAMS distclean-tags distclean-depend \
-		distclean-generic clean-am
+distclean-am:  distclean-libLIBRARIES distclean-compile \
+		distclean-noinstPROGRAMS distclean-tags \
+		distclean-depend distclean-generic clean-am
 
 distclean: distclean-am
 	-rm -f config.status
 
-maintainer-clean-am:  maintainer-clean-hdr maintainer-clean-libLIBRARIES \
-		maintainer-clean-compile maintainer-clean-binPROGRAMS \
-		maintainer-clean-tags maintainer-clean-depend \
-		maintainer-clean-generic distclean-am
+maintainer-clean-am:  maintainer-clean-libLIBRARIES \
+		maintainer-clean-compile \
+		maintainer-clean-noinstPROGRAMS maintainer-clean-tags \
+		maintainer-clean-depend maintainer-clean-generic \
+		distclean-am
 	@echo "This command is intended for maintainers to use;"
 	@echo "it deletes files that may require special tools to rebuild."
 
 maintainer-clean: maintainer-clean-am
 	-rm -f config.status
 
-.PHONY: mostlyclean-hdr distclean-hdr clean-hdr maintainer-clean-hdr \
-mostlyclean-libLIBRARIES distclean-libLIBRARIES clean-libLIBRARIES \
-maintainer-clean-libLIBRARIES uninstall-libLIBRARIES \
+.PHONY: mostlyclean-libLIBRARIES distclean-libLIBRARIES \
+clean-libLIBRARIES maintainer-clean-libLIBRARIES uninstall-libLIBRARIES \
 install-libLIBRARIES mostlyclean-compile distclean-compile \
-clean-compile maintainer-clean-compile mostlyclean-binPROGRAMS \
-distclean-binPROGRAMS clean-binPROGRAMS maintainer-clean-binPROGRAMS \
-uninstall-binPROGRAMS install-binPROGRAMS tags mostlyclean-tags \
-distclean-tags clean-tags maintainer-clean-tags distdir \
-mostlyclean-depend distclean-depend clean-depend \
-maintainer-clean-depend info-am info dvi-am dvi check check-am \
-installcheck-am installcheck all-recursive-am install-exec-am \
+clean-compile maintainer-clean-compile mostlyclean-noinstPROGRAMS \
+distclean-noinstPROGRAMS clean-noinstPROGRAMS \
+maintainer-clean-noinstPROGRAMS uninstall-pandaincludeHEADERS \
+install-pandaincludeHEADERS tags mostlyclean-tags distclean-tags \
+clean-tags maintainer-clean-tags distdir mostlyclean-depend \
+distclean-depend clean-depend maintainer-clean-depend info-am info \
+dvi-am dvi check check-am installcheck-am installcheck install-exec-am \
 install-exec install-data-am install-data install-am install \
 uninstall-am uninstall all-redirect all-am all installdirs \
 mostlyclean-generic distclean-generic clean-generic \
