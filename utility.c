@@ -139,7 +139,7 @@ void textstreamprintf(object *textobj, char *format, ...){
   vsprintf(buffer, format, argPtr);
 
   // This new object has a textstream with the text in it
-  appendtextstream(textobj, buffer, strlen(buffer));
+  appendtextstream(textobj, buffer, strlen(buffer) + 1);
 
   va_end(argPtr);
 }
