@@ -1,5 +1,5 @@
 %{
-#include "panda.tab.h"
+#include "lexer.tab.h"
 
 extern int binaryMode;
 

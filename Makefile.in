@@ -75,6 +75,8 @@ clean:
 		rm -i panda
 		rm -i libpanda.a
 		rm -i configure
+		rm -i lexer.tab.c
+		rm -i lexer.tab.h
 		rm -rf mctemp
 
 # Remove all the caching stuff from the configure script so we can run it again
@@ -124,7 +126,7 @@ xref.o:		xref.c constants.h functions.h objects.h Makefile
 
 ###########################################################################
 
-lexer:	lexer.y lexer.l
+lexer:	lexer.y lexer.l $(OBJFILES)
 	bison -d lexer.y
 	flex -olexer.c lexer.l
 	$(COMPILER) lexer.tab.c lexer.c @LIBS@ -D$(DMALLOC) -o lexical -lfl $(OBJFILES)
