@@ -8,3 +8,6 @@ Release 0.4 -> Release 0.5
 
 2002-01-07 Michael Still mikal@stillhq.com
 	Worked on generating the documentation as a single big PS or PDF file
+
+2002-01-08 Michael Still mikal@stillhq.com
+	Implemented the viewer preference functions in view.c... You can now hide the toolbar, the menubar, the view window user interface, and other cool things like that.

@@ -196,6 +196,8 @@ extern "C"
 ******************************************************************************/
 
   void panda_toolbar (panda_pdf *, int);
+  void panda_hidemenubar (panda_pdf *, int);
+  void panda_hidewindowui (panda_pdf *, int);
 
 /******************************************************************************
   Windows.c -- Windows specific function calls
