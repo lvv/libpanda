@@ -34,6 +34,8 @@ do
   ~mikal/opensource/autodocbook/working/autodocbook $item man
 done
 
+mv *.3 man/
+
 # Autotools
 echo "------------------------------------------------------------------------"
 echo "Running the autotools"
