@@ -63,19 +63,22 @@ _declspec (dllexport)
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_setcharacterspacing (panda_pdf * document, double amount)
+     void __stdcall winpanda_setcharacterspacing (panda_pdf * document,
+						  double amount)
 {
   panda_setcharacterspacing (document, amount);
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_setwordspacing (panda_pdf * document, double amount)
+     void __stdcall winpanda_setwordspacing (panda_pdf * document,
+					     double amount)
 {
   panda_setwordspacing (document, amount);
 }
 
 _declspec (dllexport)
-     void __stdcall winpanda_sethorizontalscaling (panda_pdf * document, double scaling)
+     void __stdcall winpanda_sethorizontalscaling (panda_pdf * document,
+						   double scaling)
 {
   panda_sethorizontalscaling (document, scaling);
 }

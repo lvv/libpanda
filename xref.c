@@ -24,7 +24,7 @@ panda_writexref (panda_pdf * output)
   // object is the lowest and %d is the object count. The first line is a 
   // magic incantation
   panda_printf (output, "xref\n%d %d\n%010d 65535 f\n",
-	     0, output->nextObjectNumber, 0);
+		0, output->nextObjectNumber, 0);
 
   // All of the object entries are inuse, because I see no point in creating
   // free objects at this point.
@@ -34,7 +34,8 @@ panda_writexref (panda_pdf * output)
 
   while (currentXREF->next != NULL)
     {
-      panda_printf (output, "%010d %05d n\n", currentXREF->this->byteOffset, 0);
+      panda_printf (output, "%010d %05d n\n", currentXREF->this->byteOffset,
+		    0);
       currentXREF = currentXREF->next;
     }
 }

@@ -32,7 +32,8 @@ panda_printf (panda_pdf * file, char *format, ...)
   // the format string, and then add them here if we were not compiled on 
   // windows
 #if defined WINDOWS
-  formatString = (char *) panda_xmalloc((strlen (format) + 1) * sizeof (char));
+  formatString =
+    (char *) panda_xmalloc ((strlen (format) + 1) * sizeof (char));
   strcpy (formatString, format);
 #else
   // We need to go through the format string and replace \n with \r\n
@@ -44,7 +45,8 @@ panda_printf (panda_pdf * file, char *format, ...)
       newlineCount++;
 
   formatString =
-    (char *) panda_xmalloc((strlen (format) + newlineCount + 1) * sizeof (char));
+    (char *) panda_xmalloc ((strlen (format) + newlineCount + 1) *
+			    sizeof (char));
   formatString[0] = 0;
 
   // Make every \n a \r\n in the format string
@@ -58,7 +60,8 @@ panda_printf (panda_pdf * file, char *format, ...)
   //
   //  formatString[indent] = 0;
 
-  strtokVictim = (char *) panda_xmalloc(sizeof (char) * (strlen (format) + 1));
+  strtokVictim =
+    (char *) panda_xmalloc (sizeof (char) * (strlen (format) + 1));
   strcpy (strtokVictim, format);
   token = strtok (strtokVictim, "\n");
 
@@ -84,7 +87,7 @@ panda_printf (panda_pdf * file, char *format, ...)
 
   // Now we need to make a best guess at how long buffer needs to be -- it is 
   // hardly ever longer than 1k...
-  buffer = (char *) panda_xmalloc(1024 * sizeof (char));
+  buffer = (char *) panda_xmalloc (1024 * sizeof (char));
 
   // Build the information
   va_start (argPtr, format);
@@ -94,10 +97,11 @@ panda_printf (panda_pdf * file, char *format, ...)
       free (buffer);
 
 #if defined DEBUG
-      printf ("Needed to make a bigger space for the buffer in panda_printf\n");
+      printf
+	("Needed to make a bigger space for the buffer in panda_printf\n");
 #endif
 
-      buffer = (char *) panda_xmalloc(actualLen * sizeof (char));
+      buffer = (char *) panda_xmalloc (actualLen * sizeof (char));
 
       if (vsnprintf (buffer, actualLen, formatString, argPtr) > actualLen)
 	{
@@ -160,14 +164,15 @@ panda_streamprintf (char *stream, char *format, ...)
       if ((stream = (char *) realloc (stream,
 				      sizeof (char) * (len + currentlen))) ==
 	  NULL)
-	panda_error ("Could not append to an object's stream (of some form).");
+	panda_error
+	  ("Could not append to an object's stream (of some form).");
 
       // Do the actual appending
       strncat (stream, buffer, len + currentlen);
     }
   else
     {
-      stream = (char *) panda_xmalloc(sizeof (char) * (strlen (buffer) + 1));
+      stream = (char *) panda_xmalloc (sizeof (char) * (strlen (buffer) + 1));
       strncpy (stream, buffer, strlen (buffer) + 1);
     }
 
@@ -193,7 +198,8 @@ panda_print (panda_pdf * output, char *format)
   int counter, newlineCount;
 
 #if defined WINDOWS
-  formatString = (char *) panda_xmalloc((strlen (format) + 1) * sizeof (char));
+  formatString =
+    (char *) panda_xmalloc ((strlen (format) + 1) * sizeof (char));
   strcpy (formatString, format);
 #else
   // We need to go through the format string and replace \n with \r\n
@@ -205,11 +211,13 @@ panda_print (panda_pdf * output, char *format)
     if (format[counter] == '\n')
       newlineCount++;
 
-  formatString = 
-    (char *) panda_xmalloc((strlen (format) + newlineCount + 1) * sizeof (char));
+  formatString =
+    (char *) panda_xmalloc ((strlen (format) + newlineCount + 1) *
+			    sizeof (char));
   formatString[0] = 0;
 
-  strtokVictim = (char *) panda_xmalloc(sizeof (char) * (strlen (format) + 1));
+  strtokVictim =
+    (char *) panda_xmalloc (sizeof (char) * (strlen (format) + 1));
   strcpy (strtokVictim, format);
   token = strtok (strtokVictim, "\n");
 

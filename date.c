@@ -13,7 +13,8 @@
 
 // Format a given date into the approved format
 char *
-panda_makedate (int year, int month, int day, int hour, int minutes, int seconds)
+panda_makedate (int year, int month, int day, int hour, int minutes,
+		int seconds)
 {
   char *dateString, zulu = '+';
   int gmthours = 10, gmtminutes = 0;
@@ -26,7 +27,7 @@ panda_makedate (int year, int month, int day, int hour, int minutes, int seconds
   // Make some space for the string we are going to return. We know this is
   // always going to be 21 characters long (so we say 30 characters to be
   // safe)
-  dateString = panda_xmalloc(sizeof(char) * 30);
+  dateString = panda_xmalloc (sizeof (char) * 30);
 
   // Do some insurance things to make sure we do y2k dates ok
   if (year < 100)

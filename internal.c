@@ -13,7 +13,7 @@
 #include <panda/functions.h>
 
 void
-panda_entergraphicsmode(panda_page *target)
+panda_entergraphicsmode (panda_page * target)
 {
   //  - save the current graphics state (q operator, p 386 of spec)
   //  - setup the current transformation matrix (ctm, s 3.2 and p 323 of spec)
@@ -23,24 +23,26 @@ panda_entergraphicsmode(panda_page *target)
   //  - use the image xobject we have created (Do operator, p 348 of spec)
   //  - restore the graphics state to the way it was previously (Q operator,
   //    p 386 of spec)
-  if(target->contents->textmode == panda_true)
+  if (target->contents->textmode == panda_true)
     {
-      target->contents->layoutstream = 
-	panda_streamprintf(target->contents->layoutstream, "ET\nq\n");
+      target->contents->layoutstream =
+	panda_streamprintf (target->contents->layoutstream, "ET\nq\n");
       target->contents->textmode = panda_false;
-      
+
 #if defined DEBUG
-      printf("Ended textmode for object %d\n", target->contents->number);
+      printf ("Ended textmode for object %d\n", target->contents->number);
 #endif
     }
-  else{
-    target->contents->layoutstream =
-      panda_streamprintf(target->contents->layoutstream, "q\n");
-  }
+  else
+    {
+      target->contents->layoutstream =
+	panda_streamprintf (target->contents->layoutstream, "q\n");
+    }
 }
 
-void panda_exitgraphicsmode(panda_page *target){
-  target->contents->layoutstream = 
-    panda_streamprintf(target->contents->layoutstream, "Q\n\n");
+void
+panda_exitgraphicsmode (panda_page * target)
+{
+  target->contents->layoutstream =
+    panda_streamprintf (target->contents->layoutstream, "Q\n\n");
 }
-      

@@ -11,12 +11,15 @@
 
 #include <stdio.h>
 
-void *panda_xmalloc(size_t size){
+void *
+panda_xmalloc (size_t size)
+{
   void *buffer;
 
-  if((buffer = malloc(size)) == NULL){
-    panda_error("panda_xmalloc failed to allocate memory");
-  }
-  
+  if ((buffer = malloc (size)) == NULL)
+    {
+      panda_error ("panda_xmalloc failed to allocate memory");
+    }
+
   return buffer;
 }

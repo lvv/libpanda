@@ -12,7 +12,8 @@
 #include <panda/functions.h>
 
 char *
-panda_createfont (panda_pdf * output, char *fontname, int type, char *encoding)
+panda_createfont (panda_pdf * output, char *fontname, int type,
+		  char *encoding)
 {
   // Create a font object in the PDF
   panda_object *font;
@@ -31,7 +32,7 @@ panda_createfont (panda_pdf * output, char *fontname, int type, char *encoding)
   panda_adddictitem (font->dict, "Subtype", panda_textvalue, tempBuffer);
 
   // Make a font identifier string for this font
-  fontident = panda_xmalloc(10 * sizeof (char));
+  fontident = panda_xmalloc (10 * sizeof (char));
   sprintf (fontident, "F%08d", output->nextFontNumber);
   output->nextFontNumber++;
 
@@ -41,7 +42,7 @@ panda_createfont (panda_pdf * output, char *fontname, int type, char *encoding)
   panda_adddictitem (font->dict, "Encoding", panda_textvalue, encoding);
 
 #if defined DEBUG
-  printf("Returning the font ident \"%s\"\n", fontident);
+  printf ("Returning the font ident \"%s\"\n", fontident);
 #endif
 
   return fontident;
@@ -51,10 +52,11 @@ void
 panda_setfont (panda_pdf * output, char *fontident)
 {
   // Free on a NULL should do nothing (check for other platforms)
-  free(output->currentFont);
+  free (output->currentFont);
 
-  output->currentFont = panda_xmalloc((strlen(fontident) + 1) * sizeof(char));
-  strcpy(output->currentFont, fontident);
+  output->currentFont =
+    panda_xmalloc ((strlen (fontident) + 1) * sizeof (char));
+  strcpy (output->currentFont, fontident);
 }
 
 // Set the current font size
@@ -75,7 +77,7 @@ panda_getfontobj (panda_pdf * output, char *fontident)
   char valueString[20];
 
 #if defined DEBUG
-  printf("Looking in pdf for font object \"%s\"\n", fontident);
+  printf ("Looking in pdf for font object \"%s\"\n", fontident);
 #endif
 
   // The value string needs to have a / out the front

@@ -23,16 +23,17 @@ panda_newobject (panda_pdf * doc, int type)
   panda_object *created;
 
   // Get some memory
-  created = (panda_object *) panda_xmalloc(sizeof (panda_object));
+  created = (panda_object *) panda_xmalloc (sizeof (panda_object));
 
   // We have no children at the moment
-  created->children = (panda_child *) panda_xmalloc(sizeof (panda_child));
+  created->children = (panda_child *) panda_xmalloc (sizeof (panda_child));
 
   ((panda_child *) created->children)->next = NULL;
   (panda_child *) created->cachedLastChild = NULL;
 
   // Initialise the dictionary
-  created->dict = (panda_dictionary *) panda_xmalloc(sizeof (panda_dictionary));
+  created->dict =
+    (panda_dictionary *) panda_xmalloc (sizeof (panda_dictionary));
   created->dict->next = NULL;
 
   // By default this object is not a pages object
@@ -71,7 +72,7 @@ panda_newobject (panda_pdf * doc, int type)
   doc->xrefTail->this = created;
 
   // Make space for the next one
-  doc->xrefTail->next = panda_xmalloc(sizeof (panda_xref));
+  doc->xrefTail->next = panda_xmalloc (sizeof (panda_xref));
   doc->xrefTail->next->next = NULL;
   doc->xrefTail = doc->xrefTail->next;
 
@@ -107,7 +108,8 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
   // Make a new end to the dictionary if needed
   if (dictNow->next == NULL)
     {
-      dictNow->next = (panda_dictionary *) panda_xmalloc(sizeof(panda_dictionary));
+      dictNow->next =
+	(panda_dictionary *) panda_xmalloc (sizeof (panda_dictionary));
 
       // Setup
       dictNow->next->next = NULL;
@@ -133,7 +135,8 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
   // And add some content to this entry if needed
   if (overwriting == panda_false)
     {
-      dictNow->name = (char *) panda_xmalloc((strlen (name) + 1) * sizeof (char));
+      dictNow->name =
+	(char *) panda_xmalloc ((strlen (name) + 1) * sizeof (char));
       strcpy (dictNow->name, name);
 
       // Record the type
@@ -166,8 +169,8 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 
       // Get the value
       value = va_arg (argPtr, char *);
-      dictNow->textValue = 
-	(char *) panda_xmalloc((strlen (value) + 3) * sizeof (char));
+      dictNow->textValue =
+	(char *) panda_xmalloc ((strlen (value) + 3) * sizeof (char));
       dictNow->textValue[0] = '\0';
 
       // Some stuff for different types
@@ -197,7 +200,7 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 
       // We assume we need no more than 20 characters to store this. This
       // should be fine
-      dictNow->textValue = (char *) panda_xmalloc(sizeof (char) * 20);
+      dictNow->textValue = (char *) panda_xmalloc (sizeof (char) * 20);
 
       sprintf (dictNow->textValue, "%d %d R", objValue->number,
 	       objValue->generation);
@@ -208,8 +211,8 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 
       if (dictNow->objectarrayValue == NULL)
 	{
-	  dictNow->objectarrayValue = 
-	    (panda_objectarray *) panda_xmalloc(sizeof (panda_objectarray));
+	  dictNow->objectarrayValue =
+	    (panda_objectarray *) panda_xmalloc (sizeof (panda_objectarray));
 	  dictNow->objectarrayValue->next = NULL;
 	}
 
@@ -219,8 +222,8 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 	currentObjectArray = currentObjectArray->next;
 
       // Make a new array entry
-      currentObjectArray->next = 
-	(panda_objectarray *) panda_xmalloc(sizeof (panda_objectarray *));
+      currentObjectArray->next =
+	(panda_objectarray *) panda_xmalloc (sizeof (panda_objectarray *));
 
       // Append
       currentObjectArray->number = objValue->number;
@@ -259,28 +262,32 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
 		case panda_brackettedtextvalue:
 		case panda_literaltextvalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
-			       dictValue->valueType, dictValue->textValue);
+				     dictValue->valueType,
+				     dictValue->textValue);
 		  break;
 
 		case panda_objectvalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
-			       panda_literaltextvalue, dictValue->textValue);
+				     panda_literaltextvalue,
+				     dictValue->textValue);
 		  break;
 
 		case panda_dictionaryvalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
-			       dictValue->valueType, dictValue->dictValue);
+				     dictValue->valueType,
+				     dictValue->dictValue);
 		  break;
 
 		case panda_integervalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
-			       dictValue->valueType, dictValue->intValue);
+				     dictValue->valueType,
+				     dictValue->intValue);
 		  break;
 
 		case panda_objectarrayvalue:
 		  panda_adddictitem (dictNow->dictValue, dictValue->name,
-			       dictValue->valueType,
-			       dictValue->objectarrayValue);
+				     dictValue->valueType,
+				     dictValue->objectarrayValue);
 		  break;
 		}
 
@@ -449,20 +456,20 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
       if (dumpTarget->layoutstream != NULL)
 	{
 	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
-		       strlen (dumpTarget->layoutstream) - 1);
+			     strlen (dumpTarget->layoutstream) - 1);
 	}
 
       // We cannot have a layoutstream and a binary stream in the same object
       else if (dumpTarget->binarystream != NULL)
 	{
 	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
-		       dumpTarget->binarystreamLength);
+			     dumpTarget->binarystreamLength);
 	}
 
       // We are going to dump the named object (and only the named object) to 
       // disk
       panda_printf (output, "%d %d obj\n",
-		 dumpTarget->number, dumpTarget->generation);
+		    dumpTarget->number, dumpTarget->generation);
 
       panda_writedictionary (output, dumpTarget, dumpTarget->dict);
 
@@ -491,7 +498,8 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 }
 
 void
-panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary * incoming)
+panda_writedictionary (panda_pdf * output, panda_object * obj,
+		       panda_dictionary * incoming)
 {
   // Recursively write the dictionary out (including sub-dictionaries)
   panda_objectarray *currentObjectArray;
@@ -522,7 +530,8 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 		  dictNow->name);
 #endif
 
-	  panda_printf (output, "\t/%s %s\n", dictNow->name, dictNow->textValue);
+	  panda_printf (output, "\t/%s %s\n", dictNow->name,
+			dictNow->textValue);
 
 	  // If the type is type, then possibly output the Kids line for the pages
 	  // object
@@ -542,8 +551,8 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 		    atBegining = panda_false;
 
 		  panda_printf (output, "%d %d R",
-			     currentKid->me->number,
-			     currentKid->me->generation);
+				currentKid->me->number,
+				currentKid->me->generation);
 
 		  // Next
 		  currentKid = currentKid->next;
@@ -560,7 +569,8 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 		  dictNow->name);
 #endif
 
-	  panda_printf (output, "\t/%s %d\n", dictNow->name, dictNow->intValue);
+	  panda_printf (output, "\t/%s %d\n", dictNow->name,
+			dictNow->intValue);
 	  break;
 
 	case panda_objectarrayvalue:
@@ -585,8 +595,8 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 		panda_print (output, " ");
 
 	      panda_printf (output, "%d %d R",
-			 currentObjectArray->number,
-			 currentObjectArray->generation);
+			    currentObjectArray->number,
+			    currentObjectArray->generation);
 
 	      currentObjectArray = currentObjectArray->next;
 	    }
@@ -607,7 +617,8 @@ panda_writedictionary (panda_pdf * output, panda_object * obj, panda_dictionary 
 
 	  panda_printf (output, "\t/%s ", dictNow->name);
 
-	  panda_writedictionary (output, output->dummyObj, dictNow->dictValue);
+	  panda_writedictionary (output, output->dummyObj,
+				 dictNow->dictValue);
 	  break;
 
 	default:
@@ -633,7 +644,7 @@ panda_addchild (panda_object * parentObj, panda_object * panda_childObj)
     currentChild = currentChild->next;
 
   // Make a new end
-  currentChild->next = (panda_child *) panda_xmalloc(sizeof (panda_child));
+  currentChild->next = (panda_child *) panda_xmalloc (sizeof (panda_child));
   currentChild->next->next = NULL;
 
   // Make me be the child object
@@ -644,8 +655,8 @@ panda_addchild (panda_object * parentObj, panda_object * panda_childObj)
 }
 
 void
-panda_traverseobjects (panda_pdf * output, panda_object * dumpTarget, int direction,
-		 traverseFunct function)
+panda_traverseobjects (panda_pdf * output, panda_object * dumpTarget,
+		       int direction, traverseFunct function)
 {
   // Write out an object and all of it's children. This may be done with
   // recursive calls and writeobject()

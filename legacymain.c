@@ -39,7 +39,7 @@ main (int argc, char *argv[])
 #endif
 
       // Create a page
-      currPage = pdfpage(demo, panda_pagesize_a4);
+      currPage = pdfpage (demo, panda_pagesize_a4);
 
       // Put in the background images
       imagebox (demo, currPage, 0, 0, currPage->height / 2, currPage->width,
@@ -62,23 +62,23 @@ main (int argc, char *argv[])
       textbox (demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30,
 	       tempString);
 
-      setfont (demo, tempPtr = createfont(demo, "Symbol", 1, 
-					  "MacRomanEncoding"));
+      setfont (demo, tempPtr = createfont (demo, "Symbol", 1,
+					   "MacRomanEncoding"));
       textbox (demo, currPage, lineDepth * 20 + 50, 10 + lineDepth, 100, 30,
 	       "Symbol");
-      free(tempPtr);
+      free (tempPtr);
 
-      setfont (demo, tempPtr = createfont(demo, "Helvetica-Bold", 1, 
-					  "MacRomanEncoding"));
+      setfont (demo, tempPtr = createfont (demo, "Helvetica-Bold", 1,
+					   "MacRomanEncoding"));
       textbox (demo, currPage, lineDepth * 20 + 70, 30 + lineDepth, 100, 30,
 	       "A line in Helvetica-Bold");
-      free(tempPtr);
+      free (tempPtr);
 
       // Insert some images
       imagebox (demo, currPage, 100, 100, 150, 150, "gnu-head.jpg",
 		panda_image_jpeg);
       textbox (demo, currPage, 90, 110, 200, 200, "INFRONTINFRONTINFRONT");
-      
+
       textbox (demo, currPage, 190, 210, 300, 300, "BEHINDBEHINDBEHIND");
       imagebox (demo, currPage, 200, 200, 317, 317, "gnu_box.jpg",
 		panda_image_jpeg);
@@ -89,19 +89,19 @@ main (int argc, char *argv[])
 
       // Do an imageboxrot or two to test the code included by Ceasar Miquel
       imageboxrot (demo, currPage, 600, 0, 717, 117, 15.0, "gnu_box.jpg",
-		panda_image_jpeg);
+		   panda_image_jpeg);
 
       imageboxrot (demo, currPage, 600, 200, 717, 317, 30.0, "gnu_box.jpg",
-		panda_image_jpeg);
+		   panda_image_jpeg);
 
       imageboxrot (demo, currPage, 600, 400, 717, 517, 42.0, "gnu_box.jpg",
-		panda_image_jpeg);
+		   panda_image_jpeg);
 
       imageboxrot (demo, currPage, 700, 0, 817, 117, 90.0, "gnu_box.jpg",
-		panda_image_jpeg);
+		   panda_image_jpeg);
 
       imageboxrot (demo, currPage, 700, 200, 817, 317, 132.0, "gnu_box.jpg",
-		panda_image_jpeg);
+		   panda_image_jpeg);
 
 #if defined DEBUG
       printf ("Created textbox and inserted first image\n");
@@ -114,13 +114,13 @@ main (int argc, char *argv[])
       printf ("Created second textbox\n");
 #endif
 
-      setfont (demo, tempPtr = createfont (demo, "Times-Roman", 1, 
+      setfont (demo, tempPtr = createfont (demo, "Times-Roman", 1,
 					   "MacRomanEncoding"));
       textbox (demo, currPage, 600, 10, 700, 300,
 	       "The background image on this page is Copyright 2000 Andrew Cagney");
       textbox (demo, currPage, 620, 10, 720, 300,
 	       "and is distributed under the terms of the GPL...");
-      free(tempPtr);
+      free (tempPtr);
     }
 
   pdfclose (demo);

@@ -14,7 +14,8 @@
 #define PANDA_CONSTANTS_H 1
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 // The text that we make binary to display in the first 100 bytes or so of the
@@ -25,9 +26,9 @@ extern "C" {
 #define  panda_binarychar(x)        256 - x
 
 #if defined GLOBALS
-char panda_binaryheaderstring[14];
+  char panda_binaryheaderstring[14];
 #else
-extern char panda_binaryheaderstring[12];
+  extern char panda_binaryheaderstring[12];
 #endif
 
 // We sometimes need to specify what type of value we are passing to a 
@@ -65,28 +66,28 @@ extern char panda_binaryheaderstring[12];
 #define  panda_normal             1
 
 // The text drawing modes (p 343 v 1.3)
-enum
-{
-  panda_textmode_normal = 0,
-  panda_textmode_outline,
-  panda_textmode_filledoutline,
-  panda_textmode_invisible,
-  panda_textmode_filledclipped,
-  panda_textmode_strokedclipped,
-  panda_textmode_filledstrokedclipped,
-  panda_textmode_clipped
-};
+  enum
+  {
+    panda_textmode_normal = 0,
+    panda_textmode_outline,
+    panda_textmode_filledoutline,
+    panda_textmode_invisible,
+    panda_textmode_filledclipped,
+    panda_textmode_strokedclipped,
+    panda_textmode_filledstrokedclipped,
+    panda_textmode_clipped
+  };
 
 // The image types supported
-enum
-{
-  gImageTiff = 0,
-  gImageJpeg,
-  gImagePNG
-};
+  enum
+  {
+    panda_image_tiff = 0,
+    panda_image_jpeg,
+    panda_image_png
+  };
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* PANDA_CONSTANTS_H */
+#endif				/* PANDA_CONSTANTS_H */

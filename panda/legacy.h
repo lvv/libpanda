@@ -16,7 +16,8 @@
 #define PANDA_LEGACY_H 1
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 #define makedate panda_makedate
@@ -96,21 +97,15 @@ extern "C" {
 #define  panda_placeholder
 #define  panda_normal
   panda_textmode_normal
-  panda_textmode_outline
-  panda_textmode_filledoutline
-  panda_textmode_invisible
-  panda_textmode_filledclipped
-  panda_textmode_strokedclipped
-  panda_textmode_filledstrokedclipped
-  panda_textmode_clipped
-  panda_image_tiff
-  panda_image_jpeg
-  panda_image_png
-
+    panda_textmode_outline
+    panda_textmode_filledoutline
+    panda_textmode_invisible
+    panda_textmode_filledclipped
+    panda_textmode_strokedclipped
+    panda_textmode_filledstrokedclipped
+    panda_textmode_clipped panda_image_tiff panda_image_jpeg panda_image_png
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* PANDA_LEGACY_H */
-
-
+#endif				/* PANDA_LEGACY_H */
