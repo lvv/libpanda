@@ -51,7 +51,7 @@ DOCBOOK END
 void
 panda_setlinestart (panda_page * target, int x, int y)
 {
-  panda_entergraphicsmode(target);
+  panda_entergraphicsmode (target);
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
 			"%d %d m\n", x, target->height - y);

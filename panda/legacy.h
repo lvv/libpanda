@@ -101,9 +101,9 @@ extern "C"
 #define gTextModeFilledClipped panda_textmode_filledclipped
 #define gTextModeStrokedClipped panda_textmode_strokedclipped
 #define gTextModeFilledStrokedClipped panda_textmode_filledstrokedclipped
-#define gTextModeClipped panda_textmode_clipped 
-#define gImageTiff panda_image_tiff 
-#define gImageJpeg panda_image_jpeg 
+#define gTextModeClipped panda_textmode_clipped
+#define gImageTiff panda_image_tiff
+#define gImageJpeg panda_image_jpeg
 #define gImagePNG panda_image_png
 
 #ifdef __cplusplus

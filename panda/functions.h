@@ -98,7 +98,7 @@ extern "C"
 
   void panda_entergraphicsmode (panda_page *);
   void panda_exitgraphicsmode (panda_page *);
-  panda_page * panda_createandinsertpage (panda_pdf *);
+  panda_page *panda_createandinsertpage (panda_pdf *);
 
 /******************************************************************************
   Font.c

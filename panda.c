@@ -43,10 +43,10 @@ void
 panda_init ()
 {
   int generalCounter;
-  
+
   // We first need to create the binary string to include in our header
   for (generalCounter = 0; generalCounter <
-	 (sizeof (panda_binaryheaderstring) / sizeof (char)); generalCounter++)
+       (sizeof (panda_binaryheaderstring) / sizeof (char)); generalCounter++)
     {
       panda_binaryheaderstring[generalCounter] =
 	panda_binarychar (panda_headerstring[generalCounter]);
@@ -186,10 +186,11 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  }
 
       // Opening the file with the binary option makes Windows work
-      newmode = panda_xsnprintf("%cb", mode[0]);
+      newmode = panda_xsnprintf ("%cb", mode[0]);
 
       // We _are_ going to create the file
-      if(strcmp(filename, "-") == 0) openedpdf->file = stdout;
+      if (strcmp (filename, "-") == 0)
+	openedpdf->file = stdout;
       else if ((openedpdf->file = fopen (filename, newmode)) == NULL)
 	return NULL;
 
@@ -207,7 +208,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 			panda_binaryheaderstring);
 
 	  // We need a catalog object with some elements within it's dictionary
-	  openedpdf->catalog = (panda_object *) panda_newobject (openedpdf, 
+	  openedpdf->catalog = (panda_object *) panda_newobject (openedpdf,
 								 panda_normal);
 	  panda_adddictitem (openedpdf->catalog->dict, "Type",
 			     panda_textvalue, "Catalog");
@@ -215,7 +216,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  // We need a reference to our pages object
 	  panda_addchild (openedpdf->catalog,
 			  openedpdf->pages =
-			  (panda_object *) panda_newobject (openedpdf, 
+			  (panda_object *) panda_newobject (openedpdf,
 							    panda_normal));
 	  panda_adddictitem (openedpdf->catalog->dict, "Pages",
 			     panda_objectvalue, openedpdf->pages);
@@ -236,7 +237,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
 	  // The fonts object in the pdf * is a dummy which makes fonts 
 	  // external to each page. This makes the PDF more efficient
-	  openedpdf->fonts = (panda_object *) panda_newobject (openedpdf, 
+	  openedpdf->fonts = (panda_object *) panda_newobject (openedpdf,
 							       panda_placeholder);
 
 	  // Set the text mode to something basic
@@ -261,10 +262,11 @@ panda_open_actual (char *filename, char *mode, int suppress)
 			     panda_nowdate ());
 
 #if defined DEBUG
-	  printf("Inserted the creation date\n");
+	  printf ("Inserted the creation date\n");
 #endif
 
-	  if(tempPtr != NULL) free (tempPtr);
+	  if (tempPtr != NULL)
+	    free (tempPtr);
 	}
       else
 	{
@@ -276,15 +278,14 @@ panda_open_actual (char *filename, char *mode, int suppress)
       // And this stuff is always done
 
       // Create a dummy object for when we print the pdf to a file
-      openedpdf->dummyObj = 
-	(panda_object *) panda_newobject (openedpdf, 
-					  panda_placeholder);
+      openedpdf->dummyObj =
+	(panda_object *) panda_newobject (openedpdf, panda_placeholder);
 
       // Remember the mode and create the linear object if needed
       if ((mode[1] == 'l') || (mode[1] == 'L'))
 	{
 	  openedpdf->mode = panda_writelinear;
-	  openedpdf->linear = (panda_object *) panda_newobject (openedpdf, 
+	  openedpdf->linear = (panda_object *) panda_newobject (openedpdf,
 								panda_normal);
 	  panda_adddictitem (openedpdf->linear->dict, "Linearised",
 			     panda_integervalue, 1);
@@ -296,7 +297,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	}
 
 #if defined DEBUG
-      printf("PDF file opened ok\n");
+      printf ("PDF file opened ok\n");
 #endif
 
       // We did open the PDF file ok
@@ -499,18 +500,19 @@ panda_newpage (panda_pdf * output, char *pageSize)
   pageSizeCopy =
     (char *) panda_xmalloc (sizeof (char) * (strlen (pageSize) + 1));
   strcpy (pageSizeCopy, pageSize);
-  
-  if(strcmp(strtok(pageSizeCopy, " "), "TEMPLATE") == 0){
-    // Here we make the somewhat dangerous assumption that the only thing left
-    // in the pagesize string is numerical...
-    newPage = panda_newtemplate(output, strtok(NULL, "a"));
-    free(pageSizeCopy);
-    return newPage;
-  }
-  free(pageSizeCopy);
-  
+
+  if (strcmp (strtok (pageSizeCopy, " "), "TEMPLATE") == 0)
+    {
+      // Here we make the somewhat dangerous assumption that the only thing left
+      // in the pagesize string is numerical...
+      newPage = panda_newtemplate (output, strtok (NULL, "a"));
+      free (pageSizeCopy);
+      return newPage;
+    }
+  free (pageSizeCopy);
+
   // The code to setup the page has been moved to make things easier elsewhere
-  newPage = panda_createandinsertpage(output);
+  newPage = panda_createandinsertpage (output);
 
   // Setup some basic things within the page object's dictionary
   panda_adddictitem (newPage->obj->dict, "Type", panda_textvalue, "Page");

@@ -33,24 +33,12 @@ N * TIFF support does not currently include the following compression options:
 	- LZW (never!)
 	- Packbit
 
-N * More work on the lexer
-
 L * New font ids are handed out too often -- what about font reuse?
 
   * Handle image reuse better
 
   * At the moment if we can't change font we stop the whole schmozzle - should
 	we just report an error and keep going in the old font?
-
-  * Re run GNU indent
-
-  * Lines and stuff...
-	The following operations in graphics mode are needed (p 159):
-		- w (set the line width)
-		- J (set the line cap)
-		- j (set the line join style)
-		- M (set the mitre limit)
-		- d (set the dash pattern)
 
   * AM_CONFIG_HEADER problems
 

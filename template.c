@@ -20,15 +20,14 @@ panda_newtemplate (panda_pdf * output, char *pageSize)
 {
   panda_page *template;
 
-  template = panda_createandinsertpage(output);
+  template = panda_createandinsertpage (output);
 
   // Add the required dictionary elements for a template page
   panda_adddictitem (template->obj->dict, "Type", panda_textvalue, "XObject");
   panda_adddictitem (template->obj->dict, "Subtype", panda_textvalue, "Form");
   panda_adddictitem (template->obj->dict, "FormType", panda_integervalue, 1);
-  panda_adddictitem (template->obj->dict, "BBox", panda_literaltextvalue, 
-  		     pageSize);
-  
+  panda_adddictitem (template->obj->dict, "BBox", panda_literaltextvalue,
+		     pageSize);
+
   return template;
 }
-

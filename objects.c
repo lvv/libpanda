@@ -110,11 +110,11 @@ panda_newobject (panda_pdf * doc, int type)
 
   // Set the value of the local and cascaded proprties for this object to 
   // defaults (all off)
-  memset(created->localproperties, panda_false, panda_object_property_max);
-  memset(created->cascadeproperties, panda_false, panda_object_property_max);
+  memset (created->localproperties, panda_false, panda_object_property_max);
+  memset (created->cascadeproperties, panda_false, panda_object_property_max);
 
   // The compression level is a little different
-  created->localproperties[panda_object_property_compress_level] = 
+  created->localproperties[panda_object_property_compress_level] =
     created->cascadeproperties[panda_object_property_compress_level] =
     panda_default_compress_level;
 
@@ -244,8 +244,8 @@ panda_adddictitem (panda_dictionary * input, char *name, int valueType, ...)
       // should be fine
       dictNow->textValue = (char *) panda_xmalloc (sizeof (char) * 20);
 
-      dictNow->textValue = panda_xsnprintf("%d %d R", objValue->number,
-	       objValue->generation);
+      dictNow->textValue = panda_xsnprintf ("%d %d R", objValue->number,
+					    objValue->generation);
       break;
 
     case panda_objectarrayvalue:
@@ -444,7 +444,7 @@ panda_freeobject (panda_pdf * output, panda_object * freeVictim)
       panda_freedictionary (freeVictim->dict);
     }
 
-  free(freeVictim);
+  free (freeVictim);
 }
 
 void
@@ -452,7 +452,7 @@ panda_freedictionary (panda_dictionary * freeDict)
 {
   panda_dictionary *now, *prev;
   int endoftheline = panda_true;
-  
+
   // Still need to free the dictionary... This can be made more efficient
   while (freeDict->next != NULL)
     {
@@ -468,7 +468,7 @@ panda_freedictionary (panda_dictionary * freeDict)
       if (endoftheline == panda_false)
 	{
 #if defined DEBUG
-	  printf("Free dictionary item named %s\n", now->name);
+	  printf ("Free dictionary item named %s\n", now->name);
 #endif
 
 	  free (now->name);
@@ -494,7 +494,7 @@ panda_freedictionary (panda_dictionary * freeDict)
 	free (freeDict->textValue);
       if (freeDict->dictValue != NULL)
 	panda_freedictionary (freeDict->dictValue);
-      
+
       free (freeDict);
     }
 }
@@ -568,76 +568,81 @@ panda_writeobject (panda_pdf * output, panda_object * dumpTarget)
 
       if (dumpTarget->layoutstream != NULL)
 	{
-	  dumpTarget->layoutstreamLength = strlen(dumpTarget->layoutstream);
+	  dumpTarget->layoutstreamLength = strlen (dumpTarget->layoutstream);
 
 	  // We determine if the stream is to be compressed, and then
 	  // overwrite the old stream with the compressed one (and save
 	  // the length).
 
-	  if((dumpTarget->cascadeproperties
-	      [panda_object_property_compress] == panda_true) || 
-	     (dumpTarget->localproperties
-	      [panda_object_property_compress] == panda_true)){ 
-	    
+	  if ((dumpTarget->cascadeproperties
+	       [panda_object_property_compress] == panda_true) ||
+	      (dumpTarget->localproperties
+	       [panda_object_property_compress] == panda_true))
+	    {
+
 #if defined DEBUG
-	    printf("Compression enabled for this object\n");
+	      printf ("Compression enabled for this object\n");
 #endif
 
-	    // See zlib.h
-	    compressedLen = dumpTarget->layoutstreamLength * 1.2 + 12;
-	    compressed = panda_xmalloc(compressedLen);
+	      // See zlib.h
+	      compressedLen = dumpTarget->layoutstreamLength * 1.2 + 12;
+	      compressed = panda_xmalloc (compressedLen);
 
-	    // Determine what compression level to use
-	    if(dumpTarget->localproperties
-	       [panda_object_property_compress_level] !=
-	       panda_default_compress_level)
-	      level = dumpTarget->localproperties
-		[panda_object_property_compress_level];
-	    else level = dumpTarget->cascadeproperties
-		[panda_object_property_compress_level];
-	    
-	    if(((compressResult = compress2(compressed, &compressedLen,
-					    dumpTarget->layoutstream, 
-					    dumpTarget->layoutstreamLength,
-					    level)) 
-	       == Z_OK) && (compressedLen < dumpTarget->layoutstreamLength)){
-	      printf("Compressed is %d [obj %d]\n", compressedLen,
-		     dumpTarget->number);
-	      
-	      // The compression worked (no error returned)
-	      panda_adddictitem (dumpTarget->dict, "Filter", panda_textvalue,
-				 "FlateDecode");
-	  
-	      // Now we need to make the stream use the compressed one,
-	      // and record the length
-	      free(dumpTarget->layoutstream);
-	      dumpTarget->layoutstream = compressed;
-	      dumpTarget->layoutstreamLength = compressedLen;
+	      // Determine what compression level to use
+	      if (dumpTarget->localproperties
+		  [panda_object_property_compress_level] !=
+		  panda_default_compress_level)
+		level = dumpTarget->localproperties
+		  [panda_object_property_compress_level];
+	      else
+		level = dumpTarget->cascadeproperties
+		  [panda_object_property_compress_level];
+
+	      if (((compressResult = compress2 (compressed, &compressedLen,
+						dumpTarget->layoutstream,
+						dumpTarget->
+						layoutstreamLength,
+						level)) == Z_OK)
+		  && (compressedLen < dumpTarget->layoutstreamLength))
+		{
+		  printf ("Compressed is %d [obj %d]\n", compressedLen,
+			  dumpTarget->number);
+
+		  // The compression worked (no error returned)
+		  panda_adddictitem (dumpTarget->dict, "Filter",
+				     panda_textvalue, "FlateDecode");
+
+		  // Now we need to make the stream use the compressed one,
+		  // and record the length
+		  free (dumpTarget->layoutstream);
+		  dumpTarget->layoutstream = compressed;
+		  dumpTarget->layoutstreamLength = compressedLen;
+		}
 	    }
-	  }
 
 	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
 			     dumpTarget->layoutstreamLength);
 	}
-	  
+
       // We cannot have a layoutstream and a binary stream in the same object
       else if (dumpTarget->binarystream != NULL)
 	{
 	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
 			     dumpTarget->binarystreamLength);
 	}
-     
+
       // Make sure we deal with empty content streams probably
       else if (dumpTarget->isContents == panda_true)
 	{
 #if defined DEBUG
-	  printf("Forcing output of content stream\n");
+	  printf ("Forcing output of content stream\n");
 #endif
 
 	  panda_adddictitem (dumpTarget->dict, "Length", panda_integervalue,
 			     0);
-	  dumpTarget->layoutstream = (char *) panda_xmalloc(sizeof(char) * 2);
-	  dumpTarget->layoutstream = panda_xsnprintf(" ");
+	  dumpTarget->layoutstream =
+	    (char *) panda_xmalloc (sizeof (char) * 2);
+	  dumpTarget->layoutstream = panda_xsnprintf (" ");
 	  dumpTarget->layoutstreamLength = 1;
 	}
 
@@ -863,8 +868,8 @@ panda_addchild (panda_object * parentObj, panda_object * childObj)
   currentChild->me = childObj;
 
   // Cascade the relevant properties
-  memcpy(childObj->cascadeproperties, parentObj->cascadeproperties, 
-	 panda_object_property_max);
+  memcpy (childObj->cascadeproperties, parentObj->cascadeproperties,
+	  panda_object_property_max);
 
   // Cache it
   parentObj->cachedLastChild = currentChild;
@@ -967,35 +972,39 @@ SEEALSO panda_newobject, panda_const_properties
 DOCBOOK END
 ******************************************************************************/
 
-void panda_setproperty(panda_object *target, int scope, int key, int value){
+void
+panda_setproperty (panda_object * target, int scope, int key, int value)
+{
 #if defined DEBUG
-  printf("Set a property for object %d %d\n", target->number, target->generation);
+  printf ("Set a property for object %d %d\n", target->number,
+	  target->generation);
 #endif
 
-  if((key < 0) || (key > panda_object_property_max)){
+  if ((key < 0) || (key > panda_object_property_max))
+    {
 #if defined DEBUG
-    printf("Undefined key value specifiec\n");
+      printf ("Undefined key value specifiec\n");
 #endif
-    return;
-  }
+      return;
+    }
 
-  switch(scope){
-  case panda_scope_cascade:
+  switch (scope)
+    {
+    case panda_scope_cascade:
 #if defined DEBUG
-    printf("Cascade\n");
+      printf ("Cascade\n");
 #endif
-    target->cascadeproperties[key] = value;
-    break;
-    
-  case panda_scope_local:
-#if defined DEBUG
-    printf("Local\n");
-#endif
-    target->localproperties[key] = value;
+      target->cascadeproperties[key] = value;
       break;
-      
-  default:
-    // Do nothing
-  }
-}
 
+    case panda_scope_local:
+#if defined DEBUG
+      printf ("Local\n");
+#endif
+      target->localproperties[key] = value;
+      break;
+
+    default:
+      // Do nothing
+    }
+}

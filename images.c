@@ -152,12 +152,12 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 
   // We make an object not just a dictionary because this is what
   // adddictitem needs
-  xobjrefsubsubdict = (panda_object *) panda_newobject (output, 
+  xobjrefsubsubdict = (panda_object *) panda_newobject (output,
 							panda_placeholder);
   panda_adddictitem (xobjrefsubsubdict->dict, pdfFilename, panda_objectvalue,
 		     imageObj);
 
-  xobjrefsubdict = (panda_object *) panda_newobject (output, 
+  xobjrefsubdict = (panda_object *) panda_newobject (output,
 						     panda_placeholder);
   panda_adddictitem (xobjrefsubdict->dict, "XObject", panda_dictionaryvalue,
 		     xobjrefsubsubdict->dict);
@@ -189,37 +189,37 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
     {
     case panda_image_tiff:
 #if defined HAVE_LIBTIFF
-	panda_insertTIFF (output, target, imageObj, filename);
+      panda_insertTIFF (output, target, imageObj, filename);
 #else
-	  fprintf (stderr, "%s %s\n",
-		   "TIFF support not compiled into Panda because libtiff was",
-		   "not found at compile time.");
-	  panda_adddictitem (imageObj->dict, "TIFF_Support_Missing",
-			     panda_integervalue, 1);
+      fprintf (stderr, "%s %s\n",
+	       "TIFF support not compiled into Panda because libtiff was",
+	       "not found at compile time.");
+      panda_adddictitem (imageObj->dict, "TIFF_Support_Missing",
+			 panda_integervalue, 1);
 #endif
       break;
 
     case panda_image_jpeg:
 #if defined HAVE_LIBJPEG
-	panda_insertJPEG (output, target, imageObj, filename);
+      panda_insertJPEG (output, target, imageObj, filename);
 #else
-	  fprintf (stderr, "%s %s\n",
-		   "JPEG support not compiled into Panda because libjpeg was",
-		   "not found at compile time.");
-	  panda_adddictitem (imageObj->dict, "JPEG_Support_Missing",
-			     panda_integervalue, 1);
+      fprintf (stderr, "%s %s\n",
+	       "JPEG support not compiled into Panda because libjpeg was",
+	       "not found at compile time.");
+      panda_adddictitem (imageObj->dict, "JPEG_Support_Missing",
+			 panda_integervalue, 1);
 #endif
       break;
 
     case panda_image_png:
 #if defined HAVE_LIBPNG
-	panda_insertPNG(output, target, imageObj, filename);
+      panda_insertPNG (output, target, imageObj, filename);
 #else
-	  fprintf (stderr, "%s %s\n",
-		   "PNG support not compiled into Panda because libpng was not",
-		   "found at compile time.");
-	  panda_adddictitem (imageObj->dict, "PNG_Support_Missing",
-			     panda_integervalue, 1);
+      fprintf (stderr, "%s %s\n",
+	       "PNG support not compiled into Panda because libpng was not",
+	       "found at compile time.");
+      panda_adddictitem (imageObj->dict, "PNG_Support_Missing",
+			 panda_integervalue, 1);
 #endif
       break;
     }
@@ -312,8 +312,9 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
   // Open the file and make sure that it exists and is a TIFF file
   if ((image = TIFFOpen (filename, "r")) == NULL)
     {
-      errMessage = panda_xsnprintf(
-		"Could not open the specified TIFF image \"%s\".", filename);
+      errMessage =
+	panda_xsnprintf ("Could not open the specified TIFF image \"%s\".",
+			 filename);
       panda_error (errMessage);
     }
 
@@ -331,8 +332,9 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
     panda_error ("Could not get the colour depth for the tiff image.");
 
   // The colour device will change based on the number of samples per pixel
-  if(TIFFGetField (image, TIFFTAG_SAMPLESPERPIXEL, &tiffResponse16) == 0)
-    panda_error("Could not get number of samples per pixel for a tiff image.");
+  if (TIFFGetField (image, TIFFTAG_SAMPLESPERPIXEL, &tiffResponse16) == 0)
+    panda_error
+      ("Could not get number of samples per pixel for a tiff image.");
 
   switch (tiffResponse16)
     {
@@ -535,7 +537,7 @@ panda_insertTIFF (panda_pdf * output, panda_page * target,
       imageObj->binarystreamLength = imageOffset;
     }
 
-  TIFFClose(image);
+  TIFFClose (image);
 }
 
 /******************************************************************************
@@ -716,31 +718,31 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
     panda_error ("Could not open the specified PNG file.");
 
   // Check that it really is a PNG file
-  fread(sig, 1, 8, image);
-  if(!png_check_sig(sig, 8))
-    panda_error("PNG file was invalid");
+  fread (sig, 1, 8, image);
+  if (!png_check_sig (sig, 8))
+    panda_error ("PNG file was invalid");
 
   // Start decompressing
-  if((png = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, 
-				   NULL, NULL)) == NULL)
-    panda_error("Could not create a PNG read structure (out of memory?)");
+  if ((png = png_create_read_struct (PNG_LIBPNG_VER_STRING, NULL,
+				     NULL, NULL)) == NULL)
+    panda_error ("Could not create a PNG read structure (out of memory?)");
 
-  if((info = png_create_info_struct(png)) == NULL)
-    panda_error("Could not create PNG info structure (out of memory?)");
-  
+  if ((info = png_create_info_struct (png)) == NULL)
+    panda_error ("Could not create PNG info structure (out of memory?)");
+
   // If panda_error did not exit, we would have to call png_destroy_read_struct
 
-  if(setjmp(png_jmpbuf(png)))
-    panda_error("Could not set PNG jump value");
+  if (setjmp (png_jmpbuf (png)))
+    panda_error ("Could not set PNG jump value");
 
   // Get ready for IO and tell the API we have already read the image signature
   // The IHDR chunk inside the PNG defines some info we need about the picture
   // (see PNG specification 1.2, page 15).
-  png_init_io(png, image);
-  png_set_sig_bytes(png, 8);
-  png_read_info(png, info);
-  png_get_IHDR(png, info, &width, &height, &bitdepth, &colourtype, NULL, 
-	       NULL, NULL);
+  png_init_io (png, image);
+  png_set_sig_bytes (png, 8);
+  png_read_info (png, info);
+  png_get_IHDR (png, info, &width, &height, &bitdepth, &colourtype, NULL,
+		NULL, NULL);
 
   // This dictionary item is PNG specific, but until we put uncompressed 
   // data into the PDF
@@ -753,10 +755,8 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
   // I can't find any documentation for why the predictor should always be
   // 15. If I ever do, then I will update this...
   subdict = (panda_object *) panda_newobject (output, panda_placeholder);
-  panda_adddictitem (subdict->dict, "Predictor", panda_integervalue,
-		     15);
-  panda_adddictitem (subdict->dict, "Columns", panda_integervalue,
-		     width);
+  panda_adddictitem (subdict->dict, "Predictor", panda_integervalue, 15);
+  panda_adddictitem (subdict->dict, "Columns", panda_integervalue, width);
   panda_adddictitem (subdict->dict, "BitsPerComponent", panda_integervalue,
 		     bitdepth);
 
@@ -767,16 +767,14 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
     case PNG_COLOR_TYPE_GRAY_ALPHA:
       panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue,
 			 "DeviceGray");
-      panda_adddictitem (subdict->dict, "Colors", panda_integervalue,
-			 1);
+      panda_adddictitem (subdict->dict, "Colors", panda_integervalue, 1);
       outColourType = PNG_COLOR_TYPE_GRAY;
       break;
 
     default:
       panda_adddictitem (imageObj->dict, "ColorSpace", panda_textvalue,
 			 "DeviceRGB");
-      panda_adddictitem (subdict->dict, "Colors", panda_integervalue,
-			 3);
+      panda_adddictitem (subdict->dict, "Colors", panda_integervalue, 3);
       outColourType = PNG_COLOR_TYPE_RGB;
       break;
     }
@@ -785,15 +783,13 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
      Some details of the image
   ****************************************************************************/
 
-  panda_adddictitem (imageObj->dict, "Width", panda_integervalue,
-		     width);
-  panda_adddictitem (imageObj->dict, "Height", panda_integervalue,
-		     height);
+  panda_adddictitem (imageObj->dict, "Width", panda_integervalue, width);
+  panda_adddictitem (imageObj->dict, "Height", panda_integervalue, height);
   panda_adddictitem (imageObj->dict, "Filter", panda_textvalue,
-  		     "FlateDecode");
+		     "FlateDecode");
   panda_adddictitem (imageObj->dict, "DecodeParms", panda_dictionaryvalue,
-  		     subdict->dict);
-  
+		     subdict->dict);
+
   /****************************************************************************
      Now actually insert the image. libpng lets us do some cool stuff with
      the data before it is handed to us like expanding it to our expectations.
@@ -806,60 +802,65 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
     Read the image into it's memory buffer
   ****************************************************************************/
 
-  if(colourtype == PNG_COLOR_TYPE_PALETTE)
-    png_set_expand(png);
+  if (colourtype == PNG_COLOR_TYPE_PALETTE)
+    png_set_expand (png);
   //  if(colourtype & PNG_COLOR_MASK_ALPHA)
-  png_set_strip_alpha(png);
-  png_read_update_info(png, info);
+  png_set_strip_alpha (png);
+  png_read_update_info (png, info);
 
-  rowbytes = png_get_rowbytes(png, info);
-  imageObj->binarystream = (unsigned char *) panda_xmalloc((rowbytes * height) + 1);
+  rowbytes = png_get_rowbytes (png, info);
+  imageObj->binarystream =
+    (unsigned char *) panda_xmalloc ((rowbytes * height) + 1);
   imageObj->binarystreamLength = rowbytes * height;
-  row_pointers = panda_xmalloc(height * sizeof(png_bytep));
+  row_pointers = panda_xmalloc (height * sizeof (png_bytep));
 
   // Get the image bitmap
-  for (i = 0;  i < height;  ++i) row_pointers[i] = 
-				   imageObj->binarystream + (i * rowbytes);
-  png_read_image(png, row_pointers);
+  for (i = 0; i < height; ++i)
+    row_pointers[i] = imageObj->binarystream + (i * rowbytes);
+  png_read_image (png, row_pointers);
   // free(row_pointers);
-  png_read_end(png, NULL);
+  png_read_end (png, NULL);
 
   imageObj->binarystream[imageObj->binarystreamLength++] = 0;
   fclose (image);
 
   // This cleans things up for us in the PNG library
-  png_destroy_read_struct(&png, &info, NULL);
+  png_destroy_read_struct (&png, &info, NULL);
 
   /****************************************************************************
      ... And now we write that image out into another memory buffer (this one
      compressed) via some funky callbacks to libpng...
   ****************************************************************************/
 
-  if((png = png_create_write_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL)) == NULL)
-    panda_error("Could not create write structure for PNG (out of memory?)");
+  if (
+      (png =
+       png_create_write_struct (PNG_LIBPNG_VER_STRING, NULL, NULL,
+				NULL)) == NULL)
+    panda_error ("Could not create write structure for PNG (out of memory?)");
 
-  if((info = png_create_info_struct(png)) == NULL)
-    panda_error("Could not create PNG info structure for writing (out of memory?)");
+  if ((info = png_create_info_struct (png)) == NULL)
+    panda_error
+      ("Could not create PNG info structure for writing (out of memory?)");
 
-  if(setjmp(png_jmpbuf(png)))
-    panda_error("Could not set the PNG jump value for writing");
+  if (setjmp (png_jmpbuf (png)))
+    panda_error ("Could not set the PNG jump value for writing");
 
   // If this call is done before png_create_write_struct, then everything seg faults...
   pthread_mutex_lock (&convMutex);
-  png_set_write_fn(png, NULL, (png_rw_ptr) libpngDummyWriteProc, 
-  		   (png_flush_ptr) libpngDummyFlushProc);
+  png_set_write_fn (png, NULL, (png_rw_ptr) libpngDummyWriteProc,
+		    (png_flush_ptr) libpngDummyFlushProc);
   globalIsIDAT = panda_false;
   globalImageBuffer = NULL;
   globalImageBufferOffset = 0;
 
-  png_set_IHDR(png, info, width, height, bitdepth, outColourType, 
-	       PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT, 
-	       PNG_FILTER_TYPE_DEFAULT);
-  png_write_info(png, info);
+  png_set_IHDR (png, info, width, height, bitdepth, outColourType,
+		PNG_INTERLACE_NONE, PNG_COMPRESSION_TYPE_DEFAULT,
+		PNG_FILTER_TYPE_DEFAULT);
+  png_write_info (png, info);
 
-  png_write_image(png, row_pointers);
-  png_write_end(png, info);
-  png_destroy_write_struct(&png, &info);
+  png_write_image (png, row_pointers);
+  png_write_end (png, info);
+  png_destroy_write_struct (&png, &info);
 
   /****************************************************************************
      ... Finally, we have something that we can insert into the PDF stream
@@ -867,7 +868,7 @@ panda_insertPNG (panda_pdf * output, panda_page * target,
 
   imageObj->binarystream = globalImageBuffer;
   imageObj->binarystreamLength = globalImageBufferOffset;
-  pthread_mutex_unlock (&convMutex);    
+  pthread_mutex_unlock (&convMutex);
 }
 
 /*****************************************************************************
@@ -960,8 +961,8 @@ libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size)
       else
 	{
 	  if ((globalImageBuffer = (char *) realloc (globalImageBuffer,
-						    (size * sizeof (char)) +
-						    globalImageBufferOffset))
+						     (size * sizeof (char)) +
+						     globalImageBufferOffset))
 	      == NULL)
 	    panda_error ("Could not grow the tiff conversion memory buffer.");
 	}
@@ -1051,7 +1052,8 @@ SEEALSO panda_insertPNG, libpngDummyReadProc, libpngDummyFlushProc
 DOCBOOK END
 ******************************************************************************/
 
-void libpngDummyWriteProc(png_structp png, png_bytep data, png_uint_32 len)
+void
+libpngDummyWriteProc (png_structp png, png_bytep data, png_uint_32 len)
 {
   unsigned long count;
   char tempString[5];
@@ -1064,10 +1066,10 @@ void libpngDummyWriteProc(png_structp png, png_bytep data, png_uint_32 len)
   tempString[4] = '\0';
 
   // If we know this is an IDAT, then copy the compressed image information
-  if(globalIsIDAT == panda_true)
+  if (globalIsIDAT == panda_true)
     {
 #if defined DEBUG
-      printf("Inserted %d bytes into the PNG\n", len);
+      printf ("Inserted %d bytes into the PNG\n", len);
 #endif
 
       // Have we done anything yet?
@@ -1078,8 +1080,8 @@ void libpngDummyWriteProc(png_structp png, png_bytep data, png_uint_32 len)
       else
 	{
 	  if ((globalImageBuffer = (char *) realloc (globalImageBuffer,
-						    (len * sizeof (char)) +
-						    globalImageBufferOffset))
+						     (len * sizeof (char)) +
+						     globalImageBufferOffset))
 	      == NULL)
 	    panda_error ("Could not grow the png conversion memory buffer.");
 	}
@@ -1090,8 +1092,10 @@ void libpngDummyWriteProc(png_structp png, png_bytep data, png_uint_32 len)
 
       globalIsIDAT = panda_false;
     }
-  else if((len == 4) && (strcmp(tempString, "IDAT") == 0)) globalIsIDAT = panda_true;
-  else globalIsIDAT = panda_false;
+  else if ((len == 4) && (strcmp (tempString, "IDAT") == 0))
+    globalIsIDAT = panda_true;
+  else
+    globalIsIDAT = panda_false;
 }
 
 /******************************************************************************
@@ -1115,10 +1119,7 @@ SEEALSO panda_insertPNG, libpngDummyReadProc, libpngDummyWriteProc
 DOCBOOK END
 ******************************************************************************/
 
-void libpngDummyFlushProc(png_structp png)
+void
+libpngDummyFlushProc (png_structp png)
 {
 }
-
-
-
-

@@ -95,7 +95,7 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left,
 
       // We make an object not just a dictionary because this is what
       // adddictitem needs
-      subsubdict = (panda_object *) panda_newobject (output, 
+      subsubdict = (panda_object *) panda_newobject (output,
 						     panda_placeholder);
       panda_adddictitem (subsubdict->dict, output->currentFont,
 			 panda_objectvalue, fontObj);
@@ -238,7 +238,7 @@ panda_textbox (panda_pdf * output, panda_page * thisPage, int top, int left,
   strcpy (strtokVictim, text);
 
   // Build the delimiter string
-  delim = panda_xsnprintf("\n%c%c%c", 4, 5, 6);
+  delim = panda_xsnprintf ("\n%c%c%c", 4, 5, 6);
 
   currentToken = strtok (strtokVictim, delim);
 

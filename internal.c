@@ -66,7 +66,7 @@ panda_entergraphicsmode (panda_page * target)
       printf ("Ended textmode for object %d\n", target->contents->number);
 #endif
     }
-  else if(target->contents->insidegraphicsblock == panda_false)
+  else if (target->contents->insidegraphicsblock == panda_false)
     {
       target->contents->layoutstream =
 	panda_streamprintf (target->contents->layoutstream, "q\n");
@@ -149,7 +149,8 @@ DOCBOOK END
 ******************************************************************************/
 
 panda_page *
-panda_createandinsertpage (panda_pdf * output){
+panda_createandinsertpage (panda_pdf * output)
+{
   panda_page *newPage;
 
   // Make some space for the object

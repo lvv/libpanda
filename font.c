@@ -59,11 +59,11 @@ panda_createfont (panda_pdf * output, char *fontname, int type,
   // Setup some values within the font object
   panda_adddictitem (font->dict, "Type", panda_textvalue, "Font");
 
-  tempBuffer = panda_xsnprintf("Type%d", type);
+  tempBuffer = panda_xsnprintf ("Type%d", type);
   panda_adddictitem (font->dict, "Subtype", panda_textvalue, tempBuffer);
 
   // Make a font identifier string for this font
-  fontident = panda_xsnprintf("F%08d", output->nextFontNumber);
+  fontident = panda_xsnprintf ("F%08d", output->nextFontNumber);
   output->nextFontNumber++;
 
   panda_adddictitem (font->dict, "Name", panda_textvalue, fontident);
@@ -114,7 +114,8 @@ void
 panda_setfont (panda_pdf * output, char *fontident)
 {
   // Free on a NULL should do nothing (check for other platforms)
-  if(output->currentFont != NULL) free (output->currentFont);
+  if (output->currentFont != NULL)
+    free (output->currentFont);
 
   output->currentFont =
     panda_xmalloc ((strlen (fontident) + 1) * sizeof (char));
@@ -206,7 +207,7 @@ panda_getfontobj (panda_pdf * output, char *fontident)
 #endif
 
   // The value string needs to have a / out the front
-  valueString = panda_xsnprintf("/%s", fontident);
+  valueString = panda_xsnprintf ("/%s", fontident);
 
   // Start
   thisChild = output->fonts->children;

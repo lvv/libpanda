@@ -52,7 +52,7 @@ DOCBOOK END
 void
 panda_setlinestart (panda_page * target, int x, int y)
 {
-  panda_entergraphicsmode(target);
+  panda_entergraphicsmode (target);
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
 			"%d %d m\n", x, target->height - y);
@@ -144,7 +144,7 @@ panda_addcubiccurvesegment (panda_page * target, int x, int y, int cx1,
 {
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
-			"%d %d %d %d %d %d c\n", cx1, target->height - cy1, 
+			"%d %d %d %d %d %d c\n", cx1, target->height - cy1,
 			cx2, target->height - cy2, x, target->height - y);
 }
 
@@ -186,11 +186,11 @@ DOCBOOK END
 // Add a different type of curved segment
 void
 panda_addquadraticcurvesegmentone (panda_page * target, int x, int y, int cx1,
-				 int cy1)
+				   int cy1)
 {
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
-			"%d %d %d %d v\n", cx1, target->height - cy1, 
+			"%d %d %d %d v\n", cx1, target->height - cy1,
 			x, target->height - y);
 }
 
@@ -232,11 +232,11 @@ DOCBOOK END
 // Add a different type of curved segment
 void
 panda_addquadraticcurvesegmenttwo (panda_page * target, int x, int y, int cx1,
-				 int cy1)
+				   int cy1)
 {
   target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
-			"%d %d %d %d y\n", cx1, target->height - cy1, 
+			"%d %d %d %d y\n", cx1, target->height - cy1,
 			x, target->height - y);
 }
 
@@ -321,12 +321,12 @@ DOCBOOK END
 
 // Add a rectangle from the current cursor point
 void
-panda_rectangle (panda_page * target, int top, int left, int bottom, 
+panda_rectangle (panda_page * target, int top, int left, int bottom,
 		 int right)
 {
-  panda_entergraphicsmode(target);
+  panda_entergraphicsmode (target);
 
-  target->contents->layoutstream = 
+  target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
 			"%d %d %d %d re\n", left, target->height - top,
 			right - left, top - bottom);
@@ -372,7 +372,7 @@ DOCBOOK END
 void
 panda_endline (panda_page * target)
 {
-  panda_exitgraphicsmode(target);
+  panda_exitgraphicsmode (target);
 }
 
 /******************************************************************************
@@ -418,10 +418,9 @@ panda_strokeline (panda_page * target)
 {
   // There is also an option to close and stoke, but I see no reason to
   // implement it...
-  target->contents->layoutstream = 
-    panda_streamprintf (target->contents->layoutstream,
-			"S\n");
-}  
+  target->contents->layoutstream =
+    panda_streamprintf (target->contents->layoutstream, "S\n");
+}
 
 /******************************************************************************
 DOCBOOK START
@@ -469,9 +468,8 @@ panda_fillline (panda_page * target)
 {
   // There is another instance of this command, but the spec recommends not
   // implementing it...
-  target->contents->layoutstream = 
-    panda_streamprintf (target->contents->layoutstream,
-			"B\n");
+  target->contents->layoutstream =
+    panda_streamprintf (target->contents->layoutstream, "B\n");
 }
 
 /******************************************************************************
@@ -512,18 +510,18 @@ DOCBOOK END
 
 // Set the line width
 void
-panda_setlinewidth(panda_page * target, int width)
+panda_setlinewidth (panda_page * target, int width)
 {
   // The width must be positive
-  if(width < 0){
-    fprintf(stderr, "Panda ignoring bad width\n");
-    return;
-  }
-    
-  panda_entergraphicsmode(target);
-  target->contents->layoutstream = 
-    panda_streamprintf (target->contents->layoutstream,
-			"%d w\n", width);
+  if (width < 0)
+    {
+      fprintf (stderr, "Panda ignoring bad width\n");
+      return;
+    }
+
+  panda_entergraphicsmode (target);
+  target->contents->layoutstream =
+    panda_streamprintf (target->contents->layoutstream, "%d w\n", width);
 }
 
 /******************************************************************************
@@ -564,18 +562,18 @@ DOCBOOK END
 
 // Set the line cap
 void
-panda_setlinecap(panda_page * target, int cap)
+panda_setlinecap (panda_page * target, int cap)
 {
   // The width must be positive
-  if((cap < 0) || (cap >= panda_linecap_max)){
-    fprintf(stderr, "Panda ignoring bad line cap\n");
-    return;
-  }
+  if ((cap < 0) || (cap >= panda_linecap_max))
+    {
+      fprintf (stderr, "Panda ignoring bad line cap\n");
+      return;
+    }
 
-  panda_entergraphicsmode(target);
-  target->contents->layoutstream = 
-    panda_streamprintf (target->contents->layoutstream,
-			"%d J\n", cap);
+  panda_entergraphicsmode (target);
+  target->contents->layoutstream =
+    panda_streamprintf (target->contents->layoutstream, "%d J\n", cap);
 }
 
 /******************************************************************************
@@ -619,15 +617,15 @@ void
 panda_setlinejoin (panda_page * target, int join)
 {
   // The width must be positive
-  if((join < 0) || (join >= panda_linejoin_max)){
-    fprintf(stderr, "Panda ignoring bad line join\n");
-    return;
-  }
+  if ((join < 0) || (join >= panda_linejoin_max))
+    {
+      fprintf (stderr, "Panda ignoring bad line join\n");
+      return;
+    }
 
-  panda_entergraphicsmode(target);
-  target->contents->layoutstream = 
-    panda_streamprintf (target->contents->layoutstream,
-			"%d j\n", join);
+  panda_entergraphicsmode (target);
+  target->contents->layoutstream =
+    panda_streamprintf (target->contents->layoutstream, "%d j\n", join);
 }
 
 /******************************************************************************
@@ -684,10 +682,10 @@ DOCBOOK END
 
 // Set the line dashing pattern (my, isn't this line dashing?)
 void
-panda_setlinedash(panda_page *target, int on, int off, int phase)
+panda_setlinedash (panda_page * target, int on, int off, int phase)
 {
-  panda_entergraphicsmode(target);
-  target->contents->layoutstream = 
+  panda_entergraphicsmode (target);
+  target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
 			"[%d %d] %d d\n", on, off, phase);
 }
@@ -733,18 +731,20 @@ DOCBOOK END
 
 // We also need to be able to set the fill colour
 void
-panda_setfillcolor(panda_page *target, int red, int green, int blue)
+panda_setfillcolor (panda_page * target, int red, int green, int blue)
 {
-  if(red > 255) red = 255;
-  if(green > 255) green = 255;
-  if(blue > 255) blue = 255;
+  if (red > 255)
+    red = 255;
+  if (green > 255)
+    green = 255;
+  if (blue > 255)
+    blue = 255;
 
-  panda_entergraphicsmode(target);
-  target->contents->layoutstream = 
+  panda_entergraphicsmode (target);
+  target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
-  			"%f %f %f rg\n", (((double) red) / 255), 
-			(((double) green) / 255), 
-			(((double) blue) / 255));
+			"%f %f %f rg\n", (((double) red) / 255),
+			(((double) green) / 255), (((double) blue) / 255));
 }
 
 /******************************************************************************
@@ -785,16 +785,18 @@ DOCBOOK END
 
 // And the line colour
 void
-panda_setlinecolor(panda_page *target, int red, int green, int blue)
+panda_setlinecolor (panda_page * target, int red, int green, int blue)
 {
-  if(red > 255) red = 255;
-  if(green > 255) green = 255;
-  if(blue > 255) blue = 255;
-  
-  panda_entergraphicsmode(target);
-  target->contents->layoutstream = 
+  if (red > 255)
+    red = 255;
+  if (green > 255)
+    green = 255;
+  if (blue > 255)
+    blue = 255;
+
+  panda_entergraphicsmode (target);
+  target->contents->layoutstream =
     panda_streamprintf (target->contents->layoutstream,
-    			"%f %f %f RG\n", (((double) red) / 255), 
-			(((double) green) / 255), 
-			(((double) blue) / 255));
+			"%f %f %f RG\n", (((double) red) / 255),
+			(((double) green) / 255), (((double) blue) / 255));
 }

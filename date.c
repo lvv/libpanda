@@ -53,10 +53,11 @@ panda_makedate (int year, int month, int day, int hour, int minutes,
   // We need to work out how to decide what this machine's relationship to GMT
   // (zulu) so that we can provide this in the date string for the PDF.
   curtime = time (NULL);
-  gmtoffset = (struct tm *) localtime(&curtime);
+  gmtoffset = (struct tm *) localtime (&curtime);
   gmthours = gmtoffset->tm_gmtoff / 60 / 60;
   gmtminutes = (gmtoffset->tm_gmtoff - gmthours * 60 * 60) / 60;
-  if(gmthours < 0) zulu = '-';
+  if (gmthours < 0)
+    zulu = '-';
 
   // Do some insurance things to make sure we do y2k dates ok
   if (year < 100)
@@ -68,12 +69,12 @@ panda_makedate (int year, int month, int day, int hour, int minutes,
     }
 
   // Make the string
-  dateString = panda_xsnprintf("D:%4d%02d%02d%02d%02d%02d%c%02d'%02d'",
-	    year, month, day, hour, minutes, seconds,
-	    zulu, gmthours, gmtminutes);
+  dateString = panda_xsnprintf ("D:%4d%02d%02d%02d%02d%02d%c%02d'%02d'",
+				year, month, day, hour, minutes, seconds,
+				zulu, gmthours, gmtminutes);
 
 #if defined DEBUG
-  printf("Returned a date string as requested\n");
+  printf ("Returned a date string as requested\n");
 #endif
 
   // And finish
@@ -114,21 +115,19 @@ panda_nowdate ()
   time_t curtime;
 
 #if defined DEBUG
-  printf("Requested the date string for now\n");
+  printf ("Requested the date string for now\n");
 #endif
 
   // Get the current time...
   curtime = time (NULL);
-  timenow = (struct tm *) localtime(&curtime);
+  timenow = (struct tm *) localtime (&curtime);
 
-  return panda_makedate (1900 + timenow->tm_year, 
-			 timenow->tm_mon + 1, 
-			 timenow->tm_mday, 
-			 timenow->tm_hour, 
-			 timenow->tm_min, 
-			 timenow->tm_sec);
+  return panda_makedate (1900 + timenow->tm_year,
+			 timenow->tm_mon + 1,
+			 timenow->tm_mday,
+			 timenow->tm_hour, timenow->tm_min, timenow->tm_sec);
 
 #if defined DEBUG
-  printf("Returned a date string representing now, as requested\n");
+  printf ("Returned a date string representing now, as requested\n");
 #endif
 }
