@@ -31,7 +31,7 @@ rm man/*sgml man/*man
 # Generate the new documentation
 for item in `ls *.c`
 do
-  ~mikal/opensource/autodocbook/working/autodocbook $item man
+  ~mikal/opensource/stable/autodocbook/working/autodocbook $item man
 done
 
 mv *.3 man/
