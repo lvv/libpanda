@@ -10,8 +10,8 @@
     as stand alone application. This file supports that methodology.
 ******************************************************************************/
 
-#include  "functions.h"
-#include  "constants.h"
+#include  <panda/functions.h>
+#include  <panda/constants.h>
 
 int main(int argc, char *argv[]){
   pdf    *demo;

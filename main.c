@@ -54,4 +54,7 @@ int main(int argc, char *argv[]){
   }
 
   pdfclose(demo);
+
+  // We should return a value here
+  return 0;
 }

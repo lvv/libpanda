@@ -127,7 +127,7 @@ void writeXrefEntry(pdf *output, object *dumpTarget){
   if((currentXREF->next->string = (char *) malloc(sizeof(char) * 20)) == NULL)
     error("Could not make space for the XREF line.");
 
-  sprintf(currentXREF->next->string, "%010d %05d n",
+  sprintf(currentXREF->next->string, "%010ld %05d n",
     dumpTarget->byteOffset,
     dumpTarget->generation);
 
