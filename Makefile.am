@@ -1,4 +1,4 @@
-bin_PROGRAMS = panda
+noinst_PROGRAMS = panda
 lib_LIBRARIES = libpanda.a
 include_HEADERS = constants.h functions.h objects.h
 
