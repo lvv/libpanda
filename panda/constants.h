@@ -32,7 +32,7 @@ extern "C"
 #define  panda_binarychar(x)        256 - x
 
 #ifndef VERSION
-#define VERSION "0.5.2d"
+#define VERSION "0.6.0"
 #endif
 
 #if defined GLOBALS
@@ -74,10 +74,88 @@ extern "C"
     panda_normal
   };
 
-// Standard page sizes -- these are expressed in inches, with 72 dots per inch
-// with no fractional values shown. As many values as needed can be added here
-#define  panda_pagesize_a4                "[0 0 594 841]"
-#define  panda_pagesize_usletter          "[0 0 612 792]"
+  /* Standard page sizes -- these are expressed in inches, with 72
+     dots per inch with no fractional values shown. As many values as
+     needed can be added here.
+
+     Conversions:
+     o There are approximately 0.0393700787 mm per in
+
+     Most of these sizes are from
+     http://www.math.wayne.edu/~rrb/A4.html
+   */
+
+// ISO 215 sizes
+// A series
+#define  panda_pagesize_4a0        "[0 0 4768 6735]" // 1682 × 2378 mm
+#define  panda_pagesize_2a0        "[0 0 3370 4768]" // 1189 × 1682 mm
+#define  panda_pagesize_a0         "[0 0 2384 3370]" // 841 × 1189 mm
+#define  panda_pagesize_a1         "[0 0 1684 2384]" // 594 × 841 mm
+#define  panda_pagesize_a2         "[0 0 1191 1684]" // 420 × 594 mm
+#define  panda_pagesize_a3         "[0 0 842 1191]"  // 297 × 420 mm
+#define  panda_pagesize_a4         "[0 0 595 842]"   // 210 × 297 mm
+#define  panda_pagesize_a5         "[0 0 420 595]"   // 148 × 210 mm
+#define  panda_pagesize_a6         "[0 0 298 420]"   // 105 × 148 mm
+#define  panda_pagesize_a7         "[0 0 210 298]"   // 74 × 105 mm
+#define  panda_pagesize_a8         "[0 0 147 210]"   // 52 × 74 mm
+#define  panda_pagesize_a9         "[0 0 105 147]"   // 37 × 52 mm
+#define  panda_pagesize_a10        "[0 0 74 105]"    // 26 × 37 mm
+// B series
+#define  panda_pagesize_b0         "[0 0 2835 4008]" // 1000 × 1414 mm
+#define  panda_pagesize_b1         "[0 0 2004 2835]" // 707 × 1000 mm
+#define  panda_pagesize_b2         "[0 0 1417 2004]" // 500 × 707 mm
+#define  panda_pagesize_b3         "[0 0 1001 1417]" // 353 × 500 mm
+#define  panda_pagesize_b4         "[0 0 709 1001]"  // 250 × 353 mm
+#define  panda_pagesize_b5         "[0 0 499 709]"   // 176 × 250 mm
+#define  panda_pagesize_b6         "[0 0 354 499]"   // 125 × 176 mm
+#define  panda_pagesize_b7         "[0 0 249 354]"   // 88 × 125 mm
+#define  panda_pagesize_b8         "[0 0 176 249]"   // 62 × 88 mm
+#define  panda_pagesize_b9         "[0 0 125 176]"   // 44 × 62 mm
+#define  panda_pagesize_b10        "[0 0 88 125]"    // 31 × 44 mm
+// C series
+#define  panda_pagesize_c0         "[0 0 2599 3677]" // 917 × 1297 mm
+#define  panda_pagesize_c1         "[0 0 1837 2599]" // 648 × 917 mm
+#define  panda_pagesize_c2         "[0 0 1298 1837]" // 458 × 648 mm
+#define  panda_pagesize_c3         "[0 0 918 1298]"  // 324 × 458 mm
+#define  panda_pagesize_c4         "[0 0 649 918]"   // 229 × 324 mm
+#define  panda_pagesize_c5         "[0 0 459 649]"   // 162 × 229 mm
+#define  panda_pagesize_c6         "[0 0 323 459]"   // 114 × 162 mm
+#define  panda_pagesize_c7         "[0 0 230 323]"   // 81 × 114 mm
+#define  panda_pagesize_c8         "[0 0 162 230]"   // 57 × 81 mm
+#define  panda_pagesize_c9         "[0 0 113 162]"   // 40 × 57 mm
+#define  panda_pagesize_c10        "[0 0 79 113]"    // 28 × 40 mm
+// Raw format A
+#define panda_pagesize_ra0         "[0 0 2438 3458]" // 860 × 1220 mm
+#define panda_pagesize_ra1         "[0 0 1729 2438]" // 610 × 860 mm
+#define panda_pagesize_ra2         "[0 0 1219 1729]" // 430 × 610 mm
+#define panda_pagesize_ra3         "[0 0 865 1219]"  // 305 × 430 mm
+#define panda_pagesize_ra4         "[0 0 609 865]"   // 215 × 305 mm
+// Supplementary raw format A
+#define panda_pagesize_sra0        "[0 0 2551 3628]" // 900 × 1280 mm
+#define panda_pagesize_sra1        "[0 0 1814 2551]" // 640 × 900 mm
+#define panda_pagesize_sra2        "[0 0 1276 1814]" // 450 × 640 mm
+#define panda_pagesize_sra3        "[0 0 907 1276]"  // 320 × 450 mm
+#define panda_pagesize_sra4        "[0 0 225 907]"   // 225 × 320 mm
+// US specific formats.
+#define panda_pagesize_usletter    "[0 0 612 792]"   // 8.5 x 11 in
+#define panda_pagesize_uslegal     "[0 0 612 1008]"  // 8.5 x 14 in
+#define panda_pagesize_usexecutive "[0 0 522 756]"   // 7.25 x 10.5 in
+#define panda_pagesize_usledger    "[0 0 792 1224]"  // 11 x 17 in
+// ANSI/ASME Y14.1 technical drawings
+#define panda_pagesize_usarch1     "[0 0 648 864]"   // 9 × 12 in
+#define panda_pagesize_usarch2     "[0 0 864 1298]"  // 12 × 18 in
+#define panda_pagesize_usarch3     "[0 0 1298 1728]" // 18 × 24 in
+#define panda_pagesize_usarch4     "[0 0 1728 2592]" // 24 × 36 in
+#define panda_pagesize_usarch5     "[0 0 2160 3024]" // 30 × 42 in
+#define panda_pagesize_usarch6     "[0 0 2592 3456]" // 36 × 48 in
+// Overhead projectors.
+#define panda_pagesize_overheada   "[0 0 709 709]" // 250 x 250 mm
+#define panda_pagesize_overheadb   "[0 0 808 808]" // 285 x 285 mm
+// Identification cards
+#define panda_pagesize_id1         "[0 0 343 153]" // 3.370 × 2.125 in
+#define panda_pagesize_id2         "[0 0 298 210]" // 105 × 74 mm (A7)
+#define panda_pagesize_id3         "[0 0 354 249]" // 125 × 88 mm (B7)
+
 
 // The text drawing modes (p 343 v 1.3)
   enum

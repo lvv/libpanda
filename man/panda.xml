@@ -1,4 +1,4 @@
-<!-- $Id: panda.xml,v 1.2 2004/04/25 04:44:05 tadpole Exp $ -->
+<!-- $Id: panda.xml,v 1.3 2004/04/29 21:20:38 tadpole Exp $ -->
 <?xml version='1.0' encoding='iso-8859-1'?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "docbook/xml-dtd-4.1.2/docbookx.dtd">
 <book><!-- Parts of this are from the FANN documentation. -->
@@ -4169,19 +4169,411 @@ panda_transduration (page, 30.5);
 	    expressed in inches, with 72 dots per inch with no
 	    fractional values shown.
 	  </para>
+          <para>
+            Most of the information contained in this section is from
+            <ulink
+            url="http://www.math.wayne.edu/~rrb/A4.html">http://www.math.wayne.edu/~rrb/A4.html</ulink>,
+            which has a plethora of information regarding paper sizes,
+            usage, history, and standards.
+          </para>
+          <para>
+            The most common page sizes are A4 (panda_pagesize_a4) and
+            US Letter (panda_pagesize_usletter) in North America.
+          </para>
           <variablelist>
-            <title>Constants</title>
+            <title>ISO 215 paper sizes</title>
 
             <varlistentry>
-              <term>panda_pagesize_a4</term>
+              <term>panda_pagesize_4a0</term>
+              <listitem><para>ISO 215 4A0 - 1682 &#215; 2378 mm - "[0 0 4768 6735]"</para></listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_2a0</term>
               <listitem>
-                <para>A4 - "[0 0 594 841]"</para>
+                <para>ISO 215 2A0 - 1189 &#215; 1682 mm - "[0 0 3370 4768]"</para>
               </listitem>
             </varlistentry>
             <varlistentry>
+              <term>panda_pagesize_a0</term>
+              <listitem>
+                <para>ISO 215 A0 - 841 &#215; 1189 mm - "[0 0 2384 3370]"</para>
+                <para>Commonly used for technical drawings and posters.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a1</term>
+              <listitem>
+                <para>ISO 215 A1 - 594 &#215; 841 mm - "[0 0 1684 2384]"</para>
+                <para>Commonly used for technical drawings, posters, and flip charts.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a2</term>
+              <listitem>
+                <para>ISO 215 A2 - 420 &#215; 594 mm - "[0 0 1191 1684]"</para>
+                <para>Commonly used flip charts, drawings, diagrams, and large tables.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a3</term>
+              <listitem>
+                <para>ISO 215 A3 - 297 &#215; 420 mm - "[0 0 842 1191]"</para>
+                <para>Commonly used drawings, diagrams, large tables, and newspapers.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a4</term>
+              <listitem>
+                <para>ISO 215 A4 - 210 &#215; 297 mm - "[0 0 595 842]"</para>
+                <para>Most commonly used paper size. Used for letters, magazines, etc.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a5</term>
+              <listitem>
+                <para>ISO 215 A5 - 148 &#215; 210 mm - "[0 0 420 595]"</para>
+                <para>Commonly used for note pads and books.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a6</term>
+              <listitem>
+                <para>ISO 215 A6 - 105 &#215; 148 mm - "[0 0 298 420]"</para>
+                <para>Commonly used for postcards and books.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a7</term>
+              <listitem>
+                <para>ISO 215 A7 - 74 &#215; 105 mm - "[0 0 210 298]"</para>
+                <para>Some ID cards (specifically, German).</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a8</term>
+              <listitem>
+                <para>ISO 215 A8 - 52 &#215; 74 mm - "[0 0 147 210]"</para>
+                <para>Commonly used for playing cards, sometimes business cards.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a9</term>
+              <listitem>
+                <para>ISO 215 A9 - 37 &#215; 52 mm - "[0 0 105 147]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_a10</term>
+              <listitem>
+                <para>ISO 215 A10 - 26 &#215; 37 mm - "[0 0 74 105]"</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>panda_pagesize_b0</term>
+              <listitem>
+                <para>ISO 215 B0 - 1000 &#215; 1414 mm - "[0 0 2835 4008]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b1</term>
+              <listitem>
+                <para>ISO 215 B1 - 707 &#215; 1000 mm - "[0 0 2004 2835]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b2</term>
+              <listitem>
+                <para>ISO 215 B2 - 500 &#215; 707 mm - "[0 0 1417 2004]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b3</term>
+              <listitem>
+                <para>ISO 215 B3 - 353 &#215; 500 mm - "[0 0 1001 1417]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b4</term>
+              <listitem>
+                <para>ISO 215 B4 - 250 &#215; 353 mm - "[0 0 709 1001]"</para>
+                <para>Commonly used for newspapers.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b5</term>
+              <listitem>
+                <para>ISO 215 B5 - 176 &#215; 250 mm - "[0 0 499 709]"</para>
+                <para>Commonly used for books.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b6</term>
+              <listitem>
+                <para>ISO 215 B6 - 125 &#215; 176 mm - "[0 0 354 499]"</para>
+                <para>Commonly used for books.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b7</term>
+              <listitem>
+                <para>ISO 215 B7 - 88 &#215; 125 mm - "[0 0 249 354]"</para>
+                <para>Standard passport.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b8</term>
+              <listitem>
+                <para>ISO 215 B8 - 62 &#215; 88 mm - "[0 0 176 249]"</para>
+                <para>Commonly used for playing cards.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b9</term>
+              <listitem>
+                <para>ISO 215 B9 - 44 &#215; 62 mm - "[0 0 125 176]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_b10</term>
+              <listitem>
+                <para>ISO 215 B10 - 31 &#215; 44 mm - "[0 0 88 125]"</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>panda_pagesize_c0</term>
+              <listitem>
+                <para>ISO 215 C0 - 917 &#215; 1297 mm - "[0 0 2599 3677]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c1</term>
+              <listitem>
+                <para>ISO 215 C1 - 648 &#215; 917 mm - "[0 0 1837 2599]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c2</term>
+              <listitem>
+                <para>ISO 215 C2 - 458 &#215; 648 mm - "[0 0 1298 1837]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c3</term>
+              <listitem>
+                <para>ISO 215 C3 - 324 &#215; 458 mm - "[0 0 918 1298]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c4</term>
+              <listitem>
+                <para>ISO 215 C4 - 229 &#215; 324 mm - "[0 0 649 918]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c5</term>
+              <listitem>
+                <para>ISO 215 C5 - 162 &#215; 229 mm - "[0 0 459 649]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c6</term>
+              <listitem>
+                <para>ISO 215 C6 - 114 &#215; 162 mm - "[0 0 323 459]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c7</term>
+              <listitem>
+                <para>ISO 215 C7 - 81 &#215; 114 mm - "[0 0 230 323]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c8</term>
+              <listitem>
+                <para>ISO 215 C8 - 57 &#215; 81 mm - "[0 0 162 230]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c9</term>
+              <listitem>
+                <para>ISO 215 C9 - 40 &#215; 57 mm - "[0 0 113 162]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_c10</term>
+              <listitem>
+                <para>ISO 215 C10 - 28 &#215; 40 mm - "[0 0 79 113]"</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+
+          <variablelist>
+            <title>Raw formats</title>
+            <varlistentry>
+              <term>panda_pagesize_ra0</term>
+              <listitem>
+                <para>Raw format A series 0 - 860 &#215; 1220 mm - "[0 0 2438 3458]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_ra1</term>
+              <listitem>
+                <para>Raw format A series 1 - 610 &#215; 860 mm - "[0 0 1729 2438]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_ra2</term>
+              <listitem>
+                <para>Raw format A series 2 - 430 &#215; 610 mm - "[0 0 1219 1729]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_ra3</term>
+              <listitem>
+                <para>Raw format A series 3 - 305 &#215; 430 mm - "[0 0 865 1219]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_ra4</term>
+              <listitem>
+                <para>Raw format A series 4 - 215 &#215; 305 mm - "[0 0 609 865]"</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>panda_pagesize_sra0</term>
+              <listitem>
+                <para>Supplementary raw format A series 0 - 900 &#215; 1280 mm - "[0 0 2551 3628]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_sra1</term>
+              <listitem>
+                <para>Supplementary raw format A series 1 - 640 &#215; 900 mm - "[0 0 1814 2551]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_sra2</term>
+              <listitem>
+                <para>Supplementary raw format A series 2 - 450 &#215; 640 mm - "[0 0 1276 1814]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_sra3</term>
+              <listitem>
+                <para>Supplementary raw format A series 3 - 320 &#215; 450 mm - "[0 0 907 1276]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_sra4</term>
+              <listitem>
+                <para>Supplementary raw format A series 4 - 225 &#215; 320 mm - "[0 0 225 907]"</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+
+          <variablelist>
+            <title>US/Canada formats</title>
+            <varlistentry>
               <term>panda_pagesize_usletter</term>
               <listitem>
-                <para>US letter - "[0 0 612 792]"</para>
+                <para>US letter - 8.5 x 11 in - "[0 0 612 792]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_uslegal</term>
+              <listitem>
+                <para>US legal - 8.5 x 14 in - "[0 0 612 1008]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_usexecutive</term>
+              <listitem>
+                <para>US executive - 7.25 x 10.5 in - "[0 0 522 756]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_usledger</term>
+              <listitem>
+                <para>US ledger - 11 x 17 in - "[0 0 792 1224]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_usarch1</term>
+              <listitem>
+                <para>ARCH 1 - 9 &#215; 12 in - "[0 0 648 864]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_usarch2</term>
+              <listitem>
+                <para>ARCH 2 - 12 &#215; 18 in - "[0 0 864 1298]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_usarch3</term>
+              <listitem>
+                <para>ARCH 3 - 18 &#215; 24 in - "[0 0 1298 1728]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_usarch4</term>
+              <listitem>
+                <para>ARCH 4 - 24 &#215; 36 in - "[0 0 1728 2592]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_usarch5</term>
+              <listitem>
+                <para>ARCH 5 - 30 &#215; 42 in - "[0 0 2160 3024]"</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_usarch6</term>
+              <listitem>
+                <para>ARCH 6 - 36 &#215; 48 in - "[0 0 2592 3456]"</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+
+          <variablelist>
+            <title>Miscellaneous sizes</title>
+            <varlistentry>
+              <term>panda_pagesize_overheada</term>
+              <listitem>
+                <para>ISO 7943-1 overhead projector type A - 250 x 250 mm - "[0 0 709 709]"</para>
+                <para>Corners rounded at a radius <= 60 mm</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_overheadb</term>
+              <listitem>
+                <para>ISO 7943-1 overhead projector type B - 285 x 285 mm - "[0 0 808 808]"</para>
+                <para>Corners rounded or cut off diagonally at a radius <= 40 mm.</para>
+              </listitem>
+            </varlistentry>
+
+            <varlistentry>
+              <term>panda_pagesize_id1</term>
+              <listitem>
+                <para>ISO 7810 ID-1 - 3.370 &#215; 2.125 in - "[0 0 343 153]"</para>
+                <para>This is the most common format for credit cards, business cards, and most driver's licenses.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_id2</term>
+              <listitem>
+                <para>ISO 7810 ID-2 - 105 &#215; 74 mm (A7) - "[0 0 298 210]"</para>
+                <para>German ID cards use this format.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>panda_pagesize_id3</term>
+              <listitem>
+                <para>ISO 7810 ID-3 - 125 &#215; 88 mm (B7) - "[0 0 354 249]"</para>
+                <para>Standard passport size.</para>
               </listitem>
             </varlistentry>
 	  </variablelist>
