@@ -65,7 +65,7 @@ clean:
 
 ###############################################################################
 
-date.o		date.c constants.h functions.h objects.h Makefile
+date.o:		date.c constants.h functions.h objects.h Makefile
 		$(COMPILER) $(COMPILER_FLAGS) date.c -o date.o
 
 error.o:	error.c constants.h functions.h objects.h Makefile

@@ -47,3 +47,7 @@ Release 0.1 -> Release 0.2
   * Added the xobject stream. This will later be used for inline image data,
 	but is currently used to refer to the external image data that resides
 	in the xobject.
+
+  * Added the makedate function, which will represent any given date in the
+	approved PDF format. Also added the nowdate function, which calls
+	makedate for the time that is now...

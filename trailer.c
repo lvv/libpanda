@@ -1,12 +1,13 @@
 /******************************************************************************
-	trailer.c
+  trailer.c
 
-	Change Control:													DDMMYYYY
-		Michael Still		File created							19062000
-		Michael Still		Added the %%EOF							22062000
+  Change Control:                                                      DDMMYYYY
+    Michael Still    File created                                      19062000
+                     Added the %%EOF                                   22062000
+		     Added the informational bits to the trailer       03092000
 
-	Purpose:
-		Write out the trailer for the PDF.
+  Purpose:
+    Write out the trailer for the PDF.
 ******************************************************************************/
 
 #include "constants.h"
@@ -14,7 +15,8 @@
 
 void writeTrailer(pdf *output){
   // Write out the trailer information for the PDF
-  pdfprintf(output, "trailer\n<<\n/Size %d\n/Root %d %d R\n>>\nstartxref\n%d\n%sEOF\n",
+  pdfprintf(output,
+    "trailer\n<<\n/Size %d\n/Root %d %d R\n>>\nstartxref\n%d\n%sEOF\n",
     output->nextObjectNumber + 1,
     output->catalog->number, output->catalog->generation,
     output->xrefOffset,
