@@ -15,78 +15,91 @@
 
 #include <stdio.h>
 
-typedef struct __objectArray{
-  int                   number;
-  int                   generation;
-  struct __objectArray  *next;
-} objectArray;
+typedef struct __objectArray
+{
+  int number;
+  int generation;
+  struct __objectArray *next;
+}
+objectArray;
 
-typedef struct __dictionary{
-  char                 *name;
-  int                  valueType;
-  int                  intValue;
-  char                 *textValue;
-  objectArray          *objectArrayValue;
-  struct __dictionary  *dictValue;
+typedef struct __dictionary
+{
+  char *name;
+  int valueType;
+  int intValue;
+  char *textValue;
+  objectArray *objectArrayValue;
+  struct __dictionary *dictValue;
 
-  struct __dictionary  *next;
-} dictionary;
+  struct __dictionary *next;
+}
+dictionary;
 
-typedef struct __object{
-  int            type;
-  int            number;
-  int            generation;
-  unsigned long  byteOffset;
-  dictionary     *dict;
-  char           *textstream, *binarystream, *xobjectstream;
-  unsigned long  binarystreamLength;
-  char           *currentSetFont;
+typedef struct __object
+{
+  int type;
+  int number;
+  int generation;
+  unsigned long byteOffset;
+  dictionary *dict;
+  char *textstream, *binarystream, *xobjectstream;
+  unsigned long binarystreamLength;
+  char *currentSetFont;
 
-  void           *children;
-  void           *cachedLastChild;
+  void *children;
+  void *cachedLastChild;
 
-  int            isPages;
-} object;
+  int isPages;
+}
+object;
 
-typedef struct __page{
-  object      *obj;
-  object      *contents;
-  int         height;
-  int         width;
-} page;
+typedef struct __page
+{
+  object *obj;
+  object *contents;
+  int height;
+  int width;
+}
+page;
 
-typedef struct __child{
-  object          *me;
-  struct __child  *next;
-} child;
+typedef struct __child
+{
+  object *me;
+  struct __child *next;
+}
+child;
 
-typedef struct __xref{
-  object         *this;
-  struct __xref  *next;
-} xref;
+typedef struct __xref
+{
+  object *this;
+  struct __xref *next;
+}
+xref;
 
-typedef struct __pdf{
-  FILE             *file;  
-  object           *catalog, *pages, *fonts, *info, *linear;
-  unsigned long    byteOffset, xrefOffset;
-  int              nextObjectNumber, pageCount;
-  xref             *xrefList, *xrefTail;
-  int              mode;
+typedef struct __pdf
+{
+  FILE *file;
+  object *catalog, *pages, *fonts, *info, *linear;
+  unsigned long byteOffset, xrefOffset;
+  int nextObjectNumber, pageCount;
+  xref *xrefList, *xrefTail;
+  int mode;
 
   // This is needed for the tiff conversion
-  char             *convertedTiff;
+  char *convertedTiff;
 
   // These store the state of the drawing environment
-  char             *currentFont;
-  int              currentFontSize;
-  int              currentFontMode;
-  double           currentCharacterSpacing;
-  double           currentWordSpacing;
-  double           currentHorizontalScaling;
-  double           currentLeading;
-  int              nextFontNumber;
+  char *currentFont;
+  int currentFontSize;
+  int currentFontMode;
+  double currentCharacterSpacing;
+  double currentWordSpacing;
+  double currentHorizontalScaling;
+  double currentLeading;
+  int nextFontNumber;
 
   // This is a dummy object for dumping objects
-  object           *dummyObj;
-} pdf;
-
+  object *dummyObj;
+}
+pdf;

@@ -20,9 +20,9 @@
 #define  gBinaryChar(x)        256 - x
 
 #if defined GLOBALS
-  char  gBinaryHeaderString[14];
+char gBinaryHeaderString[14];
 #else
-  extern char  gBinaryHeaderString[12];
+extern char gBinaryHeaderString[12];
 #endif
 
 // We sometimes need to specify what type of value we are passing to a 
@@ -58,7 +58,8 @@
 #define  gNormal             1
 
 // The text drawing modes (p 343 v 1.3)
-enum{
+enum
+{
   gTextModeNormal = 0,
   gTextModeOutline,
   gTextModeFilledOutline,
@@ -67,11 +68,12 @@ enum{
   gTextModeStrokeClipped,
   gTextModeFillStrokeClipped,
   gTextModeClipped
-  };
+};
 
 // The image types supported
-enum{
+enum
+{
   gImageTiff = 0,
   gImageJpeg,
   gImagePNG
-  };
+};

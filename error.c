@@ -20,7 +20,9 @@
 	Handle an error.
 ******************************************************************************/
 
-void error(char *message){
-	fprintf(stderr, "%s\n", message);
-	exit(42);
+void
+error (char *message)
+{
+  fprintf (stderr, "%s\n", message);
+  exit (42);
 }

@@ -12,13 +12,15 @@
 #include "constants.h"
 #include "functions.h"
 
-void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
-       int right, char *text){
+void
+textbox (pdf * output, page * thisPage, int top, int left, int bottom,
+	 int right, char *text)
+{
   // Add a box with some text in it into the PDF page
-  object      *textobj;
-  char        *currentToken, *strtokVictim = NULL, delim[10];
-  int         internalTop, internalLeft, displayedFirstPart = gFalse;
-  object      *subdict, *subsubdict, *fontObj;
+  object *textobj;
+  char *currentToken, *strtokVictim = NULL, delim[10];
+  int internalTop, internalLeft, displayedFirstPart = gFalse;
+  object *subdict, *subsubdict, *fontObj;
 
   /***************************************************************************
      Some text handling
@@ -31,12 +33,12 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   textobj = thisPage->contents;
 
   // Is there a font setup? Does this work with changing the font?
-  if(output->currentFont == NULL)
-    setfont(output,
-      createfont(output, "Helvetica", 1, "MacRomanEncoding"));
+  if (output->currentFont == NULL)
+    setfont (output, createfont (output, "Helvetica", 1, "MacRomanEncoding"));
 
   // If the font is not defined on this page
-  if(thisPage->obj->currentSetFont == NULL){
+  if (thisPage->obj->currentSetFont == NULL)
+    {
     /************************************************************************
     This font has to be referred to in the resources entry in the dictionary.
 
@@ -52,27 +54,27 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     This does not currently allow more than one font per page... Doh!
     *************************************************************************/
 
-    // Find the font object needed
-    if((fontObj = getfontobj(output, output->currentFont)) == NULL)
-      error("Could not find the font requested.");
+      // Find the font object needed
+      if ((fontObj = getfontobj (output, output->currentFont)) == NULL)
+	error ("Could not find the font requested.");
 
-    // We make an object not just a dictionary because this is what
-    // adddictitem needs
-    subsubdict = newobject(output, gPlaceholder);
-    adddictitem(subsubdict->dict, output->currentFont, gObjValue, fontObj);
-  
-    subdict = newobject(output, gPlaceholder);
-    adddictitem(subdict->dict, "Font", gDictionaryValue, subsubdict->dict);
+      // We make an object not just a dictionary because this is what
+      // adddictitem needs
+      subsubdict = newobject (output, gPlaceholder);
+      adddictitem (subsubdict->dict, output->currentFont, gObjValue, fontObj);
 
-    // And put this into the PDF
-    adddictitem(thisPage->obj->dict, "Resources", gDictionaryValue, 
-      subdict->dict);
-  }
+      subdict = newobject (output, gPlaceholder);
+      adddictitem (subdict->dict, "Font", gDictionaryValue, subsubdict->dict);
+
+      // And put this into the PDF
+      adddictitem (thisPage->obj->dict, "Resources", gDictionaryValue,
+		   subdict->dict);
+    }
 
   // Is there a text size setup?
-  if(output->currentFontSize == -1)
-    setfontsize(output, 16);
-  
+  if (output->currentFontSize == -1)
+    setfontsize (output, 16);
+
   /***************************************************************************
     PDF deals in points, with the bottom left hand side of the page being at
     0,0. I think this is anti-intuitive for most users, so I convert to that
@@ -96,52 +98,62 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   // This is a little dodgy at the moment because I do not understand the
   // PS matrix environment well enough to be writing this sort of code. I am
   // going to have to have a look into this a little more...
-  textobj->textstream = streamprintf(textobj->textstream, "1 0 0 1 %d %d Tm\n",
-    internalLeft, internalTop);
+  textobj->textstream =
+    streamprintf (textobj->textstream, "1 0 0 1 %d %d Tm\n", internalLeft,
+		  internalTop);
 
   // There are now a whole bunch of options that may or may not need to be set
-  if(output->currentFontMode != 0){
-    textobj->textstream = streamprintf(textobj->textstream, "%d Tr\n", 
-      output->currentFontMode);
-  }
+  if (output->currentFontMode != 0)
+    {
+      textobj->textstream = streamprintf (textobj->textstream, "%d Tr\n",
+					  output->currentFontMode);
+    }
 
-  if(output->currentCharacterSpacing != 0){
-    textobj->textstream = streamprintf(textobj->textstream, "%.2f Tc\n", 
-      output->currentCharacterSpacing);
-  }
+  if (output->currentCharacterSpacing != 0)
+    {
+      textobj->textstream = streamprintf (textobj->textstream, "%.2f Tc\n",
+					  output->currentCharacterSpacing);
+    }
 
-  if(output->currentWordSpacing != 0){
-    textobj->textstream = streamprintf(textobj->textstream, "%.2f Tw\n", 
-      output->currentWordSpacing);
-  }
+  if (output->currentWordSpacing != 0)
+    {
+      textobj->textstream = streamprintf (textobj->textstream, "%.2f Tw\n",
+					  output->currentWordSpacing);
+    }
 
-  if(output->currentHorizontalScaling != 1){
-    textobj->textstream = streamprintf(textobj->textstream, "%.0f Tz\n",
-      output->currentHorizontalScaling * 100);
-  }
+  if (output->currentHorizontalScaling != 1)
+    {
+      textobj->textstream = streamprintf (textobj->textstream, "%.0f Tz\n",
+					  output->currentHorizontalScaling *
+					  100);
+    }
 
-  if(output->currentLeading != 0){
-    textobj->textstream = streamprintf(textobj->textstream, "%.2f TL\n", 
-      output->currentLeading);
-  }
+  if (output->currentLeading != 0)
+    {
+      textobj->textstream = streamprintf (textobj->textstream, "%.2f TL\n",
+					  output->currentLeading);
+    }
 
   // If the font that we are using on the page is not the font that is
   // currently set, then the font has changed and we will need to define the
   // font here
-  if((textobj->currentSetFont == NULL) || 
-    (strcmp(output->currentFont, textobj->currentSetFont) != 0)){
-    // Set the font that we want to use
-    textobj->textstream = streamprintf(textobj->textstream, "/%s %d Tf\n", 
-      output->currentFont, output->currentFontSize);
+  if ((textobj->currentSetFont == NULL) ||
+      (strcmp (output->currentFont, textobj->currentSetFont) != 0))
+    {
+      // Set the font that we want to use
+      textobj->textstream = streamprintf (textobj->textstream, "/%s %d Tf\n",
+					  output->currentFont,
+					  output->currentFontSize);
 
-    // Make space for the new name
-    if((textobj->currentSetFont = malloc(
-      sizeof(char) * strlen(output->currentFont) + 1)) == NULL)
-        error("Could not copy the font to the new page.");
+      // Make space for the new name
+      if (
+	  (textobj->currentSetFont =
+	   malloc (sizeof (char) * strlen (output->currentFont) + 1)) == NULL)
+	error ("Could not copy the font to the new page.");
 
-    // Store the name so we know what is happening
-    strcpy(textobj->currentSetFont, output->currentFont);
-  }
+      // Store the name so we know what is happening
+      strcpy (textobj->currentSetFont, output->currentFont);
+    }
 
   /***************************************************************************
     PDFs are funny in that we have to specify where line breaks are to occur.
@@ -170,49 +182,57 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   ***************************************************************************/
 
   // Get the first token
-  if((strtokVictim = (char *) malloc(sizeof(char) * strlen(text) + 1)) == NULL)
-    error("Could not make space for temporary copy of textbox text.");
-  strcpy(strtokVictim, text);
+  if ((strtokVictim = (char *) malloc (sizeof (char) * strlen (text) + 1)) ==
+      NULL)
+    error ("Could not make space for temporary copy of textbox text.");
+  strcpy (strtokVictim, text);
 
   // Build the delimiter string
-  sprintf(delim, "\n%c%c%c", 4, 5, 6);
+  sprintf (delim, "\n%c%c%c", 4, 5, 6);
 
-  currentToken = strtok(strtokVictim, delim);
+  currentToken = strtok (strtokVictim, delim);
 
-  while(currentToken != NULL){
-    // If we haven't displayed that first part that would otherwise be missed
-    // do so now
-    if(displayedFirstPart == gFalse){
-      textobj->textstream = streamprintf(textobj->textstream, "(%s) '\n", 
-        strtokVictim);
-      displayedFirstPart = gTrue;
+  while (currentToken != NULL)
+    {
+      // If we haven't displayed that first part that would otherwise be missed
+      // do so now
+      if (displayedFirstPart == gFalse)
+	{
+	  textobj->textstream = streamprintf (textobj->textstream, "(%s) '\n",
+					      strtokVictim);
+	  displayedFirstPart = gTrue;
+	}
+
+      switch (text[currentToken - strtokVictim - 1])
+	{
+	case '\n':
+	  textobj->textstream = streamprintf (textobj->textstream, "(%s) '\n",
+					      currentToken);
+	  break;
+
+	case 4:
+	  textobj->textstream = streamprintf (textobj->textstream,
+					      "%c Ts (%s) Tj\n",
+					      currentToken[0],
+					      currentToken + 1);
+	  break;
+
+	case 5:
+	  textobj->textstream = streamprintf (textobj->textstream,
+					      "-%c Ts (%s) Tj\n",
+					      currentToken[0],
+					      currentToken + 1);
+	  break;
+
+	case 6:
+	  textobj->textstream = streamprintf (textobj->textstream,
+					      "0 Ts (%s) Tj\n", currentToken);
+	  break;
+	}
+
+      currentToken = strtok (NULL, delim);
     }
-
-    switch(text[currentToken - strtokVictim - 1]){
-    case '\n':
-      textobj->textstream = streamprintf(textobj->textstream, "(%s) '\n", 
-        currentToken);
-      break;
-
-    case 4:
-      textobj->textstream = streamprintf(textobj->textstream, 
-        "%c Ts (%s) Tj\n", currentToken[0], currentToken + 1);
-      break;
-
-    case 5:
-      textobj->textstream = streamprintf(textobj->textstream, 
-        "-%c Ts (%s) Tj\n", currentToken[0], currentToken + 1);
-      break;
-
-    case 6:
-      textobj->textstream = streamprintf(textobj->textstream, 
-        "0 Ts (%s) Tj\n", currentToken);
-      break;
-    }
-
-    currentToken = strtok(NULL, delim);
-  }
 
   // Free temp data
-  free(strtokVictim);
+  free (strtokVictim);
 }

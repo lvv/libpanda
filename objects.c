@@ -19,42 +19,45 @@
   Create an object with error checking.
 ******************************************************************************/
 
-object *newobject(pdf *doc, int type){
+object *
+newobject (pdf * doc, int type)
+{
   // Do all the magic needed to create an object
-  object  *created;
+  object *created;
 
   // Get some memory
-  if((created = (object *) malloc(sizeof(object))) == NULL)
-    error("Could not create an object (out of memory?)");
+  if ((created = (object *) malloc (sizeof (object))) == NULL)
+    error ("Could not create an object (out of memory?)");
 
   // We have no children at the moment
-  if((created->children = (child *) malloc(sizeof(child))) == NULL)
-    error("Could not make a child for the new object.");
+  if ((created->children = (child *) malloc (sizeof (child))) == NULL)
+    error ("Could not make a child for the new object.");
 
   ((child *) created->children)->next = NULL;
   (child *) created->cachedLastChild = NULL;
 
   // Initialise the dictionary
-  if((created->dict = (dictionary *) malloc(sizeof(dictionary))) == NULL)
-    error("Could not create the dictionary root for the new object.");
+  if ((created->dict = (dictionary *) malloc (sizeof (dictionary))) == NULL)
+    error ("Could not create the dictionary root for the new object.");
 
   created->dict->next = NULL;
 
   // By default this object is not a pages object
   created->isPages = gFalse;
 
-  if(type == gPlaceholder){
-    // This is a placeholder object, therefore it's number is -1
-    created->number = -1;
+  if (type == gPlaceholder)
+    {
+      // This is a placeholder object, therefore it's number is -1
+      created->number = -1;
 
-    return created;
-  }
+      return created;
+    }
 
   // Initialise the object number
   created->number = doc->nextObjectNumber++;
 
 #if defined DEBUG
-  printf("Created object %d\n", created->number);
+  printf ("Created object %d\n", created->number);
 #endif
 
   // We don't have any streams at the moment
@@ -70,11 +73,11 @@ object *newobject(pdf *doc, int type){
 
   // Add this new object to the end of the linked list that we use to append
   // the xref table onto the end of the PDF
-  doc->xrefTail->this = created;  
+  doc->xrefTail->this = created;
 
   // Make space for the next one
-  if((doc->xrefTail->next = malloc(sizeof(xref))) == NULL)
-    error("Could not add xref to the list for new object.");
+  if ((doc->xrefTail->next = malloc (sizeof (xref))) == NULL)
+    error ("Could not add xref to the list for new object.");
   doc->xrefTail->next->next = NULL;
   doc->xrefTail = doc->xrefTail->next;
 
@@ -82,314 +85,368 @@ object *newobject(pdf *doc, int type){
   return created;
 }
 
-dictionary *adddictitem(dictionary *input, char *name, int valueType, ...){
+dictionary *
+adddictitem (dictionary * input, char *name, int valueType, ...)
+{
   // Add an item to the dictionary in the object
-  dictionary  *dictNow;
-  va_list     argPtr;
-  char        *value;
-  object      *objValue;
+  dictionary *dictNow;
+  va_list argPtr;
+  char *value;
+  object *objValue;
   objectArray *currentObjectArray;
-  dictionary  *dictValue, *prevDictValue;
-  int         overwriting = gFalse;
+  dictionary *dictValue, *prevDictValue;
+  int overwriting = gFalse;
 
 #if defined DEBUG
-  printf("Added dictionary item %s to object (type = %d)\n", name, valueType);
-  fflush(stdout);
+  printf ("Added dictionary item %s to object (type = %d)\n", name,
+	  valueType);
+  fflush (stdout);
 #endif
 
   // Find the end of the dictionary or something with this name already
   dictNow = input;
-  while((dictNow->next != NULL) && (strcmp(dictNow->name, name) != 0)){
-    dictNow = dictNow->next;
+  while ((dictNow->next != NULL) && (strcmp (dictNow->name, name) != 0))
+    {
+      dictNow = dictNow->next;
     }
 
   // Make a new end to the dictionary if needed
-  if(dictNow->next == NULL){
-    if((dictNow->next = (dictionary *) malloc(sizeof(dictionary))) == NULL)
-      error("Could not grow the dictionary.");
+  if (dictNow->next == NULL)
+    {
+      if ((dictNow->next = (dictionary *) malloc (sizeof (dictionary))) ==
+	  NULL)
+	error ("Could not grow the dictionary.");
 
-    // Setup
-    dictNow->next->next = NULL;
-    dictNow->objectArrayValue = NULL;
-    dictNow->dictValue = NULL;
-    dictNow->textValue = NULL;
+      // Setup
+      dictNow->next->next = NULL;
+      dictNow->objectArrayValue = NULL;
+      dictNow->dictValue = NULL;
+      dictNow->textValue = NULL;
 
 #if defined DEBUG
-    printf(" (This is a new dictionary element)\n");
+      printf (" (This is a new dictionary element)\n");
 #endif
     }
-  else{
+  else
+    {
 #if defined DEBUG
-    printf(" (Overwriting a dictionary element)\n");
+      printf (" (Overwriting a dictionary element)\n");
 #endif
-    overwriting = gTrue;
-  }
+      overwriting = gTrue;
+    }
 
   // Work with the last argument
-  va_start(argPtr, valueType);
+  va_start (argPtr, valueType);
 
   // And add some content to this entry if needed
-  if(overwriting == gFalse){
-    if((dictNow->name =
-      (char *) malloc((strlen(name) + 1) * sizeof(char))) == NULL)
-      error("Could not make space for the new tag name value.");
-    strcpy(dictNow->name, name);
+  if (overwriting == gFalse)
+    {
+      if ((dictNow->name =
+	   (char *) malloc ((strlen (name) + 1) * sizeof (char))) == NULL)
+	error ("Could not make space for the new tag name value.");
+      strcpy (dictNow->name, name);
 
-    // Record the type
-    dictNow->valueType = valueType;
-  }
-  else switch(valueType){
-  case gObjArrayValue:
-  case gDictionaryValue:
-  case gTextValue:
-  case gLiteralTextValue:
-  case gBracketedTextValue:
-  case gIntValue:
-  case gObjValue:
-    break;
+      // Record the type
+      dictNow->valueType = valueType;
+    }
+  else
+    switch (valueType)
+      {
+      case gObjArrayValue:
+      case gDictionaryValue:
+      case gTextValue:
+      case gLiteralTextValue:
+      case gBracketedTextValue:
+      case gIntValue:
+      case gObjValue:
+	break;
 
-  default:
-    error("Overwriting some dictionary types not yet supported.");
-  }
-
-  switch(valueType){
-  case gTextValue:
-  case gLiteralTextValue:
-  case gBracketedTextValue:
-    // Are we overwriting?
-    if((overwriting == gTrue) && (dictNow->textValue != NULL))
-      free(dictNow->textValue);
-
-    // Get the value
-    value = va_arg(argPtr, char *);
-    if((dictNow->textValue =
-      (char *) malloc((strlen(value) + 3) * sizeof(char))) == NULL)
-      error("Could not make space for the new dictionary text value.");
-    dictNow->textValue[0] = '\0';
-
-    // Some stuff for different types
-    if(valueType == gTextValue) strcat(dictNow->textValue, "/");
-    if(valueType == gBracketedTextValue) strcat(dictNow->textValue, "(");
-
-    // The string
-    strcat(dictNow->textValue, value);
-
-    // Some more stuff for different types
-    if(valueType == gBracketedTextValue) strcat(dictNow->textValue, ")");
-    break;
-
-  case gIntValue:
-    dictNow->intValue = va_arg(argPtr, int);
-    break;
-
-  case gObjValue:
-    // Are we overwriting?
-    if((overwriting == gTrue) && (dictNow->textValue != NULL))
-      free(dictNow->textValue);
-
-    objValue = va_arg(argPtr, object *);
-
-    // We assume we need no more than 20 characters to store this. This
-    // should be fine
-    if((dictNow->textValue =
-      (char *) malloc(sizeof(char) * 20)) == NULL)
-      error("Could not make space for the new dictionary object value.");
-
-    sprintf(dictNow->textValue, "%d %d R", objValue->number,
-      objValue->generation);
-    break;
-
-  case gObjArrayValue:
-    objValue = va_arg(argPtr, object *);
-
-    if(dictNow->objectArrayValue == NULL){
-      if((dictNow->objectArrayValue =
-        (objectArray *) malloc(sizeof(objectArray))) == NULL)
-        error(
-          "Could not create the object array root for the new dictionary.");
-      dictNow->objectArrayValue->next = NULL;
+      default:
+	error ("Overwriting some dictionary types not yet supported.");
       }
 
-    // Find the end of the object array list
-    currentObjectArray = dictNow->objectArrayValue;
-    while(currentObjectArray->next != NULL)
-      currentObjectArray = currentObjectArray->next;
+  switch (valueType)
+    {
+    case gTextValue:
+    case gLiteralTextValue:
+    case gBracketedTextValue:
+      // Are we overwriting?
+      if ((overwriting == gTrue) && (dictNow->textValue != NULL))
+	free (dictNow->textValue);
 
-    // Make a new array entry
-    if((currentObjectArray->next =
-      (objectArray *) malloc(sizeof(objectArray *))) == NULL)
-      error("Could not append to the object array.");
+      // Get the value
+      value = va_arg (argPtr, char *);
+      if ((dictNow->textValue =
+	   (char *) malloc ((strlen (value) + 3) * sizeof (char))) == NULL)
+	error ("Could not make space for the new dictionary text value.");
+      dictNow->textValue[0] = '\0';
 
-    // Append
-    currentObjectArray->number = objValue->number;
-    currentObjectArray->generation = objValue->generation;
-    currentObjectArray->next->next = NULL;
-    break;
+      // Some stuff for different types
+      if (valueType == gTextValue)
+	strcat (dictNow->textValue, "/");
+      if (valueType == gBracketedTextValue)
+	strcat (dictNow->textValue, "(");
 
-  case gDictionaryValue:
-    // This is a sub-dictionary
-    dictValue = va_arg(argPtr, dictionary *);
+      // The string
+      strcat (dictNow->textValue, value);
 
-    if(overwriting == gFalse){
-      // This is a new dictionary item, just copy the info across
-      dictNow->dictValue = dictValue;
+      // Some more stuff for different types
+      if (valueType == gBracketedTextValue)
+	strcat (dictNow->textValue, ")");
+      break;
 
-#if defined DEBUG
-      printf("Added a subdictionary in its full glory\n");
-#endif
-    }
-    else{
-      // We are appending to a subdictionary item -- we need to go through all
-      // of the subdictionary items we just got handed and add them to the
-      // subdictionary that is already here
-      while(dictValue->next != NULL){
-#if defined DEBUG
-	printf("Adding a subdictionary element named %s to existing\n",
-          dictValue->name);
-#endif
+    case gIntValue:
+      dictNow->intValue = va_arg (argPtr, int);
+      break;
 
-	switch(dictValue->valueType){
-	case gTextValue:
-	case gBracketedTextValue:
-	case gLiteralTextValue:
-	  adddictitem(dictNow->dictValue, dictValue->name,
-	    dictValue->valueType, dictValue->textValue);
-	  break;
+    case gObjValue:
+      // Are we overwriting?
+      if ((overwriting == gTrue) && (dictNow->textValue != NULL))
+	free (dictNow->textValue);
 
-	case gObjValue:
-	  adddictitem(dictNow->dictValue, dictValue->name,
-	    gLiteralTextValue, dictValue->textValue);
-	  break;
+      objValue = va_arg (argPtr, object *);
 
-	case gDictionaryValue:
-	  adddictitem(dictNow->dictValue, dictValue->name,
-	    dictValue->valueType, dictValue->dictValue);
-	  break;
+      // We assume we need no more than 20 characters to store this. This
+      // should be fine
+      if ((dictNow->textValue = (char *) malloc (sizeof (char) * 20)) == NULL)
+	error ("Could not make space for the new dictionary object value.");
 
-	case gIntValue:
-	  adddictitem(dictNow->dictValue, dictValue->name,
-	    dictValue->valueType, dictValue->intValue);
-	  break;
+      sprintf (dictNow->textValue, "%d %d R", objValue->number,
+	       objValue->generation);
+      break;
 
-	case gObjArrayValue:
-	  adddictitem(dictNow->dictValue, dictValue->name,
-	    dictValue->valueType, dictValue->objectArrayValue);
-	  break;
+    case gObjArrayValue:
+      objValue = va_arg (argPtr, object *);
+
+      if (dictNow->objectArrayValue == NULL)
+	{
+	  if ((dictNow->objectArrayValue =
+	       (objectArray *) malloc (sizeof (objectArray))) == NULL)
+	    error
+	      ("Could not create the object array root for the new dictionary.");
+	  dictNow->objectArrayValue->next = NULL;
 	}
 
-	prevDictValue = dictValue;
-	dictValue = dictValue->next;
-      }
+      // Find the end of the object array list
+      currentObjectArray = dictNow->objectArrayValue;
+      while (currentObjectArray->next != NULL)
+	currentObjectArray = currentObjectArray->next;
+
+      // Make a new array entry
+      if ((currentObjectArray->next =
+	   (objectArray *) malloc (sizeof (objectArray *))) == NULL)
+	error ("Could not append to the object array.");
+
+      // Append
+      currentObjectArray->number = objValue->number;
+      currentObjectArray->generation = objValue->generation;
+      currentObjectArray->next->next = NULL;
+      break;
+
+    case gDictionaryValue:
+      // This is a sub-dictionary
+      dictValue = va_arg (argPtr, dictionary *);
+
+      if (overwriting == gFalse)
+	{
+	  // This is a new dictionary item, just copy the info across
+	  dictNow->dictValue = dictValue;
+
+#if defined DEBUG
+	  printf ("Added a subdictionary in its full glory\n");
+#endif
+	}
+      else
+	{
+	  // We are appending to a subdictionary item -- we need to go through all
+	  // of the subdictionary items we just got handed and add them to the
+	  // subdictionary that is already here
+	  while (dictValue->next != NULL)
+	    {
+#if defined DEBUG
+	      printf ("Adding a subdictionary element named %s to existing\n",
+		      dictValue->name);
+#endif
+
+	      switch (dictValue->valueType)
+		{
+		case gTextValue:
+		case gBracketedTextValue:
+		case gLiteralTextValue:
+		  adddictitem (dictNow->dictValue, dictValue->name,
+			       dictValue->valueType, dictValue->textValue);
+		  break;
+
+		case gObjValue:
+		  adddictitem (dictNow->dictValue, dictValue->name,
+			       gLiteralTextValue, dictValue->textValue);
+		  break;
+
+		case gDictionaryValue:
+		  adddictitem (dictNow->dictValue, dictValue->name,
+			       dictValue->valueType, dictValue->dictValue);
+		  break;
+
+		case gIntValue:
+		  adddictitem (dictNow->dictValue, dictValue->name,
+			       dictValue->valueType, dictValue->intValue);
+		  break;
+
+		case gObjArrayValue:
+		  adddictitem (dictNow->dictValue, dictValue->name,
+			       dictValue->valueType,
+			       dictValue->objectArrayValue);
+		  break;
+		}
+
+	      prevDictValue = dictValue;
+	      dictValue = dictValue->next;
+	    }
+	}
+      break;
     }
-    break;
-  }
 
   // Stop dealing with arguments
-  va_end(argPtr);
+  va_end (argPtr);
 
   // Return the dictionary item we changed (used in the lexer)
   return dictNow;
 }
 
-void *getdictvalue(dictionary *dictValue){
+void *
+getdictvalue (dictionary * dictValue)
+{
   // Return a dictionary value
-  switch(dictValue->valueType){
-  case gDictionaryValue:  return dictValue->dictValue;    break;
+  switch (dictValue->valueType)
+    {
+    case gDictionaryValue:
+      return dictValue->dictValue;
+      break;
 
-  // This line is a little scary -- we are going to make the int look like
-  // a pointer for just a little while
-  case gIntValue:       return dictValue->intValue;         break;
+      // This line is a little scary -- we are going to make the int look like
+      // a pointer for just a little while
+    case gIntValue:
+      return dictValue->intValue;
+      break;
 
-  case gTextValue:
-  case gLiteralTextValue:
-  case gObjValue:
-                        return dictValue->textValue;        break;
+    case gTextValue:
+    case gLiteralTextValue:
+    case gObjValue:
+      return dictValue->textValue;
+      break;
 
-  case gObjArrayValue:  return dictValue->objectArrayValue; break;
-  }
+    case gObjArrayValue:
+      return dictValue->objectArrayValue;
+      break;
+    }
 
   return NULL;
 }
 
-dictionary *getdict(dictionary *head, char *name){
-  while((strcmp(head->name, name) != 0) && (head->next != NULL))
+dictionary *
+getdict (dictionary * head, char *name)
+{
+  while ((strcmp (head->name, name) != 0) && (head->next != NULL))
     head = head->next;
 
-  if(head->next == NULL) return NULL;
+  if (head->next == NULL)
+    return NULL;
   return head;
 }
 
-void freeObject(pdf *output, object *freeVictim){
+void
+freeObject (pdf * output, object * freeVictim)
+{
 
 #if defined DEBUG
-  printf("Cleaning up object number %d\n", freeVictim->number);
+  printf ("Cleaning up object number %d\n", freeVictim->number);
 #endif
-  
-  // We should skip placeholder objects (I think)
-  if(freeVictim->number != -1){
-    // Free the object and all it's bits -- free of a NULL does nothing! But
-    // not in dmalloc!!!
-    if(freeVictim->textstream != NULL) free(freeVictim->textstream);
-    if(freeVictim->binarystream != NULL) free(freeVictim->binarystream);
-    if(freeVictim->xobjectstream != NULL) free(freeVictim->xobjectstream);
-    if(freeVictim->currentSetFont != NULL) free(freeVictim->currentSetFont);
 
-    freeDictionary(freeVictim->dict);
-  }
+  // We should skip placeholder objects (I think)
+  if (freeVictim->number != -1)
+    {
+      // Free the object and all it's bits -- free of a NULL does nothing! But
+      // not in dmalloc!!!
+      if (freeVictim->textstream != NULL)
+	free (freeVictim->textstream);
+      if (freeVictim->binarystream != NULL)
+	free (freeVictim->binarystream);
+      if (freeVictim->xobjectstream != NULL)
+	free (freeVictim->xobjectstream);
+      if (freeVictim->currentSetFont != NULL)
+	free (freeVictim->currentSetFont);
+
+      freeDictionary (freeVictim->dict);
+    }
 
   // free(freeVictim);
 }
 
-void freeDictionary(dictionary *freeDict){
-  dictionary    *now, *prev;
-  int           endoftheline = gTrue;
+void
+freeDictionary (dictionary * freeDict)
+{
+  dictionary *now, *prev;
+  int endoftheline = gTrue;
 
   // Still need to free the dictionary... This can be made more efficient
-  while(freeDict->next != NULL){
-    now = freeDict;
-    prev = NULL;
-    
-    while(now->next != NULL){
-      prev = now;
-      now = now->next;
+  while (freeDict->next != NULL)
+    {
+      now = freeDict;
+      prev = NULL;
+
+      while (now->next != NULL)
+	{
+	  prev = now;
+	  now = now->next;
+	}
+
+      if (endoftheline == gFalse)
+	{
+	  free (now->name);
+	  if (now->textValue != NULL)
+	    free (now->textValue);
+	  if (now->dictValue != NULL)
+	    freeDictionary (now->dictValue);
+	}
+      else
+	endoftheline = gFalse;
+
+      free (now);
+
+      if (prev != NULL)
+	prev->next = NULL;
     }
-    
-    if(endoftheline == gFalse){
-      free(now->name);
-      if(now->textValue != NULL) free(now->textValue);
-      if(now->dictValue != NULL) freeDictionary(now->dictValue);
-    }
-    else endoftheline = gFalse;
-    
-    free(now);
-    
-    if(prev != NULL) prev->next = NULL;
-  }
-  
+
   // And free that initial dictionary element
-  if(freeDict != NULL){
-    free(freeDict->name);
-    if(freeDict->textValue != NULL) free(freeDict->textValue);
-    if(freeDict->dictValue != NULL) freeDictionary(freeDict->dictValue);
-    
-    free(freeDict);
-  }
+  if (freeDict != NULL)
+    {
+      free (freeDict->name);
+      if (freeDict->textValue != NULL)
+	free (freeDict->textValue);
+      if (freeDict->dictValue != NULL)
+	freeDictionary (freeDict->dictValue);
+
+      free (freeDict);
+    }
 }
 
 
-void writeObject(pdf *output, object *dumpTarget){
+void
+writeObject (pdf * output, object * dumpTarget)
+{
   // Do all that is needed to dump a PDF object to disk
-  unsigned long  count;
+  unsigned long count;
 
 #if defined DEBUG
-  printf("Writing object number %d\n", dumpTarget->number);
+  printf ("Writing object number %d\n", dumpTarget->number);
 #endif
 
   // We don't dump place holder objects (number = -1)
-  if(dumpTarget->number != -1){
-    // Remember the byte offset that was the start of this object -- this is
-    // needed for the XREF later
-    dumpTarget->byteOffset = output->byteOffset;
+  if (dumpTarget->number != -1)
+    {
+      // Remember the byte offset that was the start of this object -- this is
+      // needed for the XREF later
+      dumpTarget->byteOffset = output->byteOffset;
 
     /*************************************************************************
       Do we have a textstream? If we do, work out the length of the stream and
@@ -406,213 +463,235 @@ void writeObject(pdf *output, object *dumpTarget){
     *************************************************************************/
 
 #if defined DEBUG
-    printf("Textstream is %s\n", 
-      (dumpTarget->textstream == NULL) ? "NULL" : "not NULL");
-    printf("Xobjectstream is %s\n", 
-      (dumpTarget->xobjectstream == NULL) ? "NULL" : "not NULL");
-    printf("Binarystream is %s\n", 
-      (dumpTarget->binarystream == NULL) ? "NULL" : "not NULL");
+      printf ("Textstream is %s\n",
+	      (dumpTarget->textstream == NULL) ? "NULL" : "not NULL");
+      printf ("Xobjectstream is %s\n",
+	      (dumpTarget->xobjectstream == NULL) ? "NULL" : "not NULL");
+      printf ("Binarystream is %s\n",
+	      (dumpTarget->binarystream == NULL) ? "NULL" : "not NULL");
 #endif
 
-    if(dumpTarget->textstream != NULL){
-      // Do we also have an xobjectstream?
-      if(dumpTarget->xobjectstream != NULL)
-	adddictitem(dumpTarget->dict, "Length", gIntValue, 
-          strlen(dumpTarget->textstream) + 6 + 
-          strlen(dumpTarget->xobjectstream));
+      if (dumpTarget->textstream != NULL)
+	{
+	  // Do we also have an xobjectstream?
+	  if (dumpTarget->xobjectstream != NULL)
+	    adddictitem (dumpTarget->dict, "Length", gIntValue,
+			 strlen (dumpTarget->textstream) + 6 +
+			 strlen (dumpTarget->xobjectstream));
 
-      else
-	adddictitem(dumpTarget->dict, "Length", gIntValue,
-	  strlen(dumpTarget->textstream) + 6);
+	  else
+	    adddictitem (dumpTarget->dict, "Length", gIntValue,
+			 strlen (dumpTarget->textstream) + 6);
+	}
+
+      // We cannot have a textstream and a binary stream in the same object
+      else if (dumpTarget->binarystream != NULL)
+	{
+	  adddictitem (dumpTarget->dict, "Length", gIntValue,
+		       dumpTarget->binarystreamLength);
+	}
+
+      // We might also only have an xobjectstream here
+      else if (dumpTarget->xobjectstream != NULL)
+	{
+	  adddictitem (dumpTarget->dict, "Length", gIntValue,
+		       strlen (dumpTarget->xobjectstream));
+	}
+
+      // We are going to dump the named object (and only the named object) to 
+      // disk
+      pdfprintf (output, "%d %d obj\n",
+		 dumpTarget->number, dumpTarget->generation);
+
+      writeDictionary (output, dumpTarget, dumpTarget->dict);
+
+      // Do we have a textstream?
+      if (dumpTarget->textstream != NULL)
+	{
+	  pdfprint (output, "stream\n");
+
+	  // We might also have an xobjectstream
+	  if (dumpTarget->xobjectstream != NULL)
+	    {
+	      pdfprintf (output, "%s", dumpTarget->xobjectstream);
+	    }
+
+	  pdfprint (output, "BT\n");
+	  pdfprintf (output, "%s", dumpTarget->textstream);
+	  pdfprint (output, "ET\n");
+
+	  pdfprint (output, "endstream\n");
+	}
+
+      // Do we have a binary stream? We cannot have both cause how would be 
+      // differentiate?
+      else if (dumpTarget->binarystream != NULL)
+	{
+	  pdfprint (output, "stream\n");
+
+	  for (count = 0; count < dumpTarget->binarystreamLength; count++)
+	    pdfputc (output, dumpTarget->binarystream[count]);
+
+	  pdfprint (output, "\nendstream\n");
+	}
+
+      // We might also only have an xobject stream
+      else if (dumpTarget->xobjectstream > 0)
+	{
+	  pdfprint (output, "stream\n");
+	  pdfprintf (output, "%s", dumpTarget->xobjectstream);
+	  pdfprint (output, "\nendstream\n");
+	}
+
+      pdfprint (output, "endobj\n");
     }
-
-    // We cannot have a textstream and a binary stream in the same object
-    else if(dumpTarget->binarystream != NULL){
-      adddictitem(dumpTarget->dict, "Length", gIntValue,
-	dumpTarget->binarystreamLength);
-    }
-
-    // We might also only have an xobjectstream here
-    else if(dumpTarget->xobjectstream != NULL){
-      adddictitem(dumpTarget->dict, "Length", gIntValue, 
-	strlen(dumpTarget->xobjectstream));
-    }
-    
-    // We are going to dump the named object (and only the named object) to 
-    // disk
-    pdfprintf(output, "%d %d obj\n", 
-      dumpTarget->number,
-      dumpTarget->generation);
-
-    writeDictionary(output, dumpTarget, dumpTarget->dict);
-
-    // Do we have a textstream?
-    if(dumpTarget->textstream != NULL){
-      pdfprint(output, "stream\n");
-
-      // We might also have an xobjectstream
-      if(dumpTarget->xobjectstream != NULL){
-        pdfprintf(output, "%s", dumpTarget->xobjectstream);
-      }
-
-      pdfprint(output, "BT\n");
-      pdfprintf(output, "%s", dumpTarget->textstream);
-      pdfprint(output, "ET\n");
-
-      pdfprint(output, "endstream\n");
-    }
-
-    // Do we have a binary stream? We cannot have both cause how would be 
-    // differentiate?
-    else if(dumpTarget->binarystream != NULL){
-      pdfprint(output, "stream\n");
-
-      for(count = 0; count < dumpTarget->binarystreamLength; count ++)
-	pdfputc(output, dumpTarget->binarystream[count]);
-
-      pdfprint(output, "\nendstream\n");
-    }
-    
-    // We might also only have an xobject stream
-    else if(dumpTarget->xobjectstream > 0){
-      pdfprint(output, "stream\n");
-      pdfprintf(output, "%s", dumpTarget->xobjectstream);
-      pdfprint(output, "\nendstream\n");
-    }
-
-    pdfprint(output, "endobj\n");
-  }
 }
 
-void writeDictionary(pdf *output, object *obj, dictionary *incoming){
+void
+writeDictionary (pdf * output, object * obj, dictionary * incoming)
+{
   // Recursively write the dictionary out (including sub-dictionaries)
-  objectArray  *currentObjectArray;
-  dictionary   *dictNow;
-  int          atBegining = gTrue;
-  child        *currentKid;
+  objectArray *currentObjectArray;
+  dictionary *dictNow;
+  int atBegining = gTrue;
+  child *currentKid;
 
 #if defined DEBUG
-  printf("Starting to write a dictionary\n");
+  printf ("Starting to write a dictionary\n");
 #endif
 
   // The start of the dictionary
-  pdfprint(output, "<<\n");
+  pdfprint (output, "<<\n");
 
   // Enumerate the dictionary elements
   dictNow = incoming;
 
-  while(dictNow->next != NULL){
-    switch(dictNow->valueType){
-    case gTextValue:
-    case gObjValue:
-    case gLiteralTextValue:
-    case gBracketedTextValue:
+  while (dictNow->next != NULL)
+    {
+      switch (dictNow->valueType)
+	{
+	case gTextValue:
+	case gObjValue:
+	case gLiteralTextValue:
+	case gBracketedTextValue:
 #if defined DEBUG
-      printf("Writing a text value named %s into the dictionary\n",
-	dictNow->name);
+	  printf ("Writing a text value named %s into the dictionary\n",
+		  dictNow->name);
 #endif
 
-      pdfprintf(output, "\t/%s %s\n", dictNow->name, dictNow->textValue);
+	  pdfprintf (output, "\t/%s %s\n", dictNow->name, dictNow->textValue);
 
-      // If the type is type, then possibly output the Kids line for the pages
-      // object
-      if((strcmp(dictNow->name, "Type") == 0) && (obj->isPages == gTrue)){
-	pdfprint(output, "\t/Kids [");
+	  // If the type is type, then possibly output the Kids line for the pages
+	  // object
+	  if ((strcmp (dictNow->name, "Type") == 0)
+	      && (obj->isPages == gTrue))
+	    {
+	      pdfprint (output, "\t/Kids [");
 
-	// Do the dumping
-	currentKid = obj->children;
+	      // Do the dumping
+	      currentKid = obj->children;
 
-	while(currentKid->next != NULL){
-	  if(atBegining == gFalse) pdfprint(output, " ");
-	  else atBegining = gFalse;
+	      while (currentKid->next != NULL)
+		{
+		  if (atBegining == gFalse)
+		    pdfprint (output, " ");
+		  else
+		    atBegining = gFalse;
 
-	  pdfprintf(output, "%d %d R", 
-	    currentKid->me->number,
-	    currentKid->me->generation);
+		  pdfprintf (output, "%d %d R",
+			     currentKid->me->number,
+			     currentKid->me->generation);
 
-	  // Next
-	  currentKid = currentKid->next;
+		  // Next
+		  currentKid = currentKid->next;
+		}
+
+	      // End it all
+	      pdfprint (output, "]\n");
+	    }
+	  break;
+
+	case gIntValue:
+#if defined DEBUG
+	  printf ("Writing a int value with name %s into the dictionary\n",
+		  dictNow->name);
+#endif
+
+	  pdfprintf (output, "\t/%s %d\n", dictNow->name, dictNow->intValue);
+	  break;
+
+	case gObjArrayValue:
+#if defined DEBUG
+	  printf
+	    ("Writing an object array value with name %s into dictionary\n",
+	     dictNow->name);
+#endif
+
+	  // Start the array in the file
+	  atBegining = gTrue;
+
+	  pdfprintf (output, "\t/%s [", dictNow->name);
+
+	  // Go through the array list until the end
+	  currentObjectArray = dictNow->objectArrayValue;
+	  while (currentObjectArray->next != NULL)
+	    {
+	      if (atBegining == gTrue)
+		atBegining = gFalse;
+	      else
+		pdfprint (output, " ");
+
+	      pdfprintf (output, "%d %d R",
+			 currentObjectArray->number,
+			 currentObjectArray->generation);
+
+	      currentObjectArray = currentObjectArray->next;
+	    }
+
+	  // Finish the array
+	  pdfprint (output, "]\n");
+	  break;
+
+	case gDictionaryValue:
+	  // These are handled recursively
+	  if (dictNow->dictValue == NULL)
+	    error ("Subdictionary value erroneously NULL.");
+
+#if defined DEBUG
+	  printf ("Output the subdictionary starting with the name %s\n",
+		  dictNow->dictValue->name);
+#endif
+
+	  pdfprintf (output, "\t/%s ", dictNow->name);
+
+	  writeDictionary (output, output->dummyObj, dictNow->dictValue);
+	  break;
+
+	default:
+	  error ("Unknown dictionary type");
 	}
-	
-	// End it all
-	pdfprint(output, "]\n");
-      }
-      break;
 
-    case gIntValue:
-#if defined DEBUG
-      printf("Writing a int value with name %s into the dictionary\n",
-	dictNow->name);
-#endif
-
-      pdfprintf(output, "\t/%s %d\n", dictNow->name, dictNow->intValue);
-      break;
-
-    case gObjArrayValue:
-#if defined DEBUG
-      printf("Writing an object array value with name %s into dictionary\n",
-	dictNow->name);
-#endif
-
-      // Start the array in the file
-      atBegining = gTrue;
-
-      pdfprintf(output, "\t/%s [", dictNow->name);
-
-      // Go through the array list until the end
-      currentObjectArray = dictNow->objectArrayValue;
-      while(currentObjectArray->next != NULL){
-        if(atBegining == gTrue) atBegining = gFalse;
-        else pdfprint(output, " ");
-
-        pdfprintf(output, "%d %d R",
-          currentObjectArray->number,
-	  currentObjectArray->generation);
-
-        currentObjectArray = currentObjectArray->next;
-      }
-
-      // Finish the array
-      pdfprint(output, "]\n");
-      break;
-
-    case gDictionaryValue:
-      // These are handled recursively
-      if(dictNow->dictValue == NULL)
-	error("Subdictionary value erroneously NULL.");
-
-#if defined DEBUG
-      printf("Output the subdictionary starting with the name %s\n",
-	dictNow->dictValue->name);
-#endif
-
-      pdfprintf(output, "\t/%s ", dictNow->name);
-
-      writeDictionary(output, output->dummyObj, dictNow->dictValue);
-      break;
-
-    default:
-      error("Unknown dictionary type");
+      dictNow = dictNow->next;
     }
 
-    dictNow = dictNow->next;
-  }
-
-  pdfprint(output, ">>\n");
+  pdfprint (output, ">>\n");
 }
 
-void addchild(object *parentObj, object *childObj){
-  child  *currentChild = parentObj->children;
+void
+addchild (object * parentObj, object * childObj)
+{
+  child *currentChild = parentObj->children;
 
   // Find the end of the list of children
-  if(parentObj->cachedLastChild != NULL) 
+  if (parentObj->cachedLastChild != NULL)
     currentChild = parentObj->cachedLastChild;
 
-  while(currentChild->next != NULL) currentChild = currentChild->next;
+  while (currentChild->next != NULL)
+    currentChild = currentChild->next;
 
   // Make a new end
-  if((currentChild->next = (child *) malloc(sizeof(child))) == NULL)
-    error("Could not add the child to the end of the list.");
+  if ((currentChild->next = (child *) malloc (sizeof (child))) == NULL)
+    error ("Could not add the child to the end of the list.");
   currentChild->next->next = NULL;
 
   // Make me be the child object
@@ -622,26 +701,32 @@ void addchild(object *parentObj, object *childObj){
   parentObj->cachedLastChild = currentChild;
 }
 
-void traverseObjects(pdf *output, object *dumpTarget, int direction,
-  traverseFunct function){
+void
+traverseObjects (pdf * output, object * dumpTarget, int direction,
+		 traverseFunct function)
+{
   // Write out an object and all of it's children. This may be done with
   // recursive calls and writeObject()
-  child  *currentChild;
+  child *currentChild;
 
   // No children
-  if(((child *) dumpTarget->children)->next == NULL){
-    function(output, dumpTarget);
-    return;
-  }
+  if (((child *) dumpTarget->children)->next == NULL)
+    {
+      function (output, dumpTarget);
+      return;
+    }
 
   // Otherwise, for me and then for all children
-  if(direction == gDown) function(output, dumpTarget);
+  if (direction == gDown)
+    function (output, dumpTarget);
 
   currentChild = dumpTarget->children;
-  while(currentChild->next != NULL){
-    traverseObjects(output, currentChild->me, direction, function);
-    currentChild = currentChild->next;
-  }
+  while (currentChild->next != NULL)
+    {
+      traverseObjects (output, currentChild->me, direction, function);
+      currentChild = currentChild->next;
+    }
 
-  if(direction == gUp) function(output, dumpTarget);
+  if (direction == gUp)
+    function (output, dumpTarget);
 }

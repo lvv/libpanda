@@ -22,46 +22,66 @@
 // We should have a callback for errors setup -- this is not currently
 // implemented in the library, but we will put just enough here to make it
 // work later...
-typedef void (__stdcall *pandaErrorCallback) (BSTR errorString);
+typedef void (__stdcall * pandaErrorCallback) (BSTR errorString);
 pandaErrorCallback errorCB = NULL;
 
 // Function exports
-_declspec(dllexport) void __stdcall wininitpanda(void){
-  initpanda();
+_declspec (dllexport)
+     void __stdcall wininitpanda (void)
+{
+  initpanda ();
 }
 
-_declspec(dllexport) pdf * __stdcall winpdfopen(char *filename, char *mode){
-  return pdfopen(filename, mode);
+_declspec (dllexport)
+     pdf *__stdcall winpdfopen (char *filename, char *mode)
+{
+  return pdfopen (filename, mode);
 }
 
-_declspec(dllexport) void __stdcall winpdfclose(pdf *document){
-  pdfclose(document);
+_declspec (dllexport)
+     void __stdcall winpdfclose (pdf * document)
+{
+  pdfclose (document);
 }
 
-_declspec(dllexport) page * __stdcall winpdfpage(pdf *document, char *size){
-  return pdfpage(document, size);
+_declspec (dllexport)
+     page *__stdcall winpdfpage (pdf * document, char *size)
+{
+  return pdfpage (document, size);
 }
 
-_declspec(dllexport) void __stdcall winsetfontsize(pdf *document, int size){
-  setfontsize(document, size);
+_declspec (dllexport)
+     void __stdcall winsetfontsize (pdf * document, int size)
+{
+  setfontsize (document, size);
 }
 
-_declspec(dllexport) void __stdcall winsetfontmode(pdf *document, int size){
-  setfontmode(document, size);
+_declspec (dllexport)
+     void __stdcall winsetfontmode (pdf * document, int size)
+{
+  setfontmode (document, size);
 }
 
-_declspec(dllexport) void __stdcall winsetcharacterspacing(pdf *document, double amount){
-  setcharacterspacing(document, amount);
+_declspec (dllexport)
+     void __stdcall winsetcharacterspacing (pdf * document, double amount)
+{
+  setcharacterspacing (document, amount);
 }
 
-_declspec(dllexport) void __stdcall winsetwordspacing(pdf *document, double amount){
-  setwordspacing(document, amount);
+_declspec (dllexport)
+     void __stdcall winsetwordspacing (pdf * document, double amount)
+{
+  setwordspacing (document, amount);
 }
 
-_declspec(dllexport) void __stdcall winsethorizontalscaling(pdf *document, double scaling){
-  sethorizontalscaling(document, scaling);
+_declspec (dllexport)
+     void __stdcall winsethorizontalscaling (pdf * document, double scaling)
+{
+  sethorizontalscaling (document, scaling);
 }
 
-_declspec(dllexport) void __stdcall winsetleading(pdf *document, double amount){
-  setleading(document, amount);
+_declspec (dllexport)
+     void __stdcall winsetleading (pdf * document, double amount)
+{
+  setleading (document, amount);
 }
