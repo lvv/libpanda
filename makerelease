@@ -6,6 +6,16 @@
 echo -n "Release name (e.g) panda-0.4.1: "
 read relname
 
+echo -n "Tag this release (y/n)? "
+read tag
+
+cvs commit
+
+if [ $tag = "y" ]
+then
+  cvs tag -b $relname
+fi
+
 # Get a clean copy of the source
 mkdir temp
 cd temp
