@@ -3,11 +3,12 @@
 
   Change Control:                                                      DDMMYYYY
     Michael Still    File created                                      17062000
-    Michael Still    Obscure bug in byte offsets fixed.                22062000
+                     Obscure bug in byte offsets fixed.                22062000
                        Windows printf will add a '\r' even if
                        you don't ask it to, and even if you
                        have added your own. I need to take
                        this into account in the byte offsets.
+		     Added streamprintf(...) call.                     17072000
 
   Purpose:
     Utility functions for the panda library.
@@ -84,5 +85,18 @@ void pdfprintf(pdf *file, char *format, ...){
 
   // Free the temp string
   free(formatString);
+  va_end(argPtr);
+}
+
+void streamprintf(object *textobj, char *format, ...){
+  va_list   argPtr;
+  char      buffer[2048];
+
+  va_start(argPtr, format);
+  vsprintf(buffer, format, argPtr);
+
+  // This new object has a stream with the text in it
+  appendstream(textobj, buffer, strlen(buffer));
+
   va_end(argPtr);
 }

@@ -16,8 +16,7 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
        int right, char *text){
   // Add a box with some text in it into the PDF page
   object      *textobj, *tempObj;
-  char        commandBuffer[1024], *currentToken, *strtokVictim = NULL,
-                delim[10];
+  char        *currentToken, *strtokVictim = NULL, delim[10];
   int         internalTop, internalLeft, displayedFirstPart = gFalse;
   object      *subdict, *subsubdict, *fontObj;
 
@@ -92,44 +91,36 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   // This is a little dodgy at the moment because I do not understand the
   // PS matrix environment well enough to be writing this sort of code. I am
   // going to have to have a look into this a little more...
-  sprintf(commandBuffer,
-    "BT\n 1 0 0 1 %d %d Tm\n",
+  streamprintf(textobj, "BT\n 1 0 0 1 %d %d Tm\n",
     internalLeft, internalTop);
-
-  // This new object has a stream with the text in it
-  appendstream(textobj, commandBuffer, strlen(commandBuffer));
 
   // There are now a whole bunch of options that may or may not need to be set
   if(output->currentFontMode != 0){
-    sprintf(commandBuffer, "%d Tr\n", output->currentFontMode);
-    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+    streamprintf(textobj, "%d Tr\n", output->currentFontMode);
   }
 
   if(output->currentCharacterSpacing != 0){
-    sprintf(commandBuffer, "%.2f Tc\n", output->currentCharacterSpacing);
-    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+    streamprintf(textobj, "%.2f Tc\n", 
+      output->currentCharacterSpacing);
   }
 
   if(output->currentWordSpacing != 0){
-    sprintf(commandBuffer, "%.2f Tw\n", output->currentWordSpacing);
-    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+    streamprintf(textobj, "%.2f Tw\n", 
+      output->currentWordSpacing);
   }
 
   if(output->currentHorizontalScaling != 1){
-    sprintf(commandBuffer, "%.0f Tz\n",
+    streamprintf(textobj, "%.0f Tz\n",
       output->currentHorizontalScaling * 100);
-    appendstream(textobj, commandBuffer, strlen(commandBuffer));
   }
 
   if(output->currentLeading != 0){
-    sprintf(commandBuffer, "%.2 TL\n", output->currentLeading);
-    appendstream(textobj, commandBuffer, strlen(commandBuffer));
+    streamprintf(textobj, "%.2 TL\n", output->currentLeading);
   }
 
   // Set the font that we want to use
-  sprintf(commandBuffer, "/%s %d Tf\n", 
+  streamprintf(textobj, "/%s %d Tf\n", 
     output->currentFont, output->currentFontSize);
-  appendstream(textobj, commandBuffer, strlen(commandBuffer));
 
   /***************************************************************************
     PDFs are funny in that we have to specify where line breaks are to occur.
@@ -171,32 +162,27 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
     // If we haven't displayed that first part that would otherwise be missed
     // do so now
     if(displayedFirstPart == gFalse){
-      sprintf(commandBuffer, "(%s) '\n", strtokVictim);
-      appendstream(textobj, commandBuffer, strlen(commandBuffer));
+      streamprintf(textobj, "(%s) '\n", strtokVictim);
       displayedFirstPart = gTrue;
     }
 
     switch(text[currentToken - strtokVictim - 1]){
     case '\n':
-      sprintf(commandBuffer, "(%s) '\n", currentToken);
-      appendstream(textobj, commandBuffer, strlen(commandBuffer));
+      streamprintf(textobj, "(%s) '\n", currentToken);
       break;
 
     case 4:
-      sprintf(commandBuffer, "%c Ts (%s) Tj\n",
+      streamprintf(textobj, "%c Ts (%s) Tj\n",
 	currentToken[0], currentToken + 1);
-      appendstream(textobj, commandBuffer, strlen(commandBuffer));
       break;
 
     case 5:
-      sprintf(commandBuffer, "-%c Ts (%s) Tj\n",
+      streamprintf(textobj, "-%c Ts (%s) Tj\n",
 	currentToken[0], currentToken + 1);
-      appendstream(textobj, commandBuffer, strlen(commandBuffer));
       break;
 
     case 6:
-      sprintf(commandBuffer, "0 Ts (%s) Tj\n", currentToken);
-      appendstream(textobj, commandBuffer, strlen(commandBuffer));
+      streamprintf(textobj, "0 Ts (%s) Tj\n", currentToken);
       break;
     }
 
@@ -206,5 +192,5 @@ void textbox(pdf *output, page *thisPage, int top, int left, int bottom,
   /***************************************************************************
     Now finish the text off
   ***************************************************************************/
-  appendstream(textobj, "ET", 2);
+  streamprintf(textobj, "ET");
 }
