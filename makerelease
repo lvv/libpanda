@@ -19,7 +19,7 @@ fi
 # Get a clean copy of the source
 mkdir temp
 cd temp
-export CVSROOT="/usr/home/cvs"
+export CVSROOT="/home/cvs"
 cvs co panda
 cd panda
 exit
