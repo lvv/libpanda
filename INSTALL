@@ -1,11 +1,13 @@
 Welcome to Panda 0.1.
 
-This code is covered by the GNU Public License. Please respect the conditions of this license, which is included in
-this distribution. All of this code is (c) Michael Still, 2000.
+This code is covered by the GNU Public License. Please respect the conditions 
+of this license, which is included in this distribution. All of this code is 
+(c) Michael Still, 2000.
 
 INSTALLATION
 
-Type "make all" to build the library...
+Type "make all" to build a demo application. Type "make lib" and "make install"
+(the last one as root) to install the API.
 
 Michael Still (mikal@stillhq.com)
-24 June 2000
+23 July 2000

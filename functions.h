@@ -80,6 +80,7 @@ void  writeTrailer(pdf *);
 
 void  pdfprintf(pdf *, char *, ...);
 void  textstreamprintf(object *, char *, ...);
+void  pdfputc(pdf *, int c);
 
 /******************************************************************************
   XREF.c

@@ -246,7 +246,7 @@ void writeObject(pdf *output, object *dumpTarget){
       // This is done because a valid textstream could contain a \0, which
       // would confuse pdfprintf with a %s
       for(count = 0; count < dumpTarget->textstreamLength; count ++)
-        pdfprintf(output, "%c", dumpTarget->textstream[count]);
+        pdfputc(output, dumpTarget->textstream[count]);
 
       pdfprintf(output, "ET\nendstream\n");
     }
