@@ -54,7 +54,7 @@ endstream               { debuglex(yytext, "endstream", binaryMode);
 \>\>                    { debuglex(yytext, ">>", binaryMode);
                           return DBLGT;                                      }
 
-[a-zA-Z0-9\.:'+-]+      { debuglex(yytext, "string", binaryMode);
+[a-zA-Z0-9\.:'+\-!]+    { debuglex(yytext, "string", binaryMode);
                           yylval.textVal = yytext;
                           return((binaryMode == 0) ? STRING : ANYTHING);     }
 
@@ -73,7 +73,8 @@ endstream               { debuglex(yytext, "endstream", binaryMode);
 
                         /* --- Stuff used to match binary streams ---       */
 [^a-zA-Z0-9+-\/\t\ \r\n()\[\]]+     { 
-                          debuglex(yytext, "run of wierd characters", binaryMode);
+                          debuglex(yytext, "run of wierd characters",
+                            binaryMode);
                           yylval.textVal = yytext;
                           return ANYTHING;
                                                                              }

@@ -22,6 +22,8 @@
 %token <textVal> PDFEOF
 %token <textVal> ANYTHING
 
+%type <textVal> binary
+
 %%
 
           /*********************************************************
@@ -78,8 +80,10 @@ stream    : STREAM { binaryMode = 1; } binary { binaryMode = 0; } ENDSTREAM
           |
           ;
 
-binary    : ANYTHING binary {}
-          |
+binary    : ANYTHING binary 
+          | {
+                      $$ = NULL;
+                                                                             }
           ;
 
 xref      : STRING INT INT xrefitems {}
