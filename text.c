@@ -158,10 +158,8 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
 					  output->currentFontSize);
 
       // Make space for the new name
-      if (
-	  (textobj->currentSetFont =
-	   malloc (sizeof (char) * strlen (output->currentFont) + 1)) == NULL)
-	error ("Could not copy the font to the new page.");
+      textobj->currentSetFont = 
+	(char *) xmalloc(sizeof (char) * (strlen (output->currentFont) + 1));
 
       // Store the name so we know what is happening
       strcpy (textobj->currentSetFont, output->currentFont);
@@ -194,9 +192,7 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
   ***************************************************************************/
 
   // Get the first token
-  if ((strtokVictim = (char *) malloc (sizeof (char) * strlen (text) + 1)) ==
-      NULL)
-    error ("Could not make space for temporary copy of textbox text.");
+  strtokVictim = (char *) xmalloc(sizeof (char) * (strlen (text) + 1));
   strcpy (strtokVictim, text);
 
   // Build the delimiter string

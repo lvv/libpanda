@@ -26,20 +26,16 @@ newobject (pdf * doc, int type)
   object *created;
 
   // Get some memory
-  if ((created = (object *) malloc (sizeof (object))) == NULL)
-    error ("Could not create an object (out of memory?)");
+  created = (object *) xmalloc(sizeof (object));
 
   // We have no children at the moment
-  if ((created->children = (child *) malloc (sizeof (child))) == NULL)
-    error ("Could not make a child for the new object.");
+  created->children = (child *) xmalloc(sizeof (child));
 
   ((child *) created->children)->next = NULL;
   (child *) created->cachedLastChild = NULL;
 
   // Initialise the dictionary
-  if ((created->dict = (dictionary *) malloc (sizeof (dictionary))) == NULL)
-    error ("Could not create the dictionary root for the new object.");
-
+  created->dict = (dictionary *) xmalloc(sizeof (dictionary));
   created->dict->next = NULL;
 
   // By default this object is not a pages object
@@ -78,8 +74,7 @@ newobject (pdf * doc, int type)
   doc->xrefTail->this = created;
 
   // Make space for the next one
-  if ((doc->xrefTail->next = malloc (sizeof (xref))) == NULL)
-    error ("Could not add xref to the list for new object.");
+  doc->xrefTail->next = xmalloc(sizeof (xref));
   doc->xrefTail->next->next = NULL;
   doc->xrefTail = doc->xrefTail->next;
 
@@ -115,9 +110,7 @@ adddictitem (dictionary * input, char *name, int valueType, ...)
   // Make a new end to the dictionary if needed
   if (dictNow->next == NULL)
     {
-      if ((dictNow->next = (dictionary *) malloc (sizeof (dictionary))) ==
-	  NULL)
-	error ("Could not grow the dictionary.");
+      dictNow->next = (dictionary *) xmalloc(sizeof(dictionary));
 
       // Setup
       dictNow->next->next = NULL;
@@ -143,9 +136,7 @@ adddictitem (dictionary * input, char *name, int valueType, ...)
   // And add some content to this entry if needed
   if (overwriting == gFalse)
     {
-      if ((dictNow->name =
-	   (char *) malloc ((strlen (name) + 1) * sizeof (char))) == NULL)
-	error ("Could not make space for the new tag name value.");
+      dictNow->name = (char *) xmalloc((strlen (name) + 1) * sizeof (char));
       strcpy (dictNow->name, name);
 
       // Record the type
@@ -178,9 +169,8 @@ adddictitem (dictionary * input, char *name, int valueType, ...)
 
       // Get the value
       value = va_arg (argPtr, char *);
-      if ((dictNow->textValue =
-	   (char *) malloc ((strlen (value) + 3) * sizeof (char))) == NULL)
-	error ("Could not make space for the new dictionary text value.");
+      dictNow->textValue = 
+	(char *) xmalloc((strlen (value) + 3) * sizeof (char));
       dictNow->textValue[0] = '\0';
 
       // Some stuff for different types
@@ -210,8 +200,7 @@ adddictitem (dictionary * input, char *name, int valueType, ...)
 
       // We assume we need no more than 20 characters to store this. This
       // should be fine
-      if ((dictNow->textValue = (char *) malloc (sizeof (char) * 20)) == NULL)
-	error ("Could not make space for the new dictionary object value.");
+      dictNow->textValue = (char *) xmalloc(sizeof (char) * 20);
 
       sprintf (dictNow->textValue, "%d %d R", objValue->number,
 	       objValue->generation);
@@ -222,10 +211,8 @@ adddictitem (dictionary * input, char *name, int valueType, ...)
 
       if (dictNow->objectArrayValue == NULL)
 	{
-	  if ((dictNow->objectArrayValue =
-	       (objectArray *) malloc (sizeof (objectArray))) == NULL)
-	    error
-	      ("Could not create the object array root for the new dictionary.");
+	  dictNow->objectArrayValue = 
+	    (objectArray *) xmalloc(sizeof (objectArray));
 	  dictNow->objectArrayValue->next = NULL;
 	}
 
@@ -235,9 +222,8 @@ adddictitem (dictionary * input, char *name, int valueType, ...)
 	currentObjectArray = currentObjectArray->next;
 
       // Make a new array entry
-      if ((currentObjectArray->next =
-	   (objectArray *) malloc (sizeof (objectArray *))) == NULL)
-	error ("Could not append to the object array.");
+      currentObjectArray->next = 
+	(objectArray *) xmalloc(sizeof (objectArray *));
 
       // Append
       currentObjectArray->number = objValue->number;
@@ -650,8 +636,7 @@ addchild (object * parentObj, object * childObj)
     currentChild = currentChild->next;
 
   // Make a new end
-  if ((currentChild->next = (child *) malloc (sizeof (child))) == NULL)
-    error ("Could not add the child to the end of the list.");
+  currentChild->next = (child *) xmalloc(sizeof (child));
   currentChild->next->next = NULL;
 
   // Make me be the child object

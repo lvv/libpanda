@@ -57,9 +57,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
 
   // We cannot have some characters in the filename that we embed into the PDF,
   // so we fix them here
-  if((pdfFilename = (char *) 
-      malloc((strlen(filename) + 1) * sizeof(char))) == NULL)
-    error("Could not make space for mangled filename");
+  pdfFilename = (char *) xmalloc((strlen(filename) + 1) * sizeof(char));
   strcpy(pdfFilename, filename);
 
   for(i = 0; i < strlen(pdfFilename) + 1; i++)
@@ -340,9 +338,7 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
       stripMax = TIFFNumberOfStrips (image);
       imageOffset = 0;
 
-      if ((stripBuffer =
-	   malloc (TIFFNumberOfStrips (image) * stripSize)) == NULL)
-	error ("Insufficient memory for TIFF image insertion.");
+      stripBuffer = xmalloc(TIFFNumberOfStrips (image) * stripSize);
 
       for (stripCount = 0; stripCount < stripMax; stripCount++)
 	{
@@ -412,9 +408,7 @@ insertTiff (pdf * output, page * target, object * imageObj, char *filename)
       stripSize = TIFFStripSize (image);
       imageOffset = 0;
 
-      if ((imageObj->binarystream =
-	   malloc (TIFFNumberOfStrips (image) * stripSize)) == NULL)
-	error ("Insufficient memory for TIFF image insertion.");
+      imageObj->binarystream = xmalloc(TIFFNumberOfStrips (image) * stripSize);
 
       for (stripCount = 0; stripCount < TIFFNumberOfStrips (image);
 	   stripCount++)
@@ -577,11 +571,7 @@ libtiffDummyWriteProc (thandle_t fd, tdata_t buf, tsize_t size)
     {
       // Have we done anything yet?
       if (globalTiffBuffer == NULL)
-	{
-	  if ((globalTiffBuffer = (char *) malloc (size * sizeof (char))) ==
-	      NULL)
-	    error ("Could not start tiff conversion memory buffer.");
-	}
+	globalTiffBuffer = (char *) xmalloc(size * sizeof (char));
 
       // Otherwise, we need to grow the memory buffer
       else

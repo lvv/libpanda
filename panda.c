@@ -58,15 +58,11 @@ pdfopen_actual (char *filename, char *mode, int suppress)
   // checking below (like a+b), deal with it.
 
   // Make some space for the PDF information
-  if ((openedpdf = (pdf *) malloc (sizeof (pdf))) == NULL)
-    {
-      error ("Could not create a pdf structure (out of memory?)");
-    }
-
+  openedpdf = (pdf *) xmalloc(sizeof(pdf));
+  
   // Every PDF is going to have to have some xref information associated with
   // it at some stage.
-  if ((openedpdf->xrefList = (xref *) malloc (sizeof (xref))) == NULL)
-    error ("Could not make a new xref list for this pdf document.");
+  openedpdf->xrefList = (xref *) xmalloc(sizeof(xref));
   openedpdf->xrefList->next = NULL;
   openedpdf->xrefTail = openedpdf->xrefList;
 
@@ -303,8 +299,7 @@ pdfpage (pdf * output, char *pageSize)
   char *pageSizeCopy;
 
   // Make some space for the object
-  if ((newPage = (page *) malloc (sizeof (page))) == NULL)
-    error ("Could not make a new page.");
+  newPage = (page *) xmalloc(sizeof(page));
 
   // Make the new page object
   newPage->obj = newobject (output, gNormal);
@@ -326,10 +321,7 @@ pdfpage (pdf * output, char *pageSize)
   // Copy the pageSize string somewhere safe, and then clobber the copy.
   // We can't clober the original because it is a constant anyway and it would
   // be rude to screw with another person's data
-  if (
-      (pageSizeCopy =
-       (char *) malloc (sizeof (char) * (strlen (pageSize) + 1))) == NULL)
-    error ("Could not copy the pageSize string.");
+  pageSizeCopy = (char *) xmalloc(sizeof (char) * (strlen (pageSize) + 1));
   strcpy (pageSizeCopy, pageSize);
 
   strtok (pageSizeCopy, " ");

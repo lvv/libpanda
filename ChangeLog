@@ -27,3 +27,9 @@ Release 0.3 -> Release 0.4
   * Discovered that the Makefile.am needs to be changed for that the headers
 	will install from their new location in panda/, so I had a look into
 	that as well...
+
+========================== 0.3.1 Released =====================================
+
+  * Implemented xmalloc in memory.c so that I could simplify the malloc calls
+	in the rest of the code in the library... Also changed all of the 
+	malloc calls in the library to use it...

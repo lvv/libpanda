@@ -32,9 +32,7 @@ pdfprintf (pdf * file, char *format, ...)
   // the format string, and then add them here if we were not compiled on 
   // windows
 #if defined WINDOWS
-  if ((formatString = malloc ((strlen (format) + 1) * sizeof (char))) == NULL)
-    error ("Could not make temporary printing space.");
-
+  formatString = (char *) xmalloc((strlen (format) + 1) * sizeof (char));
   strcpy (formatString, format);
 #else
   // We need to go through the format string and replace \n with \r\n
@@ -45,9 +43,8 @@ pdfprintf (pdf * file, char *format, ...)
     if (format[counter] == '\n')
       newlineCount++;
 
-  if ((formatString =
-       malloc ((strlen (format) + newlineCount + 1) * sizeof (char))) == NULL)
-    error ("Could not make temporary printing space.");
+  formatString =
+    (char *) xmalloc((strlen (format) + newlineCount + 1) * sizeof (char));
   formatString[0] = 0;
 
   // Make every \n a \r\n in the format string
@@ -61,9 +58,7 @@ pdfprintf (pdf * file, char *format, ...)
   //
   //  formatString[indent] = 0;
 
-  if ((strtokVictim = (char *) malloc (sizeof (char) * (strlen (format) + 1)))
-      == NULL)
-    error ("Could not make a strtok victim.");
+  strtokVictim = (char *) xmalloc(sizeof (char) * (strlen (format) + 1));
   strcpy (strtokVictim, format);
   token = strtok (strtokVictim, "\n");
 
@@ -89,8 +84,7 @@ pdfprintf (pdf * file, char *format, ...)
 
   // Now we need to make a best guess at how long buffer needs to be -- it is 
   // hardly ever longer than 1k...
-  if ((buffer = malloc (1024 * sizeof (char))) == NULL)
-    error ("Could not grab space for a pdfprintf call (1k).");
+  buffer = (char *) xmalloc(1024 * sizeof (char));
 
   // Build the information
   va_start (argPtr, format);
@@ -103,8 +97,7 @@ pdfprintf (pdf * file, char *format, ...)
       printf ("Needed to make a bigger space for the buffer in pdfprintf\n");
 #endif
 
-      if ((buffer = malloc (actualLen * sizeof (char))) == NULL)
-	error ("Could not grab space for a pdfprintf call (actual).");
+      buffer = (char *) xmalloc(actualLen * sizeof (char));
 
       if (vsnprintf (buffer, actualLen, formatString, argPtr) > actualLen)
 	{
@@ -174,9 +167,7 @@ streamprintf (char *stream, char *format, ...)
     }
   else
     {
-      if ((stream = (char *) malloc (sizeof (char) * (strlen (buffer) + 1)))
-	  == NULL)
-	error ("Could not create the first entry for the text stream.");
+      stream = (char *) xmalloc(sizeof (char) * (strlen (buffer) + 1));
       strncpy (stream, buffer, strlen (buffer) + 1);
     }
 
@@ -202,9 +193,7 @@ pdfprint (pdf * output, char *format)
   int counter, newlineCount;
 
 #if defined WINDOWS
-  if ((formatString = malloc ((strlen (format) + 1) * sizeof (char))) == NULL)
-    error ("Could not make temporary printing space.");
-
+  formatString = (char *) xmalloc((strlen (format) + 1) * sizeof (char));
   strcpy (formatString, format);
 #else
   // We need to go through the format string and replace \n with \r\n
@@ -216,14 +205,11 @@ pdfprint (pdf * output, char *format)
     if (format[counter] == '\n')
       newlineCount++;
 
-  if ((formatString =
-       malloc ((strlen (format) + newlineCount + 1) * sizeof (char))) == NULL)
-    error ("Could not make temporary printing space.");
+  formatString = 
+    (char *) xmalloc((strlen (format) + newlineCount + 1) * sizeof (char));
   formatString[0] = 0;
 
-  if ((strtokVictim = (char *) malloc (sizeof (char) * (strlen (format) + 1)))
-      == NULL)
-    error ("Could not make a strtok victim.");
+  strtokVictim = (char *) xmalloc(sizeof (char) * (strlen (format) + 1));
   strcpy (strtokVictim, format);
   token = strtok (strtokVictim, "\n");
 

@@ -31,8 +31,7 @@ createfont (pdf * output, char *fontname, int type, char *encoding)
   adddictitem (font->dict, "Subtype", gTextValue, tempBuffer);
 
   // Make a font identifier string for this font
-  if ((fontident = (char *) malloc (10 * sizeof (char))) == NULL)
-    error ("Could not make space for a new font identifier.");
+  fontident = xmalloc(10 * sizeof (char));
   sprintf (fontident, "F%08d", output->nextFontNumber);
   output->nextFontNumber++;
 
@@ -54,8 +53,7 @@ setfont (pdf * output, char *fontident)
   // Free on a NULL should do nothing (check for other platforms)
   free(output->currentFont);
 
-  if((output->currentFont = malloc(strlen(fontident) + 1)) == NULL)
-    error("Could not allocate enough memory to change font, and old font clobbered");
+  output->currentFont = xmalloc((strlen(fontident) + 1) * sizeof(char));
   strcpy(output->currentFont, fontident);
 }
 
