@@ -51,3 +51,6 @@ Release 0.1 -> Release 0.2
   * Added the makedate function, which will represent any given date in the
 	approved PDF format. Also added the nowdate function, which calls
 	makedate for the time that is now...
+
+  * Added the info object and added support for the tags within that object
+	(for instance Author)
