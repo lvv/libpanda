@@ -42,7 +42,7 @@ autoconf
 ./configure
 make clean
 make
-exit
+
 # Make sure that the release passes some simple dmalloc tests
 echo "------------------------------------------------------------------------"
 echo "Checking for memory leaks"
@@ -90,7 +90,7 @@ done
 # How much space do we use?
 echo "------------------------------------------------------------------------"
 echo "Release takes" `du -sk` "kbytes"
-
+exit
 # Now we can start packaging the various versions
 cd ..
 mkdir $relname
