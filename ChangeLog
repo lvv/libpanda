@@ -149,3 +149,6 @@ Release 0.3 -> Release 0.4
   * Cleaned up use of config defines in images code (Dave <dave@valinux.com>)
 
   * Finished off the setup of libtool
+
+  * Rectified a bug in the TIFF handling code, reported by 
+	Juan Herrero <juan_herrero@yahoo.com>
