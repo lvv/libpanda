@@ -19,33 +19,53 @@
 .\" License along with this manual; if not, write to the Free
 .\" Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111,
 .\" USA.
-.TH PANDA 3  "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Spec Compatibility"
-.SH SPECIFICATION VERSION
-Panda is currently working on version 1.3 of the PDF specification coompilance. A copy of the specification is available for download from http://www.adobe.com
-.SH TEXT MODE COMPLIANCE
-This document outlines Panda's complicance with the various text modes outlined in the PDF specification version specified above.
-.SH TEXT MODES
+.TH SFM 3 "15 July 2000" "Panda PDF Generator" "Panda PDF Generator Programmer's Manual"
+.SH NAME
+setfontmode
+.SH SYNOPSIS
+.B #include <panda.h>
+.sp
+.BI "void setfontmodepdf *, int mode);"
+.SH DESCRIPTION
+The function
+.B setfontmode
+sets the text drawing method to be used for text within text boxes. The default mode is gTextModeNormal, and possible modes are:
+
+.B gTextModeNormal
 .br
-Character spacing (Tc operator)
+.B gTextModeOutline
+.br
+.B gTextModeFilledOutline
+.br
+.B gTextModeInvisible
+.br
+.B gTextModeFillClipped
+.br
+.B gTextModeStrokeClipped
+.br
+.B gTextModeFillStrokeClipped
+.br
+.B gTextModeClipped
+
+Modes once set are 'sticky' and therefore apply to all text boxes created after the mode is set. You will therefore need to change mode back (possibly to the default) if you no longer want to draw in that mode.
+.SH MODES
+To be completed
+.br
 .RS
-The definition of this operator may be found on page 340 of the PDF specification.
-
-The mode is fully implemented in Panda, and is accessible through the
-.B setcharacterspacing (3)
-function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
-
-The default value is 0.
+Definitions of each mode and what it looks like on paper should be added here.
 .RE
-
-Text rendering (Tr operator)
+.SH EXAMPLE
+.br
+Simply use:
 .RS
-The definition of this operator may be found on page 343 of the PDF specification.
+.nf
+#include <panda.h>
 
-The mode is fully implemented in Panda, and is accessible through the
-.B setfontmode (3)
-function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
+pdf *document;
 
-The default mode is gTextModeNormal.
+document = openpdf("filename", "w");
+setfontmode(document, gTextModeNormal);
+.fi
 .RE
 .SH AUTHOR
 .br
