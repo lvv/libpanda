@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Check we are not running already
+if [ `ps -aux | grep wrapper | wc -l | tr -d " "` -gt 1 ]
+then
+  echo "Already running"
+  exit 42
+fi
+
 if [ `echo $1 | wc -c | tr -d " "` -gt 1 ]
 then
   echo "Set working dir to $1"
