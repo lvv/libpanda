@@ -132,7 +132,7 @@ void adddictitem(object *input, char *name, int valueType, ...){
   // And add some content to this entry if needed
   if(dictNow->next->next == NULL){
     if((dictNow->name =
-      (char *) malloc(strlen(name) * sizeof(char))) == NULL)
+      (char *) malloc((strlen(name) + 1) * sizeof(char))) == NULL)
       error("Could not make space for the new tag name value.");
     strcpy(dictNow->name, name);
 

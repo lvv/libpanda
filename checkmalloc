@@ -36,7 +36,8 @@ do
 
   if [ $? -eq 0 ]
   then
-    exit "Changing $item fixed it"
+    echo "Changing $item fixed it"
+    exit
   fi
 done
 
