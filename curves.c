@@ -32,6 +32,34 @@ panda_addlinesegment(panda_page *target, int x, int y)
 		       "%d %d l\n", x, target->height - y);
 }
 
+// Add a curved segment to the line that we are building
+void
+panda_addcubiccurvesegment(panda_page *target, int x, int y, int cx1, int cy1,
+			   int cx2, int cy2)
+{
+  target->contents->layoutstream = 
+    panda_streamprintf(target->contents->layoutstream,
+		       "%d %d %d %d %d %d v\n", cx1, cy1, cx2, cy2, x, y);
+}
+
+// Add a different type of curved segment
+void
+panda_addquadraticcurvedsegment(panda_page *target, int x, int y, int cx1,
+				int cy1)
+{
+  target->contents->layoutstream = 
+    panda_streamprintf(target->contents->layoutstream,
+		       "%d %d %d %d y\n", cx1, cy1, x, y);
+}
+
+// Return to the start point of the line to make some
+void
+panda_closeline(panda_page *)
+{
+  target->contents->layoutstream =
+    panda_streamprintf(target->contents->layoutstream, "h\n");
+}
+
 // Make the line be drawn by the viewer
 void
 panda_endline(panda_page *target)
@@ -40,3 +68,5 @@ panda_endline(panda_page *target)
     panda_streamprintf(target->contents->layoutstream,
 		       "S\n");
 }
+
+

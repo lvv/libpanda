@@ -34,8 +34,11 @@ typedef void (*traverseFunct) (panda_pdf *, panda_object *);
   Curves.c
 ******************************************************************************/
 
-void panda_setlinestart(panda_page *, int x, int y);
-void panda_addlinesegment(panda_page *, int x, int y);
+void panda_setlinestart(panda_page *, int, int);
+void panda_addlinesegment(panda_page *, int, int);
+void panda_addcubiccurvesegment(panda_page *, int, int, int, int, int, int);
+void panda_addquadraticcurvesegment(panda_page *, int, int, int, int);
+void panda_closeline(panda_page *);
 void panda_endline(panda_page *);
 
 /******************************************************************************

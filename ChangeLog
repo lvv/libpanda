@@ -58,3 +58,7 @@ Release 0.3 -> Release 0.4
 
   * Added legacymain.c to check that the legacy function mappings and stuff
 	actually work
+
+  * BACKPORTED FROM PANDA 0.3.2: Fixed some small problems with the
+	configure script, added the Makefile.am to the distribution and made
+	some small changes requested by the users...
