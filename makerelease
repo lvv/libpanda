@@ -18,6 +18,7 @@ read tag
 #fi
 
 # Get a clean copy of the source
+rm -rf temp
 mkdir temp
 cd temp
 export CVSROOT="/home/httpd/html/cvs"
@@ -32,7 +33,7 @@ rm man/*sgml man/*man
 # Generate the new documentation
 for item in `ls *.c`
 do
-  ~mikal/opensource/autodocbook/working/autodocbook $item man
+  ~mikal/opensource/autodocbook/autodocbook $item man
 done
 
 mv *.3 man/
