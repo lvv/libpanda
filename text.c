@@ -169,7 +169,6 @@ panda_textboxrot (panda_pdf * output, panda_page * thisPage, int top,
       panda_xfree (dictkey);
     }
 
-  return;
   // Is there a text size setup?
   if (output->currentFontSize == -1)
     panda_setfontsize (output, 16);

@@ -174,7 +174,7 @@ panda_pdf *
 panda_open_actual (char *filename, char *mode, int suppress)
 {
   panda_pdf *openedpdf;
-  char *tempPtr, *newmode;
+  char *tempPtr, *newmode, *verStr;
 
   // We are going to open a PDF for file I/O. Currently, the only supported
   // mode is 'w'. There are some more obscure modes not included in the error
@@ -288,14 +288,17 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	       "Failed to make an info object for the PDF. Not sure why...");
 
 	  // Add some stuff
-	  panda_adddictitem (openedpdf, openedpdf->info, "Producer",
-			     panda_brackettedtextvalue,
+	  verStr = panda_xsnprintf(
 #if defined _WINDOWS
-			     "Panda 0.4.2 MS Windows Version"
+				   "Panda %s MS Windows Version"
 #else
-			     "Panda 0.4.2"
+				   "Panda %s"
 #endif
-	    );
+				   , VERSION);
+
+	  panda_adddictitem (openedpdf, openedpdf->info, "Producer",
+			     panda_brackettedtextvalue, verStr);
+	  panda_xfree(verStr);
 	  panda_adddictitem (openedpdf, openedpdf->info, "CreationDate",
 			     panda_brackettedtextvalue, tempPtr =
 			     panda_nowdate ());

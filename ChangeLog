@@ -44,3 +44,6 @@ Release 0.4 -> Release 0.5
 
 2002-05-01 Michael Still mikal@stillhq.com
 	Fixed tdb.h install bug
+
+2002-07-09 Michael Still mikal@stillhq.com
+	Fixed textboxes bug
