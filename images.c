@@ -102,7 +102,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
   // where we check if support has been compiled in for the libraries we need.
   switch (type)
     {
-    case gImageTiff:
+    case panda_image_tiff:
       if(HAVE_LIBTIFF)
 	panda_insertTIFF (output, target, imageObj, filename);
       else
@@ -114,7 +114,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 	}
       break;
 
-    case gImageJpeg:
+    case panda_image_jpeg:
       if(HAVE_LIBJPEG)
 	panda_insertJPEG (output, target, imageObj, filename);
       else
@@ -126,7 +126,7 @@ panda_imageboxrot (panda_pdf * output, panda_page * target, int top, int left,
 	}
       break;
 
-    case gImagePNG:
+    case panda_image_png:
       if(HAVE_LIBPNG)
 	panda_insertPNG (output, target, imageObj, filename);
       else

@@ -125,7 +125,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
 	  openedpdf->fonts = panda_newobject (openedpdf, panda_placeholder);
 
 	  // Set the text mode to something basic
-	  panda_setfontmode (openedpdf, gTextModeNormal);
+	  panda_setfontmode (openedpdf, panda_textmode_normal);
 	  panda_setcharacterspacing (openedpdf, 0.0);
 	  panda_setwordspacing (openedpdf, 0.0);
 	  panda_sethorizontalscaling (openedpdf, 1.0);
