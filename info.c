@@ -62,6 +62,7 @@ SEEALSO panda_setauthor, panda_setcreator, panda_settitle, panda_setsubject, pan
 DOCBOOK END
 ******************************************************************************/
 
+// DEPRECATED
 // Check if an info object exists in the PDF document already
 void
 panda_checkinfo (panda_pdf * document)
@@ -109,12 +110,12 @@ DOCBOOK END
 void
 panda_setauthor (panda_pdf * document, char *author)
 {
-  // Check the info object already exists
-  panda_checkinfo (document);
+  document->author = panda_xsnprintf("%s", author);
+}
 
-  // Add the author bit to it
-  panda_adddictitem (document, document->info, "Author",
-		     panda_brackettedtextvalue, author);
+char *
+panda_getauthor (panda_pdf * document) {
+  return document->author;
 }
 
 /******************************************************************************
@@ -152,12 +153,12 @@ DOCBOOK END
 void
 panda_setcreator (panda_pdf * document, char *creator)
 {
-  // Check the info object already exists
-  panda_checkinfo (document);
+  document->creator = panda_xsnprintf("%s", creator);
+}
 
-  // Add the creator bit to it
-  panda_adddictitem (document, document->info, "Creator",
-		     panda_brackettedtextvalue, creator);
+char *
+panda_getcreator (panda_pdf * document) {
+  return document->creator;
 }
 
 /******************************************************************************
@@ -195,12 +196,12 @@ DOCBOOK END
 void
 panda_settitle (panda_pdf * document, char *title)
 {
-  // Check the info object already exists
-  panda_checkinfo (document);
+  document->title = panda_xsnprintf("%s", title);
+}
 
-  // Add the title bit to it
-  panda_adddictitem (document, document->info, "Title",
-		     panda_brackettedtextvalue, title);
+char *
+panda_gettitle (panda_pdf * document) {
+  return document->title;
 }
 
 /******************************************************************************
@@ -238,12 +239,12 @@ DOCBOOK END
 void
 panda_setsubject (panda_pdf * document, char *subject)
 {
-  // Check the info object already exists
-  panda_checkinfo (document);
+  document->subject = panda_xsnprintf("%s", subject);
+}
 
-  // Add the subject bit to it
-  panda_adddictitem (document, document->info, "Subject",
-		     panda_brackettedtextvalue, subject);
+char *
+panda_getsubject (panda_pdf * document) {
+  return document->subject;
 }
 
 /******************************************************************************
@@ -281,12 +282,12 @@ DOCBOOK END
 void
 panda_setkeywords (panda_pdf * document, char *keywords)
 {
-  // Check the info object already exists
-  panda_checkinfo (document);
+  document->keywords = panda_xsnprintf("%s", keywords);
+}
 
-  // Add the keywords bit to it
-  panda_adddictitem (document, document->info, "Keywords",
-		     panda_brackettedtextvalue, keywords);
+char *
+panda_getkeywords (panda_pdf * document) {
+  return document->keywords;
 }
 
 /******************************************************************************

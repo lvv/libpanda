@@ -173,6 +173,38 @@ DOCBOOK END
 panda_pdf *
 panda_open_actual (char *filename, char *mode, int suppress)
 {
+  char *newmode;
+  FILE *fp;
+
+  switch (mode[0])
+    {
+    case 'r':
+    case 'a':
+      panda_error (panda_true, "Unsupported file I/O mode handed to panda.");
+      break;
+
+    case 'w':
+      newmode = panda_xsnprintf ("%cb", mode[0]);
+
+      if (strcmp (filename, "-") == 0)
+        fp = stdout;
+      else if ( (fp = fopen(filename, newmode)) == NULL )
+        return NULL;
+      else
+        return panda_open_fp_actual (fp, mode, suppress);
+      break;
+
+    default:
+      panda_error (panda_true, "Unknown file I/O mode handed to panda.");
+      break;
+    }
+}
+
+// Open a PDF using a file descriptor. Useful for the PHP extension,
+// and probably other programs as well.
+panda_pdf *
+panda_open_fp_actual (FILE *fp, char *mode, int suppress)
+{
   panda_pdf *openedpdf;
   char *tempPtr, *newmode, *verStr;
 
@@ -214,11 +246,7 @@ panda_open_actual (char *filename, char *mode, int suppress)
       // Opening the file with the binary option makes Windows work
       newmode = panda_xsnprintf ("%cb", mode[0]);
 
-      // We _are_ going to create the file
-      if (strcmp (filename, "-") == 0)
-	openedpdf->file = stdout;
-      else if ((openedpdf->file = fopen (filename, newmode)) == NULL)
-	return NULL;
+      openedpdf->file = fp;
 
       // We have no objects yet
       openedpdf->nextObjectNumber = 1;
@@ -345,6 +373,9 @@ panda_open_actual (char *filename, char *mode, int suppress)
 
       openedpdf->outline = NULL;
 
+      openedpdf->author = openedpdf->producer = openedpdf->creator =
+        openedpdf->title = openedpdf->subject = openedpdf->keywords = NULL;
+
 #if defined DEBUG
       printf ("PDF file opened ok\n");
 #endif
@@ -419,6 +450,26 @@ panda_close (panda_pdf * openedpdf)
 
   // Link the outline together.
   panda_writeoutline(openedpdf, openedpdf->outline);
+
+  // Create the info.
+  panda_checkinfo (openedpdf);
+
+  // Populate the info.
+  if ( openedpdf->author != NULL )
+    panda_adddictitem (openedpdf, openedpdf->info, "Author",
+                       panda_brackettedtextvalue, openedpdf->author);
+  if ( openedpdf->creator != NULL )
+    panda_adddictitem (openedpdf, openedpdf->info, "Creator",
+                       panda_brackettedtextvalue, openedpdf->creator);
+  if ( openedpdf->title != NULL )
+    panda_adddictitem (openedpdf, openedpdf->info, "Title",
+                       panda_brackettedtextvalue, openedpdf->title);
+  if ( openedpdf->subject != NULL )
+    panda_adddictitem (openedpdf, openedpdf->info, "Subject",
+                       panda_brackettedtextvalue, openedpdf->subject);
+  if ( openedpdf->keywords != NULL )
+    panda_adddictitem (openedpdf, openedpdf->info, "Keywords",
+                       panda_brackettedtextvalue, openedpdf->keywords);
 
   // We do some different things to write out the PDF depending on the mode
   switch (openedpdf->mode)

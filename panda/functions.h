@@ -158,6 +158,11 @@ SUPPRESSEX (panda_setfont, cmd)
        void panda_settitle (panda_pdf *, char *);
        void panda_setsubject (panda_pdf *, char *);
        void panda_setkeywords (panda_pdf *, char *);
+       char *panda_getauthor (panda_pdf *);
+       char *panda_getcreator (panda_pdf *);
+       char *panda_gettitle (panda_pdf *);
+       char *panda_getsubject (panda_pdf *);
+       char *panda_getkeywords (panda_pdf *);
 
 /******************************************************************************
   Internal.c
@@ -206,6 +211,7 @@ SUPPRESSEX (panda_setfont, cmd)
        panda_pdf *panda_open (char *, char *);
        panda_pdf *panda_open_suppress (char *, char *);
        INTERNAL panda_pdf *panda_open_actual (char *, char *, int);
+       INTERNAL panda_pdf *panda_open_fp_actual(FILE *, char *, int);
        void panda_close (panda_pdf *);
        panda_page *panda_newpage (panda_pdf *, char *);
        INTERNAL void panda_closetext (panda_pdf *, panda_object *);
@@ -226,6 +232,8 @@ SUPPRESSEX (panda_setfont, cmd)
 						 char *value);
        INTERNAL int panda_getobjdictno (panda_pdf *, panda_object *);
        INTERNAL int panda_getdictelem (panda_pdf *, int, char *);
+       INTERNAL char *panda_getdictitem (panda_pdf * document,
+                                         panda_object * input, char * name);
        INTERNAL char *panda_finddictitem (panda_pdf *, panda_object *,
 					  char *);
        INTERNAL char *panda_finddictiteminternal (panda_pdf *, int, char *);

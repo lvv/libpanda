@@ -106,6 +106,9 @@ extern "C"
     panda_xref *xrefList, *xrefTail;
     int mode;
 
+    // Metadata
+    char *author, *producer, *creator, *title, *subject, *keywords;
+
     // This is needed for the tiff conversion
     char *convertedTiff;
 
