@@ -98,8 +98,8 @@ echo "Release takes" `du -sk` "kbytes"
 # Now we can start packaging the various versions
 cd ..
 
-relnamenoexamples=`echo $relname | sed 's/-/-noexamples-/g'`
-relnamewindows=`echo $relname | sed 's/-/-windows-/g'`
+relnamenoexamples=`echo $relname | sed 's/-/-noexamples-/'`
+relnamewindows=`echo $relname | sed 's/-/-windows-/'`
 
 mkdir $relname
 mkdir $relnamenoexamples
@@ -125,7 +125,7 @@ cd ..
 
 # Compress them all
 tar czf `echo $relname | sed 's/-/_/g' | sed 's/\./_/g'`.tgz $relname
-tar czf `echo $relnamenoexamples | sed 's/-/g_/' | sed 's/\./_/g'`.tgz $relnamenoexamples
+tar czf `echo $relnamenoexamples | sed 's/-/_/g' | sed 's/\./_/g'`.tgz $relnamenoexamples
 tar czf `echo $relnamewindows | sed 's/-/_/g' | sed 's/\./_/g'`.tgz $relnamewindows
 
 # Sign them all
