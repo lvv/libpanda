@@ -39,3 +39,11 @@
   * Linearisation (also known as optimised PDF)
 
   * Validity checks for things like names
+
+  * TIFF support does not currently include the following compression options:
+	- NONE
+	- Flate
+	- LZW (never!)
+	- Packbit
+
+  * More work on the lexer

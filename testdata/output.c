@@ -23,7 +23,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-B-lsb2msb-contig-1.tif"
+"none-B-lsb2msb-contig-1.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -42,7 +42,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-B-lsb2msb-contig-1000.tif"
+"none-B-lsb2msb-contig-1000.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -61,7 +61,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-B-lsb2msb-contig-1000000.tif"
+"none-B-lsb2msb-contig-1000000.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-B-msb2lsb-contig-1.tif"
+"none-B-msb2lsb-contig-1.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -99,7 +99,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-B-msb2lsb-contig-1000.tif"
+"none-B-msb2lsb-contig-1000.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -118,7 +118,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-B-msb2lsb-contig-1000000.tif"
+"none-B-msb2lsb-contig-1000000.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -137,7 +137,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-L-lsb2msb-contig-1.tif"
+"none-L-lsb2msb-contig-1.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -156,7 +156,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-L-lsb2msb-contig-1000.tif"
+"none-L-lsb2msb-contig-1000.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -175,7 +175,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-L-lsb2msb-contig-1000000.tif"
+"none-L-lsb2msb-contig-1000000.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -194,7 +194,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-L-msb2lsb-contig-1.tif"
+"none-L-msb2lsb-contig-1.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -213,7 +213,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-L-msb2lsb-contig-1000.tif"
+"none-L-msb2lsb-contig-1000.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
@@ -232,7 +232,7 @@ int main(int argc, char *argv[]){
 
 
 
-"g4-L-msb2lsb-contig-1000000.tif"
+"none-L-msb2lsb-contig-1000000.tif"
     );
 
     imagebox(demo, currPage, 0, 0, currPage->height / 2, currPage->width, 
