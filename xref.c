@@ -53,7 +53,7 @@ void writeXref(pdf *output){
 			prevNumber++;
 		}
 
-		pdfprintf(output, "%s", currentXREF->string);
+		pdfprintf(output, "%s\n", currentXREF->string);
 		prevNumber = currentXREF->number;
 		currentXREF = currentXREF->next;
 
@@ -84,7 +84,7 @@ void writeXrefEntry(pdf *output, object *dumpTarget){
 	currentXREF->number = dumpTarget->number;
 	if((currentXREF->string = (char *) malloc(sizeof(char) * 20)) == NULL)
 		error("Could not make space for the XREF line.");
-	sprintf(currentXREF->string, "%010d %05d n\n",
+	sprintf(currentXREF->string, "%010d %05d n",
 		dumpTarget->byteOffset,
 		dumpTarget->generation);
 

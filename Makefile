@@ -4,8 +4,8 @@ COMPILER = gcc
 COMPILER_FLAGS = -g -c
 
 # This is used to do the Windows specific I/O things we have to do.
-PLATFORM = WINDOWS
-#PLATFORM = LINUX
+#PLATFORM = WINDOWS
+PLATFORM = LINUX
 
 # Main is excluded from here for the benefit of the tests
 OBJFILES = error.o  font.o  objects.o  panda.o  text.o  trailer.o  utility.o  xref.o

@@ -39,7 +39,7 @@ void pdfprintf(pdf *file, char *format, ...){
   // because lines in a PDF end with \r\n (one of the options)
 
   // Count the number of \n's.
-/*  for(counter = 0; counter < strlen(format); counter++)
+  for(counter = 0; counter < strlen(format); counter++)
     if(format[counter] == '\n') newlineCount++;
 
   if((formatString = 
@@ -47,16 +47,16 @@ void pdfprintf(pdf *file, char *format, ...){
     error("Could not make temporary printing space.");
 
   for(counter = indent = 0; counter < strlen(format); counter++){
-    //    if(format[counter] == '\n'){
-    //  formatString[indent++] = '\r';
-    //  formatString[indent++] = format[counter];
-    //  }
-    // else
+    if(format[counter] == '\n'){
+      formatString[indent++] = '\r';
+      formatString[indent++] = format[counter];
+      }
+     else
 
     formatString[indent++] = format[counter];
     }
 
-  formatString[indent] = 0; */
+  formatString[indent] = 0;
 #endif
 
   // Build the information
@@ -71,9 +71,8 @@ void pdfprintf(pdf *file, char *format, ...){
   // add (change for unix)
 
   // POSSIBLE BUG: Binary streams may be corrupted by Windows here
-  while(counter < strlen(buffer)){
+  for(icounter = 0; counter < strlen(buffer); counter++){
     if(buffer[counter] == '\n') newlineCount++;
-    counter++;
   }
 
   // Add this number to the byteOffset

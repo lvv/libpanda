@@ -68,8 +68,9 @@ void adddictitem(dictionary *victim, char *name, int valueType, ...){
 
 	// Find the end of the dictionary or something with this name already
 	dictNow = victim;
-	while((dictNow->next != NULL) && (strcmp(dictNow->name, name) != 0)) 
+	while((dictNow->next != NULL) && (strcmp(dictNow->name, name) != 0)){
 		dictNow = dictNow->next;
+		}
 
 	// Make a new end to the dictionary if needed
 	if(dictNow->next == NULL){
@@ -88,7 +89,7 @@ void adddictitem(dictionary *victim, char *name, int valueType, ...){
 	// And add some content to this entry if needed
 	if(dictNow->next->next == NULL){
 		if((dictNow->name =
-			(char *) malloc(sizeof(name) + sizeof(char))) == NULL)
+			(char *) malloc(strlen(name) * sizeof(char))) == NULL)
 			error("Could not make space for the new tag name value.");
 		strcpy(dictNow->name, name);
 
@@ -103,9 +104,8 @@ void adddictitem(dictionary *victim, char *name, int valueType, ...){
 	case gLiteralTextValue:
 		// Get the value
 		value = va_arg(argPtr, char *);
-
 		if((dictNow->textValue =
-			(char *) malloc(sizeof(value) + sizeof(char))) == NULL)
+			(char *) malloc(strlen(value) * sizeof(char))) == NULL)
 			error("Could not make space for the new dictionary text value.");
 		dictNow->textValue[0] = '\0';
 		if(valueType != gLiteralTextValue) strcat(dictNow->textValue, "/");
