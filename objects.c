@@ -439,7 +439,7 @@ panda_freeobject(panda_pdf *output, panda_object *freeVictim){
 void
 panda_freetempobject(panda_pdf *output, panda_object *freeVictim,
 		     int freedict){
-  panda_freeobjectactual(output, freeVictim, freedict, panda_false);
+  panda_freeobjectactual(output, freeVictim, freedict, panda_true);
 }
 
 void
@@ -481,7 +481,9 @@ panda_freeobjectactual (panda_pdf * output, panda_object * freeVictim,
   if(freedict == panda_true)
     panda_freedictionary (freeVictim->dict);
 
-  if(freekids == panda_true) free (freeVictim->children);
+  if(freekids == panda_true) 
+    free (freeVictim->children);
+  
   free (freeVictim);
 }
 
