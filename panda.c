@@ -674,10 +674,17 @@ panda_processtrans (panda_pdf * opened, panda_object * obj)
   printf ("processtrans() traversal struct object numbered %d\n", obj->number);
 #endif
 
-  // If the transitions dictionary has anything in it, and this is a page
-  // content object, then add the dictionary to the normal dictionary
-  if((obj->isContents == panda_true) && (obj->trans->next != NULL))
+  // If the transitions dictionary has anything in it
+  if(obj->trans->name != NULL)
     {
-      printf("***** There was a trans dict\n");
+#if defined DEBUG
+      printf("Moved the transitions dictionary into the page contents\n");
+#endif
+
+      panda_adddictitem(obj->dict, "Trans", panda_dictionaryvalue,
+			obj->trans);
+
+      // We also clean up that trans dictionary
+      //      panda_freeobject(obj->trans, panda_true);
     }
 }

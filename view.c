@@ -356,7 +356,7 @@ PURPOSE specify the maximum number of seconds that a page should be displayed by
 SYNOPSIS START
 #include&lt;panda/constants.h&gt;
 #include&lt;panda/functions.h&gt;
-void panda_pageduration (panda_page *target, double seconds);
+void panda_pageduration (panda_page *target, int seconds);
 SYNOPSIS END
 
 DESCRIPTION This function records information within the PDF indicating the maximum number of seconds that the given page should be displayed within the viewer. This is useful for presentations and the like where you might like to automatically move onto the next page in the document at some point. The default value for this is to never move onto the next page automatically. If this value is changed from the default, there is currently no way to revert back to the default later. The feature may not be implemented by all viewers.
@@ -380,9 +380,9 @@ EXAMPLE END
 DOCBOOK END
 ******************************************************************************/
 
-void panda_pageduration(panda_page *target, double duration)
+void panda_pageduration(panda_page *target, int duration)
 {
-  panda_adddictitem(target->obj->dict, "Dur", panda_doublevalue, duration);
+  panda_adddictitem(target->obj->dict, "Dur", panda_integervalue, duration);
 }
 
 /******************************************************************************
@@ -483,6 +483,11 @@ DOCBOOK END
 
 void panda_transstyle(panda_page *target, int style)
 {
+#if defined DEBUG
+  printf("Defined transition style for object number %d\n", 
+	 target->obj->number);
+#endif
+
   switch(style)
     {
     case panda_pagetrans_split_yi:

@@ -204,7 +204,7 @@ extern "C"
   void panda_nfspagemode (panda_pdf *, int);
   void panda_fullscreen (panda_pdf *, int);
   void panda_textdirection (panda_pdf *, int);
-  void panda_pageduration (panda_page *, double);
+  void panda_pageduration (panda_page *, int);
   void panda_transduration (panda_page *, double);
   void panda_transstyle (panda_page *, int);
 

@@ -20,7 +20,7 @@ main (int argc, char *argv[])
 {
   panda_pdf *demo;
   panda_page *currPage, *templatePage;
-  int lineDepth;
+  int lineDepth, trans;
   char tempString[1024], *tempPtr;
 
   printf ("Welcome to the Panda 0.4 sample application...\n");
@@ -46,10 +46,6 @@ main (int argc, char *argv[])
     }
   else
     printf ("For compressed sample, use %s compressed\n", argv[0]);
-
-  // Viewer toggles
-  ///////////////////////////////////////////////////////////////////////////
-  panda_hidetoolbar(demo, panda_true);
 
   // Image functionality
   ///////////////////////////////////////////////////////////////////////////
@@ -390,6 +386,30 @@ main (int argc, char *argv[])
   currPage = panda_newpage(demo, panda_pagesize_a4);
   panda_applytemplate(demo, currPage, templatePage);
 
+  ///////////////////////////////////////////////////////////////////////////
+  // Let's try some transitions
+  ///////////////////////////////////////////////////////////////////////////
+  
+  for(trans = 0; trans < panda_pagetrans_none; trans++)
+    {
+      currPage = panda_newpage(demo, panda_pagesize_a4);
+      panda_pageduration(currPage, 5);
+      panda_transduration(currPage, 5.0);
+      panda_transstyle(currPage, trans);
+      
+      panda_setlinecolor (currPage, trans * 20, 0, trans * 10);
+      panda_setfillcolor (currPage, trans * 20, 0, trans * 10);
+      panda_setlinestart (currPage, 0, 0);
+      panda_setlinewidth (currPage, 5);
+      panda_addlinesegment (currPage, 1000, 0);
+      panda_addlinesegment (currPage, 1000, 1000);
+      panda_addlinesegment (currPage, 0, 1000);
+      panda_closeline (currPage);
+      panda_fillline (currPage);
+      panda_endline (currPage);
+    }
+
+  currPage = panda_newpage(demo, panda_pagesize_a4);
 
   // Finished all the demoing, close the PDF document
   panda_close (demo);

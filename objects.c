@@ -78,7 +78,7 @@ panda_newobject (panda_pdf * doc, int type)
   created->dict->textValue = NULL;
   created->dict->objectarrayValue = NULL;
   created->dict->dictValue = NULL;
-
+ 
   // Initialise the transitions dictionary (only used for page objects)
   // todo_mikal: perhaps only init when needed?
   created->trans =
