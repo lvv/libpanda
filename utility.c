@@ -84,7 +84,7 @@ void pdfprintf(pdf *file, char *format, ...){
   fprintf(file->file, "%s", buffer);
 
   // Free the temp string
-  free(formatString);
+  //  free(formatString);
   va_end(argPtr);
 }
 

@@ -94,7 +94,7 @@ pdf *pdfopen(char *filename, char *mode){
     // to each page. This makes the PDF more efficient
     openedpdf->fonts = newobject(openedpdf, gPlaceholder);
 
-    // Set the font mode to something basic
+    // Set the text mode to something basic
     setfontmode(openedpdf, gTextModeNormal);
     setcharacterspacing(openedpdf, 0.0);
     setwordspacing(openedpdf, 0.0);

@@ -40,16 +40,22 @@ int main(int argc, char *argv[]){
     setcharacterspacing(demo, (double) lineDepth);
     setwordspacing(demo, (double) lineDepth * 10);
     sethorizontalscaling(demo, (double) 1 - (lineDepth * 0.1));
-    setleading(demo, (double) lineDepth);
+    setleading(demo, 16.0);
 
     // I am not drawing a multiline string here because I am not sure how to 
     // represent this in the PDF at the moment
-    sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator", 4, 6, 5);
+    sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok (once you have set a leading)", 4, 6, 5);
     textbox(demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30, 
       tempString);
 
 #if defined DEBUG
     printf("Created textbox\n");
+#endif
+
+    textbox(demo, currPage, 300, 10, 400, 50, "A second textbox on the page");
+
+#if defined DEBUG
+    printf("Created second textbox\n");
 #endif
   }
 
