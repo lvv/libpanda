@@ -1,11 +1,9 @@
 Type=Exe
 Form=interface.frm
-Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#..\..\..\..\..\WIN98\SYSTEM\StdOle2.tlb#OLE Automation
+Reference=*\G{00020430-0000-0000-C000-000000000046}#2.0#0#C:\WINDOWS\SYSTEM\STDOLE2.TLB#OLE Automation
 Module=panda; panda.bas
-Object={3B7C8863-D78F-101B-B9B5-04021C009402}#1.2#0; RICHTX32.OCX
 IconForm="Form1"
 Startup="Form1"
-ExeName32="example.exe"
 Command32=""
 Name="Project1"
 HelpContextID="0"
