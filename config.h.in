@@ -3,3 +3,6 @@
 #define HAVE_LIBTIFF	@HAVE_LIBTIFF@
 #define HAVE_LIBJPEG	@HAVE_LIBJPEG@
 #define HAVE_LIBPNG	@HAVE_LIBPNG@
+
+// The debug option is now in here as well -- uncomment this line to turn it on
+//#define	DEBUG		1

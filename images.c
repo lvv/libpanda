@@ -18,11 +18,6 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#if defined HAVE_CONFIG_H
-  #warning "Included config.h which is made by autoconf"
-  #include "config.h"
-#endif
-
 static tsize_t libtiffDummyReadProc (thandle_t fd, tdata_t buf, tsize_t size);
 static tsize_t libtiffDummyWriteProc (thandle_t fd, tdata_t buf,
 				      tsize_t size);
@@ -93,39 +88,39 @@ imageboxrot (pdf * output, page * target, int top, int left,
   switch (type)
     {
     case gImageTiff:
-#if defined HAVE_LIBTIFF
-      insertTiff (output, target, imageObj, filename);
-#else
-      #warning "TIFF support missing at compile time"
-      fprintf(stderr, "%s %s\n",
-	      "TIFF support not compiled into Panda because libtiff was not",
-	      "found at compile time.");
-      adddictitem(imageObj->dict, "TIFF_Support_Missing", gIntValue, 1);
-#endif
+      if(HAVE_LIBTIFF)
+	insertTiff (output, target, imageObj, filename);
+      else
+	{
+	  fprintf(stderr, "%s %s\n",
+		  "TIFF support not compiled into Panda because libtiff was",
+		  "not found at compile time.");
+	  adddictitem(imageObj->dict, "TIFF_Support_Missing", gIntValue, 1);
+	}
       break;
 
     case gImageJpeg:
-#if defined HAVE_LIBJPEG
-      insertJpeg (output, target, imageObj, filename);
-#else
-      #warning "JPEG support missing at compile time"
-      fprintf(stderr, "%s %s\n",
-	      "JPEG support not compiled into Panda because libjpeg was not",
-	      "found at compile time.");
-      adddictitem(imageObj->dict, "JPEG_Support_Missing", gIntValue, 1);
-#endif
+      if(HAVE_LIBJPEG)
+	insertJpeg (output, target, imageObj, filename);
+      else
+	{
+	  fprintf(stderr, "%s %s\n",
+		  "JPEG support not compiled into Panda because libjpeg was",
+		  "not found at compile time.");
+	  adddictitem(imageObj->dict, "JPEG_Support_Missing", gIntValue, 1);
+	}
       break;
 
     case gImagePNG:
-#if defined HAVE_LIBPNG
-      insertPNG (output, target, imageObj, filename);
-#else
-      #warning "PNG support missing at compile time"
-      fprintf(stderr, "%s %s\n",
-	      "PNG support not compiled into Panda because libpng was not",
-	      "found at compile time.");
-      adddictitem(imageObj->dict, "PNG_Support_Missing", gIntValue, 1);
-#endif
+      if(HAVE_LIBPNG)
+	insertPNG (output, target, imageObj, filename);
+      else
+	{
+	  fprintf(stderr, "%s %s\n",
+		  "PNG support not compiled into Panda because libpng was not",
+		  "found at compile time.");
+	  adddictitem(imageObj->dict, "PNG_Support_Missing", gIntValue, 1);
+	}
       break;
     }
   // --------------------------------------------------------------------------
