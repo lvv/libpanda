@@ -23,7 +23,7 @@ main (int argc, char *argv[])
   int lineDepth, trans;
   char tempString[1024], *tempPtr;
 
-  printf ("Welcome to the Panda 0.4 sample application...\n");
+  printf ("Welcome to the Panda 0.5 sample application...\n");
 
   // Initialise the library
   panda_init ();
