@@ -615,16 +615,16 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
   FILE *image;
   int c;
   unsigned long imageBufSize;
-
+  
 #if defined DEBUG
   printf ("Inserting a JPEG image on page with object number %d.\n",
 	  target->obj->number);
 #endif
 
-  // Open the file
+  // Open the file -- why is this a memory leak?
   if ((image = fopen (filename, "rb")) == NULL)
     panda_error (panda_true, "Could not open the specified JPEG file.");
-
+  
   // Setup the decompression options
   cinfo.err = jpeg_std_error (&jerr);
 
@@ -697,6 +697,10 @@ panda_insertJPEG (panda_pdf * output, panda_page * target,
 
   // This cleans things up for us in the JPEG library
   jpeg_destroy_decompress (&cinfo);
+
+#if defined DEBUG
+  printf("Finished inserting the JPEG\n");
+#endif
 }
 
 /******************************************************************************

@@ -1,0 +1,11 @@
+#!/bin/bash
+
+count=0
+
+while [ $count -lt 8 ]
+do
+  ./exercise $count
+  mv logfile logfile.$count
+
+  count=$(( $count + 1 ))
+done
