@@ -61,11 +61,8 @@ clean:
 		rm -i panda
 		rm -i libpanda.a
 		rm -i configure
-		rm -i Makefile
-		rm -i timetrials/Makefile
-		rm -i regression/Makefile
 		rm -rf mctemp
-  		rm -i *~
+		rm -i *~
 		rm -i *core*
 
 ###############################################################################
