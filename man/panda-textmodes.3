@@ -30,7 +30,7 @@ Character spacing (Tc operator)
 .RS
 The definition of this operator may be found on page 340 of the PDF specification.
 
-The mode is fully implemented in Panda, and is accessible through the
+This operator is fully implemented in Panda, and is accessible through the
 .B setcharacterspacing (3)
 function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
 
@@ -41,7 +41,7 @@ Word spacing (Tw operator)
 .RS
 The definition of this operator may be found on page 340 of the PDF specification.
 
-The mode is fully implemented in Panda, and is accessible through the
+This operator is fully implemented in Panda, and is accessible through the
 .B setwordspacing (3)
 function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
 
@@ -52,7 +52,7 @@ Horizontal Scaling (Tz operator)
 .RS
 The definition of this operator may be found on page 341 of the PDF specification.
 
-The mode is fully implemented in Panda, and is accessible through the
+This operator is fully implemented in Panda, and is accessible through the
 .B sethorizontalscaling (3)
 function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
 
@@ -63,7 +63,7 @@ Leading (TL operator)
 .RS
 The definition of this operator may be found on page 342 of the PDF specification.
 
-The mode is fully implemented in Panda, and is accessible through the
+This operator is fully implemented in Panda, and is accessible through the
 .B setleading (3)
 function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
 
@@ -74,7 +74,7 @@ Font and size (Tf operator)
 .RS
 The definition of this operator may be found on page 342 of the PDF specification.
 
-The mode is fully implemented in Panda, and is accessible through the
+This operator is fully implemented in Panda, and is accessible through the
 .B setfont (3)
 and
 .B setfontsize (3)
@@ -88,7 +88,7 @@ Text matrix (Tm operator)
 .RS
 The definition of this operator may be found on page 342 of the PDF specification.
 
-The mode is partially implemented in Panda (due to my lack of understanding of the meaning of the values in the matrix), and is accessible indirectly through the
+This operator is partially implemented in Panda (due to my lack of understanding of the meaning of the values in the matrix), and is accessible indirectly through the
 .B textbox (3)
 function call in Panda. This is because this operator is used to place the textbox onto the page. The default Tm value, is we did not set one in the textbox code, is the bottom left hand corner of the page. The default implemented by the textbox code is the top left hand corner of the page, although the user must set a location on the page for the function call to be valid.
 .RE
@@ -97,48 +97,101 @@ Text rendering (Tr operator)
 .RS
 The definition of this operator may be found on page 343 of the PDF specification.
 
-The mode is fully implemented in Panda, and is accessible through the
+This operator is fully implemented in Panda, and is accessible through the
 .B setfontmode (3)
 function call in Panda. Note that this attribute is 'sticky' and therefore will not revert to the default if you change font \-\- it must be explicitly changed.
 
 The default mode is gTextModeNormal.
 .RE
 
+Super and sub scripting (Ts operator)
+.RS
+The definition of this operator may be found on page 344 of the PDF specification.
 
+This operator is fully implemented in Panda, and is accessible indirectly through the
+.B textbox (3)
+function call in Panda. Note that this attribute is
+.B not
+'sticky' and therefore will revert to the default when you create a new textbox. This attribute is accessed via the text string passed into
+.B textbox (3)
+. In order to turn on superscripting, place the
+.B EOT
+character (ASCII value 4) into the string, followed immediately by the jump upwards (as an ASCII single digit number). To subscript, place the
+.B ENQ
+character (ASCII value 5), followed immediately by the jump downwards (as an ASCII single digit number). To return to the normal text placement, place the
+.B ACK
+character (ASCII value 6) into the string.
 
+The default is no super or sub scripting.
 
+Some source code that shows this is:
+.RS
+.nf
+sprintf(tempString, "Hello %c5World! %cMy name %c5is Panda!", 4, 6, 5);
+.fi
+.RE
+This code superscripts the text "World!" by 5 points, subscripts the text "is Panda!" by 5 points, and displays the rest in the normal location on the line. Note that you may need to use the text leading functionality to ensure correct display.
+.RE
 
+Text object operators (BT and ET operators)
+.RS
+The definition of these operators may be found on page 344 of the PDF specification.
 
+These operators are implemented in Panda and are accessible implicitly in the 
+.B textbox (3)
+function call.
+.RE
 
+Newline with offset (Td and TD operators)
+.B NOT YET IMPLEMENTED
 
+Newline (T* operator)
+.B NOT YET IMPLEMENTED
 
+Text rendering matrix (Trm operator)
+.B NOT YET IMPLEMENTED
 
+Show text (Tj operator)
+.RS
+The definition of this operator may be found on page 347 of the PDF specification.
 
+This operator is implicitly implemented in the
+.B textbox (3)
+function call.
+.RE
 
+Show text on new line (' operator)
+.RS
+The definition of this operator may be found on page 347 of the PDF specification.
 
+This operator is implicitly implemented in the
+.B textbox (3)
+function call.
+.RE
 
+Show text one new line with movement (" operator)
+.B NOT YET IMPLEMENTED
 
+Show text with manipulation (TJ operator)
+.B NOT YET IMPLEMENTED
 
+Execute xobject (Do operator)
+.B NOT YET IMPLEMENTED
 
+Execute postscript xobject (PS operator)
+.B NOT YET IMPLEMENTED
 
+Inline image (BI, DI, and EI operators)
+.B NOT YET IMPLEMENTED
 
+Various font operators
+.B NOT YET IMPLEMENTED
 
+Do not report page desciption problems (BX and EX operators)
+.B NOT YET IMPLEMENTED
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+Various marked context operators
+.B NOT YET IMPLEMENTED
 
 .SH AUTHOR
 .br
