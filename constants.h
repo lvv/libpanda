@@ -12,9 +12,6 @@
     the one source file which owns the variables
 ******************************************************************************/
 
-// Stuff from autoconf
-#include "config.h"
-
 // The text that we make binary to display in the first 100 bytes or so of the
 // PDF (forces some FTP clients into binary mode). The function inipanda
 // actually generates the gBinaryHeaderString string value.
