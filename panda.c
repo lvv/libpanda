@@ -32,6 +32,7 @@ void initpanda(){
 // Open the named PDF document in the given mode
 pdf *pdfopen(char *filename, char *mode){
   pdf  *openedpdf;
+  char *tempPtr;
 
   // We are going to open a PDF for file I/O. Currently, the only supported
   // mode is 'w'. There are some more obscure modes not included in the error
@@ -115,9 +116,14 @@ pdf *pdfopen(char *filename, char *mode){
     // Create a dummy object for when we print the pdf to a file
     openedpdf->dummyObj = newobject(openedpdf, gPlaceholder);
 
-    // Now we just need to make sure we know there is no info object
+    // Setup the info object with some stuff which makes me happy... :)
     openedpdf->info = NULL;
-
+    checkInfo(openedpdf);
+    adddictitem(openedpdf->info, "Producer", gTextValue, "Panda 0.2");
+    adddictitem(openedpdf->info, "CreationDate, gTextValue,
+      tempPtr = nowdate());
+    free(tempPtr);
+ 
     // We did open the PDF file ok
     return openedpdf;
     break;
