@@ -130,7 +130,7 @@ imageboxrot (pdf * output, page * target, int top, int left,
     }
   // --------------------------------------------------------------------------
 
-  // We also need to add some information to the text stream for the contents
+  // We also need to add some information to the layout stream for the contents
   // object for the page that the image is being displayed on. This information
   // consists of the following:
   //  - save the current graphics state (q operator, p 386 of spec)
@@ -141,8 +141,19 @@ imageboxrot (pdf * output, page * target, int top, int left,
   //  - use the image xobject we have created (Do operator, p 348 of spec)
   //  - restore the graphics state to the way it was previously (Q operator,
   //    p 386 of spec)
-  target->contents->xobjectstream =
-    streamprintf (target->contents->xobjectstream,
+  if(target->contents->textmode == gTrue)
+    {
+      target->contents->layoutstream = 
+	streamprintf(target->contents->layoutstream, "ET\n");
+      target->contents->textmode = gFalse;
+
+#if defined DEBUG
+      printf("Imageboxrot: Ended textmode for object %d\n", target->contents->number);
+#endif
+    }
+
+  target->contents->layoutstream =
+    streamprintf (target->contents->layoutstream,
 		  "\nq\n%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
 		  // The first matrix -- this has been modified because of
 		  // patches submitted by Ceasar Miquel (miquel@df.uba.ar)
@@ -153,8 +164,8 @@ imageboxrot (pdf * output, page * target, int top, int left,
 		  (double) left,	// x start
 		  (double) target->height - bottom);	// y start
 
-  target->contents->xobjectstream =
-    streamprintf (target->contents->xobjectstream,
+  target->contents->layoutstream =
+    streamprintf (target->contents->layoutstream,
 		  "%.2f %.2f %.2f %.2f %.2f %.2f cm\n",
 		  // The second matrix
 		  (double) (right - left),	// x size
@@ -164,8 +175,8 @@ imageboxrot (pdf * output, page * target, int top, int left,
 		  0.0,		// ???
 		  0.0);		// ???
 
-  target->contents->xobjectstream =
-    streamprintf (target->contents->xobjectstream, "/%s Do\nQ\n\n", filename);
+  target->contents->layoutstream =
+    streamprintf (target->contents->layoutstream, "/%s Do\nQ\n\n", filename);
 
 #if defined DEBUG
   printf ("Finished inserting an image.\n");

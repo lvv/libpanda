@@ -29,10 +29,6 @@ K * Start using automake
 K * Handling of vsnprintf return number based on the differnt ways that
 	glibc behaves...
 
-K * At the moment you can only have background images, make foreground images
-	work as well... (I think I have this arse about -- you can only have 
-	foreground images...)
-
   * Be a bit more sensible in some of our error handling, for instance, if we
   	can't find a file to include in the PDF we shouldn't exit -- we should
 	report it to the calling function and let them deal with it...

@@ -27,9 +27,6 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
   ***************************************************************************/
 
   // Make an object to store the text
-  //  textobj = newobject(output, gNormal);
-  //  addchild(thisPage->obj, textobj);
-  //  adddictitem(thisPage->obj->dict, "Contents", gObjValue, textobj);
   textobj = thisPage->contents;
 
   // Is there a font setup? Does this work with changing the font?
@@ -99,42 +96,53 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
   ***************************************************************************/
 
   // Build the command buffer
+  if(textobj->textmode == gFalse)
+    {
+      textobj->layoutstream = 
+	streamprintf(textobj->layoutstream, "\nBT\n");
+      textobj->textmode = gTrue;
+
+#if defined DEBUG
+      printf("Textbox: Entered textmode for object %d\n", textobj->number);
+#endif
+    }
+
   // This is a little dodgy at the moment because I do not understand the
   // PS matrix environment well enough to be writing this sort of code. I am
   // going to have to have a look into this a little more...
-  textobj->textstream =
-    streamprintf (textobj->textstream, "1 0 0 1 %d %d Tm\n", internalLeft,
+  textobj->layoutstream =
+    streamprintf (textobj->layoutstream, "1 0 0 1 %d %d Tm\n", internalLeft,
 		  internalTop);
 
   // There are now a whole bunch of options that may or may not need to be set
   if (output->currentFontMode != 0)
     {
-      textobj->textstream = streamprintf (textobj->textstream, "%d Tr\n",
+      textobj->layoutstream = streamprintf (textobj->layoutstream, "%d Tr\n",
 					  output->currentFontMode);
     }
 
   if (output->currentCharacterSpacing != 0)
     {
-      textobj->textstream = streamprintf (textobj->textstream, "%.2f Tc\n",
+      textobj->layoutstream = streamprintf (textobj->layoutstream, "%.2f Tc\n",
 					  output->currentCharacterSpacing);
     }
 
   if (output->currentWordSpacing != 0)
     {
-      textobj->textstream = streamprintf (textobj->textstream, "%.2f Tw\n",
+      textobj->layoutstream = streamprintf (textobj->layoutstream, "%.2f Tw\n",
 					  output->currentWordSpacing);
     }
 
   if (output->currentHorizontalScaling != 1)
     {
-      textobj->textstream = streamprintf (textobj->textstream, "%.0f Tz\n",
+      textobj->layoutstream = streamprintf (textobj->layoutstream, "%.0f Tz\n",
 					  output->currentHorizontalScaling *
 					  100);
     }
 
   if (output->currentLeading != 0)
     {
-      textobj->textstream = streamprintf (textobj->textstream, "%.2f TL\n",
+      textobj->layoutstream = streamprintf (textobj->layoutstream, "%.2f TL\n",
 					  output->currentLeading);
     }
 
@@ -145,7 +153,7 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
       (strcmp (output->currentFont, textobj->currentSetFont) != 0))
     {
       // Set the font that we want to use
-      textobj->textstream = streamprintf (textobj->textstream, "/%s %d Tf\n",
+      textobj->layoutstream = streamprintf (textobj->layoutstream, "/%s %d Tf\n",
 					  output->currentFont,
 					  output->currentFontSize);
 
@@ -202,7 +210,7 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
       // do so now
       if (displayedFirstPart == gFalse)
 	{
-	  textobj->textstream = streamprintf (textobj->textstream, "(%s) '\n",
+	  textobj->layoutstream = streamprintf (textobj->layoutstream, "(%s) '\n",
 					      strtokVictim);
 	  displayedFirstPart = gTrue;
 	}
@@ -210,26 +218,26 @@ textbox (pdf * output, page * thisPage, int top, int left, int bottom,
       switch (text[currentToken - strtokVictim - 1])
 	{
 	case '\n':
-	  textobj->textstream = streamprintf (textobj->textstream, "(%s) '\n",
+	  textobj->layoutstream = streamprintf (textobj->layoutstream, "(%s) '\n",
 					      currentToken);
 	  break;
 
 	case 4:
-	  textobj->textstream = streamprintf (textobj->textstream,
+	  textobj->layoutstream = streamprintf (textobj->layoutstream,
 					      "%c Ts (%s) Tj\n",
 					      currentToken[0],
 					      currentToken + 1);
 	  break;
 
 	case 5:
-	  textobj->textstream = streamprintf (textobj->textstream,
+	  textobj->layoutstream = streamprintf (textobj->layoutstream,
 					      "-%c Ts (%s) Tj\n",
 					      currentToken[0],
 					      currentToken + 1);
 	  break;
 
 	case 6:
-	  textobj->textstream = streamprintf (textobj->textstream,
+	  textobj->layoutstream = streamprintf (textobj->layoutstream,
 					      "0 Ts (%s) Tj\n", currentToken);
 	  break;
 	}

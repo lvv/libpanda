@@ -119,7 +119,7 @@ pdfprintf (pdf * file, char *format, ...)
   // Count how many \n's there are and take into account the \r windows will
   // add (change for unix)
 
-  // POSSIBLE BUG: Binary textstreams may be corrupted by Windows here
+  // POSSIBLE BUG: Binary layoutstreams may be corrupted by Windows here
   for (icounter = 0; counter < strlen (buffer); counter++)
     {
       if (buffer[counter] == '\n')

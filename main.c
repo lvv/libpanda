@@ -40,6 +40,12 @@ main (int argc, char *argv[])
       // Create a page
       currPage = pdfpage (demo, gPageSizeA4);
 
+      // Put in the background images
+      imagebox (demo, currPage, 0, 0, currPage->height / 2, currPage->width,
+		"input.tif", gImageTiff);
+      imagebox (demo, currPage, currPage->height / 2, 0, currPage->height,
+		currPage->width, "input2.tif", gImageTiff);
+
       // Put some text onto it
       setfontmode (demo, lineDepth);
       setcharacterspacing (demo, (double) lineDepth);
@@ -55,26 +61,24 @@ main (int argc, char *argv[])
       textbox (demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30,
 	       tempString);
 
-      setfont (demo, tempPtr = createfont(demo, "Helvetica-Bold", 1, 
-					  "MacRomanEncoding"));
-      textbox (demo, currPage, lineDepth * 20 + 70, 30 + lineDepth, 100, 30,
-	       "A line in Helvetica-Bold");
-      free(tempPtr);
-
       setfont (demo, tempPtr = createfont(demo, "Symbol", 1, 
 					  "MacRomanEncoding"));
       textbox (demo, currPage, lineDepth * 20 + 50, 10 + lineDepth, 100, 30,
 	       "Symbol");
       free(tempPtr);
 
-      // Insert some images
-      imagebox (demo, currPage, 0, 0, currPage->height / 2, currPage->width,
-		"input.tif", gImageTiff);
-      imagebox (demo, currPage, currPage->height / 2, 0, currPage->height,
-		currPage->width, "input2.tif", gImageTiff);
+      setfont (demo, tempPtr = createfont(demo, "Helvetica-Bold", 1, 
+					  "MacRomanEncoding"));
+      textbox (demo, currPage, lineDepth * 20 + 70, 30 + lineDepth, 100, 30,
+	       "A line in Helvetica-Bold");
+      free(tempPtr);
 
+      // Insert some images
       imagebox (demo, currPage, 100, 100, 150, 150, "gnu-head.jpg",
 		gImageJpeg);
+      textbox (demo, currPage, 90, 110, 200, 200, "INFRONTINFRONTINFRONT");
+      
+      textbox (demo, currPage, 190, 210, 300, 300, "BEHINDBEHINDBEHIND");
       imagebox (demo, currPage, 200, 200, 317, 317, "gnu_box.jpg",
 		gImageJpeg);
       imagebox (demo, currPage, 317, 317, 434, 434, "gnu_box.jpg",
@@ -116,63 +120,6 @@ main (int argc, char *argv[])
       textbox (demo, currPage, 620, 10, 720, 300,
 	       "and is distributed under the terms of the GPL...");
       free(tempPtr);
-    }
-
-  pdfclose (demo);
-
-  // ---------------------------- LINEAR -----------------------------------
-
-  // Open our demo PDF
-  if ((demo = pdfopen ("output-linear.pdf", "wl")) == NULL)
-    error ("demo: could not open output.pdf to write to.");
-
-  // For every text mode in v 1.3
-  for (lineDepth = 0; lineDepth < 1; lineDepth++)
-    {
-#if defined DEBUG
-      printf ("Created page\n");
-#endif
-
-      // Create a page
-      currPage = pdfpage (demo, gPageSizeA4);
-
-      // Put some text onto it
-      setfontmode (demo, lineDepth);
-      setcharacterspacing (demo, (double) lineDepth);
-      setwordspacing (demo, (double) lineDepth * 10);
-      sethorizontalscaling (demo, (double) 1 - (lineDepth * 0.1));
-      setleading (demo, 16.0);
-
-      // I am not drawing a multiline string here because I am not sure how to 
-      // represent this in the PDF at the moment
-      sprintf (tempString,
-	       "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.",
-	       4, 6, 5);
-      textbox (demo, currPage, lineDepth * 20 + 10, 10 + lineDepth, 100, 30,
-	       tempString);
-
-      // Insert some images
-      imagebox (demo, currPage, 10, 10, 20, 20, "input.tif", gImageTiff);
-      imagebox (demo, currPage, 200, 200, 250, 250, "gnu-head.jpg",
-		gImageJpeg);
-      //    imagebox(demo, currPage, 300, 300, 310, 310, "gnu_box.jpg", gImageJpeg);
-
-#if defined DEBUG
-      printf ("Created textbox and inserted first image\n");
-#endif
-
-      textbox (demo, currPage, 300, 10, 400, 50,
-	       "A second textbox on the page");
-
-#if defined DEBUG
-      printf ("Created second textbox\n");
-#endif
-
-      setfont (demo, createfont (demo, "Times-Roman", 1, "MacRomanEncoding"));
-      textbox (demo, currPage, 600, 10, 700, 300,
-	       "The background image on this page is Copyright 2000 Andrew Cagney");
-      textbox (demo, currPage, 620, 10, 720, 300,
-	       "and is distributed under the terms of the GPL...");
     }
 
   pdfclose (demo);

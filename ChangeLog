@@ -74,3 +74,6 @@ Release 0.2 -> Release 0.3
 	the silly bug.
 
   * Ensured that multiple tiffs and jpegs on the one page works as expected.
+
+  * You can now have various layers of images and texboxes, the textboxes are
+	now no longer in the foreground.

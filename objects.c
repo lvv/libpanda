@@ -61,12 +61,14 @@ newobject (pdf * doc, int type)
 #endif
 
   // We don't have any streams at the moment
-  created->textstream = NULL;
   created->binarystream = NULL;
-  created->xobjectstream = NULL;
+  created->layoutstream = NULL;
 
   // There is no font defined
   created->currentSetFont = NULL;
+
+  // We are not in text mode within the layout stream at the start
+  created->textmode = gFalse;
 
   // New objects have a generation number of 0 by definition
   created->generation = 0;
@@ -367,12 +369,10 @@ freeObject (pdf * output, object * freeVictim)
     {
       // Free the object and all it's bits -- free of a NULL does nothing! But
       // not in dmalloc!!!
-      if (freeVictim->textstream != NULL)
-	free (freeVictim->textstream);
+      if (freeVictim->layoutstream != NULL)
+	free (freeVictim->layoutstream);
       if (freeVictim->binarystream != NULL)
 	free (freeVictim->binarystream);
-      if (freeVictim->xobjectstream != NULL)
-	free (freeVictim->xobjectstream);
       if (freeVictim->currentSetFont != NULL)
 	free (freeVictim->currentSetFont);
 
@@ -449,53 +449,31 @@ writeObject (pdf * output, object * dumpTarget)
       dumpTarget->byteOffset = output->byteOffset;
 
     /*************************************************************************
-      Do we have a textstream? If we do, work out the length of the stream and
-      save that as a dictionary element -- this needs to include all of the
-      different stream types eventually...
-
-      The +6 is because of the BT and ET that are added at this stage...
-
-      There is also the option that we have commands that go after the
-      stream from the xobjectsstream, which we need to check for as well.
+      Do we have a layoutstream? If we do, work out the length of the stream 
+      and save that as a dictionary element.
 
       We also handle binarystreams here.
 
     *************************************************************************/
 
 #if defined DEBUG
-      printf ("Textstream is %s\n",
-	      (dumpTarget->textstream == NULL) ? "NULL" : "not NULL");
-      printf ("Xobjectstream is %s\n",
-	      (dumpTarget->xobjectstream == NULL) ? "NULL" : "not NULL");
+      printf ("Layoutstream is %s\n",
+	      (dumpTarget->layoutstream == NULL) ? "NULL" : "not NULL");
       printf ("Binarystream is %s\n",
 	      (dumpTarget->binarystream == NULL) ? "NULL" : "not NULL");
 #endif
 
-      if (dumpTarget->textstream != NULL)
+      if (dumpTarget->layoutstream != NULL)
 	{
-	  // Do we also have an xobjectstream?
-	  if (dumpTarget->xobjectstream != NULL)
-	    adddictitem (dumpTarget->dict, "Length", gIntValue,
-			 strlen (dumpTarget->textstream) + 6 +
-			 strlen (dumpTarget->xobjectstream));
-
-	  else
-	    adddictitem (dumpTarget->dict, "Length", gIntValue,
-			 strlen (dumpTarget->textstream) + 6);
+	  adddictitem (dumpTarget->dict, "Length", gIntValue,
+		       strlen (dumpTarget->layoutstream) - 1);
 	}
 
-      // We cannot have a textstream and a binary stream in the same object
+      // We cannot have a layoutstream and a binary stream in the same object
       else if (dumpTarget->binarystream != NULL)
 	{
 	  adddictitem (dumpTarget->dict, "Length", gIntValue,
 		       dumpTarget->binarystreamLength);
-	}
-
-      // We might also only have an xobjectstream here
-      else if (dumpTarget->xobjectstream != NULL)
-	{
-	  adddictitem (dumpTarget->dict, "Length", gIntValue,
-		       strlen (dumpTarget->xobjectstream));
 	}
 
       // We are going to dump the named object (and only the named object) to 
@@ -505,21 +483,11 @@ writeObject (pdf * output, object * dumpTarget)
 
       writeDictionary (output, dumpTarget, dumpTarget->dict);
 
-      // Do we have a textstream?
-      if (dumpTarget->textstream != NULL)
+      // Do we have a layoutstream?
+      if (dumpTarget->layoutstream != NULL)
 	{
 	  pdfprint (output, "stream\n");
-
-	  // We might also have an xobjectstream
-	  if (dumpTarget->xobjectstream != NULL)
-	    {
-	      pdfprintf (output, "%s", dumpTarget->xobjectstream);
-	    }
-
-	  pdfprint (output, "BT\n");
-	  pdfprintf (output, "%s", dumpTarget->textstream);
-	  pdfprint (output, "ET\n");
-
+	  pdfprintf (output, "%s", dumpTarget->layoutstream);
 	  pdfprint (output, "endstream\n");
 	}
 
@@ -532,14 +500,6 @@ writeObject (pdf * output, object * dumpTarget)
 	  for (count = 0; count < dumpTarget->binarystreamLength; count++)
 	    pdfputc (output, dumpTarget->binarystream[count]);
 
-	  pdfprint (output, "\nendstream\n");
-	}
-
-      // We might also only have an xobject stream
-      else if (dumpTarget->xobjectstream > 0)
-	{
-	  pdfprint (output, "stream\n");
-	  pdfprintf (output, "%s", dumpTarget->xobjectstream);
 	  pdfprint (output, "\nendstream\n");
 	}
 

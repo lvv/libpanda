@@ -205,27 +205,33 @@ pdfclose (pdf * openedpdf)
     adddictitem (openedpdf->pages->dict, "Count", gIntValue,
 		 openedpdf->pageCount);
 
+  // Before we do anything, we need to make sure that we have ended the
+  // textmode if we have entered one on one of the pages. This is because
+  // we need to modify the layout stream before we have the possibility of
+  // having had it written out to disk
+  traverseObjects(openedpdf, openedpdf->pages, gDown, closeText);
+
   // We do some different things to write out the PDF depending on the mode
   switch (openedpdf->mode)
     {
     case gWrite:
       // We need to write out the objects into the PDF file and then close the
-      // file -- any object which heads an object tree, or lives outside the tree
-      // structure will need a traverseObjects call here...
+      // file -- any object which heads an object tree, or lives outside the 
+      // tree structure will need a traverseObjects call here...
       if (openedpdf->catalog != NULL)
 	traverseObjects (openedpdf, openedpdf->catalog, gDown, writeObject);
 
       if (openedpdf->fonts != NULL)
 	traverseObjects (openedpdf, openedpdf->fonts, gDown, writeObject);
 
-      // We need to traverse the dummy object so we pick up the manually created
-      // objects from the lexer
+      // We need to traverse the dummy object so we pick up the manually 
+      // created objects from the lexer
       traverseObjects (openedpdf, openedpdf->dummyObj, gDown, writeObject);
 
       if (openedpdf->pages != NULL)
 	{
-	  // Write our the XREF object -- this MUST happen after all objects have 
-	  // been written, or the byte offsets will not be known
+	  // Write our the XREF object -- this MUST happen after all objects 
+	  // have been written, or the byte offsets will not be known
 	  writeXref (openedpdf);
 
 	  // Write the trailer
@@ -306,10 +312,6 @@ pdfpage (pdf * output, char *pageSize)
   // Add it to the object tree
   addchild (output->pages, newPage->obj);
 
-  // List it in the Kids field of the pages object
-  // This is now done when the object is written out into the PDF at the end
-  // adddictitem(output->pages->dict, "Kids", gObjArrayValue, newPage->obj);
-
   // Setup some basic things within the page object's dictionary
   adddictitem (newPage->obj->dict, "Type", gTextValue, "Page");
   adddictitem (newPage->obj->dict, "MediaBox", gLiteralTextValue, pageSize);
@@ -342,3 +344,23 @@ pdfpage (pdf * output, char *pageSize)
 
   return newPage;
 }
+
+void
+closeText(pdf *opened, object *obj){
+#if defined DEBUG
+  printf("closeText() traversal struct object numbered %d\n", obj->number);
+#endif
+
+  if(obj->textmode == gTrue)
+    {
+      obj->layoutstream =
+	streamprintf(obj->layoutstream, "\nET\n\n\n");
+      obj->textmode = gFalse;
+
+#if defined DEBUG
+      printf("Finalised textmode in an object numbered %d\n",
+	     obj->number);
+#endif
+    }
+}
+  

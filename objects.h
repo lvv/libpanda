@@ -41,7 +41,7 @@ typedef struct __object
   int type;
   int number;
   int generation;
-  int textState;
+  int textmode;
   unsigned long byteOffset;
   dictionary *dict;
   char *layoutstream, *binarystream;
