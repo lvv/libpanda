@@ -1,4 +1,20 @@
-  * Further improve font handling so that font changes are minimised (change
+Welcome to the seemingly never ending Panda TODO list. The format for this file
+is a simple list of tasks that need to be completed. There are also the
+following symbols defined to the left of the *'s, which have the following
+meanings:
+
+  K - release killer. The current development release of Panda will not be
+	released for production use until this problem is resolved
+  N - something that is expected to be fixed by the next major release of
+	Panda (after the one which we are working on now)
+  L - low priority, will one day be done.
+
+A lack of a symbol to the left merely means that I have not decided what it's
+priority is yet, and that it will oneday get done.
+
+-------------------------------------------------------------------------------
+
+N * Further improve font handling so that font changes are minimised (change
 	the order text boxes are drawn in so that the font need only be defined
 	once per page).
 
@@ -6,18 +22,18 @@
 
   * Make the \n -> \r\n conversion into a function call and make it faster...
 
-  * Add see also sections in the man pages
+L * Add see also sections in the man pages
 
-  * Check that all of the malloc calls involving a strlen have 1 added to the
+K * Check that all of the malloc calls involving a strlen have 1 added to the
 	the result of the strlen in a manner that allows the size of char to
 	change.
 
-  * Start using automake
+K * Start using automake
 
-  * Handling of vsnprintf return number based on the differnt ways that
+K * Handling of vsnprintf return number based on the differnt ways that
 	glibc behaves...
 
-  * At the moment you can only have background images, make foreground images
+K * At the moment you can only have background images, make foreground images
 	work as well... (I think I have this arse about -- you can only have 
 	foreground images...)
 
@@ -27,28 +43,28 @@
 
   * Documentation!
 
-  * Linearisation (also known as optimised PDF)
+N * Linearisation (also known as optimised PDF)
 
   * Validity checks for things like names
 
-  * TIFF support does not currently include the following compression options:
+N * TIFF support does not currently include the following compression options:
 	- NONE
 	- Flate
 	- LZW (never!)
 	- Packbit
 
-  * More work on the lexer
+N * More work on the lexer
 
-  * PNG support
+N * PNG support
 
-  * New font ids are handed out too often -- what about font reuse?
+L * New font ids are handed out too often -- what about font reuse?
 
   * Handle image reuse better
 
-  * Are the font man pages right? Perhaps I changed them to something that was
+K * Are the font man pages right? Perhaps I changed them to something that was
 	wrong in a fit of confusion.
 
-  * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
+K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
 	so that the compilation works properly.
 
   * At the moment if we can't change font we stop the whole schmozzle - should
