@@ -11,6 +11,34 @@
 #include <panda/constants.h>
 #include <panda/functions.h>
 
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_makedate
+PURPOSE format a date into the internal PDF representation
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_makedate (int year, int month, int day, int hour, int minutes, int seconds);
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. The function makedate generates a date that is suitable to be embedded into a PDF. This date will include information about the timezone in which the PDF was created and the relationship that this timezone has with GMT (Zulu) time. Mostly this function is used internally within Panda, and should not concern the average programmer too much.
+
+RETURNS The date passed formatted as a null terminated string.
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+printf("Panda would encode 19 July 1977 3:14:23 AM as: %s\n",
+  panda_makedate(1977, 7, 19, 3, 14, 23));
+
+EXAMPLE END
+SEEALSO panda_addlinesegment, panda_addcubiccurvesegment, panda_addquadraticsegmentone, panda_addquadraticcurvesegmenttwo, panda_closeline, panda_rectangle, panda_endline, panda_strokeline, panda_fillline, panda_setlinewidth, panda_setlinecap, panda_setlinejoin, panda_setlinedash, panda_setfillcolor, panda_setlinecolor
+DOCBOOK END
+******************************************************************************/
+
 // Format a given date into the approved format
 char *
 panda_makedate (int year, int month, int day, int hour, int minutes,
@@ -46,6 +74,32 @@ panda_makedate (int year, int month, int day, int hour, int minutes,
   // And finish
   return dateString;
 }
+
+/******************************************************************************
+DOCBOOK START
+
+FUNCTION panda_nowdate
+PURPOSE return the string for now
+
+SYNOPSIS START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+void panda_nowdate ();
+SYNOPSIS END
+
+DESCRIPTION <command>PANDA INTERNAL</command>. The function nowdate generates a date that is suitable to be embedded into a PDF. This date will include information about the timezone in which the PDF was created and the relationship that this timezone has with GMT (Zulu) time. Mostly this function is used internally within Panda, and should not concern the avaerage programmer too much. This version takes no input, and makes a date for the current time.
+
+RETURNS The current time in PDF format in a null terminated string.
+
+EXAMPLE START
+#include&lt;panda/constants.h&gt;
+#include&lt;panda/functions.h&gt;
+
+printf("The time now is %s\n", panda_nowdate());
+EXAMPLE END
+SEEALSO panda_addlinesegment, panda_addcubiccurvesegment, panda_addquadraticsegmentone, panda_addquadraticcurvesegmenttwo, panda_closeline, panda_rectangle, panda_endline, panda_strokeline, panda_fillline, panda_setlinewidth, panda_setlinecap, panda_setlinejoin, panda_setlinedash, panda_setfillcolor, panda_setlinecolor
+DOCBOOK END
+******************************************************************************/
 
 // Make a date string for the time that we are currently experiencing
 char *
