@@ -1,0 +1,9 @@
+Release 0.1 -> Release 0.2
+  * Stream writing improved to be much faster via the implementation of the 
+	pdfputc function (instead of pdfprintf with a single character in the
+	format string)
+
+  * Font handling improved so that the font name is only put into the text
+	stream when the font name changes or at the start of the page
+	description. This reduces the size of the output documents in some
+	cases dramatically.

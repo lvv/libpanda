@@ -1,0 +1,3 @@
+  * Further improve font handling so that font changes are minimised (change
+	the order text boxes are drawn in so that the font need only be defined
+	once per page).
