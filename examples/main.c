@@ -100,7 +100,8 @@ main (int argc, char *argv[])
   panda_setfont (demo, tempPtr = panda_createfont (demo, "Times-Roman", 1,
 						   "MacRomanEncoding"));
   panda_textbox (demo, currPage, 600, 10, 700, 300,
-		 "The background image on this page is Copyright 2000 Andrew Cagney");
+		 "The background image on this page is Copyright 2000 "
+		 "Andrew Cagney");
   panda_textbox (demo, currPage, 620, 10, 720, 300,
 		 "and is distributed under the terms of the GPL...");
   panda_textbox (demo, currPage, 310, 320, 330, 800,
@@ -111,7 +112,7 @@ main (int argc, char *argv[])
 		 panda_createfont (demo, "Helvetica-Bold", 1,
 				   "MacRomanEncoding"));
   panda_textboxrot (demo, currPage, 200, 30, 230,
-		 30, 45.0, "With new improved angled text!");
+		 80, 45.0, "With new improved angled text!");
   free (tempPtr);
 
   ///////////////////////////////////////////////////////////////////////////
@@ -123,7 +124,9 @@ main (int argc, char *argv[])
   // I am not drawing a multiline string here because I am not sure how to 
   // represent this in the PDF at the moment
   sprintf (tempString,
-	   "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF generator\nI handle multiple line text ok .once you have set a leading.",
+	   "Hello %c5World! %cMy name %c5is Panda!\nAnd I am a PDF "
+	   "generator\nI handle multiple line text ok .once you have set a "
+	   "leading.",
 	   4, 6, 5);
   panda_textbox (demo, currPage, 10, 10, 100, 30, tempString);
 
@@ -135,7 +138,7 @@ main (int argc, char *argv[])
   panda_setfont (demo, tempPtr =
 		 panda_createfont (demo, "Helvetica-Bold", 1,
 				   "MacRomanEncoding"));
-  panda_textbox (demo, currPage, 70, 30, 100, 30, "A line in Helvetica-Bold");
+  panda_textbox (demo, currPage, 70, 30, 100, 80, "A line in Helvetica-Bold");
   free (tempPtr);
 
   panda_imagebox (demo, currPage, 100, 100, 150, 150, "images/gnu-head.jpg",
