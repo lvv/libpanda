@@ -22,16 +22,12 @@ N * Further improve font handling so that font changes are minimised (change
 
   * Make the \n -> \r\n conversion into a function call and make it faster...
 
-L * Add see also sections in the man pages
-
 K * Handling of vsnprintf return number based on the differnt ways that
 	glibc behaves...
 
   * Be a bit more sensible in some of our error handling, for instance, if we
   	can't find a file to include in the PDF we shouldn't exit -- we should
 	report it to the calling function and let them deal with it...
-
-  * Documentation!
 
 N * Linearisation (also known as optimised PDF)
 
@@ -48,18 +44,10 @@ L * New font ids are handed out too often -- what about font reuse?
 
   * Handle image reuse better
 
-K * Are the font man pages right? Perhaps I changed them to something that was
-	wrong in a fit of confusion.
-
-K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
-	so that the compilation works properly.
-
   * At the moment if we can't change font we stop the whole schmozzle - should
 	we just report an error and keep going in the old font?
 
   * Re run GNU indent
-
-  * Type cast warnings
 
   * Lines and stuff...
 	The following operations in graphics mode are needed (p 159):
@@ -68,7 +56,6 @@ K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
 		- j (set the line join style)
 		- M (set the mitre limit)
 		- d (set the dash pattern)
-		- 
 
   * AM_CONFIG_HEADER problems
 
@@ -78,8 +65,6 @@ K * Work out how to get autoconf to define HAVE_LIBTIFF et al inside the source
 
   * If you set the character spacing or something like that to a very
 	negative number, then we should complain in some way...
-
-  * Fix the implicit type casts
 
   * Save the state that someone is built for lines and curves and stuff, and
 	allow them to restore that state later on if they would like to...
