@@ -19,7 +19,7 @@ tests="hello"
 
 # How many times per test
 number=100
-delay=5
+delay=1
 
 for test in $tests
 do
