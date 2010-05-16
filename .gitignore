@@ -20,6 +20,7 @@ examples/morecircles
 examples/pandademo
 examples/pandademolegacy
 examples/template
+examples/hidden
 examples/*.pdf
 
 libtool
