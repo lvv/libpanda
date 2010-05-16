@@ -44,21 +44,18 @@ if test "z" = "z$DATABASE"; then
 	[LDFLAGS="$LDFLAGS -ledb" DATABASE="edb" AC_DEFINE([USE_EDB], [], [Use Edb])],
 	[AC_CHECK_LIB(db, db_create,
 		[LDFLAGS="$LDFLAGS -ldb" DATABASE="db"],
-		[AC_MSG_RESULT([not found])
-		 AC_MSG_ERROR([please install either Edb or Berkeley DB])]
+		[ AC_MSG_ERROR([please install either Edb or Berkeley DB])]
 	)]
    )
 else
    if test "z$DATABASE" = "zedb"; then
      AC_CHECK_LIB(edb, e_db_open,
 	[LDFLAGS="$LDFLAGS -ledb" DATABASE="edb" AC_DEFINE([USE_EDB], [], [Use Edb])],
-	[AC_MSG_RESULT([not found]),
-	 AC_MSG_ERROR([please reinstall the Edb distribution])])
+	[ AC_MSG_ERROR([please reinstall the Edb distribution])])
    elif test "z$DATABASE" = "zdb"; then
      AC_CHECK_LIB(db, db_create,
 	[LDFLAGS="$LDFLAGS -ldb" DATABASE="db" AC_DEFINE([USE_DB], [], [Use Berkeley DB])],
-	[AC_MSG_RESULT([not found]),
-	 AC_MSG_ERROR([please reinstall the Berkeley DB distribution])])
+	[ AC_MSG_ERROR([please reinstall the Berkeley DB distribution])])
    fi
 fi
 
