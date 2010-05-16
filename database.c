@@ -92,7 +92,7 @@ panda_dbopen (panda_pdf * document)
   panda_windbopen (document);
 #else
 #ifdef USE_EDB
-  if ( !((E_DB_File *)document->db = e_db_open(filename)) )
+  if ( !(document->db = e_db_open(filename)) )
     panda_error(panda_true, "Could not open database.");
 #else
  {
