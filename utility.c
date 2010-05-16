@@ -412,21 +412,23 @@ DOCBOOK END
 
 char *
 panda_xsnprintf (char *format, ...)
-{
+{									// FIXME: this is slow
   char *output = NULL;
-  int size, result;
+  static int size, result;
   va_list ap;
+  va_list ap_copy;
 
   /* We start with the size of the format string as a guess */
   size = strlen (format);
   va_start (ap, format);
 
-  while (1)
+  while (1)				
     {
+      va_copy (ap_copy, ap);
       output = panda_xrealloc (output, size);
-      result = vsnprintf (output, size, format, ap);
+      result = vsnprintf (output, size, format, ap_copy);
 
-      if (result == -1)
+      if (result < 0)
 	{
 	  /* Up to glibc 2.0.6 and Microsoft's implementation */
 	  size += 100;
