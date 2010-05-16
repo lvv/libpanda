@@ -20,6 +20,7 @@ examples/morecircles
 examples/pandademo
 examples/pandademolegacy
 examples/template
+examples/*.pdf
 
 libtool
 panda.pc
@@ -31,4 +32,12 @@ stamp-h1
 *.la
 *.lo
 *.o
+
+man/html/*.html
+man/panda.html
+man/panda.pdf
+man/panda.ps
+man/panda.rtf
+man/panda.tex
+man/panda.txt
 
